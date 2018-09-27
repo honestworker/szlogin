@@ -16,10 +16,6 @@ let routes = [
                 component: require('./views/pages/home')
             },
             {
-                path: '/blank',
-                component: require('./views/pages/blank')
-            },
-            {
                 path: '/configuration',
                 component: require('./views/configuration/configuration')
             },
@@ -32,8 +28,12 @@ let routes = [
                 component: require('./views/task/index')
             },
             {
-                path: '/task/:id/edit',
-                component: require('./views/task/edit')
+                path: '/group',
+                component: require('./views/group/index')
+            },
+            {
+                path: '/group/:id/edit',
+                component: require('./views/group/edit')
             },
             {
                 path: '/user',

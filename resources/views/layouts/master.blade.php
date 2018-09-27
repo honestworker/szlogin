@@ -7,7 +7,7 @@
 	    <meta name="viewport" content="width=device-width, initial-scale=1">
 	    <meta name="description" content="">
 	    <meta name="author" content="">
-	    <title>Laravel Vue.js SPA Admin Starter Kit</title>
+	    <title>Neighborhood Watch</title>
 	    <meta name="csrf-token" content="{{ csrf_token() }}" />
     	<link rel="shortcut icon" href="/images/favicon.png">
 	    <link href="/css/style.css" rel="stylesheet">
