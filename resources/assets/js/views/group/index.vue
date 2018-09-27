@@ -146,7 +146,8 @@
                 }
                 let url = helper.getFilterURL(this.filterGroupForm);
                 axios.get('/api/group?page=' + page + url)
-                    .then(response => this.groups = response.data );
+                    .then(response => this.groups = response.data);
+                this.cancelGroup();
             },
             deleteGroup(group){
                 axios.delete('/api/group/' + group.id).then(response => {

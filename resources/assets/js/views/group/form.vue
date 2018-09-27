@@ -4,11 +4,11 @@
             <div class="col-md-12">
                 <div class="form-group">
                     <label for="">Name</label>
-                    <input class="form-control" type="text" value="" v-model="groupName">
+                    <input class="form-control" type="text" value="" v-model="groupForm.name">
                 </div>
                 <div class="form-group">
                     <label for="">Description</label>
-                    <textarea class="form-control" type="text" value="" v-model="groupDescription" rows="10"></textarea>
+                    <textarea class="form-control" type="text" value="" v-model="groupForm.description" rows="10"></textarea>
                 </div>
             </div>
         </div>
@@ -30,13 +30,19 @@
                     'name' : '',
                     'description' : '',
                 }),
-                myId: 0
+                
             };
         },
         props: ['groupId', 'groupName', 'groupDescription'],
         mounted() {
             if(this.groupId != 0) {
                 this.getGroups();
+            }
+        },
+        watch: {
+            groupId : function(val) {
+                this.groupForm.name = this.groupName;
+                this.groupForm.description = this.groupDescription;
             }
         },
         methods: {
@@ -63,7 +69,8 @@
                     if(response.type == 'error')
                         toastr['error'](response.message);
                     else {
-                        this.$router.push('/group');
+                        toastr['success'](response.message);
+                        this.$emit('completed',response.group)
                     }
                 })
                 .catch(response => {

@@ -17,16 +17,16 @@
                         <router-link to="/home" exact><i class="fa fa-home"></i> <span class="hide-menu">Home</span></router-link>
                     </li>
                     <li>
-                        <router-link to="/users" exact><i class="fa fa-users"></i> <span class="hide-menu">Administrators</span></router-link>
+                        <router-link to="/users" exact><i class="fa fa-user-secret"></i> <span class="hide-menu">Administrators</span></router-link>
                     </li>
                     <li>
-                        <router-link to="/group" exact><i class="fa fa-users"></i> <span class="hide-menu">Groups</span></router-link>
+                        <router-link to="/group" exact><i class="fa fa-groups"></i> <span class="hide-menu">Groups</span></router-link>
                     </li>
                     <li>
                         <router-link to="/user" exact><i class="fa fa-users"></i> <span class="hide-menu">Users</span></router-link>
                     </li>
                     <li>
-                        <router-link to="/banner" exact><i class="fa fa-users"></i> <span class="hide-menu">Banners</span></router-link>
+                        <router-link to="/banner" exact><i class="fa fa-tags"></i> <span class="hide-menu">Banners</span></router-link>
                     </li>
                     <li>
                         <a href="#" @click.prevent="logout"><i class="fa fa-power-off"></i> <span class="hide-menu">Logout</span></a>

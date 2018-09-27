@@ -24,10 +24,6 @@ let routes = [
                 component: require('./views/user/profile')
             },
             {
-                path: '/task',
-                component: require('./views/task/index')
-            },
-            {
                 path: '/group',
                 component: require('./views/group/index')
             },

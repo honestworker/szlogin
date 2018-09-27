@@ -60,4 +60,27 @@ class GroupController extends Controller
 
         return $group;
     }
+
+    public function update(Request $request, $id) {
+
+        $group = \App\Group::whereId($id)->first();
+
+        if(!$group)
+            return response()->json(['message' => 'Couldnot find group!']);
+
+        $validation = Validator::make($request->all(), [
+            'name' => 'required|unique:groups,name,'.$group->id.',id',
+            'description' => 'required',
+        ]);
+
+        if($validation->fails())
+            return response()->json(['message' => $validation->messages()->first()],422);
+
+        $group->name = request('name');
+        $group->description = request('description');
+        $group->save();
+
+        return response()->json(['message' => 'Group updated!', 'data' => $group]);
+    }
+
 }
