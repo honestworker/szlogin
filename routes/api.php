@@ -18,6 +18,7 @@ Route::group(['prefix' => 'auth'], function () {
     Route::post('/logout','AuthController@logout');
     Route::post('/check','AuthController@check');
     Route::post('/register','AuthController@register');
+    Route::post('/signup','AuthController@signup');
     Route::get('/activate/{token}','AuthController@activate');
     Route::post('/password','AuthController@password');
     Route::post('/validate-password-reset','AuthController@validatePasswordReset');
@@ -26,14 +27,14 @@ Route::group(['prefix' => 'auth'], function () {
 });
 
 Route::group(['middleware' => ['jwt.auth']], function () {
-    Route::get('/auth/user','AuthController@getAuthUser');
-
-    Route::post('/group','GroupController@store');
-    Route::get('/group','GroupController@index');
-    Route::delete('/group/{id}','GroupController@destroy');
-    Route::get('/group/{id}','GroupController@show');
-    Route::patch('/group/{id}','GroupController@update');
-    Route::post('/group/status','GroupController@toggleStatus');
+  Route::get('/auth/user','AuthController@getAuthUser');
+  Route::post('/auth/user/assign','AuthController@assign');
+  Route::post('/group','GroupController@store');
+  Route::get('/group','GroupController@index');
+  Route::delete('/group/{id}','GroupController@destroy');
+  Route::get('/group/{id}','GroupController@show');
+  Route::patch('/group/{id}','GroupController@update');
+  Route::post('/group/status','GroupController@toggleStatus');
 
     Route::get('/configuration/fetch','ConfigurationController@index');
     Route::post('/configuration','ConfigurationController@store');

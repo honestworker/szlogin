@@ -8,6 +8,7 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 use Validator;
 use App\Notifications\Activation;
 use App\Notifications\Activated;
+use App\Notifications\Assign;
 use App\Notifications\PasswordReset;
 use App\Notifications\PasswordResetted;
 
@@ -27,7 +28,7 @@ class AuthController extends Controller
 
         $user = \App\User::whereEmail(request('email'))->first();
 
-        if($user->status == 'pending_activation')
+        if($user->status == 'pending')
             return response()->json(['message' => 'Your account hasn\'t been activated. Please check your email & activate account.'], 422);
 
         if($user->status == 'banned')
@@ -84,32 +85,96 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $validation = Validator::make($request->all(), [
-            'first_name' => 'required',
-            'last_name' => 'required',
+            'group_name' => 'required',
+            'org_num' => 'required',
+            'contact_person' => 'required',
+            'phone_number' => 'required',
+            'email' => 'required|email|unique:users',
+        ]);
+        
+        if($validation->fails())
+            return response()->json(['message' => $validation->messages()->first()], 422);
+        
+        $user = \App\User::create([
+            'email' => request('email'),
+            'status' => 'pending',
+        ]);
+        
+        $user->activation_token = generateUuid();
+        $user->save();
+        $profile = new \App\Profile;
+        $profile->group_name = request('group_name');
+        $profile->org_num = request('org_num');
+        $profile->contact_person = request('contact_person');
+        $profile->phone_number = request('phone_number');
+        $user->profile()->save($profile);
+        
+        return response()->json(['message' => 'You have registered successfully. We will send you Group ID!']);
+    }
+
+    public function signup(Request $request)
+    {
+        $validation = Validator::make($request->all(), [
+            'group_name' => 'required',
+            'org_num' => 'required',
+            'contact_person' => 'required',
+            'phone_number' => 'required',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:6',
             'password_confirmation' => 'required|same:password'
         ]);
-
+        
         if($validation->fails())
-            return response()->json(['message' => $validation->messages()->first()],422);
-
+            return response()->json(['message' => $validation->messages()->first()], 422);
+        
         $user = \App\User::create([
             'email' => request('email'),
-            'status' => 'pending_activation',
+            'status' => 'pending',
             'password' => bcrypt(request('password'))
         ]);
-
+        
         $user->activation_token = generateUuid();
         $user->save();
         $profile = new \App\Profile;
-        $profile->first_name = request('first_name');
-        $profile->last_name = request('last_name');
+        $profile->group_name = request('group_name');
+        $profile->org_num = request('org_num');
+        $profile->contact_person = request('contact_person');
+        $profile->phone_number = request('phone_number');
         $user->profile()->save($profile);
 
         $user->notify(new Activation($user));
+        
+        return response()->json(['message' => 'You have signed up successfully. We will send you activation link. Then please check your email for activation!']);
+    }
 
-        return response()->json(['message' => 'You have registered successfully. Please check your email for activation!']);
+    public function assign(Request $request){
+        if(env('IS_DEMO'))
+            return response()->json(['message' => 'You are not allowed to perform this action in this mode.'],422);
+        
+		if(!request()->has('id'))
+            return response()->json(['message' => 'You must specify user ID!'],422);
+        
+		if(!request()->has('group_id'))
+            return response()->json(['message' => 'You must specify Group ID!'],422);
+        
+        if (!request('group_id'))
+            return response()->json(['message' => 'You must specify Group ID!'],422);
+        
+        $user = \App\User::find(request('id'));
+        
+        if(!$user)
+            return response()->json(['message' => 'Couldnot find user!'],422);
+        
+        $profile = $user->Profile;
+        $profile->group_id = request('group_id');
+        $profile->save();
+        $user->status = 'activated';
+        $user->save();
+        
+        $group = \App\Group::find(request('group_id'));
+        $user->notify(new Assign($group));
+        
+        return response()->json(['message' => 'Group Id has assigned successfully!', 'user' => $user]);
     }
 
     public function activate($activation_token){
@@ -121,7 +186,7 @@ class AuthController extends Controller
         if($user->status == 'activated')
             return response()->json(['message' => 'Your account has already been activated!'],422);
 
-        if($user->status != 'pending_activation')
+        if($user->status != 'pending')
             return response()->json(['message' => 'Invalid activation token!'],422);
 
         $user->status = 'activated';

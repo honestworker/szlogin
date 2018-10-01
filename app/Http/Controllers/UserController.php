@@ -30,12 +30,12 @@ class UserController extends Controller
         if(request()->has('status'))
             $users->whereStatus(request('status'));
 
-        if(request('sortBy') == 'first_name' || request('sortBy') == 'last_name')
-            $users->with(['profile' => function ($q) {
-              $q->orderBy(request('sortBy'), request('order'));
-            }]);
+        if(request('sortBy') == 'status')
+            $users->orderBy(request('sortBy'), request('order'));
         else
-            $users->orderBy(request('sortBy'),request('order'));
+            $users->with(['profile' => function ($q) {
+            $q->orderBy(request('sortBy'), request('order'));
+            }]);
 
 		return $users->paginate(request('pageLength'));
 	}

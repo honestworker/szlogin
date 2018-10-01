@@ -6,6 +6,10 @@ class Profile extends Eloquent {
 
     protected $fillable = [
                             'user_id',
+                            'group_name',
+                            'org_num',
+                            'contact_person',
+                            'phone_number',
                             'first_name',
                             'last_name',
                             'gender',
@@ -17,7 +21,7 @@ class Profile extends Eloquent {
                         ];
     protected $primaryKey = 'id';
     protected $table = 'profiles';
-
+    
     public function user()
     {
         return $this->belongsTo('App\User');

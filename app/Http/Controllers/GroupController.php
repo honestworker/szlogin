@@ -19,7 +19,8 @@ class GroupController extends Controller
         if(request()->has('status'))
             $groups->whereStatus(request('status'));
 
-        $groups->orderBy(request('sortBy'),request('order'));
+        if (request()->has('sortBy') && request()->has('order') )
+            $groups->orderBy(request('sortBy'), request('order'));
 
 		return $groups->paginate(request('pageLength'));
 	}

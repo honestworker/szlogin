@@ -40,7 +40,7 @@
                                     <label for="">Status</label>
                                     <select name="status" class="form-control" v-model="filterUserForm.status" @change="getUsers">
                                         <option value="">All</option>
-                                        <option value="pending_activation">Pending Activation</option>
+                                        <option value="pending">Pending Activation</option>
                                         <option value="activated">Activated</option>
                                         <option value="banned">Banned</option>
                                     </select>
@@ -164,8 +164,8 @@
                 });
             },
             getUserStatus(user){
-                if(user.status == 'pending_activation')
-                    return '<span class="label label-warning">Pending Activation</span>';
+                if(user.status == 'pending')
+                    return '<span class="label label-warning">Pending</span>';
                 else if(user.status == 'activated')
                     return '<span class="label label-success">Activated</span>';
                 else if(user.status == 'banned')

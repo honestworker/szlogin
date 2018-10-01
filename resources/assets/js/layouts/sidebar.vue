@@ -12,7 +12,7 @@
                 </div>
             </div>
             <nav class="sidebar-nav">
-                <ul id="sidebarnav">
+                <ul id="sidebarnav" class="collapsible">
                     <li>
                         <router-link to="/home" exact><i class="fa fa-home"></i> <span class="hide-menu">Home</span></router-link>
                     </li>
@@ -20,10 +20,13 @@
                         <router-link to="/users" exact><i class="fa fa-user-secret"></i> <span class="hide-menu">Administrators</span></router-link>
                     </li>
                     <li>
-                        <router-link to="/group" exact><i class="fa fa-groups"></i> <span class="hide-menu">Groups</span></router-link>
+                        <router-link to="/group" exact><i class="fa fa-bank"></i> <span class="hide-menu">Groups</span></router-link>
                     </li>
                     <li>
-                        <router-link to="/user" exact><i class="fa fa-users"></i> <span class="hide-menu">Users</span></router-link>
+                        <router-link to="/user/new" exact><i class="fa fa-user-plus"></i> <span class="hide-menu">New Users</span></router-link>
+                    </li>
+                    <li>
+                        <router-link to="/user" exact><i class="fa fa-user"></i> <span class="hide-menu">All Users</span></router-link>
                     </li>
                     <li>
                         <router-link to="/banner" exact><i class="fa fa-tags"></i> <span class="hide-menu">Banners</span></router-link>

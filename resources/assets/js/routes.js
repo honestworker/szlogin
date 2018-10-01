@@ -28,12 +28,12 @@ let routes = [
                 component: require('./views/group/index')
             },
             {
-                path: '/group/:id/edit',
-                component: require('./views/group/edit')
-            },
-            {
                 path: '/user',
                 component: require('./views/user/index')
+            },
+            {
+                path: '/user/new',
+                component: require('./views/user/new')
             },
         ]
     },
@@ -53,6 +53,18 @@ let routes = [
             {
                 path: '/register',
                 component: require('./views/auth/register')
+            },
+            {
+                path: '/success_register',
+                component: require('./views/auth/success_register')
+            },
+            {
+                path: '/signup',
+                component: require('./views/auth/signup')
+            },
+            {
+                path: '/success_signup',
+                component: require('./views/auth/success_signup')
             },
             {
                 path: '/auth/:token/activate',
@@ -91,7 +103,7 @@ router.beforeEach((to, from, next) => {
     if (to.matched.some(m => m.meta.requiresAuth)){
         return helper.check().then(response => {
             if(!response){
-                return next({ path : '/login'})
+                return next({ path : '/register'})
             }
 
             return next()
