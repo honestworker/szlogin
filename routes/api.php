@@ -20,15 +20,17 @@ Route::group(['prefix' => 'auth'], function () {
     Route::post('/register','AuthController@register');
     Route::post('/signup','AuthController@signup');
     Route::get('/activate/{token}','AuthController@activate');
-    Route::post('/password','AuthController@password');
+    Route::post('/forget-password','AuthController@forgetPassword');
     Route::post('/validate-password-reset','AuthController@validatePasswordReset');
-    Route::post('/reset','AuthController@reset');
+    Route::post('/reset-password','AuthController@resetPassword');
     Route::post('/social/token','SocialAuthController@getToken');
 });
 
 Route::group(['middleware' => ['jwt.auth']], function () {
+
   Route::get('/auth/user','AuthController@getAuthUser');
   Route::post('/auth/user/assign','AuthController@assign');
+
   Route::post('/group','GroupController@store');
   Route::get('/group','GroupController@index');
   Route::delete('/group/{id}','GroupController@destroy');

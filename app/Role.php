@@ -2,12 +2,10 @@
 namespace App;
 use Eloquent;
 
-class Group extends Eloquent {
-    
+class Role extends Eloquent {
 	protected $fillable = [
 							'name',
-							'description',
 						];
 	protected $primaryKey = 'id';
-	protected $table = 'groups';
+	protected $table = 'roles';
 }

@@ -50,9 +50,7 @@ class PasswordReset extends Notification
         return (new MailMessage)
                     ->greeting('Hello!')
                     ->line('We have recevied password reset request from you!')
-                    ->line('Click on the below link to reset your password.')
-                    ->action('Reset Password', $url)
-                    ->line('If you haven\'t requested for password reset, please ignore this email.')
+                    ->line('Verification Code: ' . $this->token . '.')
                     ->line('Thank you!');
     }
 

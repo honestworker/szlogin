@@ -26417,6 +26417,31 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -26427,13 +26452,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     data: function data() {
         return {
             users: {},
+            groups: {},
             filterUserForm: {
-                sortBy: 'first_name',
+                sortBy: 'group_name',
                 order: 'desc',
-                status: '',
-                title: '',
+                group_name: '',
+                org_num: '',
+                contact_person: '',
+                phone_num: '',
+                email: '',
+                user_role: '',
                 pageLength: 5
-            }
+            },
+            group_id: 0,
+            deletingUser: 1,
+            user_id: 0
         };
     },
     mounted: function mounted() {
@@ -26448,32 +26481,48 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 page = 1;
             }
             var url = __WEBPACK_IMPORTED_MODULE_1__services_helper__["a" /* default */].getFilterURL(this.filterUserForm);
-            axios.get('/api/user?page=' + page + url).then(function (response) {
+            axios.get('/api/user?&page=' + page + url).then(function (response) {
                 return _this.users = response.data;
             });
         },
-        deleteUser: function deleteUser(user) {
+        getUserGroupID: function getUserGroupID(user) {
+            var group_name = '';
+            if (typeof user.profile.group !== 'undefined') {
+                if (user.profile.group) {
+                    group_name = user.profile.group.name;
+                }
+            }
+            return group_name;
+        },
+        getUserRole: function getUserRole(user) {
+            var user_role = '';
+            if (typeof user.profile.role !== 'undefined') {
+                if (user.profile.role) {
+                    user_role = user.profile.role.name;
+                }
+            }
+            return user_role;
+        },
+        getUserStatus: function getUserStatus(user) {
+            if (user.status == 'pending') return '<span class="label label-warning">Pending</span>';else if (user.status == 'activated') return '<span class="label label-success">Activated</span>';else if (user.status == 'assigned') return '<span class="label label-success">Assigned</span>';else if (user.status == 'banned') return '<span class="label label-danger">Banned</span>';else return;
+        },
+        modalDeleteUser: function modalDeleteUser(user) {
+            this.user_id = user.id;
+            $('#modal-delete-user').modal('show');
+        },
+        deleteUser: function deleteUser() {
             var _this2 = this;
 
-            axios.delete('/api/user/' + user.id).then(function (response) {
+            axios.delete('/api/user/' + this.user_id).then(function (response) {
                 toastr['success'](response.data.message);
+                $('#modal-delete-user').modal('hide');
                 _this2.getUsers();
             }).catch(function (error) {
                 toastr['error'](error.response.data.message);
             });
-        },
-        getUserStatus: function getUserStatus(user) {
-            if (user.status == 'pending') return '<span class="label label-warning">Pending</span>';else if (user.status == 'activated') return '<span class="label label-success">Activated</span>';else if (user.status == 'banned') return '<span class="label label-danger">Banned</span>';else return;
         }
     },
-    filters: {
-        moment: function moment(date) {
-            return __WEBPACK_IMPORTED_MODULE_1__services_helper__["a" /* default */].formatDate(date);
-        },
-        ucword: function ucword(value) {
-            return __WEBPACK_IMPORTED_MODULE_1__services_helper__["a" /* default */].ucword(value);
-        }
-    }
+    filters: {}
 });
 
 /***/ }),
@@ -26499,7 +26548,9 @@ var render = function() {
             1
           ),
           _vm._v(" "),
-          _c("li", { staticClass: "breadcrumb-item active" }, [_vm._v("User")])
+          _c("li", { staticClass: "breadcrumb-item active" }, [
+            _vm._v("New User")
+          ])
         ])
       ])
     ]),
@@ -26513,19 +26564,21 @@ var render = function() {
             _c("div", { staticClass: "row m-t-40" }, [
               _c("div", { staticClass: "col-md-3" }, [
                 _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: "" } }, [_vm._v("First Name")]),
+                  _c("label", { attrs: { for: "" } }, [
+                    _vm._v("Contact Person")
+                  ]),
                   _vm._v(" "),
                   _c("input", {
                     directives: [
                       {
                         name: "model",
                         rawName: "v-model",
-                        value: _vm.filterUserForm.first_name,
-                        expression: "filterUserForm.first_name"
+                        value: _vm.filterUserForm.contact_person,
+                        expression: "filterUserForm.contact_person"
                       }
                     ],
                     staticClass: "form-control",
-                    domProps: { value: _vm.filterUserForm.first_name },
+                    domProps: { value: _vm.filterUserForm.contact_person },
                     on: {
                       blur: _vm.getUsers,
                       input: function($event) {
@@ -26534,7 +26587,7 @@ var render = function() {
                         }
                         _vm.$set(
                           _vm.filterUserForm,
-                          "first_name",
+                          "contact_person",
                           $event.target.value
                         )
                       }
@@ -26545,19 +26598,19 @@ var render = function() {
               _vm._v(" "),
               _c("div", { staticClass: "col-md-3" }, [
                 _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: "" } }, [_vm._v("Last Name")]),
+                  _c("label", { attrs: { for: "" } }, [_vm._v("Group ID")]),
                   _vm._v(" "),
                   _c("input", {
                     directives: [
                       {
                         name: "model",
                         rawName: "v-model",
-                        value: _vm.filterUserForm.last_name,
-                        expression: "filterUserForm.last_name"
+                        value: _vm.filterUserForm.group_name,
+                        expression: "filterUserForm.group_name"
                       }
                     ],
                     staticClass: "form-control",
-                    domProps: { value: _vm.filterUserForm.last_name },
+                    domProps: { value: _vm.filterUserForm.group_name },
                     on: {
                       blur: _vm.getUsers,
                       input: function($event) {
@@ -26566,7 +26619,39 @@ var render = function() {
                         }
                         _vm.$set(
                           _vm.filterUserForm,
-                          "last_name",
+                          "group_name",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-3" }, [
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "" } }, [_vm._v("Phone Number")]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.filterUserForm.phone_number,
+                        expression: "filterUserForm.phone_number"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    domProps: { value: _vm.filterUserForm.phone_number },
+                    on: {
+                      blur: _vm.getUsers,
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.filterUserForm,
+                          "phone_number",
                           $event.target.value
                         )
                       }
@@ -26609,60 +26694,33 @@ var render = function() {
               _vm._v(" "),
               _c("div", { staticClass: "col-md-3" }, [
                 _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: "" } }, [_vm._v("Status")]),
+                  _c("label", { attrs: { for: "" } }, [_vm._v("User Role")]),
                   _vm._v(" "),
-                  _c(
-                    "select",
-                    {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.filterUserForm.status,
-                          expression: "filterUserForm.status"
-                        }
-                      ],
-                      staticClass: "form-control",
-                      attrs: { name: "status" },
-                      on: {
-                        change: [
-                          function($event) {
-                            var $$selectedVal = Array.prototype.filter
-                              .call($event.target.options, function(o) {
-                                return o.selected
-                              })
-                              .map(function(o) {
-                                var val = "_value" in o ? o._value : o.value
-                                return val
-                              })
-                            _vm.$set(
-                              _vm.filterUserForm,
-                              "status",
-                              $event.target.multiple
-                                ? $$selectedVal
-                                : $$selectedVal[0]
-                            )
-                          },
-                          _vm.getUsers
-                        ]
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.filterUserForm.user_role,
+                        expression: "filterUserForm.user_role"
                       }
-                    },
-                    [
-                      _c("option", { attrs: { value: "" } }, [_vm._v("All")]),
-                      _vm._v(" "),
-                      _c("option", { attrs: { value: "pending" } }, [
-                        _vm._v("Pending Activation")
-                      ]),
-                      _vm._v(" "),
-                      _c("option", { attrs: { value: "activated" } }, [
-                        _vm._v("Activated")
-                      ]),
-                      _vm._v(" "),
-                      _c("option", { attrs: { value: "banned" } }, [
-                        _vm._v("Banned")
-                      ])
-                    ]
-                  )
+                    ],
+                    staticClass: "form-control",
+                    domProps: { value: _vm.filterUserForm.user_role },
+                    on: {
+                      blur: _vm.getUsers,
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.filterUserForm,
+                          "user_role",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
                 ])
               ]),
               _vm._v(" "),
@@ -26707,20 +26765,24 @@ var render = function() {
                       }
                     },
                     [
-                      _c("option", { attrs: { value: "first_name" } }, [
-                        _vm._v("First Name")
+                      _c("option", { attrs: { value: "contact_person" } }, [
+                        _vm._v("Contact Person")
                       ]),
                       _vm._v(" "),
-                      _c("option", { attrs: { value: "last_name" } }, [
-                        _vm._v("Last Name")
+                      _c("option", { attrs: { value: "group_name" } }, [
+                        _vm._v("Group Name")
+                      ]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "phone_number" } }, [
+                        _vm._v("Phone Number")
                       ]),
                       _vm._v(" "),
                       _c("option", { attrs: { value: "email" } }, [
                         _vm._v("Email")
                       ]),
                       _vm._v(" "),
-                      _c("option", { attrs: { value: "status" } }, [
-                        _vm._v("Status")
+                      _c("option", { attrs: { value: "user_role" } }, [
+                        _vm._v("User Role")
                       ])
                     ]
                   )
@@ -26802,32 +26864,30 @@ var render = function() {
                         return _c("tr", [
                           _c("td", {
                             domProps: {
-                              textContent: _vm._s(user.profile.first_name)
+                              textContent: _vm._s(user.profile.contact_person)
                             }
                           }),
                           _vm._v(" "),
                           _c("td", {
                             domProps: {
-                              textContent: _vm._s(user.profile.last_name)
+                              innerHTML: _vm._s(_vm.getUserGroupID(user))
                             }
                           }),
                           _vm._v(" "),
-                          _c("td", [
-                            _vm._v(
-                              _vm._s(
-                                _vm._f("moment")(user.profile.date_of_birth)
-                              )
-                            )
-                          ]),
-                          _vm._v(" "),
-                          _c("td", [
-                            _vm._v(
-                              _vm._s(_vm._f("ucword")(user.profile.gender))
-                            )
-                          ]),
+                          _c("td", {
+                            domProps: {
+                              textContent: _vm._s(user.profile.phone_number)
+                            }
+                          }),
                           _vm._v(" "),
                           _c("td", {
                             domProps: { textContent: _vm._s(user.email) }
+                          }),
+                          _vm._v(" "),
+                          _c("td", {
+                            domProps: {
+                              innerHTML: _vm._s(_vm.getUserRole(user))
+                            }
                           }),
                           _vm._v(" "),
                           _c("td", {
@@ -26836,40 +26896,25 @@ var render = function() {
                             }
                           }),
                           _vm._v(" "),
-                          _c(
-                            "td",
-                            [
-                              _c(
-                                "click-confirm",
-                                {
-                                  attrs: {
-                                    "yes-class": "btn btn-success",
-                                    "no-class": "btn btn-danger"
-                                  }
+                          _c("td", [
+                            _c(
+                              "button",
+                              {
+                                staticClass: "btn btn-danger btn-sm",
+                                attrs: {
+                                  "data-toggle": "tooltip",
+                                  title: "Delete User"
                                 },
-                                [
-                                  _c(
-                                    "button",
-                                    {
-                                      staticClass: "btn btn-danger btn-sm",
-                                      attrs: {
-                                        "data-toggle": "tooltip",
-                                        title: "Delete User"
-                                      },
-                                      on: {
-                                        click: function($event) {
-                                          $event.preventDefault()
-                                          _vm.deleteUser(user)
-                                        }
-                                      }
-                                    },
-                                    [_c("i", { staticClass: "fa fa-trash" })]
-                                  )
-                                ]
-                              )
-                            ],
-                            1
-                          )
+                                on: {
+                                  click: function($event) {
+                                    $event.preventDefault()
+                                    _vm.modalDeleteUser(user)
+                                  }
+                                }
+                              },
+                              [_c("i", { staticClass: "fa fa-trash" })]
+                            )
+                          ])
                         ])
                       })
                     )
@@ -26955,7 +27000,60 @@ var render = function() {
           ])
         ])
       ])
-    ])
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal",
+        attrs: { id: "modal-delete-user", tabindex: "-1", role: "dialog" }
+      },
+      [
+        _vm.deletingUser
+          ? _c("div", { staticClass: "modal-dialog" }, [
+              _c("div", { staticClass: "modal-content" }, [
+                _vm._m(1),
+                _vm._v(" "),
+                _c("div", { staticClass: "modal-body" }, [
+                  _vm._v(
+                    "\n                        Are you sure you want to delete this User?\n                    "
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "modal-footer" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-default",
+                      attrs: { type: "button", "data-dismiss": "modal" }
+                    },
+                    [_vm._v("No, Go Back")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-danger",
+                      attrs: { type: "button" },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          _vm.deleteUser()
+                        }
+                      }
+                    },
+                    [
+                      _vm._v(
+                        "\n                            Yes, Delete\n                        "
+                      )
+                    ]
+                  )
+                ])
+              ])
+            ])
+          : _vm._e()
+      ]
+    )
   ])
 }
 var staticRenderFns = [
@@ -26965,19 +27063,31 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("thead", [
       _c("tr", [
-        _c("th", [_vm._v("First Name")]),
+        _c("th", [_vm._v("Contact Person")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Last Name")]),
+        _c("th", [_vm._v("Group ID")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Date of Birth")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Gender")]),
+        _c("th", [_vm._v("Phone Number")]),
         _vm._v(" "),
         _c("th", [_vm._v("Email")]),
         _vm._v(" "),
         _c("th", [_vm._v("Status")]),
         _vm._v(" "),
+        _c("th", [_vm._v("User Role")]),
+        _vm._v(" "),
         _c("th", { staticStyle: { width: "150px" } }, [_vm._v("Action")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c("h5", { staticClass: "modal-title" }, [
+        _vm._v(
+          "\n                            Delete User\n                        "
+        )
       ])
     ])
   }
@@ -27259,8 +27369,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             axios.get('/api/group?status=1').then(function (response) {
                 _this2.groups = response.data;
                 if (_this2.groups.data.length > 0) _this2.group_id = _this2.groups.data[0].id;
-
-                console.log(_this2.group_id);
             });
         },
         changeGroup: function changeGroup(e) {
@@ -27287,6 +27395,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             axios.delete('/api/user/' + this.user_id).then(function (response) {
                 toastr['success'](response.data.message);
+                $('#modal-delete-user').modal('hide');
                 _this4.getUsers();
             }).catch(function (error) {
                 toastr['error'](error.response.data.message);
@@ -27817,7 +27926,47 @@ var render = function() {
       },
       [
         _vm.deletingUser
-          ? _c("div", { staticClass: "modal-dialog" }, [_vm._m(1)])
+          ? _c("div", { staticClass: "modal-dialog" }, [
+              _c("div", { staticClass: "modal-content" }, [
+                _vm._m(1),
+                _vm._v(" "),
+                _c("div", { staticClass: "modal-body" }, [
+                  _vm._v(
+                    "\n                        Are you sure you want to delete this User?\n                    "
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "modal-footer" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-default",
+                      attrs: { type: "button", "data-dismiss": "modal" }
+                    },
+                    [_vm._v("No, Go Back")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-danger",
+                      attrs: { type: "button" },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          _vm.deleteUser()
+                        }
+                      }
+                    },
+                    [
+                      _vm._v(
+                        "\n                            Yes, Delete\n                        "
+                      )
+                    ]
+                  )
+                ])
+              ])
+            ])
           : _vm._e()
       ]
     )
@@ -27848,39 +27997,10 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "modal-content" }, [
-      _c("div", { staticClass: "modal-header" }, [
-        _c("h5", { staticClass: "modal-title" }, [
-          _vm._v(
-            "\n                            Delete User\n                        "
-          )
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "modal-body" }, [
+    return _c("div", { staticClass: "modal-header" }, [
+      _c("h5", { staticClass: "modal-title" }, [
         _vm._v(
-          "\n                        Are you sure you want to delete this User?\n                    "
-        )
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "modal-footer" }, [
-        _c(
-          "button",
-          {
-            staticClass: "btn btn-default",
-            attrs: { type: "button", "data-dismiss": "modal" }
-          },
-          [_vm._v("No, Go Back")]
-        ),
-        _vm._v(" "),
-        _c(
-          "button",
-          { staticClass: "btn btn-danger", attrs: { type: "button" } },
-          [
-            _vm._v(
-              "\n                            Yes, Delete\n                        "
-            )
-          ]
+          "\n                            Delete User\n                        "
         )
       ])
     ])
@@ -28806,6 +28926,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 
 
@@ -29055,10 +29177,13 @@ var render = function() {
                   _vm._v(" "),
                   _c("div", { staticClass: "form-group m-b-0" }, [
                     _c("div", { staticClass: "col-sm-12 text-center" }, [
+                      _c("p", [
+                        _vm._v("Already have an administrator account?")
+                      ]),
+                      _vm._v(" "),
                       _c(
                         "p",
                         [
-                          _vm._v("Already have an administrator account? "),
                           _c(
                             "router-link",
                             {
@@ -29075,10 +29200,11 @@ var render = function() {
                   _vm._v(" "),
                   _c("div", { staticClass: "form-group m-b-0" }, [
                     _c("div", { staticClass: "col-sm-12 text-center" }, [
+                      _c("p", [_vm._v("Don't have an administrator account?")]),
+                      _vm._v(" "),
                       _c(
                         "p",
                         [
-                          _vm._v("Don't have an administrator account? "),
                           _c(
                             "router-link",
                             {
@@ -29221,6 +29347,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 
 
@@ -29281,10 +29409,11 @@ var render = function() {
                   _vm._v(" "),
                   _c("div", { staticClass: "form-group m-b-0" }, [
                     _c("div", { staticClass: "col-sm-12 text-center" }, [
+                      _c("p", [_vm._v("Do have an aministrator account?")]),
+                      _vm._v(" "),
                       _c(
                         "p",
                         [
-                          _vm._v("Do have an aministrator account? "),
                           _c(
                             "router-link",
                             {
@@ -29301,10 +29430,13 @@ var render = function() {
                   _vm._v(" "),
                   _c("div", { staticClass: "form-group m-b-0" }, [
                     _c("div", { staticClass: "col-sm-12 text-center" }, [
+                      _c("p", [
+                        _vm._v("Do you want to register another account?")
+                      ]),
+                      _vm._v(" "),
                       _c(
                         "p",
                         [
-                          _vm._v("Do you want to register another account? "),
                           _c(
                             "router-link",
                             {
@@ -29478,6 +29610,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -29486,12 +29635,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return {
             signupForm: {
                 group_name: '',
-                org_num: '',
-                contact_person: '',
-                phone_number: '',
                 email: '',
                 password: '',
-                password_confirmation: ''
+                first_name: '',
+                family_name: '',
+                street_address: '',
+                street_number: '',
+                postal_code: '',
+                phone_number: ''
             }
         };
     },
@@ -29589,108 +29740,6 @@ var render = function() {
                     ])
                   ]),
                   _vm._v(" "),
-                  _c("div", { staticClass: "form-group " }, [
-                    _c("div", { staticClass: "col-xs-12" }, [
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.signupForm.org_num,
-                            expression: "signupForm.org_num"
-                          }
-                        ],
-                        staticClass: "form-control",
-                        attrs: {
-                          type: "text",
-                          name: "org_num",
-                          placeholder: "Organization Number"
-                        },
-                        domProps: { value: _vm.signupForm.org_num },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.$set(
-                              _vm.signupForm,
-                              "org_num",
-                              $event.target.value
-                            )
-                          }
-                        }
-                      })
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "form-group" }, [
-                    _c("div", { staticClass: "col-xs-12" }, [
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.signupForm.contact_person,
-                            expression: "signupForm.contact_person"
-                          }
-                        ],
-                        staticClass: "form-control",
-                        attrs: {
-                          type: "text",
-                          name: "contact_name",
-                          placeholder: "Contact Person"
-                        },
-                        domProps: { value: _vm.signupForm.contact_person },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.$set(
-                              _vm.signupForm,
-                              "contact_person",
-                              $event.target.value
-                            )
-                          }
-                        }
-                      })
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "form-group" }, [
-                    _c("div", { staticClass: "col-xs-12" }, [
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.signupForm.phone_number,
-                            expression: "signupForm.phone_number"
-                          }
-                        ],
-                        staticClass: "form-control",
-                        attrs: {
-                          type: "text",
-                          name: "phone_number",
-                          placeholder: "Phone Number"
-                        },
-                        domProps: { value: _vm.signupForm.phone_number },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.$set(
-                              _vm.signupForm,
-                              "phone_number",
-                              $event.target.value
-                            )
-                          }
-                        }
-                      })
-                    ])
-                  ]),
-                  _vm._v(" "),
                   _c("div", { staticClass: "form-group" }, [
                     _c("div", { staticClass: "col-xs-12" }, [
                       _c("input", {
@@ -29706,7 +29755,7 @@ var render = function() {
                         attrs: {
                           type: "text",
                           name: "email",
-                          placeholder: "Email"
+                          placeholder: "Username(Email)"
                         },
                         domProps: { value: _vm.signupForm.email },
                         on: {
@@ -29759,26 +29808,24 @@ var render = function() {
                     ])
                   ]),
                   _vm._v(" "),
-                  _c("div", { staticClass: "form-group" }, [
+                  _c("div", { staticClass: "form-group " }, [
                     _c("div", { staticClass: "col-xs-12" }, [
                       _c("input", {
                         directives: [
                           {
                             name: "model",
                             rawName: "v-model",
-                            value: _vm.signupForm.password_confirmation,
-                            expression: "signupForm.password_confirmation"
+                            value: _vm.signupForm.first_name,
+                            expression: "signupForm.first_name"
                           }
                         ],
                         staticClass: "form-control",
                         attrs: {
-                          type: "password",
-                          name: "password_confirmation",
-                          placeholder: "Confirm Password"
+                          type: "text",
+                          name: "first_name",
+                          placeholder: "First Name"
                         },
-                        domProps: {
-                          value: _vm.signupForm.password_confirmation
-                        },
+                        domProps: { value: _vm.signupForm.first_name },
                         on: {
                           input: function($event) {
                             if ($event.target.composing) {
@@ -29786,7 +29833,177 @@ var render = function() {
                             }
                             _vm.$set(
                               _vm.signupForm,
-                              "password_confirmation",
+                              "first_name",
+                              $event.target.value
+                            )
+                          }
+                        }
+                      })
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-group " }, [
+                    _c("div", { staticClass: "col-xs-12" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.signupForm.family_name,
+                            expression: "signupForm.family_name"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: {
+                          type: "text",
+                          name: "family_name",
+                          placeholder: "Family Name"
+                        },
+                        domProps: { value: _vm.signupForm.family_name },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.signupForm,
+                              "family_name",
+                              $event.target.value
+                            )
+                          }
+                        }
+                      })
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-group " }, [
+                    _c("div", { staticClass: "col-xs-12" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.signupForm.street_address,
+                            expression: "signupForm.street_address"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: {
+                          type: "text",
+                          name: "street_address",
+                          placeholder: "Street Address"
+                        },
+                        domProps: { value: _vm.signupForm.street_address },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.signupForm,
+                              "street_address",
+                              $event.target.value
+                            )
+                          }
+                        }
+                      })
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-group " }, [
+                    _c("div", { staticClass: "col-xs-12" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.signupForm.street_number,
+                            expression: "signupForm.street_number"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: {
+                          type: "text",
+                          name: "street_number",
+                          placeholder: "Street Number"
+                        },
+                        domProps: { value: _vm.signupForm.street_number },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.signupForm,
+                              "street_number",
+                              $event.target.value
+                            )
+                          }
+                        }
+                      })
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-group " }, [
+                    _c("div", { staticClass: "col-xs-12" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.signupForm.postal_code,
+                            expression: "signupForm.postal_code"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: {
+                          type: "text",
+                          name: "postal_code",
+                          placeholder: "Postal Code"
+                        },
+                        domProps: { value: _vm.signupForm.postal_code },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.signupForm,
+                              "postal_code",
+                              $event.target.value
+                            )
+                          }
+                        }
+                      })
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-group" }, [
+                    _c("div", { staticClass: "col-xs-12" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.signupForm.phone_number,
+                            expression: "signupForm.phone_number"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: {
+                          type: "text",
+                          name: "phone_number",
+                          placeholder: "Mobile Number"
+                        },
+                        domProps: { value: _vm.signupForm.phone_number },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.signupForm,
+                              "phone_number",
                               $event.target.value
                             )
                           }
@@ -29799,10 +30016,13 @@ var render = function() {
                   _vm._v(" "),
                   _c("div", { staticClass: "form-group m-b-0" }, [
                     _c("div", { staticClass: "col-sm-12 text-center" }, [
+                      _c("p", [
+                        _vm._v("Already have an administrator account?")
+                      ]),
+                      _vm._v(" "),
                       _c(
                         "p",
                         [
-                          _vm._v("Already have an administrator account? "),
                           _c(
                             "router-link",
                             {
@@ -29819,10 +30039,11 @@ var render = function() {
                   _vm._v(" "),
                   _c("div", { staticClass: "form-group m-b-0" }, [
                     _c("div", { staticClass: "col-sm-12 text-center" }, [
+                      _c("p", [_vm._v("Don't have an account?")]),
+                      _vm._v(" "),
                       _c(
                         "p",
                         [
-                          _vm._v("Don't have an account? "),
                           _c(
                             "router-link",
                             {
@@ -29969,6 +30190,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 
 
@@ -30029,10 +30253,11 @@ var render = function() {
                   _vm._v(" "),
                   _c("div", { staticClass: "form-group m-b-0" }, [
                     _c("div", { staticClass: "col-sm-12 text-center" }, [
+                      _c("p", [_vm._v("Do you have an aministrator account?")]),
+                      _vm._v(" "),
                       _c(
                         "p",
                         [
-                          _vm._v("Do you have an aministrator account? "),
                           _c(
                             "router-link",
                             {
@@ -30049,10 +30274,13 @@ var render = function() {
                   _vm._v(" "),
                   _c("div", { staticClass: "form-group m-b-0" }, [
                     _c("div", { staticClass: "col-sm-12 text-center" }, [
+                      _c("p", [
+                        _vm._v("Do you want to register another account?")
+                      ]),
+                      _vm._v(" "),
                       _c(
                         "p",
                         [
-                          _vm._v("Do you want to register another account? "),
                           _c(
                             "router-link",
                             {
@@ -30069,10 +30297,13 @@ var render = function() {
                   _vm._v(" "),
                   _c("div", { staticClass: "form-group m-b-0" }, [
                     _c("div", { staticClass: "col-sm-12 text-center" }, [
+                      _c("p", [
+                        _vm._v("Do you want to sign up another account?")
+                      ]),
+                      _vm._v(" "),
                       _c(
                         "p",
                         [
-                          _vm._v("Do you want to sign up another account? "),
                           _c(
                             "router-link",
                             {

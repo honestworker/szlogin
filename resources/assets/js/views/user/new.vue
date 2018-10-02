@@ -148,7 +148,7 @@
                     <!-- Modal Actions -->
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">No, Go Back</button>
-                        <button type="button" class="btn btn-danger" @click="deleteUser">
+                        <button type="button" class="btn btn-danger" @click.prevent="deleteUser()">
                             Yes, Delete
                         </button>
                     </div>
@@ -203,8 +203,6 @@
                     this.groups = response.data;
                     if (this.groups.data.length > 0)
                         this.group_id = this.groups.data[0].id;
-                        
-                    console.log(this.group_id);
                 });
             },
             changeGroup(e) {
@@ -212,7 +210,7 @@
                     this.group_id = e.target.options[e.target.options.selectedIndex].value;
                 }
             },
-            assignGroupID(user) {               
+            assignGroupID(user) {
                 axios.post('/api/auth/user/assign?id=' + user.id + '&group_id=' + this.group_id).then(response => {
                     toastr['success'](response.data.message);
                     this.getUsers();
@@ -227,6 +225,7 @@
             deleteUser() {
                 axios.delete('/api/user/' + this.user_id).then(response => {
                     toastr['success'](response.data.message);
+                    $('#modal-delete-user').modal('hide');
                     this.getUsers();
                 }).catch(error => {
                     toastr['error'](error.response.data.message);

@@ -12,7 +12,7 @@ class UserController extends Controller
     protected $avatar_path = 'images/users/';
 
 	public function index(){
-		$users = \App\User::with('profile');
+		$users = \App\User::with('profile', 'profile.group', 'profile.role');
 
 		if(request()->has('first_name'))
             $query->whereHas('profile',function($q) use ($request){
@@ -29,13 +29,19 @@ class UserController extends Controller
 
         if(request()->has('status'))
             $users->whereStatus(request('status'));
+        
+        $users->with(['profile' => function ($q) {
+            $q->select('user_role', 'queues.inqueue', 'groups.name')->join('groups', 'group_id', '=', 'groups.id');
+        }]);
 
-        if(request('sortBy') == 'status')
-            $users->orderBy(request('sortBy'), request('order'));
-        else
-            $users->with(['profile' => function ($q) {
-            $q->orderBy(request('sortBy'), request('order'));
-            }]);
+        if(request()->has('sortBy') && request()->has('order')) {
+            if(request('sortBy') == 'status')
+                $users->orderBy(request('sortBy'), request('order'));
+            else
+                $users->with(['profile' => function ($q) {
+                    $q->orderBy(request('sortBy'), request('order'));
+                }]);
+        }
 
 		return $users->paginate(request('pageLength'));
 	}

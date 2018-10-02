@@ -3,20 +3,16 @@ namespace App;
 use Eloquent;
 
 class Profile extends Eloquent {
-
+    
     protected $fillable = [
                             'user_id',
-                            'group_name',
+                            'group_id',
+                            'group_names',
                             'org_num',
                             'contact_person',
                             'phone_number',
                             'first_name',
                             'last_name',
-                            'gender',
-                            'date_of_birth',
-                            'facebook_profile',
-                            'twitter_profile',
-                            'google_plus_profile',
                             'avatar'
                         ];
     protected $primaryKey = 'id';
@@ -25,5 +21,15 @@ class Profile extends Eloquent {
     public function user()
     {
         return $this->belongsTo('App\User');
+    }
+    
+    public function group()
+    {
+        return $this->hasOne('App\Group', 'id', 'group_id');
+    }
+    
+    public function role()
+    {
+        return $this->hasOne('App\Role', 'id', 'role_id');
     }
 }
