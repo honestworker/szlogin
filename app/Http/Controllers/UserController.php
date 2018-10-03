@@ -12,28 +12,40 @@ class UserController extends Controller
     protected $avatar_path = 'images/users/';
 
 	public function index(){
+        $user = JWTAuth::parseToken()->authenticate();
+        $roles = $user->Profile->Role;
+        $is_super = 0;
+        foreach ($roles as $role) {
+            if ($role->role_id == 1) {
+                $is_super = 1;
+                break;
+            }
+        }
+        
 		$users = \App\User::with('profile', 'profile.group', 'profile.role');
 
 		if(request()->has('first_name'))
             $query->whereHas('profile',function($q) use ($request){
                 $q->where('first_name','like','%'.request('first_name').'%');
             });
-
-		if(request()->has('last_name'))
+            
+		if(request()->has('family_name'))
             $query->whereHas('profile',function($q) use ($request){
-                $q->where('last_name','like','%'.request('last_name').'%');
+                $q->where('family_name','like','%'.request('family_name').'%');
             });
-
+            
 		if(request()->has('email'))
 			$users->where('email','like','%'.request('email').'%');
-
+		
         if(request()->has('status'))
             $users->whereStatus(request('status'));
         
-        $users->with(['profile' => function ($q) {
-            $q->select('user_role', 'queues.inqueue', 'groups.name')->join('groups', 'group_id', '=', 'groups.id');
-        }]);
-
+		if (!$is_super) {
+            $users->whereHas('profile.role', function($q) {
+                   $q->where('role_id', '>', 1);
+            });
+		}
+        
         if(request()->has('sortBy') && request()->has('order')) {
             if(request('sortBy') == 'status')
                 $users->orderBy(request('sortBy'), request('order'));
@@ -42,15 +54,23 @@ class UserController extends Controller
                     $q->orderBy(request('sortBy'), request('order'));
                 }]);
         }
-
+        
 		return $users->paginate(request('pageLength'));
+	}
+
+	public function allRole(){
+		$roles = \App\Role::whereNotNull('id');
+		
+        $roles->orderBy('id', 'ASC');
+        
+		return response()->json(['status' => 'success', 'message' => 'Get User Role Data Successfully!', 'data' => $roles->get()], 200);
 	}
 
     public function updateProfile(Request $request){
 
         $validation = Validator::make($request->all(),[
             'first_name' => 'required|min:2',
-            'last_name' => 'required|min:2',
+            'family_name' => 'required|min:2',
             'date_of_birth' => 'required|date_format:Y-m-d',
             'gender' => 'required|in:male,female'
         ]);
@@ -62,7 +82,7 @@ class UserController extends Controller
         $profile = $user->Profile;
 
         $profile->first_name = request('first_name');
-        $profile->last_name = request('last_name');
+        $profile->family_name = request('family_name');
         $profile->date_of_birth = request('date_of_birth');
         $profile->gender = request('gender');
         $profile->twitter_profile = request('twitter_profile');

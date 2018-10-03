@@ -78,7 +78,7 @@
                                 <div class="form-group">
                                     <label for="">Group ID</label>
                                     <select name="groups" class="form-control" @change="changeGroup">
-                                        <option v-for="group in groups.data" v-bind:value="group.id">{{ group.name }}</option>
+                                        <option v-for="group in groups.data" v-bind:value="group.id">{{ group.group_id }}</option>
                                     </select>
                                 </div>
                             </div>
@@ -199,7 +199,7 @@
                     .then(response => this.users = response.data );
             },
             getGroups() {
-                axios.get('/api/group?status=1').then(response => {
+                axios.post('/api/group/all').then(response => {
                     this.groups = response.data;
                     if (this.groups.data.length > 0)
                         this.group_id = this.groups.data[0].id;
@@ -211,11 +211,15 @@
                 }
             },
             assignGroupID(user) {
-                axios.post('/api/auth/user/assign?id=' + user.id + '&group_id=' + this.group_id).then(response => {
+                axios.post('/api/user/assign?id=' + user.id + '&group_id=' + this.group_id).then(response => {
                     toastr['success'](response.data.message);
                     this.getUsers();
                 }).catch(error => {
-                    toastr['error'](error.response.data.message);
+                    if (error.response.data.message) {
+                        toastr['error'](error.response.data.message);
+                    } else {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                    }
                 });
             },
             modalDeleteUser(user) {
@@ -228,7 +232,11 @@
                     $('#modal-delete-user').modal('hide');
                     this.getUsers();
                 }).catch(error => {
-                    toastr['error'](error.response.data.message);
+                    if (error.response.data.message) {
+                        toastr['error'](response.data.message);
+                    } else {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                    }
                 });
             },
         },

@@ -7,7 +7,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class PasswordReset extends Notification
+class GroupManager extends Notification
 {
     use Queueable;
 
@@ -17,13 +17,11 @@ class PasswordReset extends Notification
      * @return void
      */
 
-    protected $user;
-    protected $code;
+    protected $enable;
 
-    public function __construct($user, $code)
+    public function __construct($enable)
     {
-        $this->user = $user;
-        $this->code = $code;
+        $this->enable = $enable;
     }
 
     /**
@@ -45,13 +43,15 @@ class PasswordReset extends Notification
      */
     public function toMail($notifiable)
     {
-        $url = url('/password/reset/'.$this->code);
-
-        return (new MailMessage)
-                    ->greeting('Hello!')
-                    ->line('We have recevied password reset request from you!')
-                    ->line('Verification Code: ' . $this->code . '.')
-                    ->line('Thank you!');
+        if ($this->enable) {
+            return (new MailMessage)
+                        ->greeting('Hello!')
+                        ->line('Your account has an group manager permission.');
+        } else {
+            return (new MailMessage)
+                        ->greeting('Hello!')
+                        ->line('The adminstrator disable your group manager permission.');
+        }
     }
 
     /**

@@ -18,6 +18,7 @@ Route::group(['prefix' => 'auth'], function () {
     Route::post('/logout','AuthController@logout');
     Route::post('/check','AuthController@check');
     Route::post('/register','AuthController@register');
+    Route::post('/signup_backend','AuthController@signupBackend');
     Route::post('/signup','AuthController@signup');
     Route::get('/activate/{token}','AuthController@activate');
     Route::post('/forget-password','AuthController@forgetPassword');
@@ -28,15 +29,25 @@ Route::group(['prefix' => 'auth'], function () {
 
 Route::group(['middleware' => ['jwt.auth']], function () {
 
-  Route::get('/auth/user','AuthController@getAuthUser');
-  Route::post('/auth/user/assign','AuthController@assign');
+    Route::get('/auth/user','AuthController@getAuthUser');
+    Route::post('/user/assign','AuthController@assignGroup');
+    Route::post('/user/role','AuthController@changeRole');
 
-  Route::post('/group','GroupController@store');
-  Route::get('/group','GroupController@index');
-  Route::delete('/group/{id}','GroupController@destroy');
-  Route::get('/group/{id}','GroupController@show');
-  Route::patch('/group/{id}','GroupController@update');
-  Route::post('/group/status','GroupController@toggleStatus');
+    Route::post('/group','GroupController@store');
+    Route::post('/group/all','GroupController@all');
+    Route::get('/group','GroupController@index');
+    Route::delete('/group/{id}','GroupController@destroy');
+    Route::get('/group/{id}','GroupController@show');
+    Route::patch('/group/{id}','GroupController@update');
+    Route::post('/group/status','GroupController@toggleStatus');
+
+    Route::post('/country','CountryController@store');
+    Route::get('/country','CountryController@index');
+    Route::delete('/country/{id}','CountryController@destroy');
+    Route::get('/country/{id}','CountryController@show');
+    Route::patch('/country/{id}','CountryController@update');
+    Route::post('/country/status','CountryController@toggleStatus');
+    Route::post('/country/all','CountryController@all');
 
     Route::get('/configuration/fetch','ConfigurationController@index');
     Route::post('/configuration','ConfigurationController@store');

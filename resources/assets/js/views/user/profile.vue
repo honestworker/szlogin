@@ -21,8 +21,8 @@
                                 <input class="form-control" type="text" value="" v-model="profileForm.first_name">
                             </div>
                             <div class="form-group">
-                                <label for="">Last Name</label>
-                                <input class="form-control" type="text" value="" v-model="profileForm.last_name">
+                                <label for="">Family Name</label>
+                                <input class="form-control" type="text" value="" v-model="profileForm.family_name">
                             </div>
                             <div class="form-group">
                                 <label for="">Date of Birth</label>
@@ -122,7 +122,7 @@
                 }),
                 profileForm: new Form({
                     first_name : '',
-                    last_name : '',
+                    family_name : '',
                     date_of_birth : '',
                     gender : '',
                     facebook_profile : '',
@@ -136,7 +136,7 @@
         mounted(){
             axios.get('/api/auth/user').then(response => response.data).then(response => {
                 this.profileForm.first_name = response.profile.first_name;
-                this.profileForm.last_name = response.profile.last_name;
+                this.profileForm.family_name = response.profile.family_name;
                 this.profileForm.date_of_birth = response.profile.date_of_birth;
                 this.profileForm.gender = response.profile.gender;
                 this.profileForm.facebook_profile = response.profile.facebook_profile;
@@ -159,7 +159,7 @@
                     toastr['success'](response.message);
                     this.$store.dispatch('setAuthUserDetail',{
                         first_name: this.profileForm.first_name,
-                        last_name: this.profileForm.last_name
+                        family_name: this.profileForm.family_name
                     });
                 }).catch(response => {
                     toastr['error'](response.message);

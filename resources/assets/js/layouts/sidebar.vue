@@ -3,7 +3,7 @@
         <div class="scroll-sidebar">
             <div class="user-profile">
                 <div class="profile-img"> <img :src="getAvatar" alt="user" /> </div>
-                <div class="profile-text"> <a href="#" class="dropdown-toggle link u-dropdown" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">{{getAuthUserFullName()}}<span class="caret"></span></a>
+                <div class="profile-text"> <a href="#" class="dropdown-toggle link u-dropdown" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">{{getAuthUserContactPserson()}}<span class="caret"></span></a>
                     <div class="dropdown-menu">
                         <router-link to="/profile" class="dropdown-item"><i class="fa fa-user"></i> Profile</router-link>
                         <div class="dropdown-divider"></div> <router-link to="/configuration" class="dropdown-item"><i class="fa fa-cogs"></i> Configuration</router-link>
@@ -30,6 +30,9 @@
                     </li>
                     <li>
                         <router-link to="/banner" exact><i class="fa fa-tags"></i> <span class="hide-menu">Banners</span></router-link>
+                    </li>
+                    <li>
+                        <router-link to="/country" exact><i class="fa fa-globe"></i> <span class="hide-menu">Country</span></router-link>
                     </li>
                     <li>
                         <a href="#" @click.prevent="logout"><i class="fa fa-power-off"></i> <span class="hide-menu">Logout</span></a>
@@ -59,8 +62,8 @@
                     this.$router.replace('/login')
                 })
             },
-            getAuthUserFullName(){
-                return this.$store.getters.getAuthUserFullName;
+            getAuthUserContactPserson(){
+                return this.$store.getters.getAuthUserContactPserson;
             },
             getAuthUser(name){
                 return this.$store.getters.getAuthUser(name);

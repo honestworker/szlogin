@@ -39,7 +39,7 @@ class SocialAuthController extends Controller
             $profile = new \App\Profile;
             $profile->user()->associate($new_user);
             $profile->first_name = array_key_exists(0, $name) ? $name[0] : 'John';
-            $profile->last_name = array_key_exists(1, $name) ? $name[1] : 'Doe';
+            $profile->family_name = array_key_exists(1, $name) ? $name[1] : 'Doe';
             $profile->save();
             $token = JWTAuth::fromUser($new_user);
         }

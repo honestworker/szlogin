@@ -59,8 +59,7 @@
             if(!this.getAuthUser('email')){
                 helper.authUser().then(response => {
                     this.$store.dispatch('setAuthUserDetail',{
-                        first_name: response.profile.first_name,
-                        last_name: response.profile.last_name,
+                        contact_person: response.profile.contact_person,
                         email: response.user.email,
                         avatar:response.profile.avatar
                     });

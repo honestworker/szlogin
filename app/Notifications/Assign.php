@@ -47,7 +47,7 @@ class Assign extends Notification
         return (new MailMessage)
                     ->greeting('Hello!')
                     ->line('Your account has been activated.')
-                    ->line('Your Group ID is ' . $group_name . '!')
+                    ->line('Your Group ID : ' . $group_name . '.')
                     ->line('Please register your account in our app.')
                     ->line('Thank you for using our application!');
     }

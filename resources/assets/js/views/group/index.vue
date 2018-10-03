@@ -1,7 +1,7 @@
 <template>
 	<div>
         <div class="row page-titles">
-            <div class="col-md-6 col-8 align-self-center">
+            <div class="col-md-12 col-12 align-self-center">
                 <h3 class="text-themecolor m-b-0 m-t-0">Group</h3>
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><router-link to="/home">Home</router-link></li>
@@ -11,24 +11,64 @@
         </div>
 
         <div class="row">
-            <div class="col-lg-4">
+            <div class="col-lg-12 col-12">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">Add new Group</h4>
-                        <group-form @completed="getGroups" :groupId="groupId" :groupName="groupName" :groupDescription="groupDescription" @interface="cancelGroup"></group-form>
+                        <router-link to="/group/0/edit" class="btn btn-success waves-effect waves-light m-t-10">Create Group</router-link>
                     </div>
                 </div>
             </div>
-            
-            <div class="col-lg-8">
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12 col-12">
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Filter Group</h4>
                         <div class="row m-t-40">
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="">Search</label>
-                                    <input name="search" class="form-control" v-model="filterGroupForm.search" @blur="getGroups">
+                                    <label for="">Group ID</label>
+                                    <input name="search" class="form-control" v-model="filterGroupForm.group_id" @blur="getGroups">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="">Organization Number</label>
+                                    <input class="form-control" v-model="filterGroupForm.org_number" @blur="getGroups">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="">Contact Person</label>
+                                    <input class="form-control" v-model="filterGroupForm.contact_person" @blur="getGroups">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="">Organization Name</label>
+                                    <input class="form-control" v-model="filterGroupForm.org_name" @blur="getGroups">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="">Email</label>
+                                    <input class="form-control" v-model="filterGroupForm.email" @blur="getGroups">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="">Mobile Number</label>
+                                    <input class="form-control" v-model="filterGroupForm.mobile_number" @blur="getGroups">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="">Country</label>
+                                    <select name="status" class="form-control" v-model="filterGroupForm.country" @change="getGroups">
+                                        <option value="">All</option>
+                                        <option v-for="country in countries.data" v-bind:value="country.name">{{country.name}}</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -45,8 +85,13 @@
                                 <div class="form-group">
                                     <label for="">Sort By</label>
                                     <select name="sortBy" class="form-control" v-model="filterGroupForm.sortBy" @change="getGroups">
-                                        <option value="name">Name</option>
-                                        <option value="status">Status</option>
+                                        <option value="group_id">Group ID</option>
+                                        <option value="org_number">Organization Number</option>
+                                        <option value="contact_person">Contact Person</option>
+                                        <option value="email">Email</option>
+                                        <option value="mobile_number">Mobile Number</option>
+                                        <option value="country">Country</option>
+                                        <option value="created_at">Created At</option>
                                     </select>
                                 </div>
                             </div>
@@ -68,16 +113,26 @@
                             <table class="table" v-if="groups.total">
                                 <thead>
                                     <tr>
-                                        <th>Name</th>
-                                        <th>Description</th>
+                                        <th>Group ID</th>
+                                        <th>Organization Number</th>
+                                        <th>Contact Person</th>
+                                        <th>Email</th>
+                                        <th>Mobile Number</th>
+                                        <th>Country</th>
+                                        <th>Created At</th>
                                         <th>Status</th>
                                         <th style="width:180px;">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr v-for="group in groups.data">
-                                        <td v-text="group.name"></td>
-                                        <td v-text="group.description"></td>
+                                        <td v-text="group.group_id"></td>
+                                        <td v-text="group.org_number"></td>
+                                        <td v-text="group.contact_person"></td>
+                                        <td v-text="group.email"></td>
+                                        <td v-text="group.mobile_number"></td>
+                                        <td v-text="group.country"></td>
+                                        <td v-text="group.created_at"></td>
                                         <td v-html="getGroupStatus(group)"></td>
                                         <td>
                                             <button class="btn btn-info btn-sm" @click.prevent="editGroup(group)" data-toggle="tooltip" title="Edit Group"><i class="fa fa-pencil"></i></button>
@@ -123,20 +178,26 @@
         data() {
             return {
                 groups: {},
+                countries : {},
                 filterGroupForm: {
                     status: '',
-                    sortBy : 'name',
+                    sortBy : 'group_id',
                     order: 'desc',
+                    group_id : '',
+                    org_number : '',
+                    contact_person : '',
+                    org_name : '',
+                    email : '',
+                    mobile_number : '',
+                    country : '',
                     pageLength: 5
                 },
-                groupId: 0,
-                groupName: '',
-                groupDescription: '',
             }
         },
 
         created() {
             this.getGroups();
+            this.getCountries();
         },
 
         methods: {
@@ -147,31 +208,31 @@
                 let url = helper.getFilterURL(this.filterGroupForm);
                 axios.get('/api/group?page=' + page + url)
                     .then(response => this.groups = response.data);
-                this.cancelGroup();
+            },
+            getCountries() {
+                axios.post('/api/country/all')
+                    .then(response => this.countries = response.data);
             },
             deleteGroup(group){
                 axios.delete('/api/group/' + group.id).then(response => {
                     toastr['success'](response.data.message);
                     this.getGroups();
                 }).catch(error => {
-                    toastr['error'](error.response.data.message);
+                    if (error.response.data.message) {
+                        toastr['error'](error.response.data.message);
+                    } else {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                    }
                 });
             },
             editGroup(group){
-                this.groupId = group.id;
-                this.groupName = group.name;
-                this.groupDescription = group.description;
-            },
-            cancelGroup(){
-                this.groupId = 0;
-                this.groupName = '';
-                this.groupDescription = '';
+                this.$router.push('/group/'+group.id+'/edit');
             },
             getGroupStatus(group){
                 return (group.status == 1) ? '<span class="label label-success">Active</span>' : '<span class="label label-danger">Deactive</span>';
             },
             toggleGroupStatus(group){
-                axios.post('/api/group/status', {id:group.id}).then((response) => {
+                axios.post('/api/group/status', {id: group.id}).then((response) => {
                     this.getGroups();
                 });
             }

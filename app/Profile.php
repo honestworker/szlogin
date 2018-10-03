@@ -6,14 +6,21 @@ class Profile extends Eloquent {
     
     protected $fillable = [
                             'user_id',
-                            'group_id',
-                            'group_names',
+                            
+                            'group_name',
                             'org_num',
                             'contact_person',
                             'phone_number',
+                            
+                            'group_id',
+                            
                             'first_name',
-                            'last_name',
-                            'avatar'
+                            'family_name',
+                            
+                            'avatar',
+                            'street_address',
+                            'street_name',
+                            'postal_code',
                         ];
     protected $primaryKey = 'id';
     protected $table = 'profiles';
@@ -30,6 +37,6 @@ class Profile extends Eloquent {
     
     public function role()
     {
-        return $this->hasOne('App\Role', 'id', 'role_id');
+        return $this->hasMany('App\UserRole', 'user_id', 'user_id');
     }
 }

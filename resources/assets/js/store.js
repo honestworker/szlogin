@@ -7,14 +7,14 @@ import * as Cookies from 'js-cookie'
 const store = new Vuex.Store({
 	state: {
 		auth: {
-			first_name: '',
-			last_name: '',
+			contact_person: '',
 			email: '',
 			avatar: ''
 		},
 		config: {
 			company_name: '',
-			contact_person: ''
+			first_name: '',
+			last_name: ''
 		}
 	},
 	mutations: {
@@ -51,8 +51,8 @@ const store = new Vuex.Store({
 		getAuthUser: (state) => (name) => {
 		    return state.auth[name];
 		},
-		getAuthUserFullName: (state) => {
-		    return state.auth['first_name']+' '+state.auth['last_name'];
+		getAuthUserContactPserson: (state) => {
+		    return state.auth['contact_person'];
 		},
 		getConfig: (state) => (name) => {
 		    return state.config[name];
