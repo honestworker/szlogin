@@ -16,6 +16,8 @@ use App\Notifications\PasswordResetted;
 
 class AuthController extends Controller
 {
+    protected $avatar_path = 'images/users/';
+
     public function authenticate(Request $request)
     {
         $credentials = $request->only('email', 'password');
@@ -37,8 +39,17 @@ class AuthController extends Controller
             
         if($user->status != 'activated')
             return response()->json(['status' => 'fail', 'message' => 'There is something wrong with your account. Please contact system administrator.'], 422);
-            
-        return response()->json(['status' => 'success', 'message' => 'You are successfully logged in!','token' => $token]);
+        
+        $mamager = false;
+        $roles = $user->Profile->Role;
+        foreach ($roles as $role) {
+            if ($role->role_id == 3) {
+                $mamager = true;
+                break;
+            }
+        }
+        
+        return response()->json(['status' => 'success', 'message' => 'You are successfully logged in!', 'token' => $token, 'mamager' => $mamager]);
     }
 
     public function getAuthUser(){
@@ -128,6 +139,7 @@ class AuthController extends Controller
             'street_number' => 'required',
             'postal_code' => 'required',
             'phone_number' => 'required',
+            'country' => 'required',
             // 'password_confirmation' => 'required|same:password'
         ]);
         
@@ -152,7 +164,7 @@ class AuthController extends Controller
         //$user->activation_token = generateUuid();
         $profile = $user->profile;
         $group = \App\Group::find($profile->group_id);
-        if ($group->name != request('group_id')) {            
+        if ($group->name != request('group_id')) {
             return response()->json(['status' => 'fail', 'message' => 'Your group name does not match!'], 422);
         }
 
@@ -166,6 +178,17 @@ class AuthController extends Controller
         $profile->street_number = request('street_number');
         $profile->postal_code = request('postal_code');
         $profile->phone_number = request('phone_number');
+        $profile->country = request('country');
+
+		if(request()->file('avatar')) {
+            $extension = $request->file('avatar')->getClientOriginalExtension();
+            $filename = time('Ymdhis');
+            $file = $request->file('avatar')->move($this->avatar_path, $filename.".".$extension);
+            $img = \Image::make($this->avatar_path.$filename.".".$extension);
+            $img->save($this->avatar_path.$filename.".".$extension);
+            $profile->avatar = $filename.".".$extension;
+        }
+
         $user->profile()->save($profile);
         
         return response()->json(['status' => 'success', 'message' => 'You have signed up successfully.']);

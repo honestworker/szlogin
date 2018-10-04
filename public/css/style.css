@@ -11695,7 +11695,7 @@ File: scss
 }
 
 .topbar .profile-pic {
-  width: 30px;
+  width: 50px;
   border-radius: 100%;
 }
 
@@ -15980,6 +15980,16 @@ Contact app Page
   z-index: 10 !important;
 }
 
+/*******************
+view user profile section
+******************/
+
+.view-user-profile .profile-img {
+  width: 200px;
+  margin: 0 auto;
+  border-radius: 100%;
+}
+
 /*
 Template Name: Monster Admin
 Author: Themedesigner
@@ -16050,7 +16060,7 @@ use profile section
 }
 
 .user-profile .profile-img {
-  width: 50px;
+  width: 100px;
   margin: 0 auto;
   border-radius: 100%;
 }

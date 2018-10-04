@@ -26,7 +26,7 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Organization Number</label>
-                                    <input class="form-control" v-model="filterUserForm.org_num" @blur="getUsers">
+                                    <input class="form-control" v-model="filterUserForm.org_number" @blur="getUsers">
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -52,7 +52,7 @@
                                     <label for="">Sort By</label>
                                     <select name="sortBy" class="form-control" v-model="filterUserForm.sortBy" @change="getUsers">
                                         <option value="group_name">Group Name</option>
-                                        <option value="org_num">Organization Number</option>
+                                        <option value="org_number">Organization Number</option>
                                         <option value="contact_person">Contact Person</option>
                                         <option value="phone_number">Phone Number</option>
                                         <option value="email">Email</option>
@@ -98,7 +98,7 @@
                                 <tbody>
                                     <tr v-for="user in users.data">
                                         <td v-text="user.profile.group_name"></td>
-                                        <td v-text="user.profile.org_num"></td>
+                                        <td v-text="user.profile.org_number"></td>
                                         <td v-text="user.profile.contact_person"></td>
                                         <td v-text="user.profile.phone_number"></td>
                                         <td v-text="user.email"></td>
@@ -173,7 +173,7 @@
                     sortBy : 'group_name',
                     order: 'desc',
                     group_name : '',
-                    org_num : '',
+                    org_number : '',
                     contact_person : '',
                     phone_num : '',
                     email : '',

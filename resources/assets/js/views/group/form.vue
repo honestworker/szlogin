@@ -41,7 +41,7 @@
                 <div class="form-group">
                     <label for="">Country</label>
                         <select name="status" class="form-control" v-model="groupForm.country" @change="changeCountry">
-                            <option v-for="country in countries.data" v-bind:value="country.name" v-bind:selected="getSelectedStatus(country)">{{country.name}}</option>
+                            <option v-for="country in countries.countries" v-bind:value="country" v-bind:selected="getSelectedStatus(country)">{{country}}</option>
                         </select>
                 </div>
             </div>
@@ -102,7 +102,7 @@
                 }
             },
             getSelectedStatus(country) {
-                if (country.name == this.groupForm.country) {
+                if (country == this.groupForm.country) {
                     return true;
                 } else {
                     return false;
@@ -112,7 +112,7 @@
                 this.groupForm.post('/api/group')
                 .then(response => {
                     toastr['success'](response.message);
-                    this.$emit('completed',response.group)
+                    this.$emit('completed', response.group)
                 })
                 .catch(response => {
                     if (response.message) {

@@ -67,7 +67,7 @@
                                     <label for="">Country</label>
                                     <select name="status" class="form-control" v-model="filterGroupForm.country" @change="getGroups">
                                         <option value="">All</option>
-                                        <option v-for="country in countries.data" v-bind:value="country.name">{{country.name}}</option>
+                                        <option v-for="country in countries.countries" v-bind:value="country">{{country}}</option>
                                     </select>
                                 </div>
                             </div>

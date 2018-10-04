@@ -101,7 +101,7 @@ File: scss
         }
     }
     .profile-pic {
-        width: 30px;
+        width: 50px;
         border-radius: 100%;
     }
     .dropdown-menu {
@@ -4030,4 +4030,16 @@ Contact app Page
 }
 .slimScrollBar{
     z-index: 10!important;
+}
+
+/*******************
+view user profile section
+******************/
+
+.view-user-profile {
+    .profile-img {
+        width: 200px;
+        margin: 0 auto;
+        border-radius: 100%;
+    }
 }

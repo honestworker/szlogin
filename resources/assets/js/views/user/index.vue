@@ -55,7 +55,6 @@
                                         <option value="group_id">Group Name</option>
                                         <option value="phone_number">Phone Number</option>
                                         <option value="email">Email</option>
-                                        <option value="user_role">User Role</option>
                                     </select>
                                 </div>
                             </div>
@@ -83,7 +82,7 @@
                                         <th>Email</th>
                                         <th>User Role</th>
                                         <th>Status</th>
-                                        <th style="width:150px;">Action</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -95,6 +94,7 @@
                                         <td v-html="getUserRole(user)"></td>
                                         <td v-html="getUserStatus(user)"></td>
                                         <td>
+                                            <button class="btn btn-info btn-sm" @click.prevent="viewUserProfile(user)" data-toggle="tooltip" title="View User Profile"><i class="fa fa-eye"></i></button>
                                             <span v-if="isGroupManager(user) > -1">
                                                 <button v-if="isGroupManager(user) == 0" class="btn btn-primary btn-sm" @click.prevent="modalMakeGroupMnanager(user)" data-toggle="tooltip" title="Make Group Manager"><i class="fa fa-check"></i></button>
                                                 <button v-else class="btn btn-primary btn-sm" @click.prevent="modalDisableGroupMnanager(user)" data-toggle="tooltip" title="Disable Group Manager"><i class="fa fa-times"></i></button>
@@ -285,7 +285,7 @@
                     contact_person : '',
                     phone_num : '',
                     email : '',
-                    user_role : '',
+                    //user_role : '',
                     pageLength: 5
                 },
                 deletingUser : 1,
@@ -346,6 +346,9 @@
                     return '<span class="label label-danger">Banned</span>';
                 else
                     return;
+            },
+            viewUserProfile(user) {
+                this.$router.push('/user/'+user.id+'/view');
             },
 
             modalDeleteUser(user) {

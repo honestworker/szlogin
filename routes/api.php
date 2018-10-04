@@ -25,6 +25,7 @@ Route::group(['prefix' => 'auth'], function () {
     Route::post('/validate-password-reset','AuthController@validatePasswordReset');
     Route::post('/reset-password','AuthController@resetPassword');
     Route::post('/social/token','SocialAuthController@getToken');
+    Route::post('/country/all','CountryController@all');
 });
 
 Route::group(['middleware' => ['jwt.auth']], function () {
@@ -53,6 +54,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::post('/configuration','ConfigurationController@store');
 
     Route::get('/user','UserController@index');
+    Route::post('/user/{id}','UserController@getUser');
     Route::post('/user/change-password','AuthController@changePassword');
     Route::post('/user/update-profile','UserController@updateProfile');
     Route::post('/user/update-avatar','UserController@updateAvatar');

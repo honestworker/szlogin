@@ -21,6 +21,7 @@ class Profile extends Eloquent {
                             'street_address',
                             'street_name',
                             'postal_code',
+                            'country',
                         ];
     protected $primaryKey = 'id';
     protected $table = 'profiles';
