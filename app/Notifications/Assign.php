@@ -43,11 +43,11 @@ class Assign extends Notification
      */
     public function toMail($notifiable)
     {
-        $group_name = $this->group->name;
+        $group_id = $this->group->group_id;
         return (new MailMessage)
                     ->greeting('Hello!')
                     ->line('Your account has been activated.')
-                    ->line('Your Group ID : ' . $group_name . '.')
+                    ->line('Your Group ID : ' . $group_id . '.')
                     ->line('Please register your account in our app.')
                     ->line('Thank you for using our application!');
     }

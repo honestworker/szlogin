@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 
 Route::group(['prefix' => 'auth'], function () {
     Route::post('/login','AuthController@authenticate');
+    Route::post('/login_backend','AuthController@login');
     Route::post('/logout','AuthController@logout');
     Route::post('/check','AuthController@check');
     Route::post('/register','AuthController@register');
@@ -25,6 +26,8 @@ Route::group(['prefix' => 'auth'], function () {
     Route::post('/validate-password-reset','AuthController@validatePasswordReset');
     Route::post('/reset-password','AuthController@resetPassword');
     Route::post('/social/token','SocialAuthController@getToken');
+    
+    //app only
     Route::post('/country/all','CountryController@all');
 });
 
@@ -50,9 +53,6 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::post('/country/status','CountryController@toggleStatus');
     Route::post('/country/all','CountryController@all');
 
-    Route::get('/configuration/fetch','ConfigurationController@index');
-    Route::post('/configuration','ConfigurationController@store');
-
     Route::get('/user','UserController@index');
     Route::post('/user/{id}','UserController@getUser');
     Route::post('/user/change-password','AuthController@changePassword');
@@ -61,6 +61,16 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::post('/user/remove-avatar','UserController@removeAvatar');
     Route::delete('/user/{id}','UserController@destroy');
     Route::get('/user/dashboard','UserController@dashboard');
+    
+    //app only
+    Route::post('/profile', 'UserController@profile');
+    Route::post('/change-password','UserController@changePassword');
+    Route::post('/change-avatar','UserController@updateAvatar');
+    Route::post('/delete-account','UserController@deleteAccount');
+    
+
+    Route::get('/configuration/fetch','ConfigurationController@index');
+    Route::post('/configuration','ConfigurationController@store');
 
     Route::post('todo','TodoController@store');
     Route::get('/todo','TodoController@index');
