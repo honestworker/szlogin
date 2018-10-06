@@ -1,4 +1,4 @@
-# Vue [![Build Status]
+# Vue [Build Status]
 
 ## Functions
 
