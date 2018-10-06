@@ -47,6 +47,22 @@ let routes = [
                 path: '/country',
                 component: require('./views/country/index')
             },
+            {
+                path: '/notification',
+                component: require('./views/notification/index')
+            },
+            {
+                path: '/noti_type',
+                component: require('./views/notification/type')
+            },
+            {
+                path: '/advertisement',
+                component: require('./views/advertisement/index')
+            },
+            {
+                path: '/advertisement/:id',
+                component: require('./views/advertisement/edit')
+            },
         ]
     },
     {
@@ -121,7 +137,7 @@ router.beforeEach((to, from, next) => {
             if(!response) {
                 return next({ path : '/login'})
             }
-
+            
             return next()
         })
     }
@@ -131,7 +147,7 @@ router.beforeEach((to, from, next) => {
             if(response){
                 return next({ path : '/'})
             }
-
+            
             return next()
         })
     }

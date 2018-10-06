@@ -25,7 +25,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Filter Group</h4>
-                        <div class="row m-t-40">
+                        <div class="row m-t-20">
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Group ID</label>
@@ -138,7 +138,7 @@
                                             <button class="btn btn-info btn-sm" @click.prevent="editGroup(group)" data-toggle="tooltip" title="Edit Group"><i class="fa fa-pencil"></i></button>
                                             <button v-if="group.status == 1" class="btn btn-danger btn-sm" @click.prevent="toggleGroupStatus(group)" data-toggle="tooltip" title="Mark as Dective"><i class="fa fa-times"></i></button>
                                             <button v-else class="btn btn-success btn-sm" @click.prevent="toggleGroupStatus(group)" data-toggle="tooltip" title="Mark as Active"><i class="fa fa-check"></i></button>
-                                            <button class="btn btn-danger btn-sm" @click.prevent="deleteGroup(group)" data-toggle="tooltip" title="Delete group"><i class="fa fa-trash"></i></button>
+                                            <button class="btn btn-danger btn-sm" @click.prevent="modalDeleteGroup(group)" data-toggle="tooltip" title="Delete group"><i class="fa fa-trash"></i></button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -164,17 +164,42 @@
                 </div>
             </div>
         </div>
+        
+        <!-- Delete Group Modal -->
+        <div class="modal" id="modal-delete-group" tabindex="-1" role="dialog">
+            <div class="modal-dialog" v-if="deletingGroup">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            Delete Group
+                        </h5>
+                    </div>
+
+                    <div class="modal-body">
+                        Are you sure you want to delete this Group?
+                    </div>
+
+                    <!-- Modal Actions -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">No, Go Back</button>
+                        <button type="button" class="btn btn-danger" @click.prevent="deleteGroup()">
+                            Yes, Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
-    import GroupForm from './form'
+    //import GroupForm from './form'
     import pagination from 'laravel-vue-pagination'
     import helper from '../../services/helper'
     import ClickConfirm from 'click-confirm'
 
     export default {
-        components : { GroupForm, pagination, ClickConfirm },
+        components : { pagination, ClickConfirm }, //GroupForm, 
         data() {
             return {
                 groups: {},
@@ -192,6 +217,8 @@
                     country : '',
                     pageLength: 5
                 },
+                group_id : 0,
+                deletingGroup : 1
             }
         },
 
@@ -213,9 +240,14 @@
                 axios.post('/api/country/all')
                     .then(response => this.countries = response.data);
             },
-            deleteGroup(group){
-                axios.delete('/api/group/' + group.id).then(response => {
+            modalDeleteGroup(group) {
+                this.group_id = group.id;
+                $('#modal-delete-group').modal('show');
+            },
+            deleteGroup() {
+                axios.delete('/api/group/' + this.group_id).then(response => {
                     toastr['success'](response.data.message);
+                    $('#modal-delete-group').modal('hide');
                     this.getGroups();
                 }).catch(error => {
                     if (error.response.data.message) {

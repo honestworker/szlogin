@@ -14,6 +14,8 @@ use Illuminate\Http\Request;
 */
 
 Route::group(['prefix' => 'auth'], function () {
+    Route::post('/advertisement','AdvertisementController@store');
+    
     Route::post('/login','AuthController@authenticate');
     Route::post('/login_backend','AuthController@login');
     Route::post('/logout','AuthController@logout');
@@ -37,14 +39,16 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::post('/user/assign','AuthController@assignGroup');
     Route::post('/user/role','AuthController@changeRole');
 
+    // Group
+    Route::get('/group','GroupController@index');
     Route::post('/group','GroupController@store');
     Route::post('/group/all','GroupController@all');
-    Route::get('/group','GroupController@index');
     Route::delete('/group/{id}','GroupController@destroy');
     Route::get('/group/{id}','GroupController@show');
     Route::patch('/group/{id}','GroupController@update');
     Route::post('/group/status','GroupController@toggleStatus');
 
+    // Country
     Route::post('/country','CountryController@store');
     Route::get('/country','CountryController@index');
     Route::delete('/country/{id}','CountryController@destroy');
@@ -53,6 +57,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::post('/country/status','CountryController@toggleStatus');
     Route::post('/country/all','CountryController@all');
 
+    // User
     Route::get('/user','UserController@index');
     Route::post('/user/{id}','UserController@getUser');
     Route::post('/user/change-password','AuthController@changePassword');
@@ -68,7 +73,33 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::post('/change-avatar','UserController@updateAvatar');
     Route::post('/delete-account','UserController@deleteAccount');
     
+    Route::post('/logout','AuthController@logout');
 
+    // Notification
+    Route::get('/notification','NotificationController@index');
+    
+    // Notification app only
+    Route::post('/get-notification','NotificationController@getNotification');
+    Route::post('/create-notification','NotificationController@createNotification');
+
+    // Notification Type
+    Route::post('/noti_type','NotificationController@storeType');
+    Route::get('/noti_type','NotificationController@indexType');
+    Route::delete('/noti_type/{id}','NotificationController@destroyType');
+    Route::get('/noti_type/{id}','NotificationController@showType');
+    Route::patch('/noti_type/{id}','NotificationController@updateType');
+    Route::post('/noti_type/status','NotificationController@toggleTypeStatus');
+    Route::post('/noti_type/all','NotificationController@allType');
+    
+    // Advertisement
+    Route::get('/advertisement','AdvertisementController@index'); // Get All
+    Route::post('/advertisement','AdvertisementController@store'); // Create
+    Route::delete('/advertisement/{id}','AdvertisementController@destroy');
+    Route::get('/advertisement/{id}','AdvertisementController@show');
+    Route::patch('/advertisement/{id}','AdvertisementController@update');
+    Route::post('/advertisement/status','AdvertisementController@toggleStatus');
+    Route::post('/advertisement/all','AdvertisementController@all');
+    
     Route::get('/configuration/fetch','ConfigurationController@index');
     Route::post('/configuration','ConfigurationController@store');
 

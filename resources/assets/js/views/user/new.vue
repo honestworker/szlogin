@@ -16,7 +16,7 @@
                     <div class="card-body">
                         <h4 class="card-title">Filter User</h4>
                         
-                        <div class="row m-t-40">
+                        <div class="row m-t-20">
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Group Name</label>

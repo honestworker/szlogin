@@ -40,9 +40,9 @@
             <div class="col-md-3">
                 <div class="form-group">
                     <label for="">Country</label>
-                        <select name="status" class="form-control" v-model="groupForm.country" @change="changeCountry">
-                            <option v-for="country in countries.countries" v-bind:value="country" v-bind:selected="getSelectedStatus(country)">{{country}}</option>
-                        </select>
+                    <select name="status" class="form-control" v-model="groupForm.country" @change="changeCountry">
+                        <option v-for="country in countries.countries" v-bind:value="country" v-bind:selected="getSelectedStatus(country)">{{country}}</option>
+                    </select>
                 </div>
             </div>
         </div>
@@ -112,7 +112,8 @@
                 this.groupForm.post('/api/group')
                 .then(response => {
                     toastr['success'](response.message);
-                    this.$emit('completed', response.group)
+                    this.$emit('completed', response.group);
+                    this.$router.push('/group');
                 })
                 .catch(response => {
                     if (response.message) {
@@ -125,10 +126,9 @@
                         toastr['error']('The token is expired! Please refresh and try again!');
                     }
                 });
-                this.$router.push('/group');
             },
             getGroups(){
-                axios.get('/api/group/'+this.id)
+                axios.get('/api/group/' + this.id)
                 .then(response => {
                     this.groupForm.group_id = response.data.group_id;
                     this.groupForm.org_number = response.data.org_number;
@@ -142,7 +142,7 @@
                     toastr['error'](response.message);
                 });
             },
-            updateGroup(){
+            updateGroup() {
                 this.groupForm.patch('/api/group/' + this.id)
                 .then(response => {
                     if(response.type == 'error') {

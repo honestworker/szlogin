@@ -3,20 +3,16 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
-                    <label for="">Index</label>
-                    <input class="form-control" type="text" value="" v-model="countryForm.idx">
-                </div>
-                <div class="form-group">
                     <label for="">Name</label>
-                    <input class="form-control" type="text" value="" v-model="countryForm.name">
+                    <input class="form-control" type="text" value="" v-model="notificationTypeFrom.name">
                 </div>
             </div>
         </div>
         <button class="btn btn-info waves-effect waves-light m-t-10">
-            <span v-if="id" @click="updateCountry">Update</span>
-            <span v-else @click="storeCountry">Create</span>
+            <span v-if="id" @click="updateNotification">Update</span>
+            <span v-else @click="storeNotification">Create</span>
         </button>
-        <button class="btn btn-danger waves-effect waves-light m-t-10" v-show="id" @click="cancelCountry">Cancel</button>
+        <button class="btn btn-danger waves-effect waves-light m-t-10" v-show="id" @click="cancelNotification">Cancel</button>
     </form>
 </template>
 
@@ -26,37 +22,34 @@
     export default {
         data() {
             return {
-                countryForm: new Form({
-                    'idx' : '',
+                notificationTypeFrom: new Form({
                     'name' : '',
+                    'created_at' : '',
                 }),
             };
         },
-        props: ['id', 'idx', 'name'],
+        props: ['id', 'name', 'created_at'],
         mounted() {
-            if(this.id != 0) {
-                this.getCountries();
-            }
         },
         watch: {
             id : function(val) {
-                this.countryForm.idx = this.idx;
-                this.countryForm.name = this.name;
+                this.notificationTypeFrom.name = this.name;
+                this.notificationTypeFrom.created_at = this.created_at;
             }
         },
         methods: {
             proceed(){
             },
-            cancelCountry() {
+            cancelNotification() {
                 if(this.id) {
                     this.$emit('interface');
                 }
             },
-            storeCountry(){
-                this.countryForm.post('/api/country')
+            storeNotification(){
+                this.notificationTypeFrom.post('/api/noti_type')
                 .then(response => {
                     toastr['success'](response.message);
-                    this.$emit('completed',response.country);
+                    this.$emit('completed',response.noti_type)
                 })
                 .catch(response => {
                     if (response.message) {
@@ -66,8 +59,8 @@
                     }
                 });
             },
-            updateCountry(){
-                this.countryForm.patch('/api/country/'+this.id)
+            updateNotification(){
+                this.notificationTypeFrom.patch('/api/noti_type/'+this.id)
                 .then(response => {
                     if(response.type == 'error') {
                         if (response.message) {
@@ -77,7 +70,7 @@
                         }
                     } else {
                         toastr['success'](response.message);
-                        this.$emit('completed',response.country)
+                        this.$emit('completed',response.noti_type)
                     }
                 })
                 .catch(response => {
@@ -87,7 +80,7 @@
                         toastr['error']('The token is expired! Please refresh and try again!');
                     }
                 });
-                this.cancelCountry();
+                this.cancelNotification();
             }
         }
     }

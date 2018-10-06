@@ -5,7 +5,7 @@
                 <h3 class="text-themecolor m-b-0 m-t-0">User</h3>
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><router-link to="/home">Home</router-link></li>
-                    <li class="breadcrumb-item active">New User</li>
+                    <li class="breadcrumb-item active">User</li>
                 </ol>
             </div>
         </div>
@@ -16,7 +16,7 @@
                     <div class="card-body">
                         <h4 class="card-title">Filter User</h4>
                         
-                        <div class="row m-t-40">
+                        <div class="row m-t-20">
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Contact Person</label>
@@ -283,7 +283,7 @@
                     group_id : '',
                     org_num : '',
                     contact_person : '',
-                    phone_num : '',
+                    phone_number : '',
                     email : '',
                     //user_role : '',
                     pageLength: 5
