@@ -4,8 +4,8 @@
             <div class="col-md-6 col-8 align-self-center">
                 <h3 class="text-themecolor m-b-0 m-t-0">Edit Group</h3>
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><router-link to="/home">Home</router-link></li>
-                    <li class="breadcrumb-item"><router-link to="/task">Group</router-link></li>
+                    <li class="breadcrumb-item"><router-link to="/dashboard">Dashboard</router-link></li>
+                    <li class="breadcrumb-item"><router-link to="/group">Group</router-link></li>
                     <li class="breadcrumb-item active">Edit Group</li>
                 </ol>
             </div>

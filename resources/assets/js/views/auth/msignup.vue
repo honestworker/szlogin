@@ -60,8 +60,8 @@
                     </div>
                     <div class="form-group m-b-0">
                         <div class="col-sm-12 text-center">
-                            <p>Already have an administrator account?</p>
-                            <p><router-link to="/login" class="text-info m-l-5"><b>Sign In</b></router-link></p>
+                            <p>Already have an account?</p>
+                            <p><router-link to="/login" class="text-info m-l-5"><b>Log In</b></router-link></p>
                         </div>
                     </div>
                     <div class="form-group m-b-0">

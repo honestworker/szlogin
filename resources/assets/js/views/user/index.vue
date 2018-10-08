@@ -4,7 +4,7 @@
             <div class="col-md-6 col-8 align-self-center">
                 <h3 class="text-themecolor m-b-0 m-t-0">User</h3>
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><router-link to="/home">Home</router-link></li>
+                    <li class="breadcrumb-item"><router-link to="/dashboard">Dashboard</router-link></li>
                     <li class="breadcrumb-item active">User</li>
                 </ol>
             </div>
@@ -44,7 +44,10 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">User Role</label>
-                                    <input class="form-control" v-model="filterUserForm.user_role" @blur="getUsers">
+                                    <select name="groups" class="form-control" v-model="filterUserForm.user_role" @blur="getUsers">
+                                        <option value="0">All</option>
+                                        <option v-for="user_role in user_roles.data" v-bind:value="user_role.id">{{ user_role.name }}</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -52,7 +55,7 @@
                                     <label for="">Sort By</label>
                                     <select name="sortBy" class="form-control" v-model="filterUserForm.sortBy" @change="getUsers">
                                         <option value="contact_person">Contact Person</option>
-                                        <option value="group_id">Group Name</option>
+                                        <option value="group_id">Group ID</option>
                                         <option value="phone_number">Phone Number</option>
                                         <option value="email">Email</option>
                                     </select>
@@ -276,7 +279,8 @@
             return {
                 users: {},
                 groups: {},
-                roles: {},
+                user_roles: {},
+                user_roles: {},
                 filterUserForm: {
                     sortBy : 'group_id',
                     order: 'desc',
@@ -285,7 +289,7 @@
                     contact_person : '',
                     phone_number : '',
                     email : '',
-                    //user_role : '',
+                    user_role : 0,
                     pageLength: 5
                 },
                 deletingUser : 1,
@@ -296,6 +300,7 @@
         },
         mounted() {
             this.getUsers();
+            this.getUserRoles();
         },
         methods: {
             getUsers(page) {
@@ -305,6 +310,11 @@
                 let url = helper.getFilterURL(this.filterUserForm);
                 axios.get('/api/user?&page=' + page + url)
                     .then(response => this.users = response.data );
+            },
+            getUserRoles() {
+                axios.post('/api/user-roles').then(response => {
+                    this.user_roles = response.data;
+                });
             },
             getUserGroupID(user) {
                 let group_id = '';
@@ -317,16 +327,16 @@
             },
             getUserRole(user){
                 let user_role = '';
-                if (typeof user.profile.role !== 'undefined') {
-                    if (user.profile.role) {
-                        for (var role_no = 0; role_no < user.profile.role.length; role_no++) {
-                            if(user.profile.role[role_no].role_id == 1)
+                if (typeof user.profile.roles !== 'undefined') {
+                    if (user.profile.roles) {
+                        for (var role_no = 0; role_no < user.profile.roles.length; role_no++) {
+                            if(user.profile.roles[role_no].role_id == 1)
                                 user_role = user_role + '<span class="label label-danger">Super</span>';
-                            else if(user.profile.role[role_no].role_id == 2)
+                            else if(user.profile.roles[role_no].role_id == 2)
                                 user_role = user_role + '<span class="label label-info">Admin</span>';
-                            else if(user.profile.role[role_no].role_id == 3)
+                            else if(user.profile.roles[role_no].role_id == 3)
                                 user_role = user_role + '<span class="label label-primary">Group</span>';
-                            else if(user.profile.role[role_no].role_id == 4)
+                            else if(user.profile.roles[role_no].role_id == 4)
                                 user_role = user_role + '<span class="label label-success">User</span>';
                         }
                     }
@@ -372,11 +382,11 @@
             isGroupManager(user) {
                 if (user.status == 'activated') {
                     if (user.profile.group_id) {
-                        if (user.profile.role) {
-                            for (var role_no = 0; role_no < user.profile.role.length; role_no++) {
-                                if (user.profile.role[role_no].role_id == 3) {
+                        if (user.profile.roles) {
+                            for (var role_no = 0; role_no < user.profile.roles.length; role_no++) {
+                                if (user.profile.roles[role_no].role_id == 3) {
                                     return 1;
-                                } else if (user.profile.role[role_no].role_id == 4) {
+                                } else if (user.profile.roles[role_no].role_id == 4) {
                                     return 0;
                                 }
                             }
@@ -420,9 +430,9 @@
             
             isAdministrator(user) {
                 if (user.status == 'activated') {
-                    if (user.profile.role) {
-                        for (var role_no = 0; role_no < user.profile.role.length; role_no++) {
-                            if (user.profile.role[role_no].role_id <= 2) {
+                    if (user.profile.roles) {
+                        for (var role_no = 0; role_no < user.profile.roles.length; role_no++) {
+                            if (user.profile.roles[role_no].role_id <= 2) {
                                 return 1;
                             }
                         }

@@ -31,12 +31,17 @@ class Profile extends Eloquent {
         return $this->belongsTo('App\User');
     }
     
+    public function notification()
+    {
+        return $this->hasMany('App\Notification', 'user_id', 'user_id');
+    }
+    
     public function group()
     {
         return $this->hasOne('App\Group', 'id', 'group_id');
     }
     
-    public function role()
+    public function roles()
     {
         return $this->hasMany('App\UserRole', 'user_id', 'user_id');
     }

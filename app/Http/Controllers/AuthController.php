@@ -79,7 +79,7 @@ class AuthController extends Controller
             return response()->json(['status' => 'fail', 'message' => 'There is something wrong with your account. Please contact system administrator.'], 422);
         
         $mamager = false;
-        $roles = $user->Profile->Role;
+        $roles = $user->Profile->Roles;
         foreach ($roles as $role) {
             if ($role->role_id == 3) {
                 $mamager = true;
@@ -94,7 +94,7 @@ class AuthController extends Controller
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {
-            return response()->json(['authenticated' => false],422);
+            return response()->json(['authenticated' => false], 422);
         }
         
         $user = JWTAuth::parseToken()->authenticate();
@@ -159,7 +159,7 @@ class AuthController extends Controller
         $role = new \App\UserRole;
         $role->user_id = $user->id;
         $role->role_id = 4;
-        $profile->role()->save($role);
+        $profile->roles()->save($role);
         
         return response()->json(['status' => 'success', 'message' => 'You have registered successfully. We will send you Group ID!'], 200);
     }
@@ -266,7 +266,7 @@ class AuthController extends Controller
         $role = new \App\UserRole;
         $role->user_id = $user->id;
         $role->role_id = 4;
-        $profile->role()->save($role);
+        $profile->roles()->save($role);
         
         return response()->json(['status' => 'success', 'message' => 'You have signed up successfully.']);
     }
@@ -371,7 +371,7 @@ class AuthController extends Controller
                     $user->save();
                     $user->notify(new Activation($user));
                 }
-                $user->Profile->role()->save($role);
+                $user->Profile->roles()->save($role);
             }
         } else if ($role_save == -1) {
             $sucess = 'fail';

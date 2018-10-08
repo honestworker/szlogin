@@ -14,13 +14,13 @@
             <nav class="sidebar-nav">
                 <ul id="sidebarnav" class="collapsible">
                     <li>
-                        <router-link to="/home" exact><i class="fa fa-home"></i> <span class="hide-menu">Home</span></router-link>
+                        <router-link to="/dashboard" exact><i class="fa fa-dashboard"></i> <span class="hide-menu">Dashboard</span></router-link>
                     </li>
                     <li>
-                        <router-link to="/users" exact><i class="fa fa-user-secret"></i> <span class="hide-menu">Administrators</span></router-link>
+                        <router-link to="/setting" exact><i class="fa fa-cog"></i> <span class="hide-menu">Settings</span></router-link>
                     </li>
                     <li>
-                        <router-link to="/group" exact><i class="fa fa-bank"></i> <span class="hide-menu">Groups</span></router-link>
+                        <router-link to="/group" exact><i class="fa fa-group"></i> <span class="hide-menu">Groups</span></router-link>
                     </li>
                     <li>
                         <router-link to="/user/new" exact><i class="fa fa-user-plus"></i> <span class="hide-menu">New Users</span></router-link>
@@ -28,14 +28,14 @@
                     <li>
                         <router-link to="/user" exact><i class="fa fa-user"></i> <span class="hide-menu">All Users</span></router-link>
                     </li>
-                    <li>
+                    <!-- <li>
                         <router-link to="/notification" exact><i class="fa fa-bell"></i> <span class="hide-menu">Notifications</span></router-link>
-                    </li>
+                    </li> -->
                     <!-- <li>
                         <router-link to="/noti_type" exact><i class="fa fa-gavel"></i> <span class="hide-menu">Notification Type</span></router-link>
                     </li> -->
                     <li>
-                        <router-link to="/banner" exact><i class="fa fa-tags"></i> <span class="hide-menu">Banners</span></router-link>
+                        <router-link to="/advertisement" exact><i class="fa fa-paw"></i> <span class="hide-menu">Advertisements</span></router-link>
                     </li>
                     <li>
                         <router-link to="/country" exact><i class="fa fa-globe"></i> <span class="hide-menu">Country</span></router-link>
@@ -77,7 +77,11 @@
         },
         computed: {
             getAvatar(){
-                return '/images/users/'+this.getAuthUser('avatar');
+                if (this.getAuthUser('avatar')) {
+                    return '/images/users/' + this.getAuthUser('avatar');
+                } else {
+                    return '/images/common/no-user.png';
+                }
             }
         }
     }

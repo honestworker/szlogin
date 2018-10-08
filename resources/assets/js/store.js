@@ -23,7 +23,7 @@ const store = new Vuex.Store({
                 state.auth[key] = auth[key];
             }
             if ('avatar' in auth)
-            	state.auth.avatar = auth.avatar !== null ? auth.avatar : 'avatar.png';
+            	state.auth.avatar = auth.avatar !== null ? auth.avatar : '';
 		},
 		resetAuthUserDetail (state) {
         	for (let key of Object.keys(state.auth)) {

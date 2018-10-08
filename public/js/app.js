@@ -19062,7 +19062,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources/assets/js/views/pages/home.vue"
+Component.options.__file = "resources/assets/js/views/dashboard/home.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -19071,9 +19071,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-92734586", Component.options)
+    hotAPI.createRecord("data-v-75893226", Component.options)
   } else {
-    hotAPI.reload("data-v-92734586", Component.options)
+    hotAPI.reload("data-v-75893226", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -20629,7 +20629,7 @@ var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
 				}
 			}
 
-			if ('avatar' in auth) state.auth.avatar = auth.avatar !== null ? auth.avatar : 'avatar.png';
+			if ('avatar' in auth) state.auth.avatar = auth.avatar !== null ? auth.avatar : '';
 		},
 		resetAuthUserDetail: function resetAuthUserDetail(state) {
 			var _iteratorNormalCompletion2 = true;
@@ -21977,10 +21977,10 @@ var routes = [{
         path: '/',
         component: __webpack_require__(17)
     }, {
-        path: '/home',
+        path: '/dashboard',
         component: __webpack_require__(17)
     }, {
-        path: '/configuration',
+        path: '/setting',
         component: __webpack_require__(73)
     }, {
         path: '/group',
@@ -22358,7 +22358,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     computed: {
         getAvatar: function getAvatar() {
-            return '/images/users/' + this.getAuthUser('avatar');
+            if (this.getAuthUser('avatar')) {
+                return '/images/users/' + this.getAuthUser('avatar');
+            } else {
+                return '/images/common/no-user.png';
+            }
         }
     }
 });
@@ -22460,9 +22464,9 @@ var render = function() {
                   _c(
                     "li",
                     [
-                      _c("router-link", { attrs: { to: "/configuration" } }, [
+                      _c("router-link", { attrs: { to: "/setting" } }, [
                         _c("i", { staticClass: "fa fa-cogs" }),
-                        _vm._v(" Configuration")
+                        _vm._v(" Settings")
                       ])
                     ],
                     1
@@ -22515,7 +22519,7 @@ var staticRenderFns = [
           _vm._v(" "),
           _c("img", {
             staticClass: "light-logo",
-            attrs: { src: "/images/logo-light-icon.png", alt: "home" }
+            attrs: { src: "/images/logo-light-icon.png", alt: "dashboard" }
           })
         ]),
         _vm._v(" "),
@@ -22527,7 +22531,7 @@ var staticRenderFns = [
           _vm._v(" "),
           _c("img", {
             staticClass: "light-logo",
-            attrs: { src: "/images/logo-light-text.png", alt: "home" }
+            attrs: { src: "/images/logo-light-text.png", alt: "dashboard" }
           })
         ])
       ])
@@ -22708,7 +22712,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     computed: {
         getAvatar: function getAvatar() {
-            return '/images/users/' + this.getAuthUser('avatar');
+            if (this.getAuthUser('avatar')) {
+                return '/images/users/' + this.getAuthUser('avatar');
+            } else {
+                return '/images/common/no-user.png';
+            }
         }
     }
 });
@@ -22798,10 +22806,10 @@ var render = function() {
           _c(
             "li",
             [
-              _c("router-link", { attrs: { to: "/home", exact: "" } }, [
-                _c("i", { staticClass: "fa fa-home" }),
+              _c("router-link", { attrs: { to: "/dashboard", exact: "" } }, [
+                _c("i", { staticClass: "fa fa-dashboard" }),
                 _vm._v(" "),
-                _c("span", { staticClass: "hide-menu" }, [_vm._v("Home")])
+                _c("span", { staticClass: "hide-menu" }, [_vm._v("Dashboard")])
               ])
             ],
             1
@@ -22810,12 +22818,10 @@ var render = function() {
           _c(
             "li",
             [
-              _c("router-link", { attrs: { to: "/users", exact: "" } }, [
-                _c("i", { staticClass: "fa fa-user-secret" }),
+              _c("router-link", { attrs: { to: "/setting", exact: "" } }, [
+                _c("i", { staticClass: "fa fa-cog" }),
                 _vm._v(" "),
-                _c("span", { staticClass: "hide-menu" }, [
-                  _vm._v("Administrators")
-                ])
+                _c("span", { staticClass: "hide-menu" }, [_vm._v("Settings")])
               ])
             ],
             1
@@ -22825,7 +22831,7 @@ var render = function() {
             "li",
             [
               _c("router-link", { attrs: { to: "/group", exact: "" } }, [
-                _c("i", { staticClass: "fa fa-bank" }),
+                _c("i", { staticClass: "fa fa-group" }),
                 _vm._v(" "),
                 _c("span", { staticClass: "hide-menu" }, [_vm._v("Groups")])
               ])
@@ -22860,25 +22866,17 @@ var render = function() {
           _c(
             "li",
             [
-              _c("router-link", { attrs: { to: "/notification", exact: "" } }, [
-                _c("i", { staticClass: "fa fa-bell" }),
-                _vm._v(" "),
-                _c("span", { staticClass: "hide-menu" }, [
-                  _vm._v("Notifications")
-                ])
-              ])
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "li",
-            [
-              _c("router-link", { attrs: { to: "/banner", exact: "" } }, [
-                _c("i", { staticClass: "fa fa-tags" }),
-                _vm._v(" "),
-                _c("span", { staticClass: "hide-menu" }, [_vm._v("Banners")])
-              ])
+              _c(
+                "router-link",
+                { attrs: { to: "/advertisement", exact: "" } },
+                [
+                  _c("i", { staticClass: "fa fa-paw" }),
+                  _vm._v(" "),
+                  _c("span", { staticClass: "hide-menu" }, [
+                    _vm._v("Advertisements")
+                  ])
+                ]
+              )
             ],
             1
           ),
@@ -23216,13 +23214,13 @@ var content = __webpack_require__(67);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(69)("5233c9ca", content, false, {});
+var update = __webpack_require__(69)("0155ba48", content, false, {});
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
  if(!content.locals) {
-   module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-92734586\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./home.vue", function() {
-     var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-92734586\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./home.vue");
+   module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-75893226\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./home.vue", function() {
+     var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-75893226\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./home.vue");
      if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
      update(newContent);
    });
@@ -24149,7 +24147,7 @@ var staticRenderFns = [
     return _c("div", { staticClass: "row page-titles" }, [
       _c("div", { staticClass: "col-md-6 col-8 align-self-center" }, [
         _c("h3", { staticClass: "text-themecolor m-b-0 m-t-0" }, [
-          _vm._v("Home")
+          _vm._v("Dashboard")
         ])
       ])
     ])
@@ -24191,7 +24189,7 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-92734586", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-75893226", module.exports)
   }
 }
 
@@ -24221,7 +24219,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources/assets/js/views/configuration/configuration.vue"
+Component.options.__file = "resources/assets/js/views/setting/index.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -24230,9 +24228,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-cd86d48c", Component.options)
+    hotAPI.createRecord("data-v-48170030", Component.options)
   } else {
-    hotAPI.reload("data-v-cd86d48c", Component.options)
+    hotAPI.reload("data-v-48170030", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -24289,7 +24287,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
-            configForm: new Form({
+            settingForm: new Form({
                 company_name: '',
                 contact_person: ''
             }, false)
@@ -24298,18 +24296,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     mounted: function mounted() {
         var _this = this;
 
-        axios.get('/api/configuration/fetch').then(function (response) {
-            _this.configForm = __WEBPACK_IMPORTED_MODULE_0__services_helper__["a" /* default */].formAssign(_this.configForm, response.data.config);
+        axios.get('/api/setting/fetch').then(function (response) {
+            _this.settingForm = __WEBPACK_IMPORTED_MODULE_0__services_helper__["a" /* default */].formAssign(_this.settingForm, response.data.config);
         }).catch();
     },
 
     components: {},
     methods: {
-        saveConfiguration: function saveConfiguration() {
+        saveSetting: function saveSetting() {
             var _this2 = this;
 
-            this.configForm.post('/api/configuration').then(function (response) {
-                _this2.$store.dispatch('setConfig', _this2.configForm);
+            this.settingForm.post('/api/setting').then(function (response) {
+                _this2.$store.dispatch('setConfig', _this2.settingForm);
                 toastr['success'](response.message);
             }).catch(function (response) {
                 toastr['error'](response.message);
@@ -24330,19 +24328,23 @@ var render = function() {
     _c("div", { staticClass: "row page-titles" }, [
       _c("div", { staticClass: "col-md-6 col-8 align-self-center" }, [
         _c("h3", { staticClass: "text-themecolor m-b-0 m-t-0" }, [
-          _vm._v("Configuration")
+          _vm._v("Setting")
         ]),
         _vm._v(" "),
         _c("ol", { staticClass: "breadcrumb" }, [
           _c(
             "li",
             { staticClass: "breadcrumb-item" },
-            [_c("router-link", { attrs: { to: "/home" } }, [_vm._v("Home")])],
+            [
+              _c("router-link", { attrs: { to: "/dashboard" } }, [
+                _vm._v("Dashboard")
+              ])
+            ],
             1
           ),
           _vm._v(" "),
           _c("li", { staticClass: "breadcrumb-item active" }, [
-            _vm._v("Configuration")
+            _vm._v("Setting")
           ])
         ])
       ])
@@ -24371,20 +24373,20 @@ var render = function() {
                       {
                         name: "model",
                         rawName: "v-model",
-                        value: _vm.configForm.company_name,
-                        expression: "configForm.company_name"
+                        value: _vm.settingForm.company_name,
+                        expression: "settingForm.company_name"
                       }
                     ],
                     staticClass: "form-control",
                     attrs: { type: "text", value: "" },
-                    domProps: { value: _vm.configForm.company_name },
+                    domProps: { value: _vm.settingForm.company_name },
                     on: {
                       input: function($event) {
                         if ($event.target.composing) {
                           return
                         }
                         _vm.$set(
-                          _vm.configForm,
+                          _vm.settingForm,
                           "company_name",
                           $event.target.value
                         )
@@ -24403,20 +24405,20 @@ var render = function() {
                       {
                         name: "model",
                         rawName: "v-model",
-                        value: _vm.configForm.contact_person,
-                        expression: "configForm.contact_person"
+                        value: _vm.settingForm.contact_person,
+                        expression: "settingForm.contact_person"
                       }
                     ],
                     staticClass: "form-control",
                     attrs: { type: "text", value: "" },
-                    domProps: { value: _vm.configForm.contact_person },
+                    domProps: { value: _vm.settingForm.contact_person },
                     on: {
                       input: function($event) {
                         if ($event.target.composing) {
                           return
                         }
                         _vm.$set(
-                          _vm.configForm,
+                          _vm.settingForm,
                           "contact_person",
                           $event.target.value
                         )
@@ -24447,7 +24449,7 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-cd86d48c", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-48170030", module.exports)
   }
 }
 
@@ -24811,7 +24813,11 @@ var render = function() {
           _c(
             "li",
             { staticClass: "breadcrumb-item" },
-            [_c("router-link", { attrs: { to: "/home" } }, [_vm._v("Home")])],
+            [
+              _c("router-link", { attrs: { to: "/dashboard" } }, [
+                _vm._v("Dashboard")
+              ])
+            ],
             1
           ),
           _vm._v(" "),
@@ -25889,7 +25895,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     computed: {
         defaultAvatar: function defaultAvatar() {
-            return this.getAuthUser('avatar') !== 'avatar.png' ? true : false;
+            return this.getAuthUser('avatar') !== '' ? true : false;
         }
     }
 });
@@ -25913,7 +25919,11 @@ var render = function() {
           _c(
             "li",
             { staticClass: "breadcrumb-item" },
-            [_c("router-link", { attrs: { to: "/home" } }, [_vm._v("Home")])],
+            [
+              _c("router-link", { attrs: { to: "/dashboard" } }, [
+                _vm._v("Dashboard")
+              ])
+            ],
             1
           ),
           _vm._v(" "),
@@ -27050,14 +27060,18 @@ var render = function() {
           _c(
             "li",
             { staticClass: "breadcrumb-item" },
-            [_c("router-link", { attrs: { to: "/home" } }, [_vm._v("Home")])],
+            [
+              _c("router-link", { attrs: { to: "/dashboard" } }, [
+                _vm._v("Dashboard")
+              ])
+            ],
             1
           ),
           _vm._v(" "),
           _c(
             "li",
             { staticClass: "breadcrumb-item" },
-            [_c("router-link", { attrs: { to: "/task" } }, [_vm._v("Group")])],
+            [_c("router-link", { attrs: { to: "/group" } }, [_vm._v("Group")])],
             1
           ),
           _vm._v(" "),
@@ -27154,6 +27168,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_helper__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_click_confirm__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_click_confirm___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_click_confirm__);
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+//
+//
+//
 //
 //
 //
@@ -27429,29 +27448,27 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
     components: { pagination: __WEBPACK_IMPORTED_MODULE_0_laravel_vue_pagination___default.a, ClickConfirm: __WEBPACK_IMPORTED_MODULE_2_click_confirm___default.a },
     data: function data() {
-        return {
+        var _ref;
+
+        return _ref = {
             users: {},
             groups: {},
-            roles: {},
-            filterUserForm: {
-                sortBy: 'group_id',
-                order: 'desc',
-                group_id: '',
-                org_num: '',
-                contact_person: '',
-                phone_number: '',
-                email: '',
-                //user_role : '',
-                pageLength: 5
-            },
-            deletingUser: 1,
-            groupManagerPermission: 1,
-            administratorPermission: 1,
-            user_id: 0
-        };
+            user_roles: {}
+        }, _defineProperty(_ref, 'user_roles', {}), _defineProperty(_ref, 'filterUserForm', {
+            sortBy: 'group_id',
+            order: 'desc',
+            group_id: '',
+            org_num: '',
+            contact_person: '',
+            phone_number: '',
+            email: '',
+            user_role: 0,
+            pageLength: 5
+        }), _defineProperty(_ref, 'deletingUser', 1), _defineProperty(_ref, 'groupManagerPermission', 1), _defineProperty(_ref, 'administratorPermission', 1), _defineProperty(_ref, 'user_id', 0), _ref;
     },
     mounted: function mounted() {
         this.getUsers();
+        this.getUserRoles();
     },
 
     methods: {
@@ -27466,6 +27483,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 return _this.users = response.data;
             });
         },
+        getUserRoles: function getUserRoles() {
+            var _this2 = this;
+
+            axios.post('/api/user-roles').then(function (response) {
+                _this2.user_roles = response.data;
+            });
+        },
         getUserGroupID: function getUserGroupID(user) {
             var group_id = '';
             if (typeof user.profile.group !== 'undefined') {
@@ -27477,10 +27501,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         getUserRole: function getUserRole(user) {
             var user_role = '';
-            if (typeof user.profile.role !== 'undefined') {
-                if (user.profile.role) {
-                    for (var role_no = 0; role_no < user.profile.role.length; role_no++) {
-                        if (user.profile.role[role_no].role_id == 1) user_role = user_role + '<span class="label label-danger">Super</span>';else if (user.profile.role[role_no].role_id == 2) user_role = user_role + '<span class="label label-info">Admin</span>';else if (user.profile.role[role_no].role_id == 3) user_role = user_role + '<span class="label label-primary">Group</span>';else if (user.profile.role[role_no].role_id == 4) user_role = user_role + '<span class="label label-success">User</span>';
+            if (typeof user.profile.roles !== 'undefined') {
+                if (user.profile.roles) {
+                    for (var role_no = 0; role_no < user.profile.roles.length; role_no++) {
+                        if (user.profile.roles[role_no].role_id == 1) user_role = user_role + '<span class="label label-danger">Super</span>';else if (user.profile.roles[role_no].role_id == 2) user_role = user_role + '<span class="label label-info">Admin</span>';else if (user.profile.roles[role_no].role_id == 3) user_role = user_role + '<span class="label label-primary">Group</span>';else if (user.profile.roles[role_no].role_id == 4) user_role = user_role + '<span class="label label-success">User</span>';
                     }
                 }
             }
@@ -27497,12 +27521,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             $('#modal-delete-user').modal('show');
         },
         deleteUser: function deleteUser() {
-            var _this2 = this;
+            var _this3 = this;
 
             axios.delete('/api/user/' + this.user_id).then(function (response) {
                 toastr['success'](response.data.message);
                 $('#modal-delete-user').modal('hide');
-                _this2.getUsers();
+                _this3.getUsers();
             }).catch(function (error) {
                 if (error.response.data.message) {
                     toastr['error'](error.response.data.message);
@@ -27514,11 +27538,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         isGroupManager: function isGroupManager(user) {
             if (user.status == 'activated') {
                 if (user.profile.group_id) {
-                    if (user.profile.role) {
-                        for (var role_no = 0; role_no < user.profile.role.length; role_no++) {
-                            if (user.profile.role[role_no].role_id == 3) {
+                    if (user.profile.roles) {
+                        for (var role_no = 0; role_no < user.profile.roles.length; role_no++) {
+                            if (user.profile.roles[role_no].role_id == 3) {
                                 return 1;
-                            } else if (user.profile.role[role_no].role_id == 4) {
+                            } else if (user.profile.roles[role_no].role_id == 4) {
                                 return 0;
                             }
                         }
@@ -27532,12 +27556,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             $('#modal-group-manager').modal('show');
         },
         makeGroupManager: function makeGroupManager() {
-            var _this3 = this;
+            var _this4 = this;
 
             axios.post('/api/user/role?group=1&id=' + this.user_id).then(function (response) {
                 toastr['success'](response.data.message);
                 $('#modal-group-manager').modal('hide');
-                _this3.getUsers();
+                _this4.getUsers();
             }).catch(function (error) {
                 toastr['error'](error.response.data.message);
             });
@@ -27547,12 +27571,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             $('#modal-disable-group-manager').modal('show');
         },
         disableGroupManager: function disableGroupManager() {
-            var _this4 = this;
+            var _this5 = this;
 
             axios.post('/api/user/role?group=0&id=' + this.user_id).then(function (response) {
                 toastr['success'](response.data.message);
                 $('#modal-disable-group-manager').modal('hide');
-                _this4.getUsers();
+                _this5.getUsers();
             }).catch(function (error) {
                 if (error.response.data.message) {
                     toastr['error'](error.response.data.message);
@@ -27563,9 +27587,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         isAdministrator: function isAdministrator(user) {
             if (user.status == 'activated') {
-                if (user.profile.role) {
-                    for (var role_no = 0; role_no < user.profile.role.length; role_no++) {
-                        if (user.profile.role[role_no].role_id <= 2) {
+                if (user.profile.roles) {
+                    for (var role_no = 0; role_no < user.profile.roles.length; role_no++) {
+                        if (user.profile.roles[role_no].role_id <= 2) {
                             return 1;
                         }
                     }
@@ -27580,12 +27604,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             $('#modal-administrator').modal('show');
         },
         makeAdministrator: function makeAdministrator() {
-            var _this5 = this;
+            var _this6 = this;
 
             axios.post('/api/user/role?admin=1&id=' + this.user_id).then(function (response) {
                 toastr['success'](response.data.message);
                 $('#modal-administrator').modal('hide');
-                _this5.getUsers();
+                _this6.getUsers();
             }).catch(function (error) {
                 if (error.response.data.message) {
                     toastr['error'](error.response.data.message);
@@ -27599,12 +27623,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             $('#modal-disable-administrator').modal('show');
         },
         disableAdministrator: function disableAdministrator() {
-            var _this6 = this;
+            var _this7 = this;
 
             axios.post('/api/user/role?admin=0&id=' + this.user_id).then(function (response) {
                 toastr['success'](response.data.message);
                 $('modal-disable-administrator').modal('hide');
-                _this6.getUsers();
+                _this7.getUsers();
             }).catch(function (error) {
                 if (error.response.data.message) {
                     toastr['error'](error.response.data.message);
@@ -27636,7 +27660,11 @@ var render = function() {
           _c(
             "li",
             { staticClass: "breadcrumb-item" },
-            [_c("router-link", { attrs: { to: "/home" } }, [_vm._v("Home")])],
+            [
+              _c("router-link", { attrs: { to: "/dashboard" } }, [
+                _vm._v("Dashboard")
+              ])
+            ],
             1
           ),
           _vm._v(" "),
@@ -27786,31 +27814,53 @@ var render = function() {
                 _c("div", { staticClass: "form-group" }, [
                   _c("label", { attrs: { for: "" } }, [_vm._v("User Role")]),
                   _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.filterUserForm.user_role,
-                        expression: "filterUserForm.user_role"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    domProps: { value: _vm.filterUserForm.user_role },
-                    on: {
-                      blur: _vm.getUsers,
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.filterUserForm.user_role,
+                          expression: "filterUserForm.user_role"
                         }
-                        _vm.$set(
-                          _vm.filterUserForm,
-                          "user_role",
-                          $event.target.value
-                        )
+                      ],
+                      staticClass: "form-control",
+                      attrs: { name: "groups" },
+                      on: {
+                        blur: _vm.getUsers,
+                        change: function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.$set(
+                            _vm.filterUserForm,
+                            "user_role",
+                            $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          )
+                        }
                       }
-                    }
-                  })
+                    },
+                    [
+                      _c("option", { attrs: { value: "0" } }, [_vm._v("All")]),
+                      _vm._v(" "),
+                      _vm._l(_vm.user_roles.data, function(user_role) {
+                        return _c(
+                          "option",
+                          { domProps: { value: user_role.id } },
+                          [_vm._v(_vm._s(user_role.name))]
+                        )
+                      })
+                    ],
+                    2
+                  )
                 ])
               ]),
               _vm._v(" "),
@@ -27860,7 +27910,7 @@ var render = function() {
                       ]),
                       _vm._v(" "),
                       _c("option", { attrs: { value: "group_id" } }, [
-                        _vm._v("Group Name")
+                        _vm._v("Group ID")
                       ]),
                       _vm._v(" "),
                       _c("option", { attrs: { value: "phone_number" } }, [
@@ -28906,7 +28956,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     computed: {
         getAvatar: function getAvatar() {
-            return '/images/users/' + this.userForm.avatar;
+            if (this.userForm.avatar) {
+                return '/images/users/' + this.userForm.avatar;
+            } else {
+                return '/images/common/no-user.png';
+            }
         }
     }
 });
@@ -29216,14 +29270,18 @@ var render = function() {
           _c(
             "li",
             { staticClass: "breadcrumb-item" },
-            [_c("router-link", { attrs: { to: "/home" } }, [_vm._v("Home")])],
+            [
+              _c("router-link", { attrs: { to: "/dashboard" } }, [
+                _vm._v("Dashboard")
+              ])
+            ],
             1
           ),
           _vm._v(" "),
           _c(
             "li",
             { staticClass: "breadcrumb-item" },
-            [_c("router-link", { attrs: { to: "/task" } }, [_vm._v("User")])],
+            [_c("router-link", { attrs: { to: "/user" } }, [_vm._v("User")])],
             1
           ),
           _vm._v(" "),
@@ -29595,7 +29653,11 @@ var render = function() {
           _c(
             "li",
             { staticClass: "breadcrumb-item" },
-            [_c("router-link", { attrs: { to: "/home" } }, [_vm._v("Home")])],
+            [
+              _c("router-link", { attrs: { to: "/dashboard" } }, [
+                _vm._v("Dashboard")
+              ])
+            ],
             1
           ),
           _vm._v(" "),
@@ -30757,7 +30819,11 @@ var render = function() {
           _c(
             "li",
             { staticClass: "breadcrumb-item" },
-            [_c("router-link", { attrs: { to: "/home" } }, [_vm._v("Home")])],
+            [
+              _c("router-link", { attrs: { to: "/dashboard" } }, [
+                _vm._v("Dashboard")
+              ])
+            ],
             1
           ),
           _vm._v(" "),
@@ -31878,7 +31944,11 @@ var render = function() {
           _c(
             "li",
             { staticClass: "breadcrumb-item" },
-            [_c("router-link", { attrs: { to: "/home" } }, [_vm._v("Home")])],
+            [
+              _c("router-link", { attrs: { to: "/dashboard" } }, [
+                _vm._v("Dashboard")
+              ])
+            ],
             1
           ),
           _vm._v(" "),
@@ -32796,7 +32866,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             if (url) {
                 return 'http://szlogin.com/images/advertisements/' + url;
             } else {
-                return 'http://szlogin.com/images/advertisements/no-image.png';
+                return 'http://szlogin.com/images/common/no-image.png';
             }
         }
     }
@@ -32821,7 +32891,11 @@ var render = function() {
           _c(
             "li",
             { staticClass: "breadcrumb-item" },
-            [_c("router-link", { attrs: { to: "/home" } }, [_vm._v("Home")])],
+            [
+              _c("router-link", { attrs: { to: "/dashboard" } }, [
+                _vm._v("Dashboard")
+              ])
+            ],
             1
           ),
           _vm._v(" "),
@@ -33069,7 +33143,7 @@ var render = function() {
                           [
                             _c(
                               "option",
-                              { attrs: { value: "0", selected: "" } },
+                              { attrs: { value: "0", selected: "true" } },
                               [_vm._v("=")]
                             ),
                             _vm._v(" "),
@@ -33444,7 +33518,7 @@ var render = function() {
                                 staticClass: "btn btn-info btn-sm",
                                 attrs: {
                                   "data-toggle": "tooltip",
-                                  title: "Edit Group"
+                                  title: "Edit Advertisement"
                                 },
                                 on: {
                                   click: function($event) {
@@ -33498,7 +33572,7 @@ var render = function() {
                                 staticClass: "btn btn-danger btn-sm",
                                 attrs: {
                                   "data-toggle": "tooltip",
-                                  title: "Delete group"
+                                  title: "Delete Advertisement"
                                 },
                                 on: {
                                   click: function($event) {
@@ -33991,7 +34065,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 if (response.data.image) {
                     _this2.previewImage = 'http://szlogin.com/images/advertisements/' + response.data.image;
                 } else {
-                    _this2.previewImage = 'http://szlogin.com/images/advertisements/no-image.png';
+                    _this2.previewImage = 'http://szlogin.com/images/common/no-image.png';
                 }
                 _this2.advertisementForm.link = response.data.link;
                 _this2.advertisementForm.start_date = response.data.start_date != "" ? response.data.start_date : 0;
@@ -34407,7 +34481,11 @@ var render = function() {
           _c(
             "li",
             { staticClass: "breadcrumb-item" },
-            [_c("router-link", { attrs: { to: "/home" } }, [_vm._v("Home")])],
+            [
+              _c("router-link", { attrs: { to: "/dashboard" } }, [
+                _vm._v("Dashboard")
+              ])
+            ],
             1
           ),
           _vm._v(" "),
@@ -34415,7 +34493,7 @@ var render = function() {
             "li",
             { staticClass: "breadcrumb-item" },
             [
-              _c("router-link", { attrs: { to: "/task" } }, [
+              _c("router-link", { attrs: { to: "/advertisement" } }, [
                 _vm._v("Advertisement")
               ])
             ],
@@ -34653,15 +34731,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
@@ -34689,7 +34758,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 localStorage.setItem('auth_token', response.data.token);
                 axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('auth_token');
                 toastr['success'](response.data.message);
-                _this.$router.push('/home');
+                _this.$router.push('/dashboard');
             }).catch(function (error) {
                 toastr['error'](error.response.data.message);
             });
@@ -34787,8 +34856,8 @@ var render = function() {
                   }
                 },
                 [
-                  _c("h3", { staticClass: "box-title m-b-20" }, [
-                    _vm._v("Sign In")
+                  _c("h3", { staticClass: "box-title text-center m-b-20" }, [
+                    _vm._v("Log In")
                   ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "form-group " }, [
@@ -34861,8 +34930,6 @@ var render = function() {
                   _vm._v(" "),
                   _vm._m(0),
                   _vm._v(" "),
-                  _vm._m(1),
-                  _vm._v(" "),
                   _c("div", { staticClass: "form-group m-b-0" }, [
                     _c("div", { staticClass: "col-sm-12 text-center" }, [
                       _c(
@@ -34884,7 +34951,7 @@ var render = function() {
                       _c(
                         "p",
                         [
-                          _vm._v("Don't have an administrator account? "),
+                          _vm._v("Don't have an account? "),
                           _c(
                             "router-link",
                             {
@@ -34927,74 +34994,6 @@ var staticRenderFns = [
           [_vm._v("Log In")]
         )
       ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "row" }, [
-      _c(
-        "div",
-        { staticClass: "col-xs-12 col-sm-12 col-md-12 m-t-10 text-center" },
-        [
-          _c("div", { staticClass: "social" }, [
-            _c(
-              "a",
-              {
-                staticClass: "btn  btn-github",
-                attrs: {
-                  href: "/auth/social/github",
-                  "data-toggle": "tooltip",
-                  title: "Login with Github"
-                }
-              },
-              [
-                _c("i", {
-                  staticClass: "fa fa-github",
-                  attrs: { "aria-hidden": "true" }
-                })
-              ]
-            ),
-            _vm._v(" "),
-            _c(
-              "a",
-              {
-                staticClass: "btn  btn-twitter",
-                attrs: {
-                  href: "/auth/social/twitter",
-                  "data-toggle": "tooltip",
-                  title: "Login with Twitter"
-                }
-              },
-              [
-                _c("i", {
-                  staticClass: "fa fa-twitter",
-                  attrs: { "aria-hidden": "true" }
-                })
-              ]
-            ),
-            _vm._v(" "),
-            _c(
-              "a",
-              {
-                staticClass: "btn  btn-facebook",
-                attrs: {
-                  href: "/auth/social/facebook",
-                  "data-toggle": "tooltip",
-                  title: "Login with Facebook"
-                }
-              },
-              [
-                _c("i", {
-                  staticClass: "fa fa-facebook",
-                  attrs: { "aria-hidden": "true" }
-                })
-              ]
-            )
-          ])
-        ]
-      )
     ])
   }
 ]
@@ -35621,9 +35620,7 @@ var render = function() {
                   _vm._v(" "),
                   _c("div", { staticClass: "form-group m-b-0" }, [
                     _c("div", { staticClass: "col-sm-12 text-center" }, [
-                      _c("p", [
-                        _vm._v("Already have an administrator account?")
-                      ]),
+                      _c("p", [_vm._v("Already have an account?")]),
                       _vm._v(" "),
                       _c(
                         "p",
@@ -35634,7 +35631,7 @@ var render = function() {
                               staticClass: "text-info m-l-5",
                               attrs: { to: "/login" }
                             },
-                            [_c("b", [_vm._v("Sign In")])]
+                            [_c("b", [_vm._v("Log In")])]
                           )
                         ],
                         1
@@ -35644,7 +35641,7 @@ var render = function() {
                   _vm._v(" "),
                   _c("div", { staticClass: "form-group m-b-0" }, [
                     _c("div", { staticClass: "col-sm-12 text-center" }, [
-                      _c("p", [_vm._v("Don't have an administrator account?")]),
+                      _c("p", [_vm._v("Don't have an account?")]),
                       _vm._v(" "),
                       _c(
                         "p",
@@ -36835,9 +36832,7 @@ var render = function() {
                   _vm._v(" "),
                   _c("div", { staticClass: "form-group m-b-0" }, [
                     _c("div", { staticClass: "col-sm-12 text-center" }, [
-                      _c("p", [
-                        _vm._v("Already have an administrator account?")
-                      ]),
+                      _c("p", [_vm._v("Already have an account?")]),
                       _vm._v(" "),
                       _c(
                         "p",
@@ -36848,7 +36843,7 @@ var render = function() {
                               staticClass: "text-info m-l-5",
                               attrs: { to: "/login" }
                             },
-                            [_c("b", [_vm._v("Sign In")])]
+                            [_c("b", [_vm._v("Log In")])]
                           )
                         ],
                         1
@@ -37786,7 +37781,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             localStorage.setItem('auth_token', response.data.token);
             axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('auth_token');
             toastr['success'](response.data.message);
-            _this.$router.push('/home');
+            _this.$router.push('/dashboard');
         }).catch(function (error) {
             _this.$router.push('/login');
         });
@@ -38053,9 +38048,9 @@ var render = function() {
               {
                 staticClass:
                   "btn btn-info btn-rounded waves-effect waves-light m-b-40",
-                attrs: { to: "/home" }
+                attrs: { to: "/dashboard" }
               },
-              [_vm._v("Back to home")]
+              [_vm._v("Back to dashborad")]
             )
           ],
           1

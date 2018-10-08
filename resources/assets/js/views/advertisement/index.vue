@@ -4,7 +4,7 @@
             <div class="col-md-12 col-12 align-self-center">
                 <h3 class="text-themecolor m-b-0 m-t-0">Advertisement</h3>
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><router-link to="/home">Home</router-link></li>
+                    <li class="breadcrumb-item"><router-link to="/dashboard">Dashboard</router-link></li>
                     <li class="breadcrumb-item active">Advertisement</li>
                 </ol>
             </div>
@@ -58,7 +58,7 @@
                                             <label for="">Link Count</label>
                                             <div class="row">
                                                 <select name="status" class="form-control col-md-4" v-model="filterAdForm.link_count_oper" @change="getAds">
-                                                    <option value="0" selected>=</option>
+                                                    <option value="0" selected="true">=</option>
                                                     <option value="1">!=</option>
                                                     <option value="2">></option>
                                                     <option value="3">>=</option>
@@ -232,6 +232,9 @@
                 },
                 ad_id : 0,
                 deletingAd : 1,
+                show_count_options: {
+                    0: {"name" : "<" },
+                }
             }
         },
 
@@ -293,7 +296,7 @@
                 if (url) {
                     return 'http://szlogin.com/images/advertisements/' + url;
                 } else {
-                    return 'http://szlogin.com/images/advertisements/no-image.png';
+                    return 'http://szlogin.com/images/common/no-image.png';
                 }
                 
             }

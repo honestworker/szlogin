@@ -13,9 +13,7 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::group(['prefix' => 'auth'], function () {
-    Route::post('/advertisement','AdvertisementController@store');
-    
+Route::group(['prefix' => 'auth'], function () {    
     Route::post('/login','AuthController@authenticate');
     Route::post('/login_backend','AuthController@login');
     Route::post('/logout','AuthController@logout');
@@ -29,7 +27,7 @@ Route::group(['prefix' => 'auth'], function () {
     Route::post('/reset-password','AuthController@resetPassword');
     Route::post('/social/token','SocialAuthController@getToken');
     
-    //app only
+    // app only
     Route::post('/country/all','CountryController@all');
 });
 
@@ -39,7 +37,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::post('/user/assign','AuthController@assignGroup');
     Route::post('/user/role','AuthController@changeRole');
 
-    // Group
+    ///// Group
     Route::get('/group','GroupController@index');
     Route::post('/group','GroupController@store');
     Route::post('/group/all','GroupController@all');
@@ -48,7 +46,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::patch('/group/{id}','GroupController@update');
     Route::post('/group/status','GroupController@toggleStatus');
 
-    // Country
+    ///// Country
     Route::post('/country','CountryController@store');
     Route::get('/country','CountryController@index');
     Route::delete('/country/{id}','CountryController@destroy');
@@ -57,32 +55,42 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::post('/country/status','CountryController@toggleStatus');
     Route::post('/country/all','CountryController@all');
 
-    // User
+    ///// User
     Route::get('/user','UserController@index');
     Route::post('/user/{id}','UserController@getUser');
     Route::post('/user/change-password','AuthController@changePassword');
     Route::post('/user/update-profile','UserController@updateProfile');
     Route::post('/user/update-avatar','UserController@updateAvatar');
     Route::post('/user/remove-avatar','UserController@removeAvatar');
-    Route::delete('/user/{id}','UserController@destroy');
+    Route::delete('/user/{id}','UserController@deleteAccount');
     Route::get('/user/dashboard','UserController@dashboard');
+    Route::post('/user-roles','UserController@allRole');
+
+    // User app only
+    Route::post('/get-group-users','UserController@getGroupUsers');
     
-    //app only
+    // User app only
     Route::post('/profile', 'UserController@profile');
     Route::post('/change-password','UserController@changePassword');
     Route::post('/change-avatar','UserController@updateAvatar');
-    Route::post('/delete-account','UserController@deleteAccount');
+    Route::delete('/delete-account','UserController@destroy');
+    Route::delete('/user','UserController@deleteAccount');
     
     Route::post('/logout','AuthController@logout');
 
-    // Notification
+    ///// Notification
     Route::get('/notification','NotificationController@index');
     
     // Notification app only
     Route::post('/get-notification','NotificationController@getNotification');
     Route::post('/create-notification','NotificationController@createNotification');
+    Route::post('/get-notification-detail','NotificationController@getNotificationDetail');
+    Route::patch('/update-notification','NotificationController@updateNotification');
 
-    // Notification Type
+    // Comment app only
+    Route::post('/get-comment','NotificationController@getComment');
+
+    ///// Notification Type
     Route::post('/noti_type','NotificationController@storeType');
     Route::get('/noti_type','NotificationController@indexType');
     Route::delete('/noti_type/{id}','NotificationController@destroyType');
@@ -91,7 +99,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::post('/noti_type/status','NotificationController@toggleTypeStatus');
     Route::post('/noti_type/all','NotificationController@allType');
     
-    // Advertisement
+    ///// Advertisement
     Route::get('/advertisement','AdvertisementController@index'); // Get All
     Route::post('/advertisement','AdvertisementController@store'); // Create
     Route::delete('/advertisement/{id}','AdvertisementController@destroy');

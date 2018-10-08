@@ -10,14 +10,15 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 class NotificationController extends Controller
 {
     protected $images_path = 'images/notifications/';
+    protected $stamp_image_path = 'images/common/stamp.png';
     
     protected $image_extensions = array('jpeg', 'png', 'jpg', 'gif', 'svg');
     
 	public function index() {
 		$notifications = \App\Notification::with('user', 'group');
 		
-		if(request()->has('title'))
-			$notifications->where('title', 'like', '%'.request('title').'%');
+		if(request()->has('type'))
+			$notifications->where('type', '=', request('type'));
 			
         if(request()->has('contents'))
             $notifications->where('contents', 'like', '%'.request('contents').'%');
@@ -48,7 +49,50 @@ class NotificationController extends Controller
         
 		return $notifications->paginate(request('pageLength'));
 	}
-	
+    
+    private function stampImage($filename_x, $filename_y, $filename_result, $mergeType = 0) {
+        /// Get dimensions for specified images
+        list($width_x, $height_x, $image_x_type) = getimagesize($filename_x);
+        list($width_y, $height_y, $image_y_type) = getimagesize($filename_y);
+
+        //$image_x_type = image_type_to_extension($filename_x);
+        if ($image_x_type == 2) {
+            $image_x = imagecreatefromjpeg($filename_x);
+        } else if ($image_x_type == 3) {
+            $image_x = imagecreatefrompng($filename_x); 
+        } else if ($image_x_type == 1) {
+            $image_x = imagecreatefromgif($filename_x);
+        }
+
+        //$image_y_type = image_type_to_extension($filename_y);
+        if ($image_y_type == 2) {
+            $image_y = imagecreatefromjpeg($filename_y);
+        } else if ($image_y_type == 3) {
+            $image_y = imagecreatefrompng($filename_y); 
+        } else if ($image_y_type == 1) {
+            $image_y = imagecreatefromgif($filename_y);
+        }
+
+        $image = imagecreatetruecolor($width_x, $height_x);
+
+        imagecopy($image, $image_x, 0, 0, 0, 0, $width_x, $height_x);
+        imagecopy($image, $image_y, 50, 50, 0, 0, $width_y, $height_y);
+
+        $lowerFileName = strtolower($filename_result); 
+        if (substr_count($lowerFileName, '.jpg') > 0 || substr_count($lowerFileName, '.jpeg') > 0) {
+            imagejpeg($image, $filename_result);
+        } else if (substr_count($lowerFileName, '.png') > 0) {
+            imagepng($image, $filename_result);
+        } else if( substr_count($lowerFileName, '.gif') > 0) {
+            imagegif($image, $filename_result); 
+        }
+
+        // Clean up
+        imagedestroy($image);
+        imagedestroy($image_x);
+        imagedestroy($image_y);
+    }
+
 	// Notification
     public function createNotification(Request $request){
         $user = JWTAuth::parseToken()->authenticate();
@@ -84,25 +128,31 @@ class NotificationController extends Controller
         
         $file_count = 0;
         if($request->hasfile('images')) {
-            foreach($request->file('images') as $image)
-            {
-                $file_count = $file_count + 1;
-                $extension = $image->getClientOriginalExtension();
-                $mt = explode(' ', microtime());
-                $name = ((int)$mt[1]) * 1000000 + ((int)round($mt[0] * 1000000));
-                $file_name = $name . '.' . $extension;
-                
-                $file = $image->move($this->images_path, $file_name);
-                // $img = \Image::make($this->images_path . $file_name);
-                // $img->resize(200, null, function ($constraint) {
-                //     $constraint->aspectRatio();
-                // });
-                // $img->save($this->images_path . $file_name);
-                
-                $notificaion_image = new \App\Image;
-                $notificaion_image->parent_id = $notification->id;
-                $notificaion_image->url = $file_name;
-                $notificaion_image->save();
+            if (is_array($request->file('images'))) {
+                if (count($request->file('images'))) {
+                    foreach($request->file('images') as $image)
+                    {
+                        $file_count = $file_count + 1;
+                        $extension = $image->getClientOriginalExtension();
+                        $mt = explode(' ', microtime());
+                        $name = ((int)$mt[1]) * 1000000 + ((int)round($mt[0] * 1000000));
+                        $file_name = $name . '.' . $extension;
+                        $file_tmp_name = $name . 'tmp.' . $extension;
+                        
+                        $file = $image->move($this->images_path, $file_tmp_name);
+                        $this.stampImage($this->images_path . $file_tmp_name, $this->stamp_images_path, $this->images_path . $file_name);
+
+                        list($width, $height) = getimagesize($this->images_path . $file_name);
+                        
+                        $notificaion_image = new \App\Image;
+                        $notificaion_image->type = 'notification';
+                        $notificaion_image->width = $width;
+                        $notificaion_image->height = $height;
+                        $notificaion_image->parent_id = $notification->id;
+                        $notificaion_image->url = $file_name;
+                        $notificaion_image->save();
+                    }
+                }
             }
         }
         
@@ -118,13 +168,7 @@ class NotificationController extends Controller
             return response()->json(['status' => 'fail', 'message' => 'You must be any group memeber!'], 422);
         
         
-        $notification = \App\Notification::with('user.profile', 'comment');
-        // $notification->with(['user.profile' => function ($q) {
-        //     $q->select('first_name');
-        // }]);
-        $notification->with(['user' => function ($q) {
-            $q->select('id', 'email');
-        }]);
+        $notification = \App\Notification::with('user.profile');
         $notification->whereStatus(1);
         $notification->where('group_id', '=', $group->id);
         $notification->orderBy('updated_at', 'DESC');
@@ -132,8 +176,48 @@ class NotificationController extends Controller
         return response()->json(['status' => 'success', 'message' => 'Get Notification Data Successfully!', 'notifications' => $notification->get()], 200);
     }
 
+    public function getNotificationDetail(Request $request) {
+        $user = JWTAuth::parseToken()->authenticate();
+        $profile = $user->Profile;
+
+        $validation = Validator::make($request->all(), [
+            'notification_id' => 'required',
+        ]);
+        if($validation->fails())
+            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first()], 422);
+        
+        $group = \App\Group::find($profile->group_id);
+        if(!$group)
+            return response()->json(['status' => 'fail', 'message' => 'You must be any group memeber!'], 422);
+        
+        $notification = \App\Notification::with('user.profile', 'images', 'comments.images');
+        $notification->where('id', '=', request('notification_id'));
+        
+        return response()->json(['status' => 'success', 'message' => 'Get Notification Detail Data Successfully!', 'notification' => $notification->get()], 200);
+    }
+
+    public function updateNotification(Request $request) {
+        $user = JWTAuth::parseToken()->authenticate();
+        $profile = $user->Profile;
+
+        $validation = Validator::make($request->all(), [
+            'notification_id' => 'required',
+            'contents' => 'required',
+        ]);
+        if($validation->fails())
+            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first()], 422);
+                
+        $notification = \App\Notification::find(request('notification_id'));
+        if(!$notification)
+            return response()->json(['status' => 'fail', 'message' => 'Could not find the notification.'], 422);
+        $notification->contents = request('contents');
+        $notification->save();
+        
+        return response()->json(['status' => 'success', 'message' => 'Update Notification Data Successfully!'], 200);
+    }
+
     public function toggleStatus(Request $request){
-        $notificaioin = \App\Notification::find($request->input('id'));
+        $notificaioin = \App\Notification::find(request('id'));
         
         if(!$notificaioin)
             return response()->json(['status' => 'fail', 'message' => 'Couldnot find notificaioin!'], 422);
@@ -150,11 +234,9 @@ class NotificationController extends Controller
         $profile = $user->Profile;
         
         $validation = Validator::make($request->all(), [
-            'notificaion_id' => 'required',
-            'title' => 'required|min:1',
+            'notification_id' => 'required',
             'contents' => 'required',
-        ]);
-        
+        ]);        
         if($validation->fails())
             return response()->json(['status' => 'fail', 'message' => $validation->messages()->first()], 422);
             
@@ -162,11 +244,11 @@ class NotificationController extends Controller
         if(!$group)
             return response()->json(['status' => 'fail', 'message' => 'You must be any group memeber!'], 422);
         
-        if($request->input('notificaion_id') == 0) {
+        if(request('notification_id') == 0) {
             return response()->json(['status' => 'fail', 'message' => 'You must specify the notificaion!'], 422);
         }
         
-        $notification = \App\Notification::find($request->input('notificaion_id'));
+        $notification = \App\Notification::find(request('notification_id'));
         if(!$notification)
             return response()->json(['status' => 'fail', 'message' => 'You specify the empty notification!'], 422);
             
@@ -182,7 +264,8 @@ class NotificationController extends Controller
         }
         
         $comment = new \App\Comment;
-        $comment->fill(request()->all());
+        $comment->notification_id = $notification->id;
+        $comment->contents = request('contents');
         $comment->user_id = $user->id;
         $comment->status = 1;
         $comment->save();
@@ -195,8 +278,12 @@ class NotificationController extends Controller
                 $name = ((int)$mt[1]) * 1000000 + ((int)round($mt[0] * 1000000));
                 $file_name = $name . '.' . $extension;
                 $image->move($this->images_path, $file_name);
+                list($width, $height) = getimagesize($this->images_path . $file_name);
                 
                 $comment_image = new \App\Image;
+                $comment_image->type = 'comment';
+                $comment_image->width = $width;
+                $comment_image->height = $height;
                 $comment_image->parent_id = $comment->id;
                 $comment_image->url = $file_name;
                 $comment_image->save();
@@ -207,7 +294,7 @@ class NotificationController extends Controller
     }
 
     public function toggleCommentStatus(Request $request){
-        $comment = \App\Comment::find($request->input('id'));
+        $comment = \App\Comment::find(request('id'));
         
         if(!$comment)
             return response()->json(['status' => 'fail', 'message' => 'Couldnot find comment!'], 422);
@@ -304,7 +391,7 @@ class NotificationController extends Controller
     }
 
     public function toggleTypeStatus(Request $request){
-        $notification_type = \App\NotificationType::find($request->input('id'));
+        $notification_type = \App\NotificationType::find(request('id'));
         
         if(!$notification_type)
             return response()->json(['status' => 'fail', 'message' => 'Couldnot find notification type!'], 422);

@@ -12,15 +12,25 @@ class Comment extends Eloquent {
                             'status',
                         ];
     protected $primaryKey = 'id';
-    protected $table = 'notifications';
+    protected $table = 'comments';
     
-    public function notificaion()
+    public function user()
     {
-        return $this->belongsTo('App\Notification', 'notification_id', 'id');
+        return $this->belongsTo('App\User', 'user_id', 'id')->select('id', 'email');
     }
     
-    public function image()
+    public function profile()
     {
-        return $this->hasMany('App\Image');
+        return $this->belongsTo('App\Profile', 'user_id', 'user_id');
+    }
+    
+    public function notification()
+    {
+        return $this->belongsTo('App\Notification', 'id', 'notification_id');
+    }
+    
+    public function images()
+    {
+        return $this->hasMany('App\Image', 'parent_id', 'id')->where('type', '=', 'comment');
     }
 }

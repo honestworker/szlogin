@@ -131,7 +131,7 @@
                     if (response.data.image) {
                         this.previewImage = 'http://szlogin.com/images/advertisements/' + response.data.image;
                     } else {
-                        this.previewImage = 'http://szlogin.com/images/advertisements/no-image.png';
+                        this.previewImage = 'http://szlogin.com/images/common/no-image.png';
                     }
                     this.advertisementForm.link = response.data.link;
                     this.advertisementForm.start_date = (response.data.start_date != "") ? response.data.start_date : 0;

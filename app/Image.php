@@ -5,6 +5,7 @@ use Eloquent;
 class Image extends Eloquent {
     
     protected $fillable = [
+                            'type',
                             'parent_id',
                             'url',
                         ];

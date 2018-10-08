@@ -5,11 +5,11 @@
                 <a class="navbar-brand" href="/">
                     <b>
                         <img src="/images/logo-icon.png" alt="home" class="dark-logo" />
-                        <img src="/images/logo-light-icon.png" alt="home" class="light-logo" />
+                        <img src="/images/logo-light-icon.png" alt="dashboard" class="light-logo" />
                     </b>
                     <span>
                      <img src="/images/logo-text.png" alt="home" class="dark-logo" />
-                     <img src="/images/logo-light-text.png" class="light-logo" alt="home" /></span> </a>
+                     <img src="/images/logo-light-text.png" class="light-logo" alt="dashboard" /></span> </a>
             </div>
             <div class="navbar-collapse">
                 <ul class="navbar-nav mr-auto mt-md-0 ">
@@ -32,7 +32,7 @@
                                 <li role="separator" class="divider"></li>
                                 <li><router-link to="/profile"><i class="fa fa-user"></i> My Profile</router-link></li>
                                 <li role="separator" class="divider"></li>
-                                <li><router-link to="/configuration"><i class="fa fa-cogs"></i> Configuration</router-link></li>
+                                <li><router-link to="/setting"><i class="fa fa-cogs"></i> Settings</router-link></li>
                                 <li role="separator" class="divider"></li>
                                 <li><a href="#" @click.prevent="logout"><i class="fa fa-power-off"></i> Logout</a></li>
                             </ul>
@@ -67,7 +67,11 @@
         },
         computed: {
             getAvatar(){
-                return '/images/users/'+this.getAuthUser('avatar');
+                if (this.getAuthUser('avatar')) {
+                    return '/images/users/' + this.getAuthUser('avatar');
+                } else {
+                    return '/images/common/no-user.png';
+                }
             }
         }
     }

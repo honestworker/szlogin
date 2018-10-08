@@ -144,7 +144,12 @@
         },
         computed: {
             getAvatar(){
-                return '/images/users/'+ this.userForm.avatar;
+                if (this.userForm.avatar) {
+                    return '/images/users/'+ this.userForm.avatar;
+                } else {
+                    return '/images/common/no-user.png';
+                }
+                
             }
         }
     }

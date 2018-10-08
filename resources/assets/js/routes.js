@@ -9,15 +9,15 @@ let routes = [
         children: [
             {
                 path: '/',
-                component: require('./views/pages/home')
+                component: require('./views/dashboard/home')
             },
             {
-                path: '/home',
-                component: require('./views/pages/home')
+                path: '/dashboard',
+                component: require('./views/dashboard/home')
             },
             {
-                path: '/configuration',
-                component: require('./views/configuration/configuration')
+                path: '/setting',
+                component: require('./views/setting/index')
             },
             {
                 path: '/group',

@@ -32,8 +32,13 @@ class User extends Authenticatable
         return $this->hasOne('App\Profile', 'user_id', 'id');
     }
     
+    public function profile_short()
+    {
+        return $this->hasOne('App\Profile', 'user_id', 'id');
+    }
+    
     public function notification()
     {
-        return $this->hasMany('App\Notification', 'id', 'user_id');
+        return $this->hasMany('App\Notification', 'user_id', 'id');
     }
 }

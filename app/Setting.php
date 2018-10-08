@@ -2,13 +2,13 @@
 namespace App;
 use Eloquent;
 
-class Configuration extends Eloquent {
+class Setting extends Eloquent {
 
 	protected $fillable = [
 							'name',
 							'value',
 						];
 	protected $primaryKey = 'id';
-	protected $table = 'config';
+	protected $table = 'options';
 	public $timestamps = false;
 }
