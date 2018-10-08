@@ -7,7 +7,6 @@ class Notification extends Eloquent {
     protected $fillable = [
                             'user_id',
                             'group_id',
-                            'title',
                             'contents',
                             'type',
                             'status',
@@ -17,16 +16,21 @@ class Notification extends Eloquent {
     
     public function user()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo('App\User', 'user_id', 'id');
     }
     
     public function image()
     {
-        return $this->hasMany('App\Image');
+        return $this->hasMany('App\Image', 'parent_id', 'id');
+    }
+    
+    public function comment()
+    {
+        return $this->hasMany('App\Comment', 'id', 'notification_id');
     }
     
     public function group()
     {
-        return $this->belongsTo('App\Group');
+        return $this->belongsTo('App\Group', 'id', 'group_id');
     }
 }

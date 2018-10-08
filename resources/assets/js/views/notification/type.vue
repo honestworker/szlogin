@@ -24,7 +24,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Filter Notification Type</h4>
-                        <div class="row m-t-20">
+                        <div class="row m-t-40">
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Name</label>

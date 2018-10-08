@@ -32,7 +32,7 @@
         components : { TaskForm },
         data() {
             return {
-                id: this.$route.params.id
+                id:this.$route.params.id
             }
         }
     }

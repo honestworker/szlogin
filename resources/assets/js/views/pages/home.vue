@@ -12,7 +12,7 @@
                     <div class="card-body">
                         <h4 class="card-title">Recent Incomplete Task</h4>
                         <h6 class="card-subtitle" v-if="!recent_incomplete_tasks.length">No result found!</h6>
-                        <div class="table-responsive m-t-20">
+                        <div class="table-responsive m-t-40">
                             <table class="table stylish-table" v-if="recent_incomplete_tasks.length">
                                 <thead>
                                     <tr>
@@ -140,9 +140,9 @@
         },
         methods: {
             getTodos(){
-                // axios.get('/api/todo?show_todo_status='+this.show_todo_status).then(response =>  {
-                //     this.todos = response.data;
-                // });
+                axios.get('/api/todo?show_todo_status='+this.show_todo_status).then(response =>  {
+                    this.todos = response.data;
+                });
             },
             storeTodo(){
                 this.todoForm.post('/api/todo').then(response => {

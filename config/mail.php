@@ -29,7 +29,7 @@ return [
     |
     */
 
-    'host' => env('MAIL_HOST', ''),
+    'host' => env('MAIL_HOST', 'cpsrv37.misshosting.com'),
 
     /*
     |--------------------------------------------------------------------------
@@ -56,7 +56,7 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', ''),
+        'address' => env('MAIL_FROM_ADDRESS', 'administrator@szlogin.com'),
         'name' => env('MAIL_FROM_NAME', 'Szlogin'),
     ],
 

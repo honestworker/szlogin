@@ -25,7 +25,7 @@
                                     <div class="dw-user-box">
                                         <div class="u-img"><img :src="getAvatar" alt="user"></div>
                                         <div class="u-text">
-                                            <h4>{{getAuthUserContactPserson()}}</h4>
+                                            <h4>{{getAuthUserFullName()}}</h4>
                                             <p class="text-muted">{{getAuthUser('email')}}</p><router-link to="/profile" class="btn btn-rounded btn-danger btn-sm">View Profile</router-link></div>
                                     </div>
                                 </li>
@@ -58,8 +58,8 @@
                     this.$router.replace('/login');
                 })
             },
-            getAuthUserContactPserson(){
-                return this.$store.getters.getAuthUserContactPserson;
+            getAuthUserFullName(){
+                return this.$store.getters.getAuthUserFullName;
             },
             getAuthUser(name){
                 return this.$store.getters.getAuthUser(name);

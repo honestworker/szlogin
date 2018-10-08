@@ -27,11 +27,12 @@ Main sidebar
 /*******************
 use profile section
 ******************/
+
 .user-profile {
     text-align: center;
     position: relative;
     .profile-img {
-        width: 100px;
+        width: 50px;
         margin: 0 auto;
         border-radius: 100%;
         &::before {
@@ -105,6 +106,7 @@ use profile section
         margin: 0 auto;
     }
 }
+
 
 /*******************
 sidebar footer

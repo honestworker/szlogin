@@ -2057,11 +2057,6 @@ pre code {
   opacity: 1;
 }
 
-.form-control:-ms-input-placeholder {
-  color: #868e96;
-  opacity: 1;
-}
-
 .form-control::-ms-input-placeholder {
   color: #868e96;
   opacity: 1;
@@ -11412,7 +11407,7 @@ Custom-select
 ******************/
 
 .custom-select {
-  background: url(/images/custom-select.png?7b31b5b2c0191a0224a87cc0ca9438dd) right 0.75rem center no-repeat;
+  background: url(/images/custom-select.png?33d0b67c047e466b46c464b8eefc2d31) right 0.75rem center no-repeat;
 }
 
 /*******************
@@ -11695,7 +11690,7 @@ File: scss
 }
 
 .topbar .profile-pic {
-  width: 50px;
+  width: 30px;
   border-radius: 100%;
 }
 
@@ -15196,13 +15191,13 @@ Stylish tooltip
   margin: -7px 0 0 -15px;
   width: 30px;
   height: 20px;
-  background: url(/fonts/tooltip1.svg?0fe468c244a79221d05c33fe420907a1) no-repeat center center;
+  background: url(/images/tooltip1.svg?0fe468c244a79221d05c33fe420907a1) no-repeat center center;
   background-size: 100%;
 }
 
 .tooltip-content3 {
   position: absolute;
-  background: url(/fonts/shape1.svg?ae011d37cceae760ab311d8b9fa924bf) no-repeat center bottom;
+  background: url(/images/shape1.svg?ae011d37cceae760ab311d8b9fa924bf) no-repeat center bottom;
   background-size: 100% 100%;
   z-index: 9999;
   width: 200px;
@@ -15470,7 +15465,7 @@ Error Page
 .error-box {
   height: 100%;
   position: fixed;
-  background: url(/images/error-bg.jpg?7fda6985a44c7b92e8cfb5e865717d78) no-repeat center center #fff;
+  background: url(/images/error-bg.jpg?49225702da79d063db36a84e4471e6f9) no-repeat center center #fff;
   width: 100%;
 }
 
@@ -15980,16 +15975,6 @@ Contact app Page
   z-index: 10 !important;
 }
 
-/*******************
-view user profile section
-******************/
-
-.view-user-profile .profile-img {
-  width: 200px;
-  margin: 0 auto;
-  border-radius: 100%;
-}
-
 /*
 Template Name: Monster Admin
 Author: Themedesigner
@@ -16060,7 +16045,7 @@ use profile section
 }
 
 .user-profile .profile-img {
-  width: 100px;
+  width: 50px;
   margin: 0 auto;
   border-radius: 100%;
 }

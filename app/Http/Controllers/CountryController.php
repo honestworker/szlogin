@@ -26,7 +26,7 @@ class CountryController extends Controller
 		$country = \App\Country::whereNotNull('id');
 		
         $country->whereStatus(1);
-        $country->orderBy('idx', 'ASC');
+        $country->orderBy('name', 'ASC');
         $countries = $country->pluck('name');
         
 		return response()->json(['status' => 'success', 'message' => 'Get Country Data Successfully!', 'countries' => $countries], 200);

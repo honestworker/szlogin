@@ -16,7 +16,7 @@ class Comment extends Eloquent {
     
     public function notificaion()
     {
-        return $this->belongsTo('App\Notification');
+        return $this->belongsTo('App\Notification', 'notification_id', 'id');
     }
     
     public function image()

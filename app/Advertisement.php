@@ -9,7 +9,7 @@ class Advertisement extends Eloquent {
 							'link',
 							'country',
 							'show_count',
-							'link_count',
+							'click_count',
 							'status',
 						];
 	protected $primaryKey = 'id';

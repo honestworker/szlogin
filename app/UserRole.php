@@ -9,4 +9,9 @@ class UserRole extends Eloquent {
 						];
 	protected $primaryKey = 'id';
 	protected $table = 'user_roles';
+	
+    public function profile()
+    {
+        return $this->belongsToMany('App\UserRole', 'user_id', 'user_id');
+    }
 }

@@ -56,7 +56,6 @@ class NotificationController extends Controller
         
         $validation = Validator::make($request->all(), [
             'type' => 'required',
-            'title' => 'required|min:1',
             'contents' => 'required|min:1',
         ]);
         
@@ -83,7 +82,6 @@ class NotificationController extends Controller
         $notification->status = 1;
         $notification->save();
         
-        $file_names = "";
         $file_count = 0;
         if($request->hasfile('images')) {
             foreach($request->file('images') as $image)

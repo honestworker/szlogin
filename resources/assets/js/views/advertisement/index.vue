@@ -148,10 +148,10 @@
                                         <td v-text="numberToString(ad.link_count)"></td>
                                         <td v-html="getAdStatus(ad)"></td>
                                         <td>
-                                            <button class="btn btn-info btn-sm" @click.prevent="viewAd(ad)" data-toggle="tooltip" title="Edit Group"><i class="fa fa-pencil"></i></button>
+                                            <button class="btn btn-info btn-sm" @click.prevent="viewAd(ad)" data-toggle="tooltip" title="Edit Advertisement"><i class="fa fa-pencil"></i></button>
                                             <button v-if="ad.status == 1" class="btn btn-danger btn-sm" @click.prevent="toggleAdStatus(ad)" data-toggle="tooltip" title="Mark as Dective"><i class="fa fa-times"></i></button>
                                             <button v-else class="btn btn-success btn-sm" @click.prevent="toggleAdStatus(ad)" data-toggle="tooltip" title="Mark as Active"><i class="fa fa-check"></i></button>
-                                            <button class="btn btn-danger btn-sm" @click.prevent="modalDeleteAd(ad)" data-toggle="tooltip" title="Delete group"><i class="fa fa-trash"></i></button>
+                                            <button class="btn btn-danger btn-sm" @click.prevent="modalDeleteAd(ad)" data-toggle="tooltip" title="Delete Advertisement"><i class="fa fa-trash"></i></button>
                                         </td>
                                     </tr>
                                 </tbody>

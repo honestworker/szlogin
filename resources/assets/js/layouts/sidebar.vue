@@ -28,14 +28,14 @@
                     <li>
                         <router-link to="/user" exact><i class="fa fa-user"></i> <span class="hide-menu">All Users</span></router-link>
                     </li>
-                    <!-- <li>
+                    <li>
                         <router-link to="/notification" exact><i class="fa fa-bell"></i> <span class="hide-menu">Notifications</span></router-link>
-                    </li> -->
+                    </li>
                     <!-- <li>
                         <router-link to="/noti_type" exact><i class="fa fa-gavel"></i> <span class="hide-menu">Notification Type</span></router-link>
                     </li> -->
                     <li>
-                        <router-link to="/advertisement" exact><i class="fa fa-paw"></i> <span class="hide-menu">Advertisements</span></router-link>
+                        <router-link to="/banner" exact><i class="fa fa-tags"></i> <span class="hide-menu">Banners</span></router-link>
                     </li>
                     <li>
                         <router-link to="/country" exact><i class="fa fa-globe"></i> <span class="hide-menu">Country</span></router-link>
