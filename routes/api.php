@@ -46,6 +46,8 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::patch('/group/{id}','GroupController@update');
     Route::post('/group/status','GroupController@toggleStatus');
 
+    Route::post('/group/overview','GroupController@overview');
+    
     ///// Country
     Route::post('/country','CountryController@store');
     Route::get('/country','CountryController@index');
@@ -63,8 +65,9 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::post('/user/update-avatar','UserController@updateAvatar');
     Route::post('/user/remove-avatar','UserController@removeAvatar');
     Route::delete('/user/{id}','UserController@deleteAccount');
-    Route::get('/user/dashboard','UserController@dashboard');
+    Route::get('/user/overview','UserController@overview');
     Route::post('/user-roles','UserController@allRole');
+    
 
     // User app only
     Route::post('/get-group-users','UserController@getGroupUsers');
@@ -88,7 +91,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::patch('/update-notification','NotificationController@updateNotification');
 
     // Comment app only
-    Route::post('/get-comment','NotificationController@getComment');
+    Route::post('/create-comment','NotificationController@createComment');
 
     ///// Notification Type
     Route::post('/noti_type','NotificationController@storeType');

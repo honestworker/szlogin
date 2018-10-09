@@ -137,10 +137,12 @@ class NotificationController extends Controller
                         $mt = explode(' ', microtime());
                         $name = ((int)$mt[1]) * 1000000 + ((int)round($mt[0] * 1000000));
                         $file_name = $name . '.' . $extension;
-                        $file_tmp_name = $name . 'tmp.' . $extension;
                         
-                        $file = $image->move($this->images_path, $file_tmp_name);
-                        $this.stampImage($this->images_path . $file_tmp_name, $this->stamp_images_path, $this->images_path . $file_name);
+                        $file = $image->move($this->images_path, $file_name);
+                        
+                        //$file_tmp_name = $name . 'tmp.' . $extension;
+                        //$file = $image->move($this->images_path, $file_tmp_name);
+                        //$this.stampImage($this->images_path . $file_tmp_name, $this->stamp_images_path, $this->images_path . $file_name);
 
                         list($width, $height) = getimagesize($this->images_path . $file_name);
                         
@@ -193,7 +195,7 @@ class NotificationController extends Controller
         $notification = \App\Notification::with('user.profile', 'images', 'comments.images', 'comments.user.profile');
         $notification->where('id', '=', request('notification_id'));
         
-        return response()->json(['status' => 'success', 'message' => 'Get Notification Detail Data Successfully!', 'notification' => $notification->get()], 200);
+        return response()->json(['status' => 'success', 'message' => 'Get Notification Detail Data Successfully!', 'notification' => $notification->get(), 'my_avatar' => $profile->avatar], 200);
     }
 
     public function updateNotification(Request $request) {
@@ -289,6 +291,8 @@ class NotificationController extends Controller
                 $comment_image->save();
             }
         }
+        
+        $notification->save();
         
         return response()->json(['status' => 'success', 'message' => 'Comment has created succesfully!'], 200);
     }

@@ -5,107 +5,138 @@
                 <h3 class="text-themecolor m-b-0 m-t-0">Dashboard</h3>
             </div>
         </div>
+        
+        <div class="row">
+            <div class="col-lg-3 col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Total Number of Groups</h4>
+                        <div class="text-right">
+                            <h2 class="font-light m-b-0"><i class="fa fa-group text-success"></i> {{groups_total}}</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Total Number of Users</h4>
+                        <div class="text-right">
+                            <h2 class="font-light m-b-0"><i class="fa fa-user text-success"></i> {{users_total}}</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">App visitors in real time</h4>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Visits</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Last 24 hours</td>
+                                    <td>{{users_visitor_infor[0]}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Last 7 days</td>
+                                    <td>{{users_visitor_infor[1]}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Last 30 days</td>
+                                    <td>{{users_visitor_infor[2]}}</td>
+                                </tr>
+                                <tr>
+                                    <td>This year</td>
+                                    <td>{{users_visitor_infor[3]}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Graph of visitors month by month</h4>
+                        <div class="col-lg-9 col-md-9">
+                            <GChart type="LineChart" :data="visitorChartData" :options="chartOptions" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="row">
             <div class="col-lg-6 col-md-6">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">Recent Incomplete Task</h4>
-                        <h6 class="card-subtitle" v-if="!recent_incomplete_tasks.length">No result found!</h6>
-                        <div class="table-responsive m-t-40">
-                            <table class="table stylish-table" v-if="recent_incomplete_tasks.length">
-                                <thead>
-                                    <tr>
-                                        <th>Title</th>
-                                        <th>Start Date</th>
-                                        <th>Due Date</th>
-                                        <th>Progress</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="task in recent_incomplete_tasks">
-                                        <td v-text="task.title"></td>
-                                        <td>{{ task.start_date | moment }}</td>
-                                        <td>{{ task.due_date | moment }}</td>
-                                        <td>
-                                            <div class="progress" style="height: 10px;">
-                                                <div :class="getProgressColor(task)" role="progressbar" :style="getProgress(task)" aria-valuenow="task.progress" aria-valuemin="0" aria-valuemax="100"></div>
-                                            </div>
-                                            {{ task.progress }} %
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                        <h4 class="card-title">Group Information</h4>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-6 col-md-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <h4 class="card-title">Users</h4>
-                                <div class="text-right">
-                                    <h2 class="font-light m-b-0"><i class="fa fa-users text-success"></i> {{users_count}}</h2>
-                                    <span class="text-muted">Total Users</span>
-                                </div>
+                    <div class="card-body">
+                        <h4 class="card-title text-center">New registered groups {{year}}</h4>
+                        <div class="row">
+                            <div class="col-lg-3 col-md-3">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Quantity</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="(group_infor, index) in groups_infor">
+                                            <td v-text="monthNames[index]"></td>
+                                            <td v-text="group_infor"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <span class="text-danger">Total this year {{groups_total}}</span>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-md-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <h4 class="card-title">Tasks</h4>
-                                <div class="text-right">
-                                    <h2 class="font-light m-b-0"><i class="fa fa-tasks text-info"></i> {{tasks_count}}</h2>
-                                    <span class="text-muted">Total Tasks</span>
-                                </div>
+                            <div class="col-lg-9 col-md-9">
+                                <GChart type="ColumnChart" :data="groupChartData" :options="chartOptions" />
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6">
+            <div class="col-lg-6 col-md-6">
                 <div class="card">
-                    <div class="card-body b-b">
-                        <h4 class="card-title">My Todo</h4>
-                        <form @submit.prevent="storeTodo">
-                            <div class="row">
-                                <div class="col-8">
-                                    <textarea placeholder="Add new todo here..." class="form-control b-0" v-model="todoForm.todo"></textarea>
-                                </div>
-                                <div class="col-4 text-right">
-                                    <button type="submit" class="btn btn-info btn-circle btn-lg"><i class="fa fa-plus"></i> </button>
-                                </div>
-                            </div>
-                        </form>
+                    <div class="card-body">
+                        <h4 class="card-title">User Information</h4>
                     </div>
                     <div class="card-body">
-                        <select class="custom-select float-right" v-model="show_todo_status" @change="filterTodo" v-if="todos.length">
-                            <option selected value=''>All</option>
-                            <option value="1">Completed</option>
-                            <option value="0">Incompleted</option>
-                        </select>
-                        <h4 class="card-title">Todo list</h4>
-                        <div class="clearfix"></div>
-                        <div class="message-box" v-if="todos.length">
-                            <div class="message-widget message-scroll">
-                                <ul class="list-task todo-list list-group m-b-0" data-role="tasklist">
-                                    <li class="list-group-item" data-role="task" v-for="todo in todos">
-                                        <div class="checkbox checkbox-info">
-                                            <input type="checkbox" name="inputCheckboxesBook" @change="toggleTodoStatus(todo)" :checked="todo.status">
-                                            <label for="inputBook" class=""> <span :class="[todo.status ? 'strikethrough' : '']">{{todo.todo}}</span> </label>
-                                            <span class="float-right">
-                                                <click-confirm yes-class="btn btn-success" no-class="btn btn-danger">
-                                                    <button class="btn btn-danger btn-xs" @click.prevent="deleteTodo(todo)" data-toggle="tooltip" title="Delete Todo"><i class="fa fa-trash"></i></button>
-                                                </click-confirm>
-                                            </span>
-                                        </div>
-                                        <div class="item-date float-right" style="margin-right: 20px;">{{todo.created_at | momentWithTime}}</div>
-                                    </li>
-                                </ul>
+                        <h4 class="card-title text-center">New registered users {{year}}</h4>
+                        <div class="row">
+                            <div class="col-lg-3 col-md-3">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Quantity</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="(infor, index) in users_infor">
+                                            <td v-text="monthNames[index]"></td>
+                                            <td v-text="infor"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <span class="text-danger">Total this year {{users_total}}</span>
+                            </div>
+                            <div class="col-lg-9 col-md-9">
+                                <div class="card-body">
+                                    <GChart type="ColumnChart" :data="userChartData" :options="chartOptions" />
+                                </div>
+                                <div class="card-body">
+                                    <GChart type="PieChart" :data="userPieChartData" :options="chartOptions" />
+                                </div>
                             </div>
                         </div>
-                        <h6 class="card-subtitle" v-if="!todos.length">No todo found!</h6>
                     </div>
                 </div>
             </div>
@@ -116,66 +147,90 @@
 <script>
     import helper from '../../services/helper'
     import ClickConfirm from 'click-confirm'
+    import { GChart } from 'vue-google-charts'
+
     export default {
         data(){
             return {
-                users_count: '',
-                tasks_count: '',
-                recent_incomplete_tasks: {},
-                todos: [],
-                todoForm: new Form({
-                    'todo': ''
-                }),
-                show_todo_status: ''
+                monthNames: [
+                    "Jan", "Feb", "Mar", "Apr", "May", "Jun",  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+                ],
+                
+                users_total: 0,
+                users_infor: [],
+                userChartData: [],
+                
+                activated_users: 0,
+                userPieChartData: [],
+                // userPieChartData: [
+                //     ['Task', 'Hours per Day'],
+                //     ['Work',     11],
+                //     ['Eat',      2],
+                //     ['Commute',  2],
+                //     ['Watch TV', 2],
+                //     ['Sleep',    7]
+                // ],
+                userPieChartLabel: [],
+
+                users_visitor_infor: [],
+                users_visitors_infor: [],
+                visitorChartData: [],
+
+                groups_total: 0,
+                groups_infor: [],
+                groupChartData: [],
+                year: '',
+
+                chartOptions: {
+                    chart: {
+                        title: 'Company Performance',
+                        subtitle: 'Sales, Expenses, and Profit: 2014-2017',
+                    }
+                }
             }
         },
-        components : { ClickConfirm },
+        components : { GChart, ClickConfirm },
         mounted() {
-            axios.get('/api/user/dashboard').then(response =>  {
-                this.users_count = response.data.users_count;
-                this.tasks_count = response.data.tasks_count;
-                this.recent_incomplete_tasks = response.data.recent_incomplete_tasks;
-            });
-            this.getTodos();
+            this.getGroupInfor();
+            this.getUserInfor();
         },
         methods: {
-            getTodos(){
-                axios.get('/api/todo?show_todo_status='+this.show_todo_status).then(response =>  {
-                    this.todos = response.data;
+            getGroupInfor(){
+                axios.post('/api/group/overview').then(response =>  {
+                    this.groups_total = response.data.data.total;
+                    this.groups_infor = response.data.data.infor;
+                    this.year = response.data.data.year;
+
+                    this.groupChartData[0] = ["Month", "Quantity"];
+                    for (var index = 1; index <= this.groups_infor.length; index++){
+                        this.groupChartData[index] = [this.monthNames[index - 1], this.groups_infor[index - 1]];
+                    }
                 });
             },
-            storeTodo(){
-                this.todoForm.post('/api/todo').then(response => {
-                    toastr['success'](response.message);
-                    this.todos.unshift(response.data)
-                }).catch(response => {
-                    toastr['error'](response.message);
+            getUserInfor(){
+                axios.get('/api/user/overview').then(response =>  {
+                    this.users_total = response.data.data.total;
+                    this.users_infor = response.data.data.infor;
+                    this.activated_users = response.data.data.activated_users;
+                    this.users_visitor_infor = response.data.data.visitor_infor;
+                    this.users_visitors_infor = response.data.data.visitors_infor;
+
+                    this.userChartData[0] = ["Month", "Quantity"];
+                    for (var index = 1; index <= this.users_infor.length; index++){
+                        this.userChartData[index] = [this.monthNames[index - 1], this.users_infor[index - 1]];
+                    }
+
+                    this.visitorChartData[0] = ["Year", (this.year - 1) + "", this.year];
+                    for (var index = 1; index <= this.groups_infor.length; index++){
+                        this.visitorChartData[index] = [this.monthNames[index - 1], this.users_visitors_infor[0][index - 1], this.users_visitors_infor[1][index - 1]];
+                    }
+
+                    this.userPieChartData = [["Name", "Value"]];
+                    this.userPieChartData.push(["Active last 30 days", this.activated_users]);
+                    this.userPieChartData.push(["Non active last 30 days", this.users_total - this.activated_users]);
+                    
                 });
             },
-            deleteTodo(todo){
-                axios.delete('/api/todo/'+todo.id).then(response => {
-                    toastr['success'](response.data.message);
-                    this.getTodos();
-                }).catch(error => {
-                    toastr['error'](error.response.data.message);
-                });
-            },
-            toggleTodoStatus(todo){
-                axios.post('/api/todo/status',{id:todo.id}).then(response => {
-                    todo.status = !todo.status;
-                }).catch(error => {
-                    toastr['error'](error.response.message);
-                });
-            },
-            filterTodo(){
-                this.getTodos();
-            },
-            getProgress(task){
-                return 'width: '+task.progress+'%;';
-            },
-            getProgressColor(task){
-                return helper.taskColor(task.progress);
-            }
         },
         computed: {
         },

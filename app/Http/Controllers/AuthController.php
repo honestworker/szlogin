@@ -56,6 +56,29 @@ class AuthController extends Controller
         }
     }
 
+    private function calculateVisitor($user) {
+        $now_date = date("Y-m-d");
+        $year = date('Y', strtotime($now_date));
+        $month = date('m', strtotime($now_date));
+        $created_year = date('Y', strtotime($user->activated_at));
+        $created_month = date('m', strtotime($user->activated_at));
+        if ($created_year != $year || $created_month != $month) {
+            $visitor = \App\Visitor::where('year', '=', $year)->where('month', '=', $month)->first();
+            if ($visitor) {
+                $visitor->value = $visitor->value + 1;
+                $visitor->save();
+            } else {
+                $visitor = \App\Visitor::create([
+                    'year' => $year,
+                    'month' => $month,
+                    'value' => 1,
+                ]);
+            }
+        }
+        $user->activated_at = date('Y-m-d H:i:s');
+        $user->save();
+    }
+
     public function authenticate(Request $request)
     {
         $credentials = $request->only('email', 'password');
@@ -68,7 +91,7 @@ class AuthController extends Controller
             return response()->json(['status' => 'fail', 'message' => 'This is something wrong. Please try again!'], 500);
         }
         
-        $user = \App\User::whereEmail(request('email'))->first();        
+        $user = \App\User::whereEmail(request('email'))->first();
         if($user->status == 'pending')
             return response()->json(['status' => 'fail', 'message' => 'Your account hasn\'t been activated. Please check your email & activate account.'], 422);
             
@@ -78,6 +101,8 @@ class AuthController extends Controller
         if($user->status != 'activated')
             return response()->json(['status' => 'fail', 'message' => 'There is something wrong with your account. Please contact system administrator.'], 422);
         
+        $this->calculateVisitor($user);
+
         $mamager = false;
         $roles = $user->Profile->Roles;
         foreach ($roles as $role) {
@@ -128,6 +153,9 @@ class AuthController extends Controller
             return response()->json(['status' => 'fail', 'message' => $e->getMessage()], 500);
         }
         
+        $user->deactivated_at = date('Y-m-d H:i:s');
+        $user->save();
+
         return response()->json(['status' => 'success', 'message' => 'You are successfully logged out!'], 200);
     }
 

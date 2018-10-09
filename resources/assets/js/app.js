@@ -9,6 +9,8 @@ require('./bootstrap');
 import store from './store'
 import router from './routes'
 
+import VueGoogleCharts from 'vue-google-charts'
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -20,3 +22,5 @@ const app = new Vue({
     store,
     router
 });
+
+Vue.use(VueGoogleCharts)

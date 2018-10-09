@@ -424,16 +424,62 @@ class UserController extends Controller
         return response()->json(['status' => 'success', 'message' => 'User deleted!'], 200);
     }
 
-    public function dashboard(){
+    public function overview(){
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {
             return response()->json(['authenticated' => false], 422);
         }
 
-        $users_count = \App\User::count();
-        $tasks_count = \App\Task::count();
-        $recent_incomplete_tasks = \App\Task::whereStatus(0)->orderBy('due_date','desc')->limit(5)->get();
-        return response()->json(compact('users_count','tasks_count','recent_incomplete_tasks'));
+        $total = \App\User::count();
+
+        $infor = array();
+        $now_date = date("Y-m-d");
+        $year = date('Y', strtotime($now_date));
+        $month = date('m', strtotime($now_date));
+        for ($month_index = 1; $month_index <= $month; $month_index++) {
+            $users = \App\User::whereNotNull('id');
+            $infor[] = count($users->whereYear('created_at', '=',  $year)->whereMonth('created_at', '=',   $month_index )->get());
+        }
+        
+        $visitor_infor = array();
+        $day_before = date("Y-m-d H:i:s", strtotime("$now_date  -1 day"));
+        $users = \App\User::whereNotNull('id');
+        $visitor_infor[] = count($users->where('created_at', '>=',  $day_before)->get());
+
+        $week_before = date("Y-m-d H:i:s", strtotime("$now_date  -7 days"));
+        $users = \App\User::whereNotNull('id');
+        $visitor_infor[] = count($users->where('created_at', '>=',  $week_before)->get());
+
+        $month_before = date("Y-m-d H:i:s", strtotime("$now_date  -30 days"));
+        $users = \App\User::whereNotNull('id');
+        $visitor_infor[] = count($users->where('created_at', '>=',  $month_before)->get());
+
+        $users = \App\User::whereNotNull('id');
+        $visitor_infor[] = count($users->whereYear('created_at', '=',  $year)->get());
+
+        $visitors_infor = $visitor_infor1 = $visitor_infor2 = array();
+        for ($month_index = 1; $month_index <= 12; $month_index++) {
+            $visitor = \App\Visitor::where('year', '=', $year - 1)->where('month', '=', $month_index)->first();
+            if ($visitor) {
+                $visitor_infor1[] = $visitor->value;
+            } else {
+                $visitor_infor1[] = 0;
+            }
+        }
+        for ($month_index = 1; $month_index <= 12; $month_index++) {
+            $visitor = \App\Visitor::where('year', '=', $year)->where('month', '=', $month_index)->first();
+            if ($visitor) {
+                $visitor_infor2[] = $visitor->value;
+            } else {
+                $visitor_infor2[] = 0;
+            }
+        }
+        $visitors_infor = [$visitor_infor1, $visitor_infor2];
+
+        $users = \App\User::whereNotNull('id');
+        $activated_users = count($users->where('activated_at', '>=',  $month_before)->get());
+
+        return response()->json(['status' => 'success', 'message' => 'User and Visitor Overview!', 'data' => compact('total','infor','activated_users','visitor_infor','visitors_infor')]);
     }
 }
