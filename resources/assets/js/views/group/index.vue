@@ -250,8 +250,12 @@
                     $('#modal-delete-group').modal('hide');
                     this.getGroups();
                 }).catch(error => {
-                    if (error.response.data.message) {
-                        toastr['error'](error.response.data.message);
+                    if (error.response.data) {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('The token is expired! Please refresh and try again!');
+                        }
                     } else {
                         toastr['error']('The token is expired! Please refresh and try again!');
                     }

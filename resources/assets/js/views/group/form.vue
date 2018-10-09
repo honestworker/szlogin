@@ -114,11 +114,10 @@
                     toastr['success'](response.message);
                     this.$emit('completed', response.group);
                     this.$router.push('/group');
-                })
-                .catch(response => {
-                    if (response.message) {
-                        if (response.message) {
-                            toastr['error'](response.message);
+                }).catch(error => {
+                    if (error.response.data) {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
                         } else {
                             toastr['error']('The token is expired! Please refresh and try again!');
                         }
@@ -137,9 +136,16 @@
                     this.groupForm.email = response.data.email;
                     this.groupForm.mobile_number = response.data.mobile_number;
                     this.groupForm.country = response.data.country;
-                })
-                .catch(response => {
-                    toastr['error'](response.message);
+                }).catch(error => {
+                    if (error.response.data) {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('The token is expired! Please refresh and try again!');
+                        }
+                    } else {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                    }
                 });
             },
             updateGroup() {
@@ -152,10 +158,13 @@
                             toastr['error']('The token is expired! Please refresh and try again!');
                         }
                     }
-                })
-                .catch(response => {
-                    if (response.message) {
-                        toastr['error'](response.message);
+                }).catch(error => {
+                    if (error.response.data) {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('The token is expired! Please refresh and try again!');
+                        }
                     } else {
                         toastr['error']('The token is expired! Please refresh and try again!');
                     }

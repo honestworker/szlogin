@@ -15,13 +15,28 @@ class AdvertisementController extends Controller
 	public function index(){
 		$advertisement = \App\Advertisement::whereNotNull('id');
 		
-		// if(request()->has('idx'))
-		// 	$advertisement->where('idx','like','%'.request('idx').'%');
+		if(request()->has('country'))
+		    $advertisement->where('country', request('country'));
 			
-        // if(request()->has('status'))
-        //     $advertisement->whereStatus(request('status'));
+        if(request()->has('status'))
+            $advertisement->whereStatus(request('status'));
+
+        if(request()->has('show_count_oper') && request()->has('show_count'))
+            $advertisement->where('show_count', request('show_count_oper'), request('show_count'));
+
+        if(request()->has('link_count_oper') && request()->has('link_count'))
+            $advertisement->where('link_count', request('link_count_oper'), request('link_count'));
+
+        if(request()->has('start_date_oper') && request()->has('start_date')) {
+            $advertisement->where('start_date', '!=', '')
+                ->where('start_date', request('start_date_oper'), request('start_date'));
+        }
             
-        // $advertisement->orderBy(request('sortBy'),request('order'));
+        if(request()->has('end_date_oper') && request()->has('end_date')) {
+            $advertisement->where('end_date', '!=', '')
+                ->where('end_date', request('end_date_oper'), request('end_date'));
+        }
+        //$advertisement->orderBy(request('sortBy'),request('order'));
         
 		return $advertisement->paginate(request('pageLength'));
 	}
@@ -58,7 +73,7 @@ class AdvertisementController extends Controller
             }
         }
         
-        if ($request->has('id')) {
+        if ($request->has('id') && $request->input('id')) {
             $advertisement = \App\Advertisement::find($request->input('id'));
             if (!$advertisement)
                 return response()->json(['status' => 'fail', 'message' => 'Could not find the advertisement!'], 422);

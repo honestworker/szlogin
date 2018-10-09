@@ -41,13 +41,13 @@
                                         <div class="form-group">
                                             <label for="">Show Count</label>
                                             <div class="row">
-                                                <select name="status" class="form-control col-md-4" v-model="filterAdForm.show_count_oper" @change="getAds">
-                                                    <option value="0" selected>=</option>
-                                                    <option value="1">!=</option>
-                                                    <option value="2">></option>
-                                                    <option value="3">>=</option>
-                                                    <option value="4"><</option>
-                                                    <option value="5"><=</option>
+                                                <select name="status" class="form-control col-md-4" v-model="filterAdForm.show_count_oper" @change="changeShowCountOper">
+                                                    <option value="=" selected="true">=</option>
+                                                    <option value="!=">!=</option>
+                                                    <option value=">">></option>
+                                                    <option value=">=">>=</option>
+                                                    <option value="<"><</option>
+                                                    <option value="<="><=</option>
                                                 </select>
                                                 <input class="form-control col-md-7" v-model="filterAdForm.show_count" @blur="getAds">
                                             </div>
@@ -55,17 +55,17 @@
                                     </div>
                                     <div class="col-md-6">                            
                                         <div class="form-group">
-                                            <label for="">Link Count</label>
+                                            <label for="">Click Count</label>
                                             <div class="row">
-                                                <select name="status" class="form-control col-md-4" v-model="filterAdForm.link_count_oper" @change="getAds">
-                                                    <option value="0" selected="true">=</option>
-                                                    <option value="1">!=</option>
-                                                    <option value="2">></option>
-                                                    <option value="3">>=</option>
-                                                    <option value="4"><</option>
-                                                    <option value="5"><=</option>
+                                                <select name="status" class="form-control col-md-4" v-model="filterAdForm.click_count_oper" @change="changeClickCountOper">
+                                                    <option value="=" selected="true">=</option>
+                                                    <option value="!=">!=</option>
+                                                    <option value=">">></option>
+                                                    <option value=">=">>=</option>
+                                                    <option value="<"><</option>
+                                                    <option value="<="><=</option>
                                                 </select>
-                                                <input class="form-control col-md-7" v-model="filterAdForm.link_count" @blur="getAds">
+                                                <input class="form-control col-md-7" v-model="filterAdForm.click_count" @blur="getAds">
                                             </div>
                                         </div>
                                     </div>
@@ -77,13 +77,13 @@
                                         <div class="form-group">
                                             <label for="">Start Date</label>
                                             <div class="row">
-                                                <select name="status" class="form-control col-md-4" v-model="filterAdForm.start_date_oper" @change="getAds">
-                                                    <option value="0" selected>=</option>
-                                                    <option value="1">!=</option>
-                                                    <option value="2">></option>
-                                                    <option value="3">>=</option>
-                                                    <option value="4"><</option>
-                                                    <option value="5"><=</option>
+                                                <select name="status" class="form-control col-md-3" v-model="filterAdForm.start_date_oper" @change="changeStartDateOper">
+                                                    <option value="=" selected="true">=</option>
+                                                    <option value="!=">!=</option>
+                                                    <option value=">">></option>
+                                                    <option value=">=">>=</option>
+                                                    <option value="<"><</option>
+                                                    <option value="<="><=</option>
                                                 </select>
                                                 <datepicker class="col-md-7" v-model="filterAdForm.start_date" :bootstrapStyling="true" @blur="getAds"></datepicker>
                                             </div>
@@ -93,13 +93,13 @@
                                         <div class="form-group">
                                             <label for="">End Date</label>
                                             <div class="row">
-                                                <select name="status" class="form-control col-md-4" v-model="filterAdForm.end_date_oper" @change="getAds">
-                                                    <option value="0" selected>=</option>
-                                                    <option value="1">!=</option>
-                                                    <option value="2">></option>
-                                                    <option value="3">>=</option>
-                                                    <option value="4"><</option>
-                                                    <option value="5"><=</option>
+                                                <select name="status" class="form-control col-md-3" v-model="filterAdForm.end_date_oper" @change="changeEndDateOper">
+                                                    <option value="=" selected="true">=</option>
+                                                    <option value="!=">!=</option>
+                                                    <option value=">">></option>
+                                                    <option value=">=">>=</option>
+                                                    <option value="<"><</option>
+                                                    <option value="<="><=</option>
                                                 </select>
                                                 <datepicker class="col-md-7" v-model="filterAdForm.end_date" :bootstrapStyling="true" @blur="getAds"></datepicker>
                                             </div>
@@ -132,7 +132,7 @@
                                         <th>Start Date</th>
                                         <th>End Date</th>
                                         <th>Show Count</th>
-                                        <th>Link Count</th>
+                                        <th>Click Count</th>
                                         <th>Status</th>
                                         <th style="width:180px;">Action</th>
                                     </tr>
@@ -145,7 +145,7 @@
                                         <td v-text="ad.start_date"></td>
                                         <td v-text="ad.end_date"></td>
                                         <td v-text="numberToString(ad.show_count)"></td>
-                                        <td v-text="numberToString(ad.link_count)"></td>
+                                        <td v-text="numberToString(ad.click_count)"></td>
                                         <td v-html="getAdStatus(ad)"></td>
                                         <td>
                                             <button class="btn btn-info btn-sm" @click.prevent="viewAd(ad)" data-toggle="tooltip" title="Edit Advertisement"><i class="fa fa-pencil"></i></button>
@@ -223,7 +223,7 @@
                     country : '',
                     link : '',
                     show_count : '',
-                    link_count : '',
+                    click_count : '',
                     start_date : '',
                     start_date_oper : '',
                     end_date : '',
@@ -231,10 +231,7 @@
                     pageLength: 5
                 },
                 ad_id : 0,
-                deletingAd : 1,
-                show_count_options: {
-                    0: {"name" : "<" },
-                }
+                deletingAd : 1
             }
         },
 
@@ -244,10 +241,23 @@
         },
 
         methods: {
+            processDataTimes() {
+                if (this.filterAdForm.start_date) {
+                    this.filterAdForm.start_date = moment(this.filterAdForm.start_date).format('YYYY-MM-DD');
+                } else {
+                    this.filterAdForm.start_date = '';
+                }
+                if (this.filterAdForm.end_date) {
+                    this.filterAdForm.end_date = moment(this.filterAdForm.end_date).format('YYYY-MM-DD');
+                } else {
+                    this.filterAdForm.end_date = '';
+                }
+            },
             getAds(page) {
                 if (typeof page === 'undefined') {
                     page = 1;
                 }
+                this.processDataTimes();
                 let url = helper.getFilterURL(this.filterAdForm);
                 axios.get('/api/advertisement?page=' + page + url)
                     .then(response => this.ads = response.data);
@@ -266,8 +276,12 @@
                     $('#modal-delete-ad').modal('hide');
                     this.getUsers();
                 }).catch(error => {
-                    if (error.response.data.message) {
-                        toastr['error'](error.response.data.message);
+                    if (error.response.data) {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('The token is expired! Please refresh and try again!');
+                        }
                     } else {
                         toastr['error']('The token is expired! Please refresh and try again!');
                     }
@@ -297,9 +311,32 @@
                     return 'http://szlogin.com/images/advertisements/' + url;
                 } else {
                     return 'http://szlogin.com/images/common/no-image.png';
+                }                
+            },
+            changeShowCountOper(e) {
+                if(e.target.options.selectedIndex > -1) {
+                    this.filterAdForm.show_count_oper = e.target.options[e.target.options.selectedIndex].value;
+                    this.getAds();
                 }
-                
-            }
+            },
+            changeClickCountOper(e) {
+                if(e.target.options.selectedIndex > -1) {
+                    this.filterAdForm.click_count_oper = e.target.options[e.target.options.selectedIndex].value;
+                    this.getAds();
+                }
+            },
+            changeStartDateOper(e) {
+                if(e.target.options.selectedIndex > -1) {
+                    this.filterAdForm.start_date_oper = e.target.options[e.target.options.selectedIndex].value;
+                    this.getAds();
+                }
+            },
+            changeEndDateOper(e) {
+                if(e.target.options.selectedIndex > -1) {
+                    this.filterAdForm.end_date_oper = e.target.options[e.target.options.selectedIndex].value;
+                    this.getAds();
+                }
+            },
         }
     }
 </script>

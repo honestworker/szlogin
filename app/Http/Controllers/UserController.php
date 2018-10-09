@@ -28,7 +28,7 @@ class UserController extends Controller
             }
         }
         
-		$users = \App\User::with('profile', 'profile.group', 'profile.roles');
+		$users = \App\User::with('profile', 'profile.group', 'profile.roles')->whereNotNull('id');
 		
 		// if(request()->has('first_name'))
         //     $users->whereHas('profile',function($q) use ($request){
@@ -78,18 +78,12 @@ class UserController extends Controller
         
         if(request()->has('sortBy') && request()->has('order')) {
             if(request('sortBy') == 'status' || request('sortBy') == 'email')
-                $users->orderBy(request('sortBy'), request('order'));
+                $users->select('id', 'email', 'status')->orderBy(request('sortBy'), request('order'));
             else if(request('sortBy') == 'contact_person' || request('sortBy') == 'phone_number')
-                $users->with(['profile' => function ($q) {
-                    $q->orderBy(request('sortBy'), request('order'));
-                }]);
-            else if(request('sortBy') == 'group_id')
-                $users->with(['profile.group' => function ($q) {
-                    $q->orderBy(request('sortBy'), request('order'));
-                }]);
+                $users->select('id', 'email', 'status', \DB::raw('(select ' . request('sortBy') . ' from profiles where users.id = profiles.user_id) as '. request('sortBy')))->orderBy(request('sortBy'), request('order'));
+            // else if(request('sortBy') == 'group_id')
+            //     $users->select('id', 'email', 'status', \DB::raw('(select group_id from groups where ' .  .' = groups.id) as group_id'))->orderBy('group_id', request('order'));
         }
-        
-        $users->select('id', 'email', 'status');
         
 		return $users->paginate(request('pageLength'));
 	}
@@ -246,7 +240,7 @@ class UserController extends Controller
         ]);
         
         if($validation->fails())
-            return response()->json(['message' => $validation->messages()->first()], 422);
+            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first()], 422);
             
         $user = JWTAuth::parseToken()->authenticate();
         $profile = $user->Profile;
@@ -303,7 +297,7 @@ class UserController extends Controller
 
         $user = JWTAuth::parseToken()->authenticate();
         if(!$user)
-            return response()->json(['message' => 'Couldnot find user!'], 422);
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user!'], 422);
             
         if($user->avatar && \File::exists($this->avatar_path.$user->avatar))
             \File::delete($this->avatar_path.$user->avatar);
@@ -359,7 +353,7 @@ class UserController extends Controller
         
         $profile = $user->Profile;
         if(!$profile->avatar)
-            return response()->json(['message' => 'No avatar uploaded!'], 422);
+            return response()->json(['status' => 'fail', 'message' => 'No avatar uploaded!'], 422);
             
         if(\File::exists($this->avatar_path.$profile->avatar))
             \File::delete($this->avatar_path.$profile->avatar);
@@ -367,19 +361,25 @@ class UserController extends Controller
         $profile->avatar = null;
         $profile->save();
         
-        return response()->json(['message' => 'Avatar removed!'], 200);
+        return response()->json(['status' => 'success', 'message' => 'Avatar removed!'], 200);
     }
 
-    public function deleteAccount(Request $request, $id){
+    public function deleteAccount(Request $request){
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {
             return response()->json(['authenticated' => false], 422);
         }
-           
+          
+        $validation = Validator::make($request->all(),[
+            'id' => 'required',
+        ]);
+        if ($validation->fails())
+            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first()], 422);
+        
         $user = \App\User::find($id);
         if(!$user)
-            return response()->json(['message' => 'Couldnot find user!'],422);
+            return response()->json(['status' => 'fail', 'message' => 'Could not find user!'],422);
             
         if($user->avatar && \File::exists($this->avatar_path.$user->avatar))
             \File::delete($this->avatar_path.$user->avatar);

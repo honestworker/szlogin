@@ -50,10 +50,13 @@
                 .then(response => {
                     toastr['success'](response.message);
                     this.$emit('completed',response.noti_type)
-                })
-                .catch(response => {
-                    if (response.message) {
-                        toastr['error'](response.message);
+                }).catch(error => {
+                    if (error.response.data) {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('The token is expired! Please refresh and try again!');
+                        }
                     } else {
                         toastr['error']('The token is expired! Please refresh and try again!');
                     }
@@ -72,10 +75,13 @@
                         toastr['success'](response.message);
                         this.$emit('completed',response.noti_type)
                     }
-                })
-                .catch(response => {
-                    if (response.message) {
-                        toastr['error'](response.message);
+                }).catch(error => {
+                    if (error.response.data) {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('The token is expired! Please refresh and try again!');
+                        }
                     } else {
                         toastr['error']('The token is expired! Please refresh and try again!');
                     }

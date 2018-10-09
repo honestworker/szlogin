@@ -96,13 +96,19 @@
         },
 
         methods: {
-            proceed() {
+            processDataTimes() {
                 if (this.advertisementForm.start_date) {
                     this.advertisementForm.start_date = moment(this.advertisementForm.start_date).format('YYYY-MM-DD');
+                } else {
+                    this.advertisementForm.start_date = '';
                 }
                 if (this.advertisementForm.end_date) {
                     this.advertisementForm.end_date = moment(this.advertisementForm.end_date).format('YYYY-MM-DD');
+                } else {
+                    this.advertisementForm.end_date = '';
                 }
+            },
+            proceed() {
                 if(this.id != 0) {
                     this.updateAdvertisement();
                 } else {
@@ -156,10 +162,10 @@
                 .then(response => {
                     toastr['success'](response.data.message);
                     this.$router.push('/advertisement');
-                }).catch(response => {
-                    if (response.data.message) {
-                        if (response.data.message) {
-                            toastr['error'](response.data.message);
+                }).catch(error => {
+                    if (error.response.data) {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
                         } else {
                             toastr['error']('The token is expired! Please refresh and try again!');
                         }
@@ -182,10 +188,10 @@
                 .then(response => {
                     toastr['success'](response.data.message);
                     this.$router.push('/advertisement');
-                }).catch(response => {
-                    if (response.data.message) {
-                        if (response.data.message) {
-                            toastr['error'](response.data.message);
+                }).catch(error => {
+                    if (error.response.data) {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
                         } else {
                             toastr['error']('The token is expired! Please refresh and try again!');
                         }
@@ -202,6 +208,7 @@
                 this.$forceUpdate();
             },
             prepareFields() {
+                this.processDataTimes();
                 if (this.uploadImages.length > 0) {
                     for (var i = 0; i < this.uploadImages.length; i++) {
                         let image = this.uploadImages[i];

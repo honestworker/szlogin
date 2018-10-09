@@ -57,10 +57,13 @@
                 .then(response => {
                     toastr['success'](response.message);
                     this.$emit('completed',response.country);
-                })
-                .catch(response => {
-                    if (response.message) {
-                        toastr['error'](response.message);
+                }).catch(error => {
+                    if (error.response.data) {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('The token is expired! Please refresh and try again!');
+                        }
                     } else {
                         toastr['error']('The token is expired! Please refresh and try again!');
                     }
@@ -69,20 +72,15 @@
             updateCountry(){
                 this.countryForm.patch('/api/country/'+this.id)
                 .then(response => {
-                    if(response.type == 'error') {
-                        if (response.message) {
-                            toastr['error'](response.message);
+                    toastr['success'](response.message);
+                    this.$emit('completed',response.country);
+                }).catch(error => {
+                    if (error.response.data) {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
                         } else {
                             toastr['error']('The token is expired! Please refresh and try again!');
                         }
-                    } else {
-                        toastr['success'](response.message);
-                        this.$emit('completed',response.country)
-                    }
-                })
-                .catch(response => {
-                    if (response.message) {
-                        toastr['error'](response.message);
                     } else {
                         toastr['error']('The token is expired! Please refresh and try again!');
                     }

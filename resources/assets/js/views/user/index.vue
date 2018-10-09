@@ -55,7 +55,6 @@
                                     <label for="">Sort By</label>
                                     <select name="sortBy" class="form-control" v-model="filterUserForm.sortBy" @change="getUsers">
                                         <option value="contact_person">Contact Person</option>
-                                        <option value="group_id">Group ID</option>
                                         <option value="phone_number">Phone Number</option>
                                         <option value="email">Email</option>
                                     </select>
@@ -282,9 +281,8 @@
                 user_roles: {},
                 user_roles: {},
                 filterUserForm: {
-                    sortBy : 'group_id',
+                    sortBy : 'contact_pserson',
                     order: 'desc',
-                    group_id : '',
                     org_num : '',
                     contact_person : '',
                     phone_number : '',
@@ -371,8 +369,12 @@
                     $('#modal-delete-user').modal('hide');
                     this.getUsers();
                 }).catch(error => {
-                    if (error.response.data.message) {
-                        toastr['error'](error.response.data.message);
+                    if (error.response.data) {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('The token is expired! Please refresh and try again!');
+                        }
                     } else {
                         toastr['error']('The token is expired! Please refresh and try again!');
                     }
@@ -406,7 +408,15 @@
                     $('#modal-group-manager').modal('hide');
                     this.getUsers();
                 }).catch(error => {
-                    toastr['error'](error.response.data.message);
+                    if (error.response.data) {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('The token is expired! Please refresh and try again!');
+                        }
+                    } else {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                    }
                 });
             },
 
@@ -420,8 +430,12 @@
                     $('#modal-disable-group-manager').modal('hide');
                     this.getUsers();
                 }).catch(error => {
-                    if (error.response.data.message) {
-                        toastr['error'](error.response.data.message);
+                    if (error.response.data) {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('The token is expired! Please refresh and try again!');
+                        }
                     } else {
                         toastr['error']('The token is expired! Please refresh and try again!');
                     }
@@ -453,8 +467,12 @@
                     $('#modal-administrator').modal('hide');
                     this.getUsers();
                 }).catch(error => {
-                    if (error.response.data.message) {
-                        toastr['error'](error.response.data.message);
+                    if (error.response.data) {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('The token is expired! Please refresh and try again!');
+                        }
                     } else {
                         toastr['error']('The token is expired! Please refresh and try again!');
                     }
@@ -471,8 +489,12 @@
                     $('modal-disable-administrator').modal('hide');
                     this.getUsers();
                 }).catch(error => {
-                    if (error.response.data.message) {
-                        toastr['error'](error.response.data.message);
+                    if (error.response.data) {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('The token is expired! Please refresh and try again!');
+                        }
                     } else {
                         toastr['error']('The token is expired! Please refresh and try again!');
                     }

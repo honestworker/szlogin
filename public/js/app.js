@@ -24771,8 +24771,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 $('#modal-delete-group').modal('hide');
                 _this3.getGroups();
             }).catch(function (error) {
-                if (error.response.data.message) {
-                    toastr['error'](error.response.data.message);
+                if (error.response.data) {
+                    if (error.response.data.message) {
+                        toastr['error'](error.response.data.message);
+                    } else {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                    }
                 } else {
                     toastr['error']('The token is expired! Please refresh and try again!');
                 }
@@ -26708,10 +26712,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 toastr['success'](response.message);
                 _this2.$emit('completed', response.group);
                 _this2.$router.push('/group');
-            }).catch(function (response) {
-                if (response.message) {
-                    if (response.message) {
-                        toastr['error'](response.message);
+            }).catch(function (error) {
+                if (error.response.data) {
+                    if (error.response.data.message) {
+                        toastr['error'](error.response.data.message);
                     } else {
                         toastr['error']('The token is expired! Please refresh and try again!');
                     }
@@ -26731,8 +26735,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this3.groupForm.email = response.data.email;
                 _this3.groupForm.mobile_number = response.data.mobile_number;
                 _this3.groupForm.country = response.data.country;
-            }).catch(function (response) {
-                toastr['error'](response.message);
+            }).catch(function (error) {
+                if (error.response.data) {
+                    if (error.response.data.message) {
+                        toastr['error'](error.response.data.message);
+                    } else {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                    }
+                } else {
+                    toastr['error']('The token is expired! Please refresh and try again!');
+                }
             });
         },
         updateGroup: function updateGroup() {
@@ -26744,9 +26756,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                         toastr['error']('The token is expired! Please refresh and try again!');
                     }
                 }
-            }).catch(function (response) {
-                if (response.message) {
-                    toastr['error'](response.message);
+            }).catch(function (error) {
+                if (error.response.data) {
+                    if (error.response.data.message) {
+                        toastr['error'](error.response.data.message);
+                    } else {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                    }
                 } else {
                     toastr['error']('The token is expired! Please refresh and try again!');
                 }
@@ -27439,7 +27455,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
 
 
 
@@ -27455,9 +27470,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             groups: {},
             user_roles: {}
         }, _defineProperty(_ref, 'user_roles', {}), _defineProperty(_ref, 'filterUserForm', {
-            sortBy: 'group_id',
+            sortBy: 'contact_pserson',
             order: 'desc',
-            group_id: '',
             org_num: '',
             contact_person: '',
             phone_number: '',
@@ -27528,8 +27542,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 $('#modal-delete-user').modal('hide');
                 _this3.getUsers();
             }).catch(function (error) {
-                if (error.response.data.message) {
-                    toastr['error'](error.response.data.message);
+                if (error.response.data) {
+                    if (error.response.data.message) {
+                        toastr['error'](error.response.data.message);
+                    } else {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                    }
                 } else {
                     toastr['error']('The token is expired! Please refresh and try again!');
                 }
@@ -27563,7 +27581,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 $('#modal-group-manager').modal('hide');
                 _this4.getUsers();
             }).catch(function (error) {
-                toastr['error'](error.response.data.message);
+                if (error.response.data) {
+                    if (error.response.data.message) {
+                        toastr['error'](error.response.data.message);
+                    } else {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                    }
+                } else {
+                    toastr['error']('The token is expired! Please refresh and try again!');
+                }
             });
         },
         modalDisableGroupMnanager: function modalDisableGroupMnanager(user) {
@@ -27578,8 +27604,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 $('#modal-disable-group-manager').modal('hide');
                 _this5.getUsers();
             }).catch(function (error) {
-                if (error.response.data.message) {
-                    toastr['error'](error.response.data.message);
+                if (error.response.data) {
+                    if (error.response.data.message) {
+                        toastr['error'](error.response.data.message);
+                    } else {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                    }
                 } else {
                     toastr['error']('The token is expired! Please refresh and try again!');
                 }
@@ -27611,8 +27641,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 $('#modal-administrator').modal('hide');
                 _this6.getUsers();
             }).catch(function (error) {
-                if (error.response.data.message) {
-                    toastr['error'](error.response.data.message);
+                if (error.response.data) {
+                    if (error.response.data.message) {
+                        toastr['error'](error.response.data.message);
+                    } else {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                    }
                 } else {
                     toastr['error']('The token is expired! Please refresh and try again!');
                 }
@@ -27630,8 +27664,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 $('modal-disable-administrator').modal('hide');
                 _this7.getUsers();
             }).catch(function (error) {
-                if (error.response.data.message) {
-                    toastr['error'](error.response.data.message);
+                if (error.response.data) {
+                    if (error.response.data.message) {
+                        toastr['error'](error.response.data.message);
+                    } else {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                    }
                 } else {
                     toastr['error']('The token is expired! Please refresh and try again!');
                 }
@@ -27907,10 +27945,6 @@ var render = function() {
                     [
                       _c("option", { attrs: { value: "contact_person" } }, [
                         _vm._v("Contact Person")
-                      ]),
-                      _vm._v(" "),
-                      _c("option", { attrs: { value: "group_id" } }, [
-                        _vm._v("Group ID")
                       ]),
                       _vm._v(" "),
                       _c("option", { attrs: { value: "phone_number" } }, [
@@ -29604,8 +29638,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 toastr['success'](response.data.message);
                 _this3.getUsers();
             }).catch(function (error) {
-                if (error.response.data.message) {
-                    toastr['error'](error.response.data.message);
+                if (error.response.data) {
+                    if (error.response.data.message) {
+                        toastr['error'](error.response.data.message);
+                    } else {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                    }
                 } else {
                     toastr['error']('The token is expired! Please refresh and try again!');
                 }
@@ -29623,8 +29661,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 $('#modal-delete-user').modal('hide');
                 _this4.getUsers();
             }).catch(function (error) {
-                if (error.response.data.message) {
-                    toastr['error'](response.data.message);
+                if (error.response.data) {
+                    if (error.response.data.message) {
+                        toastr['error'](error.response.data.message);
+                    } else {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                    }
                 } else {
                     toastr['error']('The token is expired! Please refresh and try again!');
                 }
@@ -30508,8 +30550,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 $('#modal-delete-country').modal('hide');
                 _this2.getCountries();
             }).catch(function (error) {
-                if (error.response.data.message) {
-                    toastr['error'](error.response.data.message);
+                if (error.response.data) {
+                    if (error.response.data.message) {
+                        toastr['error'](error.response.data.message);
+                    } else {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                    }
                 } else {
                     toastr['error']('The token is expired! Please refresh and try again!');
                 }
@@ -30653,9 +30699,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.countryForm.post('/api/country').then(function (response) {
                 toastr['success'](response.message);
                 _this.$emit('completed', response.country);
-            }).catch(function (response) {
-                if (response.message) {
-                    toastr['error'](response.message);
+            }).catch(function (error) {
+                if (error.response.data) {
+                    if (error.response.data.message) {
+                        toastr['error'](error.response.data.message);
+                    } else {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                    }
                 } else {
                     toastr['error']('The token is expired! Please refresh and try again!');
                 }
@@ -30665,19 +30715,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this2 = this;
 
             this.countryForm.patch('/api/country/' + this.id).then(function (response) {
-                if (response.type == 'error') {
-                    if (response.message) {
-                        toastr['error'](response.message);
+                toastr['success'](response.message);
+                _this2.$emit('completed', response.country);
+            }).catch(function (error) {
+                if (error.response.data) {
+                    if (error.response.data.message) {
+                        toastr['error'](error.response.data.message);
                     } else {
                         toastr['error']('The token is expired! Please refresh and try again!');
                     }
-                } else {
-                    toastr['success'](response.message);
-                    _this2.$emit('completed', response.country);
-                }
-            }).catch(function (response) {
-                if (response.message) {
-                    toastr['error'](response.message);
                 } else {
                     toastr['error']('The token is expired! Please refresh and try again!');
                 }
@@ -31663,8 +31709,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 $('#modal-delete-notification-type').modal('hide');
                 _this2.getUsers();
             }).catch(function (error) {
-                if (error.response.data.message) {
-                    toastr['error'](error.response.data.message);
+                if (error.response.data) {
+                    if (error.response.data.message) {
+                        toastr['error'](error.response.data.message);
+                    } else {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                    }
                 } else {
                     toastr['error']('The token is expired! Please refresh and try again!');
                 }
@@ -31800,9 +31850,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.notificationTypeFrom.post('/api/noti_type').then(function (response) {
                 toastr['success'](response.message);
                 _this.$emit('completed', response.noti_type);
-            }).catch(function (response) {
-                if (response.message) {
-                    toastr['error'](response.message);
+            }).catch(function (error) {
+                if (error.response.data) {
+                    if (error.response.data.message) {
+                        toastr['error'](error.response.data.message);
+                    } else {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                    }
                 } else {
                     toastr['error']('The token is expired! Please refresh and try again!');
                 }
@@ -31822,9 +31876,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     toastr['success'](response.message);
                     _this2.$emit('completed', response.noti_type);
                 }
-            }).catch(function (response) {
-                if (response.message) {
-                    toastr['error'](response.message);
+            }).catch(function (error) {
+                if (error.response.data) {
+                    if (error.response.data.message) {
+                        toastr['error'](error.response.data.message);
+                    } else {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                    }
                 } else {
                     toastr['error']('The token is expired! Please refresh and try again!');
                 }
@@ -32786,7 +32844,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 country: '',
                 link: '',
                 show_count: '',
-                link_count: '',
+                click_count: '',
                 start_date: '',
                 start_date_oper: '',
                 end_date: '',
@@ -32804,12 +32862,25 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
     methods: {
+        processDataTimes: function processDataTimes() {
+            if (this.filterAdForm.start_date) {
+                this.filterAdForm.start_date = moment(this.filterAdForm.start_date).format('YYYY-MM-DD');
+            } else {
+                this.filterAdForm.start_date = '';
+            }
+            if (this.filterAdForm.end_date) {
+                this.filterAdForm.end_date = moment(this.filterAdForm.end_date).format('YYYY-MM-DD');
+            } else {
+                this.filterAdForm.end_date = '';
+            }
+        },
         getAds: function getAds(page) {
             var _this = this;
 
             if (typeof page === 'undefined') {
                 page = 1;
             }
+            this.processDataTimes();
             var url = __WEBPACK_IMPORTED_MODULE_2__services_helper__["a" /* default */].getFilterURL(this.filterAdForm);
             axios.get('/api/advertisement?page=' + page + url).then(function (response) {
                 return _this.ads = response.data;
@@ -32834,8 +32905,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 $('#modal-delete-ad').modal('hide');
                 _this3.getUsers();
             }).catch(function (error) {
-                if (error.response.data.message) {
-                    toastr['error'](error.response.data.message);
+                if (error.response.data) {
+                    if (error.response.data.message) {
+                        toastr['error'](error.response.data.message);
+                    } else {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                    }
                 } else {
                     toastr['error']('The token is expired! Please refresh and try again!');
                 }
@@ -32867,6 +32942,30 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 return 'http://szlogin.com/images/advertisements/' + url;
             } else {
                 return 'http://szlogin.com/images/common/no-image.png';
+            }
+        },
+        changeShowCountOper: function changeShowCountOper(e) {
+            if (e.target.options.selectedIndex > -1) {
+                this.filterAdForm.show_count_oper = e.target.options[e.target.options.selectedIndex].value;
+                this.getAds();
+            }
+        },
+        changeClickCountOper: function changeClickCountOper(e) {
+            if (e.target.options.selectedIndex > -1) {
+                this.filterAdForm.click_count_oper = e.target.options[e.target.options.selectedIndex].value;
+                this.getAds();
+            }
+        },
+        changeStartDateOper: function changeStartDateOper(e) {
+            if (e.target.options.selectedIndex > -1) {
+                this.filterAdForm.start_date_oper = e.target.options[e.target.options.selectedIndex].value;
+                this.getAds();
+            }
+        },
+        changeEndDateOper: function changeEndDateOper(e) {
+            if (e.target.options.selectedIndex > -1) {
+                this.filterAdForm.end_date_oper = e.target.options[e.target.options.selectedIndex].value;
+                this.getAds();
             }
         }
     }
@@ -33034,34 +33133,34 @@ var render = function() {
                                       : $$selectedVal[0]
                                   )
                                 },
-                                _vm.getAds
+                                _vm.changeShowCountOper
                               ]
                             }
                           },
                           [
                             _c(
                               "option",
-                              { attrs: { value: "0", selected: "" } },
+                              { attrs: { value: "=", selected: "true" } },
                               [_vm._v("=")]
                             ),
                             _vm._v(" "),
-                            _c("option", { attrs: { value: "1" } }, [
+                            _c("option", { attrs: { value: "!=" } }, [
                               _vm._v("!=")
                             ]),
                             _vm._v(" "),
-                            _c("option", { attrs: { value: "2" } }, [
+                            _c("option", { attrs: { value: ">" } }, [
                               _vm._v(">")
                             ]),
                             _vm._v(" "),
-                            _c("option", { attrs: { value: "3" } }, [
+                            _c("option", { attrs: { value: ">=" } }, [
                               _vm._v(">=")
                             ]),
                             _vm._v(" "),
-                            _c("option", { attrs: { value: "4" } }, [
+                            _c("option", { attrs: { value: "<" } }, [
                               _vm._v("<")
                             ]),
                             _vm._v(" "),
-                            _c("option", { attrs: { value: "5" } }, [
+                            _c("option", { attrs: { value: "<=" } }, [
                               _vm._v("<=")
                             ])
                           ]
@@ -33099,7 +33198,7 @@ var render = function() {
                   _c("div", { staticClass: "col-md-6" }, [
                     _c("div", { staticClass: "form-group" }, [
                       _c("label", { attrs: { for: "" } }, [
-                        _vm._v("Link Count")
+                        _vm._v("Click Count")
                       ]),
                       _vm._v(" "),
                       _c("div", { staticClass: "row" }, [
@@ -33110,8 +33209,8 @@ var render = function() {
                               {
                                 name: "model",
                                 rawName: "v-model",
-                                value: _vm.filterAdForm.link_count_oper,
-                                expression: "filterAdForm.link_count_oper"
+                                value: _vm.filterAdForm.click_count_oper,
+                                expression: "filterAdForm.click_count_oper"
                               }
                             ],
                             staticClass: "form-control col-md-4",
@@ -33130,40 +33229,40 @@ var render = function() {
                                     })
                                   _vm.$set(
                                     _vm.filterAdForm,
-                                    "link_count_oper",
+                                    "click_count_oper",
                                     $event.target.multiple
                                       ? $$selectedVal
                                       : $$selectedVal[0]
                                   )
                                 },
-                                _vm.getAds
+                                _vm.changeClickCountOper
                               ]
                             }
                           },
                           [
                             _c(
                               "option",
-                              { attrs: { value: "0", selected: "true" } },
+                              { attrs: { value: "=", selected: "true" } },
                               [_vm._v("=")]
                             ),
                             _vm._v(" "),
-                            _c("option", { attrs: { value: "1" } }, [
+                            _c("option", { attrs: { value: "!=" } }, [
                               _vm._v("!=")
                             ]),
                             _vm._v(" "),
-                            _c("option", { attrs: { value: "2" } }, [
+                            _c("option", { attrs: { value: ">" } }, [
                               _vm._v(">")
                             ]),
                             _vm._v(" "),
-                            _c("option", { attrs: { value: "3" } }, [
+                            _c("option", { attrs: { value: ">=" } }, [
                               _vm._v(">=")
                             ]),
                             _vm._v(" "),
-                            _c("option", { attrs: { value: "4" } }, [
+                            _c("option", { attrs: { value: "<" } }, [
                               _vm._v("<")
                             ]),
                             _vm._v(" "),
-                            _c("option", { attrs: { value: "5" } }, [
+                            _c("option", { attrs: { value: "<=" } }, [
                               _vm._v("<=")
                             ])
                           ]
@@ -33174,12 +33273,12 @@ var render = function() {
                             {
                               name: "model",
                               rawName: "v-model",
-                              value: _vm.filterAdForm.link_count,
-                              expression: "filterAdForm.link_count"
+                              value: _vm.filterAdForm.click_count,
+                              expression: "filterAdForm.click_count"
                             }
                           ],
                           staticClass: "form-control col-md-7",
-                          domProps: { value: _vm.filterAdForm.link_count },
+                          domProps: { value: _vm.filterAdForm.click_count },
                           on: {
                             blur: _vm.getAds,
                             input: function($event) {
@@ -33188,7 +33287,7 @@ var render = function() {
                               }
                               _vm.$set(
                                 _vm.filterAdForm,
-                                "link_count",
+                                "click_count",
                                 $event.target.value
                               )
                             }
@@ -33223,7 +33322,7 @@ var render = function() {
                                   expression: "filterAdForm.start_date_oper"
                                 }
                               ],
-                              staticClass: "form-control col-md-4",
+                              staticClass: "form-control col-md-3",
                               attrs: { name: "status" },
                               on: {
                                 change: [
@@ -33245,34 +33344,34 @@ var render = function() {
                                         : $$selectedVal[0]
                                     )
                                   },
-                                  _vm.getAds
+                                  _vm.changeStartDateOper
                                 ]
                               }
                             },
                             [
                               _c(
                                 "option",
-                                { attrs: { value: "0", selected: "" } },
+                                { attrs: { value: "=", selected: "true" } },
                                 [_vm._v("=")]
                               ),
                               _vm._v(" "),
-                              _c("option", { attrs: { value: "1" } }, [
+                              _c("option", { attrs: { value: "!=" } }, [
                                 _vm._v("!=")
                               ]),
                               _vm._v(" "),
-                              _c("option", { attrs: { value: "2" } }, [
+                              _c("option", { attrs: { value: ">" } }, [
                                 _vm._v(">")
                               ]),
                               _vm._v(" "),
-                              _c("option", { attrs: { value: "3" } }, [
+                              _c("option", { attrs: { value: ">=" } }, [
                                 _vm._v(">=")
                               ]),
                               _vm._v(" "),
-                              _c("option", { attrs: { value: "4" } }, [
+                              _c("option", { attrs: { value: "<" } }, [
                                 _vm._v("<")
                               ]),
                               _vm._v(" "),
-                              _c("option", { attrs: { value: "5" } }, [
+                              _c("option", { attrs: { value: "<=" } }, [
                                 _vm._v("<=")
                               ])
                             ]
@@ -33315,7 +33414,7 @@ var render = function() {
                                   expression: "filterAdForm.end_date_oper"
                                 }
                               ],
-                              staticClass: "form-control col-md-4",
+                              staticClass: "form-control col-md-3",
                               attrs: { name: "status" },
                               on: {
                                 change: [
@@ -33337,34 +33436,34 @@ var render = function() {
                                         : $$selectedVal[0]
                                     )
                                   },
-                                  _vm.getAds
+                                  _vm.changeEndDateOper
                                 ]
                               }
                             },
                             [
                               _c(
                                 "option",
-                                { attrs: { value: "0", selected: "" } },
+                                { attrs: { value: "=", selected: "true" } },
                                 [_vm._v("=")]
                               ),
                               _vm._v(" "),
-                              _c("option", { attrs: { value: "1" } }, [
+                              _c("option", { attrs: { value: "!=" } }, [
                                 _vm._v("!=")
                               ]),
                               _vm._v(" "),
-                              _c("option", { attrs: { value: "2" } }, [
+                              _c("option", { attrs: { value: ">" } }, [
                                 _vm._v(">")
                               ]),
                               _vm._v(" "),
-                              _c("option", { attrs: { value: "3" } }, [
+                              _c("option", { attrs: { value: ">=" } }, [
                                 _vm._v(">=")
                               ]),
                               _vm._v(" "),
-                              _c("option", { attrs: { value: "4" } }, [
+                              _c("option", { attrs: { value: "<" } }, [
                                 _vm._v("<")
                               ]),
                               _vm._v(" "),
-                              _c("option", { attrs: { value: "5" } }, [
+                              _c("option", { attrs: { value: "<=" } }, [
                                 _vm._v("<=")
                               ])
                             ]
@@ -33502,7 +33601,7 @@ var render = function() {
                           _c("td", {
                             domProps: {
                               textContent: _vm._s(
-                                _vm.numberToString(ad.link_count)
+                                _vm.numberToString(ad.click_count)
                               )
                             }
                           }),
@@ -33744,7 +33843,7 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Show Count")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Link Count")]),
+        _c("th", [_vm._v("Click Count")]),
         _vm._v(" "),
         _c("th", [_vm._v("Status")]),
         _vm._v(" "),
@@ -34026,13 +34125,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
     methods: {
-        proceed: function proceed() {
+        processDataTimes: function processDataTimes() {
             if (this.advertisementForm.start_date) {
                 this.advertisementForm.start_date = moment(this.advertisementForm.start_date).format('YYYY-MM-DD');
+            } else {
+                this.advertisementForm.start_date = '';
             }
             if (this.advertisementForm.end_date) {
                 this.advertisementForm.end_date = moment(this.advertisementForm.end_date).format('YYYY-MM-DD');
+            } else {
+                this.advertisementForm.end_date = '';
             }
+        },
+        proceed: function proceed() {
             if (this.id != 0) {
                 this.updateAdvertisement();
             } else {
@@ -34090,10 +34195,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             axios.post('/api/advertisement', this.uploadDataForm, config).then(function (response) {
                 toastr['success'](response.data.message);
                 _this3.$router.push('/advertisement');
-            }).catch(function (response) {
-                if (response.data.message) {
-                    if (response.data.message) {
-                        toastr['error'](response.data.message);
+            }).catch(function (error) {
+                if (error.response.data) {
+                    if (error.response.data.message) {
+                        toastr['error'](error.response.data.message);
                     } else {
                         toastr['error']('The token is expired! Please refresh and try again!');
                     }
@@ -34117,10 +34222,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             axios.post('/api/advertisement', this.uploadDataForm, config).then(function (response) {
                 toastr['success'](response.data.message);
                 _this4.$router.push('/advertisement');
-            }).catch(function (response) {
-                if (response.data.message) {
-                    if (response.data.message) {
-                        toastr['error'](response.data.message);
+            }).catch(function (error) {
+                if (error.response.data) {
+                    if (error.response.data.message) {
+                        toastr['error'](error.response.data.message);
                     } else {
                         toastr['error']('The token is expired! Please refresh and try again!');
                     }
@@ -34141,6 +34246,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.$forceUpdate();
         },
         prepareFields: function prepareFields() {
+            this.processDataTimes();
             if (this.uploadImages.length > 0) {
                 for (var i = 0; i < this.uploadImages.length; i++) {
                     var image = this.uploadImages[i];
