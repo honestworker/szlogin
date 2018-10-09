@@ -377,9 +377,9 @@ class UserController extends Controller
         if ($validation->fails())
             return response()->json(['status' => 'fail', 'message' => $validation->messages()->first()], 422);
         
-        $user = \App\User::find($id);
+        $user = \App\User::find(request('id'));
         if(!$user)
-            return response()->json(['status' => 'fail', 'message' => 'Could not find user!'],422);
+            return response()->json(['status' => 'fail', 'message' => 'Could not find user!'], 422);
             
         if($user->avatar && \File::exists($this->avatar_path.$user->avatar))
             \File::delete($this->avatar_path.$user->avatar);
@@ -421,7 +421,7 @@ class UserController extends Controller
 
         $user->delete();
         
-        return response()->json(['success','message' => 'User deleted!'], 200);
+        return response()->json(['status' => 'success', 'message' => 'User deleted!'], 200);
     }
 
     public function dashboard(){

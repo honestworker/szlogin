@@ -190,7 +190,7 @@ class NotificationController extends Controller
         if(!$group)
             return response()->json(['status' => 'fail', 'message' => 'You must be any group memeber!'], 422);
         
-        $notification = \App\Notification::with('user.profile', 'images', 'comments.images');
+        $notification = \App\Notification::with('user.profile', 'images', 'comments.images', 'comments.user.profile');
         $notification->where('id', '=', request('notification_id'));
         
         return response()->json(['status' => 'success', 'message' => 'Get Notification Detail Data Successfully!', 'notification' => $notification->get()], 200);
