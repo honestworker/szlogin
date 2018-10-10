@@ -6,6 +6,7 @@
             </div>
         </div>
         
+        <!-- Overview -->
         <div class="row">
             <div class="col-lg-3 col-md-3">
                 <div class="card">
@@ -25,6 +26,7 @@
                     </div>
                 </div>
             </div>
+            <!-- Visitor -->
             <div class="col-lg-3 col-md-3">
                 <div class="card">
                     <div class="card-body">
@@ -70,6 +72,7 @@
             </div>
         </div>
 
+        <!-- Group and User Detail -->
         <div class="row">
             <div class="col-lg-6 col-md-6">
                 <div class="card">
@@ -141,6 +144,82 @@
                 </div>
             </div>
         </div>
+        
+        <!-- Adversitement -->
+        <div class="row">
+            <div class="col-lg-6 col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Advertisements Information</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6">
+                                <h4 class="card-title text-center">Number of advertisement running month by month</h4>
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Quantity</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="(show_count, index) in show_count_infor">
+                                            <td v-text="monthNames[index]"></td>
+                                            <td v-text="show_count"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-lg-6 col-md-6">
+                                <h4 class="card-title text-center">Clicked advertisements</h4>
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Quantity</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="(click_count, index) in click_count_infor">
+                                            <td v-text="monthNames[index]"></td>
+                                            <td v-text="click_count"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title text-center">Advertisements statistics</h4>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Ads Banner</th>
+                                    <th>Views</th>
+                                    <th>Views 30 days</th>
+                                    <th>Clicks</th>
+                                    <th>Clicks 30 days</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(statistic, index) in statistics">
+                                    <td v-text="statistic[0]"></td>
+                                    <td v-text="statistic[1]"></td>
+                                    <td v-text="statistic[2]"></td>
+                                    <td v-text="statistic[3]"></td>
+                                    <td v-text="statistic[4]"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -162,16 +241,7 @@
                 
                 activated_users: 0,
                 userPieChartData: [],
-                // userPieChartData: [
-                //     ['Task', 'Hours per Day'],
-                //     ['Work',     11],
-                //     ['Eat',      2],
-                //     ['Commute',  2],
-                //     ['Watch TV', 2],
-                //     ['Sleep',    7]
-                // ],
-                userPieChartLabel: [],
-
+                
                 users_visitor_infor: [],
                 users_visitors_infor: [],
                 visitorChartData: [],
@@ -180,6 +250,10 @@
                 groups_infor: [],
                 groupChartData: [],
                 year: '',
+
+                show_count_infor: [],
+                click_count_infor: [],
+                statistics: [],
 
                 chartOptions: {
                     chart: {
@@ -193,6 +267,7 @@
         mounted() {
             this.getGroupInfor();
             this.getUserInfor();
+            this.getAdsCountsInfor();
         },
         methods: {
             getGroupInfor(){
@@ -229,6 +304,13 @@
                     this.userPieChartData.push(["Active last 30 days", this.activated_users]);
                     this.userPieChartData.push(["Non active last 30 days", this.users_total - this.activated_users]);
                     
+                });
+            },
+            getAdsCountsInfor(){
+                axios.post('/api/advertisement/overview').then(response =>  {
+                    this.show_count_infor = response.data.data.show_count_infor;
+                    this.click_count_infor = response.data.data.click_count_infor;
+                    this.statistics = response.data.data.statistics;
                 });
             },
         },

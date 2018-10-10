@@ -26,6 +26,12 @@
                     <div class="card-body">
                         <h4 class="card-title">Filter Advertisement</h4>
                         <div class="row m-t-20">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="">Name</label>
+                                    <input name="search" class="form-control" v-model="filterAdForm.name" @blur="getAds">
+                                </div>
+                            </div>
                             <div class="col-md-2">
                                 <div class="form-group">
                                     <label for="">Country</label>
@@ -35,7 +41,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
@@ -71,7 +77,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-5">
+                            <div class="col-md-3">
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
@@ -126,6 +132,7 @@
                             <table class="table" v-if="ads.total">
                                 <thead>
                                     <tr>
+                                        <th>Name</th>
                                         <th>Photo</th>
                                         <th>Country</th>
                                         <th>Link URL</th>
@@ -139,6 +146,7 @@
                                 </thead>
                                 <tbody>
                                     <tr v-for="ad in ads.data">
+                                        <td v-text="ad.name"></td>
                                         <td><img :src="getImageUrl(ad.image)" class="img-responsive" style="max-width: 200px;"></td>
                                         <td v-text="ad.country"></td>
                                         <td v-text="ad.link"></td>
@@ -219,6 +227,7 @@
                 countries : {},
                 filterAdForm: {
                     status: '',
+                    name: '',
                     image : '',
                     country : '',
                     link : '',

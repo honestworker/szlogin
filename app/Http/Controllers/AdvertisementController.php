@@ -13,50 +13,44 @@ class AdvertisementController extends Controller
     protected $image_extensions = array('jpeg', 'png', 'jpg', 'gif', 'svg');
     
 	public function index(){
-		$advertisement = \App\Advertisement::whereNotNull('id');
+		$advertisements = \App\Advertisement::whereNotNull('id');
 		
 		if(request()->has('country'))
-		    $advertisement->where('country', request('country'));
+		    $advertisements->where('country', request('country'));
 			
         if(request()->has('status'))
-            $advertisement->whereStatus(request('status'));
+            $advertisements->whereStatus(request('status'));
 
         if(request()->has('show_count_oper') && request()->has('show_count'))
-            $advertisement->where('show_count', request('show_count_oper'), request('show_count'));
+            $advertisements->where('show_count', request('show_count_oper'), request('show_count'));
 
         if(request()->has('link_count_oper') && request()->has('link_count'))
-            $advertisement->where('link_count', request('link_count_oper'), request('link_count'));
+            $advertisements->where('link_count', request('link_count_oper'), request('link_count'));
 
         if(request()->has('start_date_oper') && request()->has('start_date')) {
-            $advertisement->where('start_date', '!=', '')
+            $advertisements->where('start_date', '!=', '')
                 ->where('start_date', request('start_date_oper'), request('start_date'));
         }
             
         if(request()->has('end_date_oper') && request()->has('end_date')) {
-            $advertisement->where('end_date', '!=', '')
+            $advertisements->where('end_date', '!=', '')
                 ->where('end_date', request('end_date_oper'), request('end_date'));
         }
-        //$advertisement->orderBy(request('sortBy'),request('order'));
         
-		return $advertisement->paginate(request('pageLength'));
+        $advertisements->select('id', 'country', 'image', 'link', 'name', 'start_date', 'end_date', 'status', \DB::raw('(select count(*) from ads_count where ads_count.ad_id = ads.id and ads_count.type = \'show\') as show_count'), \DB::raw('(select count(*) from ads_count where ads_count.ad_id = ads.id and ads_count.type = \'click\') as click_count'));
+
+        //$advertisements->orderBy(request('sortBy'), request('order'));
+        
+		return $advertisements->paginate(request('pageLength'));
 	}
 
-	public function all(){
-		$advertisement = \App\Advertisement::whereNotNull('id');
-		
-        $advertisement->whereStatus(1);
-        $advertisement->orderBy('idx', 'ASC');
-        $countries = $advertisement->pluck('name');
-        
-		return response()->json(['status' => 'success', 'message' => 'Get Advertisement Data Successfully!', 'countries' => $countries], 200);
-	}
-
-    public function store(Request $request){
+    public function store(Request $request) {
         $user = JWTAuth::parseToken()->authenticate();
         $profile = $user->Profile;
         
         $validation = Validator::make($request->all(), [
-            'link' => 'required',
+            'name' => 'required|min:1',
+            'link' => 'required|min:1',
             'country' => 'required',
         ]);
         
@@ -73,23 +67,29 @@ class AdvertisementController extends Controller
             }
         }
         
-        if ($request->has('id') && $request->input('id')) {
-            $advertisement = \App\Advertisement::find($request->input('id'));
-            if (!$advertisement)
+        if($request->has('id')) {
+            $advertisement = \App\Advertisement::whereId(request('id'))->first();
+            if (!$advertisement) {
                 return response()->json(['status' => 'fail', 'message' => 'Could not find the advertisement!'], 422);
+            }
         } else {
+            $advertisement = \App\Advertisement::where('name', '=', request('name'))->first();
+            if ($advertisement) {
+                return response()->json(['status' => 'fail', 'message' => 'You must specify the unique name!'], 422);
+            }
             $advertisement = new \App\Advertisement;
         }
-        $advertisement->link = $request->input('link');
-        $advertisement->country = $request->input('country');
+        $advertisement->name = request('name');
+        $advertisement->link = request('link');
+        $advertisement->country = request('country');
         if ($request->has('start_date')) {
-            if ($request->input('start_date')) {
-                $advertisement->start_date = $request->input('start_date');
+            if (request('start_date')) {
+                $advertisement->start_date = request('start_date');
             }
         }
         if ($request->has('end_date')) {
-            if ($request->input('end_date')) {
-                $advertisement->end_date = $request->input('end_date');
+            if (request('end_date')) {
+                $advertisement->end_date = request('end_date');
             }
         }
         
@@ -102,11 +102,6 @@ class AdvertisementController extends Controller
                 $file_name = $name . '.' . $extension;
                 
                 $file = $image->move($this->images_path, $file_name);
-                // $img = \Image::make($this->images_path . $file_name);
-                // $img->resize(200, null, function ($constraint) {
-                //     $constraint->aspectRatio();
-                // });
-                // $img->save($this->images_path . $file_name);
                 
                 $advertisement->image = $file_name;
                 break;
@@ -115,18 +110,14 @@ class AdvertisementController extends Controller
         $advertisement->status = 1;
         $advertisement->save();
         
-        if ($request->has('id')) {
-            return response()->json(['status' => 'success', 'message' => 'Aadvertisement has created succesfully!'], 200);
-        } else {
-            return response()->json(['status' => 'success', 'message' => 'Aadvertisement has updated succesfully!'], 200);
-        }
+        return response()->json(['status' => 'success', 'message' => 'Aadvertisement has created succesfully!'], 200);
     }
 
     public function destroy(Request $request, $id){
         $advertisement = \App\Advertisement::find($id);
         
         if(!$advertisement)
-            return response()->json(['message' => 'Couldnot find Advertisement!'],422);
+            return response()->json(['message' => 'Couldnot find Advertisement!'], 422);
             
         $advertisement->delete();
         
@@ -137,41 +128,164 @@ class AdvertisementController extends Controller
         $advertisement = \App\Advertisement::whereId($id)->first();
         
         if(!$advertisement)
-            return response()->json(['message' => 'Couldnot find Advertisement!'],422);
+            return response()->json(['message' => 'Couldnot find Advertisement!'], 422);
             
         return $advertisement;
     }
 
-    public function update(Request $request, $id){
-        
+    public function update(Request $request, $id) {
         $advertisement = \App\Advertisement::whereId($id)->first();
         
         if(!$advertisement)
-            return response()->json(['message' => 'Couldnot find Advertisement!']);
-            
-        $validation = Validator::make($request->all(), [
-            'idx' => 'required|unique:Advertisement,idx,'.$advertisement->id.',id',
-            'name' => 'required',
-        ]);
+            return response()->json(['status' => 'fail', 'message' => 'Could not find the advertisement!'], 422);
         
+        $validation = Validator::make($request->all(), [
+            'name' => 'required',
+            'link' => 'required',
+            'country' => 'required',
+        ]);
         if($validation->fails())
-            return response()->json(['message' => $validation->messages()->first()],422);
+            return response()->json(['message' => $validation->messages()->first()], 422);
             
-        $advertisement->idx = request('idx');
         $advertisement->name = request('name');
+        $advertisement->link = request('link');
+        $advertisement->country = request('country');
+        if ($request->has('start_date')) {
+            if (request('start_date')) {
+                $advertisement->start_date = request('start_date');
+            }
+        }
+        if ($request->has('end_date')) {
+            if (request('end_date')) {
+                $advertisement->end_date = request('end_date');
+            }
+        }
+        
+        if($request->hasfile('images')) {
+            foreach($request->file('images') as $image)
+            {
+                $extension = $image->getClientOriginalExtension();
+                $mt = explode(' ', microtime());
+                $name = ((int)$mt[1]) * 1000000 + ((int)round($mt[0] * 1000000));
+                $file_name = $name . '.' . $extension;
+                
+                $file = $image->move($this->images_path, $file_name);
+                
+                $advertisement->image = $file_name;
+                break;
+            }
+        }
+        $advertisement->status = 1;
         $advertisement->save();
+        
         return response()->json(['message' => 'Advertisement updated!', 'data' => $advertisement]);
     }
 
     public function toggleStatus(Request $request){
-        $advertisement = \App\Advertisement::find($request->input('id'));
+        $advertisement = \App\Advertisement::find(request('id'));
         
         if(!$advertisement)
-            return response()->json(['message' => 'Couldnot find Advertisement!'],422);
+            return response()->json(['message' => 'Couldnot find Advertisement!'], 422);
             
         $advertisement->status = !$advertisement->status;
         $advertisement->save();
         
         return response()->json(['message' => 'Advertisement updated!']);
+    }
+
+    public function get(Request $request) {
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false], 422);
+        }
+        
+        $user = JWTAuth::parseToken()->authenticate();
+        $profile = $user->Profile;
+        
+        $advertisements = \App\Advertisement::whereNotNull('id');
+        
+        $now_date = date("Y-m-d m:i:s");
+        $advertisements->where('start_date', '!=', '')->where('start_date', '<=', $now_date)->where('end_date', '!=', '')->where('end_date', '>=', $now_date)->whereStatus(1);
+        if ($profile->country) {
+            $advertisements->where('country', '=', $profile->country);
+        }
+        
+        $advertisements_result = $advertisements->get();
+        $advertisements_count = count($advertisements_result);
+        
+        if (!$advertisements_count) {
+            return response()->json(['status' => 'fail', 'message' => 'Advertisement fail!'], 422);
+        }
+        $advertisement_index = rand(1, $advertisements_count);
+        $advertisement = $advertisements_result[$advertisement_index - 1];
+        
+        $visitor = \App\AdvertisementCount::create([
+            'ad_id' => $advertisement->id,
+            'type' => 'show',
+        ]);
+        
+        return response()->json(['status' => 'success', 'message' => 'Advertisement!', 'id' => $advertisement->id, 'image' => $advertisement->image, 'link' => $advertisement->link], 200);
+    }
+
+    public function click(Request $request) {
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false], 422);
+        }
+        
+        $validation = Validator::make($request->all(), [
+            'advertisement_id' => 'required'
+        ]);
+        if($validation->fails())
+            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first()], 422);
+            
+        $advertisement = \App\Advertisement::find(request('advertisement_id'));
+        if(!$advertisement)
+            return response()->json(['status' => 'fail', 'message' => 'Could not find the advertisement!'], 422);
+            
+        $visitor = \App\AdvertisementCount::create([
+            'ad_id' => $advertisement->id,
+            'type' => 'click',
+        ]);
+        
+        return response()->json(['status' => 'success', 'message' => 'Advertisement Clicked!'], 200);
+    }
+
+    public function overview(Request $request) {
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false], 422);
+        }
+        
+        $now_date = date("Y-m-d");
+        $year = date('Y', strtotime($now_date));
+        $month = date('m', strtotime($now_date));
+        $month_before = date("Y-m-d H:i:s", strtotime("$now_date  -30 days"));
+        
+        $show_count_infor = $click_count_infor = [];
+        for ($month_index = 1; $month_index <= $month; $month_index++) {
+            $advertisement_counts = \App\AdvertisementCount::whereNotNull('id');
+            $show_count_infor[] = count($advertisement_counts->whereYear('created_at', '=',  $year)->whereMonth('created_at', '=',   $month_index )->where('type', '=',  'show')->get());
+            $advertisement_counts = \App\AdvertisementCount::whereNotNull('id');
+            $click_count_infor[] = count($advertisement_counts->whereYear('created_at', '=',  $year)->whereMonth('created_at', '=',   $month_index )->where('type', '=',  'click')->get());
+        }
+        
+        $statistics = [];
+        $advertisements = \App\Advertisement::whereNotNull('id')->get();
+        foreach ($advertisements as $advertisement) {
+            $advertisement_counts = \App\AdvertisementCount::whereNotNull('id');
+            $show_all = count($advertisement_counts->where('type', '=',  'show')->where('ad_id', '=',  $advertisement->id)->get());
+            $advertisement_counts = \App\AdvertisementCount::whereNotNull('id');
+            $show_month = count($advertisement_counts->where('created_at', '>=',  $month_before)->where('type', '=',  'show')->where('ad_id', '=',  $advertisement->id)->get());
+            $advertisement_counts = \App\AdvertisementCount::whereNotNull('id');
+            $click_all = count($advertisement_counts->where('type', '=',  'click')->where('ad_id', '=',  $advertisement->id)->get());
+            $advertisement_counts = \App\AdvertisementCount::whereNotNull('id');
+            $click_month = count($advertisement_counts->where('created_at', '>=',  $month_before)->where('type', '=',  'click')->where('ad_id', '=',  $advertisement->id)->get());
+            $statistics[] = [$advertisement->name, $show_all, $show_month, $click_all, $click_month];
+        }
+        return response()->json(['status' => 'success', 'message' => 'Advertisement Overview!', 'data' => compact('show_count_infor', 'click_count_infor', 'statistics')], 200);
     }
 }

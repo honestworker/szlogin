@@ -68,7 +68,6 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::get('/user/overview','UserController@overview');
     Route::post('/user-roles','UserController@allRole');
     
-
     // User app only
     Route::post('/get-group-users','UserController@getGroupUsers');
     
@@ -110,6 +109,11 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::patch('/advertisement/{id}','AdvertisementController@update');
     Route::post('/advertisement/status','AdvertisementController@toggleStatus');
     Route::post('/advertisement/all','AdvertisementController@all');
+    Route::post('/advertisement/overview','AdvertisementController@overview');
+
+    // Advertisement app only
+    Route::post('/advertisement/get','AdvertisementController@get');
+    Route::post('/advertisement/click','AdvertisementController@click');
     
     Route::get('/configuration/fetch','ConfigurationController@index');
     Route::post('/configuration','ConfigurationController@store');

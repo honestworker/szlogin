@@ -26,7 +26,13 @@
             </div>
             <div class="form-group col-md-8">
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="">Name</label>
+                            <input class="form-control" type="text" value="" v-model="advertisementForm.name">
+                        </div>
+                    </div>
+                    <div class="col-md-10">
                         <div class="form-group">
                             <label for="">Link</label>
                             <input class="form-control" type="text" value="" v-model="advertisementForm.link">
@@ -69,13 +75,14 @@
         data() {
             return {
                 uploadImages: [],
-                uploadDataForm: new FormData(),
+                uploadDataForm: [],
                 errors: {
                 },
                 percentCompleted: 0,
 
                 countries : {},
                 advertisementForm: new Form({
+                    'name' : '',
                     'link' : '',
                     'start_date' : '',
                     'end_date' : '',
@@ -109,11 +116,13 @@
                 }
             },
             proceed() {
-                if(this.id != 0) {
-                    this.updateAdvertisement();
-                } else {
-                    this.storeAdvertisement();
-                }
+                this.uploadDataForm = new FormData();
+                // if(this.id != 0) {
+                //     this.updateAdvertisement();
+                // } else {
+                //     this.storeAdvertisement();
+                // }
+                this.storeAdvertisement();
             },
             getCountries() {
                 axios.post('/api/country/all')
@@ -139,6 +148,7 @@
                     } else {
                         this.previewImage = 'http://szlogin.com/images/common/no-image.png';
                     }
+                    this.advertisementForm.name = response.data.name;
                     this.advertisementForm.link = response.data.link;
                     this.advertisementForm.start_date = (response.data.start_date != "") ? response.data.start_date : 0;
                     this.advertisementForm.end_date = (response.data.end_date != "") ? response.data.end_date : 0;
@@ -158,7 +168,7 @@
                     }.bind(this)
                 };
                 
-                axios.post('/api/advertisement', this.uploadDataForm, config)
+                axios.patch('/api/advertisement/' + this.id, this.uploadDataForm, config)
                 .then(response => {
                     toastr['success'](response.data.message);
                     this.$router.push('/advertisement');
@@ -216,7 +226,10 @@
                         break;
                     }
                 }
-                this.uploadDataForm.append('id', this.id);
+                if (this.id) {
+                    this.uploadDataForm.append('id', this.id);
+                }
+                this.uploadDataForm.append('name', this.advertisementForm.name);
                 this.uploadDataForm.append('link', this.advertisementForm.link);
                 this.uploadDataForm.append('start_date', this.advertisementForm.start_date);
                 this.uploadDataForm.append('end_date', this.advertisementForm.end_date);

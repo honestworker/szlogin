@@ -23768,6 +23768,85 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -23784,15 +23863,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             activated_users: 0,
             userPieChartData: [],
-            // userPieChartData: [
-            //     ['Task', 'Hours per Day'],
-            //     ['Work',     11],
-            //     ['Eat',      2],
-            //     ['Commute',  2],
-            //     ['Watch TV', 2],
-            //     ['Sleep',    7]
-            // ],
-            userPieChartLabel: [],
 
             users_visitor_infor: [],
             users_visitors_infor: [],
@@ -23802,6 +23872,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             groups_infor: [],
             groupChartData: [],
             year: '',
+
+            show_count_infor: [],
+            click_count_infor: [],
+            statistics: [],
 
             chartOptions: {
                 chart: {
@@ -23816,6 +23890,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     mounted: function mounted() {
         this.getGroupInfor();
         this.getUserInfor();
+        this.getAdsCountsInfor();
     },
 
     methods: {
@@ -23856,6 +23931,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this2.userPieChartData = [["Name", "Value"]];
                 _this2.userPieChartData.push(["Active last 30 days", _this2.activated_users]);
                 _this2.userPieChartData.push(["Non active last 30 days", _this2.users_total - _this2.activated_users]);
+            });
+        },
+        getAdsCountsInfor: function getAdsCountsInfor() {
+            var _this3 = this;
+
+            axios.post('/api/advertisement/overview').then(function (response) {
+                _this3.show_count_infor = response.data.data.show_count_infor;
+                _this3.click_count_infor = response.data.data.click_count_infor;
+                _this3.statistics = response.data.data.statistics;
             });
         }
     },
@@ -24107,6 +24191,113 @@ var render = function() {
           ])
         ])
       ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-lg-6 col-md-6" }, [
+        _c("div", { staticClass: "card" }, [
+          _vm._m(6),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-body" }, [
+            _c("div", { staticClass: "row" }, [
+              _c("div", { staticClass: "col-lg-6 col-md-6" }, [
+                _c("h4", { staticClass: "card-title text-center" }, [
+                  _vm._v("Number of advertisement running month by month")
+                ]),
+                _vm._v(" "),
+                _c("table", { staticClass: "table" }, [
+                  _vm._m(7),
+                  _vm._v(" "),
+                  _c(
+                    "tbody",
+                    _vm._l(_vm.show_count_infor, function(show_count, index) {
+                      return _c("tr", [
+                        _c("td", {
+                          domProps: {
+                            textContent: _vm._s(_vm.monthNames[index])
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("td", {
+                          domProps: { textContent: _vm._s(show_count) }
+                        })
+                      ])
+                    })
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-lg-6 col-md-6" }, [
+                _c("h4", { staticClass: "card-title text-center" }, [
+                  _vm._v("Clicked advertisements")
+                ]),
+                _vm._v(" "),
+                _c("table", { staticClass: "table" }, [
+                  _vm._m(8),
+                  _vm._v(" "),
+                  _c(
+                    "tbody",
+                    _vm._l(_vm.click_count_infor, function(click_count, index) {
+                      return _c("tr", [
+                        _c("td", {
+                          domProps: {
+                            textContent: _vm._s(_vm.monthNames[index])
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("td", {
+                          domProps: { textContent: _vm._s(click_count) }
+                        })
+                      ])
+                    })
+                  )
+                ])
+              ])
+            ])
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-lg-6 col-md-6" }, [
+        _c("div", { staticClass: "card" }, [
+          _c("div", { staticClass: "card-body" }, [
+            _c("h4", { staticClass: "card-title text-center" }, [
+              _vm._v("Advertisements statistics")
+            ]),
+            _vm._v(" "),
+            _c("table", { staticClass: "table" }, [
+              _vm._m(9),
+              _vm._v(" "),
+              _c(
+                "tbody",
+                _vm._l(_vm.statistics, function(statistic, index) {
+                  return _c("tr", [
+                    _c("td", {
+                      domProps: { textContent: _vm._s(statistic[0]) }
+                    }),
+                    _vm._v(" "),
+                    _c("td", {
+                      domProps: { textContent: _vm._s(statistic[1]) }
+                    }),
+                    _vm._v(" "),
+                    _c("td", {
+                      domProps: { textContent: _vm._s(statistic[2]) }
+                    }),
+                    _vm._v(" "),
+                    _c("td", {
+                      domProps: { textContent: _vm._s(statistic[3]) }
+                    }),
+                    _vm._v(" "),
+                    _c("td", {
+                      domProps: { textContent: _vm._s(statistic[4]) }
+                    })
+                  ])
+                })
+              )
+            ])
+          ])
+        ])
+      ])
     ])
   ])
 }
@@ -24172,6 +24363,58 @@ var staticRenderFns = [
         _c("th", [_vm._v("Date")]),
         _vm._v(" "),
         _c("th", [_vm._v("Quantity")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card-body" }, [
+      _c("h4", { staticClass: "card-title" }, [
+        _vm._v("Advertisements Information")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("Date")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Quantity")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("Date")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Quantity")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("Ads Banner")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Views")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Views 30 days")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Clicks")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Clicks 30 days")])
       ])
     ])
   }
@@ -32818,6 +33061,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -32832,6 +33083,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             countries: {},
             filterAdForm: {
                 status: '',
+                name: '',
                 image: '',
                 country: '',
                 link: '',
@@ -33029,6 +33281,35 @@ var render = function() {
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "row m-t-20" }, [
+              _c("div", { staticClass: "col-md-3" }, [
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "" } }, [_vm._v("Name")]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.filterAdForm.name,
+                        expression: "filterAdForm.name"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: { name: "search" },
+                    domProps: { value: _vm.filterAdForm.name },
+                    on: {
+                      blur: _vm.getAds,
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.filterAdForm, "name", $event.target.value)
+                      }
+                    }
+                  })
+                ])
+              ]),
+              _vm._v(" "),
               _c("div", { staticClass: "col-md-2" }, [
                 _c("div", { staticClass: "form-group" }, [
                   _c("label", { attrs: { for: "" } }, [_vm._v("Country")]),
@@ -33083,7 +33364,7 @@ var render = function() {
                 ])
               ]),
               _vm._v(" "),
-              _c("div", { staticClass: "col-md-3" }, [
+              _c("div", { staticClass: "col-md-2" }, [
                 _c("div", { staticClass: "row" }, [
                   _c("div", { staticClass: "col-md-6" }, [
                     _c("div", { staticClass: "form-group" }, [
@@ -33291,7 +33572,7 @@ var render = function() {
                 ])
               ]),
               _vm._v(" "),
-              _c("div", { staticClass: "col-md-5" }, [
+              _c("div", { staticClass: "col-md-3" }, [
                 _c("div", { staticClass: "row" }, [
                   _c("div", { staticClass: "col-md-6" }, [
                     _c("div", { staticClass: "form-group" }, [
@@ -33558,6 +33839,10 @@ var render = function() {
                       "tbody",
                       _vm._l(_vm.ads.data, function(ad) {
                         return _c("tr", [
+                          _c("td", {
+                            domProps: { textContent: _vm._s(ad.name) }
+                          }),
+                          _vm._v(" "),
                           _c("td", [
                             _c("img", {
                               staticClass: "img-responsive",
@@ -33823,6 +34108,8 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("thead", [
       _c("tr", [
+        _c("th", [_vm._v("Name")]),
+        _vm._v(" "),
         _c("th", [_vm._v("Photo")]),
         _vm._v(" "),
         _c("th", [_vm._v("Country")]),
@@ -34079,6 +34366,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 
@@ -34089,12 +34382,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     data: function data() {
         return {
             uploadImages: [],
-            uploadDataForm: new FormData(),
+            uploadDataForm: [],
             errors: {},
             percentCompleted: 0,
 
             countries: {},
             advertisementForm: new Form({
+                'name': '',
                 'link': '',
                 'start_date': '',
                 'end_date': '',
@@ -34130,11 +34424,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
         },
         proceed: function proceed() {
-            if (this.id != 0) {
-                this.updateAdvertisement();
-            } else {
-                this.storeAdvertisement();
-            }
+            this.uploadDataForm = new FormData();
+            // if(this.id != 0) {
+            //     this.updateAdvertisement();
+            // } else {
+            //     this.storeAdvertisement();
+            // }
+            this.storeAdvertisement();
         },
         getCountries: function getCountries() {
             var _this = this;
@@ -34164,6 +34460,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 } else {
                     _this2.previewImage = 'http://szlogin.com/images/common/no-image.png';
                 }
+                _this2.advertisementForm.name = response.data.name;
                 _this2.advertisementForm.link = response.data.link;
                 _this2.advertisementForm.start_date = response.data.start_date != "" ? response.data.start_date : 0;
                 _this2.advertisementForm.end_date = response.data.end_date != "" ? response.data.end_date : 0;
@@ -34184,7 +34481,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 }.bind(this)
             };
 
-            axios.post('/api/advertisement', this.uploadDataForm, config).then(function (response) {
+            axios.patch('/api/advertisement/' + this.id, this.uploadDataForm, config).then(function (response) {
                 toastr['success'](response.data.message);
                 _this3.$router.push('/advertisement');
             }).catch(function (error) {
@@ -34246,7 +34543,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     break;
                 }
             }
-            this.uploadDataForm.append('id', this.id);
+            if (this.id) {
+                this.uploadDataForm.append('id', this.id);
+            }
+            this.uploadDataForm.append('name', this.advertisementForm.name);
             this.uploadDataForm.append('link', this.advertisementForm.link);
             this.uploadDataForm.append('start_date', this.advertisementForm.start_date);
             this.uploadDataForm.append('end_date', this.advertisementForm.end_date);
@@ -34411,7 +34711,39 @@ var render = function() {
         _vm._v(" "),
         _c("div", { staticClass: "form-group col-md-8" }, [
           _c("div", { staticClass: "row" }, [
-            _c("div", { staticClass: "col-md-12" }, [
+            _c("div", { staticClass: "col-md-2" }, [
+              _c("div", { staticClass: "form-group" }, [
+                _c("label", { attrs: { for: "" } }, [_vm._v("Name")]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.advertisementForm.name,
+                      expression: "advertisementForm.name"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: { type: "text", value: "" },
+                  domProps: { value: _vm.advertisementForm.name },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(
+                        _vm.advertisementForm,
+                        "name",
+                        $event.target.value
+                      )
+                    }
+                  }
+                })
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-md-10" }, [
               _c("div", { staticClass: "form-group" }, [
                 _c("label", { attrs: { for: "" } }, [_vm._v("Link")]),
                 _vm._v(" "),
