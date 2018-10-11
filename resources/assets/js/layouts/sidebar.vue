@@ -6,7 +6,7 @@
                 <div class="profile-text"> <a href="#" class="dropdown-toggle link u-dropdown" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">{{getAuthUserContactPserson()}}<span class="caret"></span></a>
                     <div class="dropdown-menu">
                         <router-link to="/profile" class="dropdown-item"><i class="fa fa-user"></i> Profile</router-link>
-                        <div class="dropdown-divider"></div> <router-link to="/configuration" class="dropdown-item"><i class="fa fa-cogs"></i> Configuration</router-link>
+                        <!-- <div class="dropdown-divider"></div> <router-link to="/configuration" class="dropdown-item"><i class="fa fa-cogs"></i> Configuration</router-link> -->
                         <div class="dropdown-divider"></div> <a href="#" class="dropdown-item" @click.prevent="logout"><i class="fa fa-power-off"></i> Logout</a>
                     </div>
                 </div>
@@ -16,9 +16,9 @@
                     <li>
                         <router-link to="/dashboard" exact><i class="fa fa-dashboard"></i> <span class="hide-menu">Dashboard</span></router-link>
                     </li>
-                    <li>
+                    <!-- <li>
                         <router-link to="/setting" exact><i class="fa fa-cog"></i> <span class="hide-menu">Settings</span></router-link>
-                    </li>
+                    </li> -->
                     <li>
                         <router-link to="/group" exact><i class="fa fa-group"></i> <span class="hide-menu">Groups</span></router-link>
                     </li>

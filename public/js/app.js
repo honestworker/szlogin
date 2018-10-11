@@ -22487,22 +22487,6 @@ var render = function() {
                     attrs: { role: "separator" }
                   }),
                   _vm._v(" "),
-                  _c(
-                    "li",
-                    [
-                      _c("router-link", { attrs: { to: "/setting" } }, [
-                        _c("i", { staticClass: "fa fa-cogs" }),
-                        _vm._v(" Settings")
-                      ])
-                    ],
-                    1
-                  ),
-                  _vm._v(" "),
-                  _c("li", {
-                    staticClass: "divider",
-                    attrs: { role: "separator" }
-                  }),
-                  _vm._v(" "),
                   _c("li", [
                     _c(
                       "a",
@@ -22794,20 +22778,6 @@ var render = function() {
               _c("div", { staticClass: "dropdown-divider" }),
               _vm._v(" "),
               _c(
-                "router-link",
-                {
-                  staticClass: "dropdown-item",
-                  attrs: { to: "/configuration" }
-                },
-                [
-                  _c("i", { staticClass: "fa fa-cogs" }),
-                  _vm._v(" Configuration")
-                ]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "dropdown-divider" }),
-              _vm._v(" "),
-              _c(
                 "a",
                 {
                   staticClass: "dropdown-item",
@@ -22836,18 +22806,6 @@ var render = function() {
                 _c("i", { staticClass: "fa fa-dashboard" }),
                 _vm._v(" "),
                 _c("span", { staticClass: "hide-menu" }, [_vm._v("Dashboard")])
-              ])
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "li",
-            [
-              _c("router-link", { attrs: { to: "/setting", exact: "" } }, [
-                _c("i", { staticClass: "fa fa-cog" }),
-                _vm._v(" "),
-                _c("span", { staticClass: "hide-menu" }, [_vm._v("Settings")])
               ])
             ],
             1

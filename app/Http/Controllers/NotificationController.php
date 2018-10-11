@@ -12,7 +12,7 @@ class NotificationController extends Controller
     protected $images_path = 'images/notifications/';
     protected $stamp_image_path = 'images/common/stamp.png';
     
-    protected $image_extensions = array('jpeg', 'png', 'jpg', 'gif', 'svg');
+    protected $image_extensions = array('jpeg', 'png', 'jpg');
     
 	public function index() {
 		$notifications = \App\Notification::with('user', 'group');
@@ -50,10 +50,10 @@ class NotificationController extends Controller
 		return $notifications->paginate(request('pageLength'));
 	}
     
-    private function stampImage($filename_x, $filename_y, $filename_result, $mergeType = 0) {
+    private function stampImage($filename_x, $filename_result, $mergeType = 0) {
         /// Get dimensions for specified images
         list($width_x, $height_x, $image_x_type) = getimagesize($filename_x);
-        list($width_y, $height_y, $image_y_type) = getimagesize($filename_y);
+        list($width_y, $height_y, $image_y_type) = getimagesize($this->stamp_image_path);
 
         //$image_x_type = image_type_to_extension($filename_x);
         if ($image_x_type == 2) {
@@ -64,19 +64,33 @@ class NotificationController extends Controller
             $image_x = imagecreatefromgif($filename_x);
         }
 
-        //$image_y_type = image_type_to_extension($filename_y);
+        //$image_y_type = image_type_to_extension($this->stamp_image_path);
         if ($image_y_type == 2) {
-            $image_y = imagecreatefromjpeg($filename_y);
+            $image_y = imagecreatefromjpeg($this->stamp_image_path);
         } else if ($image_y_type == 3) {
-            $image_y = imagecreatefrompng($filename_y); 
+            $image_y = imagecreatefrompng($this->stamp_image_path); 
         } else if ($image_y_type == 1) {
-            $image_y = imagecreatefromgif($filename_y);
+            $image_y = imagecreatefromgif($this->stamp_image_path);
         }
 
         $image = imagecreatetruecolor($width_x, $height_x);
+        imagealphablending($image, true);
+        imagesavealpha($image, true);
+
+        $min_x = ($width_x > $height_x) ? $width_x : $height_x;
+        $ratio = $min_x / 1024 * (250 / $width_y);
+        $offset_x = 100 * $ratio;
+        $offset_y = (100 + $height_y) * $ratio;
+
+        $new_width = $width_y * $ratio;
+        $new_height = $height_y * $ratio;
+        $image_tmp = imagecreate($new_width, $new_height);
+        imagealphablending($image_tmp, true);
+        imagesavealpha($image_tmp, true);
+        imagecopyresampled($image_tmp, $image_y, 0, 0, 0, 0, $new_width, $new_height, $width_y, $height_y);
 
         imagecopy($image, $image_x, 0, 0, 0, 0, $width_x, $height_x);
-        imagecopy($image, $image_y, 50, 50, 0, 0, $width_y, $height_y);
+        imagecopy($image, $image_tmp, $offset_x, $height_x - $offset_y, 0, 0, $new_width, $new_height);
 
         $lowerFileName = strtolower($filename_result); 
         if (substr_count($lowerFileName, '.jpg') > 0 || substr_count($lowerFileName, '.jpeg') > 0) {
@@ -89,6 +103,7 @@ class NotificationController extends Controller
 
         // Clean up
         imagedestroy($image);
+        imagedestroy($image_tmp);
         imagedestroy($image_x);
         imagedestroy($image_y);
     }
@@ -115,7 +130,7 @@ class NotificationController extends Controller
             {
                 $extension = $image->getClientOriginalExtension();
                 if (!in_array($extension, $this->image_extensions)) {
-                    return response()->json(['status' => 'fail', 'message' => 'Your images must be jpeg, png, jpg, gif, svg!'], 422);
+                    return response()->json(['status' => 'fail', 'message' => 'Your images must be jpeg, png, jpg!'], 422);
                 }
             }
         }
@@ -137,15 +152,17 @@ class NotificationController extends Controller
                         $mt = explode(' ', microtime());
                         $name = ((int)$mt[1]) * 1000000 + ((int)round($mt[0] * 1000000));
                         $file_name = $name . '.' . $extension;
-                        
-                        $file = $image->move($this->images_path, $file_name);
-                        
-                        //$file_tmp_name = $name . 'tmp.' . $extension;
-                        //$file = $image->move($this->images_path, $file_tmp_name);
-                        //$this.stampImage($this->images_path . $file_tmp_name, $this->stamp_images_path, $this->images_path . $file_name);
+
+                        if($this->stamp_image_path && \File::exists($this->stamp_image_path)) {
+                            $file_tmp_name = $name . 'tmp.' . $extension;
+                            $file = $image->move($this->images_path, $file_tmp_name);
+                            $this->stampImage($this->images_path . $file_tmp_name, $this->images_path . $file_name);
+                            \File::delete($this->images_path . $file_tmp_name);
+                        } else {
+                            $file = $image->move($this->images_path, $file_name);
+                        }
 
                         list($width, $height) = getimagesize($this->images_path . $file_name);
-                        
                         $notificaion_image = new \App\Image;
                         $notificaion_image->type = 'notification';
                         $notificaion_image->width = $width;
@@ -280,8 +297,18 @@ class NotificationController extends Controller
                 $name = ((int)$mt[1]) * 1000000 + ((int)round($mt[0] * 1000000));
                 $file_name = $name . '.' . $extension;
                 $image->move($this->images_path, $file_name);
-                list($width, $height) = getimagesize($this->images_path . $file_name);
-                
+                $file_name = $name . '.' . $extension;
+
+                if($this->stamp_image_path && \File::exists($this->stamp_image_path)) {
+                    $file_tmp_name = $name . 'tmp.' . $extension;
+                    $file = $image->move($this->images_path, $file_tmp_name);
+                    $this->stampImage($this->images_path . $file_tmp_name, $this->images_path . $file_name);
+                    \File::delete($this->images_path . $file_tmp_name);
+                } else {
+                    $file = $image->move($this->images_path, $file_name);
+                }
+
+                list($width, $height) = getimagesize($this->images_path . $file_name);                
                 $comment_image = new \App\Image;
                 $comment_image->type = 'comment';
                 $comment_image->width = $width;

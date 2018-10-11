@@ -10,8 +10,9 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 class AdvertisementController extends Controller
 {
     protected $images_path = 'images/advertisements/';
-    protected $image_extensions = array('jpeg', 'png', 'jpg', 'gif', 'svg');
-    
+    protected $images_base_path = 'images/advertisements/base.png';
+    protected $image_extensions = array('jpeg', 'png', 'jpg');
+
 	public function index(){
 		$advertisements = \App\Advertisement::whereNotNull('id');
 		
@@ -62,7 +63,7 @@ class AdvertisementController extends Controller
             {
                 $extension = $image->getClientOriginalExtension();
                 if (!in_array($extension, $this->image_extensions)) {
-                    return response()->json(['status' => 'fail', 'message' => 'Your images must be jpeg, png, jpg, gif, svg!'], 422);
+                    return response()->json(['status' => 'fail', 'message' => 'Your images must be jpeg, png, jpg!'], 422);
                 }
             }
         }
@@ -205,17 +206,20 @@ class AdvertisementController extends Controller
         
         $advertisements = \App\Advertisement::whereNotNull('id');
         
-        $now_date = date("Y-m-d m:i:s");
-        $advertisements->where('start_date', '!=', '')->where('start_date', '<=', $now_date)->where('end_date', '!=', '')->where('end_date', '>=', $now_date)->whereStatus(1);
+        $now_date = date("Y-m-d");
+        $advertisements->whereRaw("(`start_date` IS NOT NULL AND `end_date` IS NOT NULL AND `start_date` <= '" . $now_date . "' AND `end_date` >= '" . $now_date . "') OR (`start_date` IS NULL AND `end_date` IS NULL) OR (`start_date` IS NULL AND `end_date` >= '" . $now_date . "') OR (`end_date` IS NULL AND `start_date` <= '" . $now_date . "')");
+        $advertisements->whereStatus(1);
         if ($profile->country) {
             $advertisements->where('country', '=', $profile->country);
         }
         
         $advertisements_result = $advertisements->get();
-        $advertisements_count = count($advertisements_result);
+        if ($advertisements_result) {
+            $advertisements_count = count($advertisements_result);
+        }
         
         if (!$advertisements_count) {
-            return response()->json(['status' => 'fail', 'message' => 'Advertisement fail!'], 422);
+            return response()->json(['status' => 'success', 'message' => 'Advertisement!', 'id' => 0, 'image' => basename($this->images_base_path), 'link' => url('/'), 'now_data' => $now_date], 200);
         }
         $advertisement_index = rand(1, $advertisements_count);
         $advertisement = $advertisements_result[$advertisement_index - 1];
