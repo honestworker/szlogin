@@ -296,7 +296,7 @@
                     }
 
                     this.visitorChartData[0] = ["Year", (this.year - 1) + "", this.year];
-                    for (var index = 1; index <= this.this.users_visitors_infor[0].length; index++){
+                    for (var index = 1; index <= this.groups_infor.length; index++){
                         this.visitorChartData[index] = [this.monthNames[index - 1], this.users_visitors_infor[0][index - 1], this.users_visitors_infor[1][index - 1]];
                     }
 
@@ -313,16 +313,29 @@
                     this.statistics = response.data.data.statistics;
                 });
             },
+            loadData() {
+                this.getGroupInfor();
+                this.getUserInfor();
+                this.getAdsCountsInfor();
+                this.redraw();
+            }
         },
         computed: {
         },
         filters: {
-          moment(date) {
-            return helper.formatDate(date);
-          },
-          momentWithTime(date) {
-            return helper.formatDateTime(date);
-          }
+            moment(date) {
+                return helper.formatDate(date);
+            },
+            momentWithTime(date) {
+                return helper.formatDateTime(date);
+            }
+        },
+        ready: function () {
+            this.loadData();
+
+            setInterval(function () {
+                this.loadData();
+            }.bind(this), 3000); 
         }
     }
 </script>

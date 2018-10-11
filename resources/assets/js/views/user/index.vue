@@ -443,7 +443,7 @@
             },
             
             isAdministrator(user) {
-                if (user.status == 'activated') {
+                if (user.status != 'banned') {
                     if (user.profile.roles) {
                         for (var role_no = 0; role_no < user.profile.roles.length; role_no++) {
                             if (user.profile.roles[role_no].role_id <= 2) {

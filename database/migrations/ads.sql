@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Oct 09, 2018 at 06:32 AM
+-- Generation Time: Oct 11, 2018 at 03:40 PM
 -- Server version: 10.1.35-MariaDB-cll-lve
 -- PHP Version: 5.6.30
 
@@ -30,11 +30,10 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `ads` (
   `id` int(11) NOT NULL,
+  `name` varchar(512) NOT NULL,
   `image` varchar(512) DEFAULT '',
   `link` varchar(1024) DEFAULT '',
   `country` varchar(512) DEFAULT '',
-  `click_count` int(11) DEFAULT '0',
-  `show_count` int(11) DEFAULT '0',
   `start_date` date DEFAULT NULL,
   `end_date` date DEFAULT NULL,
   `status` int(11) NOT NULL DEFAULT '1',
@@ -56,7 +55,7 @@ ALTER TABLE `ads`
 -- AUTO_INCREMENT for table `ads`
 --
 ALTER TABLE `ads`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

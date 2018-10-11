@@ -25,28 +25,21 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users`
+-- Table structure for table `ads_count`
 --
 
-CREATE TABLE `users` (
-  `id` int(10) NOT NULL,
-  `email` varchar(573) NOT NULL,
-  `password` varchar(573) DEFAULT '',
-  `status` varchar(75) DEFAULT 'pending',
-  `provider` varchar(573) DEFAULT NULL,
-  `provider_unique_id` varchar(573) DEFAULT NULL,
-  `activation_token` varchar(191) DEFAULT NULL,
-  `remember_token` varchar(300) DEFAULT NULL,
-  `activated_at` datetime DEFAULT NULL,
-  `deactivated_at` datetime DEFAULT NULL,
-  `created_at` timestamp NOT NULL,
-  `updated_at` timestamp NOT NULL
+CREATE TABLE `ads_count` (
+  `id` int(11) NOT NULL,
+  `ad_id` int(11) NOT NULL,
+  `type` varchar(64) NOT NULL DEFAULT 'show',
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Indexes for table `users`
+-- Indexes for table `ads_count`
 --
-ALTER TABLE `users`
+ALTER TABLE `ads_count`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -54,10 +47,10 @@ ALTER TABLE `users`
 --
 
 --
--- AUTO_INCREMENT for table `users`
+-- AUTO_INCREMENT for table `ads_count`
 --
-ALTER TABLE `users`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+ALTER TABLE `ads_count`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=320;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

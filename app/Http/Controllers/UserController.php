@@ -454,24 +454,24 @@ class UserController extends Controller
         $month = date('m', strtotime($now_date));
         for ($month_index = 1; $month_index <= $month; $month_index++) {
             $users = \App\User::whereNotNull('id');
-            $infor[] = count($users->whereYear('created_at', '=',  $year)->whereMonth('created_at', '=',   $month_index )->get());
+            $infor[] = count($users->whereStatus('activated')->whereYear('created_at', '=',  $year)->whereMonth('created_at', '=',   $month_index )->get());
         }
         
         $visitor_infor = array();
         $day_before = date("Y-m-d H:i:s", strtotime("$now_date  -1 day"));
         $users = \App\User::whereNotNull('id');
-        $visitor_infor[] = count($users->where('created_at', '>=',  $day_before)->get());
+        $visitor_infor[] = count($users->whereStatus('activated')->where('created_at', '>=',  $day_before)->get());
 
         $week_before = date("Y-m-d H:i:s", strtotime("$now_date  -7 days"));
         $users = \App\User::whereNotNull('id');
-        $visitor_infor[] = count($users->where('created_at', '>=',  $week_before)->get());
+        $visitor_infor[] = count($users->whereStatus('activated')->where('created_at', '>=',  $week_before)->get());
 
         $month_before = date("Y-m-d H:i:s", strtotime("$now_date  -30 days"));
         $users = \App\User::whereNotNull('id');
-        $visitor_infor[] = count($users->where('created_at', '>=',  $month_before)->get());
+        $visitor_infor[] = count($users->whereStatus('activated')->where('created_at', '>=',  $month_before)->get());
 
         $users = \App\User::whereNotNull('id');
-        $visitor_infor[] = count($users->whereYear('created_at', '=',  $year)->get());
+        $visitor_infor[] = count($users->whereStatus('activated')->whereYear('created_at', '=',  $year)->get());
 
         $visitors_infor = $visitor_infor1 = $visitor_infor2 = array();
         for ($month_index = 1; $month_index <= 12; $month_index++) {
@@ -493,7 +493,7 @@ class UserController extends Controller
         $visitors_infor = [$visitor_infor1, $visitor_infor2];
 
         $users = \App\User::whereNotNull('id');
-        $activated_users = count($users->where('activated_at', '>=',  $month_before)->get());
+        $activated_users = count($users->whereStatus('activated')->where('activated_at', '>=',  $month_before)->get());
 
         return response()->json(['status' => 'success', 'message' => 'User and Visitor Overview!', 'data' => compact('total','infor','activated_users','visitor_infor','visitors_infor')]);
     }

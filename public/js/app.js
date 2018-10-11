@@ -23899,6 +23899,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this3.click_count_infor = response.data.data.click_count_infor;
                 _this3.statistics = response.data.data.statistics;
             });
+        },
+        loadData: function loadData() {
+            this.getGroupInfor();
+            this.getUserInfor();
+            this.getAdsCountsInfor();
+            this.redraw();
         }
     },
     computed: {},
@@ -23909,6 +23915,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         momentWithTime: function momentWithTime(date) {
             return __WEBPACK_IMPORTED_MODULE_0__services_helper__["a" /* default */].formatDateTime(date);
         }
+    },
+    ready: function ready() {
+        this.loadData();
+
+        setInterval(function () {
+            this.loadData();
+        }.bind(this), 3000);
     }
 });
 
@@ -27809,7 +27822,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             });
         },
         isAdministrator: function isAdministrator(user) {
-            if (user.status == 'activated') {
+            if (user.status != 'banned') {
                 if (user.profile.roles) {
                     for (var role_no = 0; role_no < user.profile.roles.length; role_no++) {
                         if (user.profile.roles[role_no].role_id <= 2) {
