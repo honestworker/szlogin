@@ -296,7 +296,7 @@
                     }
 
                     this.visitorChartData[0] = ["Year", (this.year - 1) + "", this.year];
-                    for (var index = 1; index <= this.groups_infor.length; index++){
+                    for (var index = 1; index <= this.this.users_visitors_infor[0].length; index++){
                         this.visitorChartData[index] = [this.monthNames[index - 1], this.users_visitors_infor[0][index - 1], this.users_visitors_infor[1][index - 1]];
                     }
 

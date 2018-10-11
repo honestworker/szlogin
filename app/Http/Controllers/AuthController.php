@@ -102,7 +102,7 @@ class AuthController extends Controller
             return response()->json(['status' => 'fail', 'message' => 'There is something wrong with your account. Please contact system administrator.'], 422);
         
         $this->calculateVisitor($user);
-
+        
         $mamager = false;
         $roles = $user->Profile->Roles;
         foreach ($roles as $role) {
@@ -146,16 +146,16 @@ class AuthController extends Controller
             $token = JWTAuth::getToken();
             
             if ($token) {
+                $user = JWTAuth::parseToken()->authenticate();
+                $user->deactivated_at = date('Y-m-d H:i:s');
+                $user->save();
                 JWTAuth::invalidate($token);
             }
             
         } catch (JWTException $e) {
             return response()->json(['status' => 'fail', 'message' => $e->getMessage()], 500);
         }
-        
-        $user->deactivated_at = date('Y-m-d H:i:s');
-        $user->save();
-
+                
         return response()->json(['status' => 'success', 'message' => 'You are successfully logged out!'], 200);
     }
 
@@ -235,7 +235,7 @@ class AuthController extends Controller
             }
         }
         if (!$group_match) {
-            return response()->json(['status' => 'fail', 'message' => 'Your group name does not match!'], 422);
+            return response()->json(['status' => 'fail', 'message' => 'Your group id does not match!'], 422);
         }
         
         $user->password = bcrypt(request('password'));
@@ -286,7 +286,7 @@ class AuthController extends Controller
         ]);
         $user->password = bcrypt(request('password'));
         $user->save();
-
+        
         $profile = new \App\Profile;
         $profile->contact_person = request('contact_person');
         $user->profile()->save($profile);
@@ -301,21 +301,21 @@ class AuthController extends Controller
 
     public function assignGroup(Request $request){
         if(env('IS_DEMO'))
-            return response()->json(['status' => 'fail', 'message' => 'You are not allowed to perform this action in this mode.'],422);
+            return response()->json(['status' => 'fail', 'message' => 'You are not allowed to perform this action in this mode.'], 422);
         
 		if(!request()->has('id'))
-            return response()->json(['status' => 'fail', 'message' => 'You must specify user ID!'],422);
+            return response()->json(['status' => 'fail', 'message' => 'You must specify user ID!'], 422);
         
 		if(!request()->has('group_id'))
-            return response()->json(['status' => 'fail', 'message' => 'You must specify Group ID!'],422);
+            return response()->json(['status' => 'fail', 'message' => 'You must specify Group ID!'], 422);
         
         if (!request('group_id'))
-            return response()->json(['status' => 'fail', 'message' => 'You must specify Group ID!'],422);
+            return response()->json(['status' => 'fail', 'message' => 'You must specify Group ID!'], 422);
         
         $user = \App\User::find(request('id'));
         
         if(!$user)
-            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user!'],422);
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user!'], 422);
         
         $profile = $user->Profile;
         $profile->group_id = request('group_id');
@@ -332,17 +332,17 @@ class AuthController extends Controller
 
     public function changeRole(Request $request){
         if(env('IS_DEMO'))
-            return response()->json(['status' => 'fail', 'message' => 'You are not allowed to perform this action in this mode.'],422);
+            return response()->json(['status' => 'fail', 'message' => 'You are not allowed to perform this action in this mode.'], 422);
         
 		if(!request()->has('id'))
-            return response()->json(['status' => 'fail', 'message' => 'You must specify user ID!'],422);
+            return response()->json(['status' => 'fail', 'message' => 'You must specify user ID!'], 422);
         
 		if(!request()->has('group') && !request()->has('admin') )
-            return response()->json(['status' => 'fail', 'message' => 'You must specify user role type!'],422);
+            return response()->json(['status' => 'fail', 'message' => 'You must specify user role type!'], 422);
         
         $user = \App\User::find(request('id'));
         if(!$user)
-            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user!'],422);
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user!'], 422);
         
         $user_role_group = $user_role_admin = 0;
         if (request()->has('group')) {
@@ -413,13 +413,13 @@ class AuthController extends Controller
         $user = \App\User::whereActivationToken($activation_token)->first();
         
         if(!$user)
-            return response()->json(['message' => 'Invalid activation token!'],422);
+            return response()->json(['message' => 'Invalid activation token!'], 422);
             
         if($user->status == 'activated')
-            return response()->json(['message' => 'Your account has already been activated!'],422);
+            return response()->json(['message' => 'Your account has already been activated!'], 422);
         
         if($user->status != 'pending_activation_admin')
-            return response()->json(['message' => 'Invalid activation token!'],422);
+            return response()->json(['message' => 'Invalid activation token!'], 422);
         
         $user->status = 'activated';
         $user->save();
@@ -442,11 +442,11 @@ class AuthController extends Controller
         ]);
         
         if($validation->fails())
-            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first()],422);
+            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first()], 422);
             
         $user = \App\User::whereEmail(request('email'))->first();
         if(!$user)
-            return response()->json(['status' => 'fail', 'message' => 'We couldn\'t found any user with this email. Please try again!'],422);
+            return response()->json(['status' => 'fail', 'message' => 'We couldn\'t found any user with this email. Please try again!'], 422);
             
         $code = $this->generateUuid6();
         $password_reset = \DB::table('password_resets')->where('email','=',request('email'))->first();
@@ -474,22 +474,22 @@ class AuthController extends Controller
         
         $validate_password_request = \DB::table('password_resets')->where('email','=', request('email'))->first();
         if(!$validate_password_request)
-            return response()->json(['status' => 'fail', 'message' => 'Invalid email!'],422);
+            return response()->json(['status' => 'fail', 'message' => 'Invalid email!'], 422);
             
         $validate_password_request = \DB::table('password_resets')->where('email','=', request('email'))->where('code','=', request('code'))->first();        
         if(!$validate_password_request)
-            return response()->json(['status' => 'fail', 'message' => 'Invalid password reset code!'],422);
+            return response()->json(['status' => 'fail', 'message' => 'Invalid password reset code!'], 422);
             
         if(date("Y-m-d H:i:s", strtotime($validate_password_request->created_at . "+30 minutes")) < date('Y-m-d H:i:s'))
-            return response()->json(['status' => 'fail', 'message' => 'Password reset code is expired. Please request reset password again!'],422);
+            return response()->json(['status' => 'fail', 'message' => 'Password reset code is expired. Please request reset password again!'], 422);
             
         return response()->json(['status' => 'success', 'message' => 'Please reset the password!']);
     }
 
     public function resetPassword(Request $request){
         if(env('IS_DEMO'))
-            return response()->json(['message' => 'You are not allowed to perform this action in this mode.'],422);
-
+            return response()->json(['message' => 'You are not allowed to perform this action in this mode.'], 422);
+            
         $validation = Validator::make($request->all(), [
             'email' => 'required|email',
             'code' => 'required',
@@ -497,18 +497,18 @@ class AuthController extends Controller
         ]);
         
         if($validation->fails())
-            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first()],422);
+            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first()], 422);
             
         $user = \App\User::whereEmail(request('email'))->first();
         if(!$user)
-            return response()->json(['status' => 'fail', 'message' => 'We couldn\'t found any user with this email. Please try again!'],422);
+            return response()->json(['status' => 'fail', 'message' => 'We couldn\'t found any user with this email. Please try again!'], 422);
             
         $validate_password_request = \DB::table('password_resets')->where('email','=',request('email'))->where('code','=', request('code'))->first();
         if(!$validate_password_request)
-            return response()->json(['status' => 'fail', 'message' => 'Invalid password reset code!'],422);
+            return response()->json(['status' => 'fail', 'message' => 'Invalid password reset code!'], 422);
             
         if(date("Y-m-d H:i:s", strtotime($validate_password_request->created_at . "+30 minutes")) < date('Y-m-d H:i:s'))
-            return response()->json(['status' => 'fail', 'message' => 'Password reset code is expired. Please request reset password again!'],422);
+            return response()->json(['status' => 'fail', 'message' => 'Password reset code is expired. Please request reset password again!'], 422);
             
         $user->password = bcrypt(request('password'));
         $user->save();
@@ -520,7 +520,7 @@ class AuthController extends Controller
 
     public function resetPasswordBackend(Request $request) {
         if(env('IS_DEMO'))
-            return response()->json(['message' => 'You are not allowed to perform this action in this mode.'],422);
+            return response()->json(['message' => 'You are not allowed to perform this action in this mode.'], 422);
         
         $validation = Validator::make($request->all(), [
             'email' => 'required|email',
@@ -529,20 +529,20 @@ class AuthController extends Controller
         ]);
         
         if($validation->fails())
-            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first()],422);
+            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first()], 422);
             
         $user = \App\User::whereEmail(request('email'))->first();
         
         if(!$user)
-            return response()->json(['status' => 'fail', 'message' => 'We couldn\'t found any user with this email. Please try again!'],422);
+            return response()->json(['status' => 'fail', 'message' => 'We couldn\'t found any user with this email. Please try again!'], 422);
             
         $validate_password_request = \DB::table('password_resets')->where('email','=',request('email'))->where('code','=',request('code'))->first();
         
         if(!$validate_password_request)
-            return response()->json(['status' => 'fail', 'message' => 'Invalid password reset code!'],422);
+            return response()->json(['status' => 'fail', 'message' => 'Invalid password reset code!'], 422);
             
         if(date("Y-m-d H:i:s", strtotime($validate_password_request->created_at . "+30 minutes")) < date('Y-m-d H:i:s'))
-            return response()->json(['status' => 'fail', 'message' => 'Password reset code is expired. Please request reset password again!'],422);
+            return response()->json(['status' => 'fail', 'message' => 'Password reset code is expired. Please request reset password again!'], 422);
             
         $user->password = bcrypt(request('password'));
         $user->save();

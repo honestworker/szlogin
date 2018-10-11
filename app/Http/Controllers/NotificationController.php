@@ -277,7 +277,7 @@ class NotificationController extends Controller
             {
                 $extension = $image->getClientOriginalExtension();
                 if (!in_array($extension, $this->image_extensions)) {
-                    return response()->json(['status' => 'fail', 'message' => 'Your images must be jpeg, png, jpg, gif, svg!'], 422);
+                    return response()->json(['status' => 'fail', 'message' => 'Your images must be jpeg, png, jpg!'], 422);
                 }
             }
         }

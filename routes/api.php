@@ -114,12 +114,4 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     // Advertisement app only
     Route::post('/advertisement/get','AdvertisementController@get');
     Route::post('/advertisement/click','AdvertisementController@click');
-    
-    Route::get('/configuration/fetch','ConfigurationController@index');
-    Route::post('/configuration','ConfigurationController@store');
-
-    Route::post('todo','TodoController@store');
-    Route::get('/todo','TodoController@index');
-    Route::delete('/todo/{id}','TodoController@destroy');
-    Route::post('/todo/status','TodoController@toggleStatus');
 });
