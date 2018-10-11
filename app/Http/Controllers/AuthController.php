@@ -85,21 +85,21 @@ class AuthController extends Controller
         
         try {
             if (! $token = JWTAuth::attempt($credentials)) {
-                return response()->json(['status' => 'fail', 'message' => 'Email or Password is incorrect! Please try again.'], 422);
+                return response()->json(['status' => 'fail', 'message' => 'Email or Password is incorrect! Please try again.', 'error_type' => 'incorrect'], 422);
             }
         } catch (JWTException $e) {
-            return response()->json(['status' => 'fail', 'message' => 'This is something wrong. Please try again!'], 500);
+            return response()->json(['status' => 'fail', 'message' => 'This is something wrong. Please try again!', 'error_type' => 'token_error'], 500);
         }
         
         $user = \App\User::whereEmail(request('email'))->first();
         if($user->status == 'pending')
-            return response()->json(['status' => 'fail', 'message' => 'Your account hasn\'t been activated. Please check your email & activate account.'], 422);
+            return response()->json(['status' => 'fail', 'message' => 'Your account hasn\'t been activated. Please check your email & activate account.', 'error_type' => 'no_groupid'], 422);
             
         if($user->status == 'banned')
-            return response()->json(['status' => 'fail', 'message' => 'Your account is banned. Please contact system administrator.'], 422);
+            return response()->json(['status' => 'fail', 'message' => 'Your account is banned. Please contact system administrator.', 'error_type' => 'banned'], 422);
             
         if($user->status != 'activated')
-            return response()->json(['status' => 'fail', 'message' => 'There is something wrong with your account. Please contact system administrator.'], 422);
+            return response()->json(['status' => 'fail', 'message' => 'There is something wrong with your account. Please contact system administrator.', 'error_type' => 'no_signup'], 422);
         
         $this->calculateVisitor($user);
         
@@ -119,7 +119,7 @@ class AuthController extends Controller
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {
-            return response()->json(['authenticated' => false], 422);
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
         }
         
         $user = JWTAuth::parseToken()->authenticate();
@@ -153,9 +153,9 @@ class AuthController extends Controller
             }
             
         } catch (JWTException $e) {
-            return response()->json(['status' => 'fail', 'message' => $e->getMessage()], 500);
+            return response()->json(['status' => 'fail', 'message' => $e->getMessage(), 'error_type' => 'token_error'], 500);
         }
-                
+        
         return response()->json(['status' => 'success', 'message' => 'You are successfully logged out!'], 200);
     }
 
@@ -166,11 +166,15 @@ class AuthController extends Controller
             'org_number' => 'required',
             'contact_person' => 'required',
             'phone_number' => 'required',
-            'email' => 'required|email|unique:users',
+            'email' => 'required|email',
         ]);
-        
+
         if($validation->fails())
-            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first()], 422);
+            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'incorrect'], 422);
+            
+        $user = \App\User::whereEmail(request('email'))->first();
+        if($user)
+            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'email_registered'], 422);
             
         $user = \App\User::create([
             'email' => request('email'),
@@ -209,21 +213,21 @@ class AuthController extends Controller
         ]);
         
         if($validation->fails())
-            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first()], 422);
+            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
             
         $user = \App\User::whereEmail(request('email'))->first();
         
         //
         if (!$user) {
-            return response()->json(['status' => 'fail', 'message' => 'Your email does not exist! Please first register your email!'], 422);
+            return response()->json(['status' => 'fail', 'message' => 'Your email does not exist! Please first register your email!', 'error_type' => 'no_user'], 422);
         }
         
         // Check Activate Status
         if ($user->status == 'pending') {
-            return response()->json(['status' => 'fail', 'message' => 'Your account does not assign Group ID yet! Please contact the administrator!'], 422);
+            return response()->json(['status' => 'fail', 'message' => 'Your account does not assign Group ID yet! Please contact the administrator!', 'error_type' => 'no_assgin'], 422);
         }
         if ($user->status == 'activated') {
-            return response()->json(['status' => 'fail', 'message' => 'Your account areadly signed up.'], 422);
+            return response()->json(['status' => 'fail', 'message' => 'Your account areadly signed up.', 'error_type' => 'signed_up'], 422);
         }
         
         $profile = $user->profile;
@@ -235,7 +239,7 @@ class AuthController extends Controller
             }
         }
         if (!$group_match) {
-            return response()->json(['status' => 'fail', 'message' => 'Your group id does not match!'], 422);
+            return response()->json(['status' => 'fail', 'message' => 'Your group id does not match!', 'error_type' => 'match_group'], 422);
         }
         
         $user->password = bcrypt(request('password'));
@@ -442,11 +446,11 @@ class AuthController extends Controller
         ]);
         
         if($validation->fails())
-            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first()], 422);
+            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
             
         $user = \App\User::whereEmail(request('email'))->first();
         if(!$user)
-            return response()->json(['status' => 'fail', 'message' => 'We couldn\'t found any user with this email. Please try again!'], 422);
+            return response()->json(['status' => 'fail', 'message' => 'We couldn\'t found any user with this email. Please try again!', 'error_type' => 'no_user'], 422);
             
         $code = $this->generateUuid6();
         $password_reset = \DB::table('password_resets')->where('email','=',request('email'))->first();
@@ -474,14 +478,14 @@ class AuthController extends Controller
         
         $validate_password_request = \DB::table('password_resets')->where('email','=', request('email'))->first();
         if(!$validate_password_request)
-            return response()->json(['status' => 'fail', 'message' => 'Invalid email!'], 422);
+            return response()->json(['status' => 'fail', 'message' => 'Invalid email!', 'error_type' => 'no_user'], 422);
             
         $validate_password_request = \DB::table('password_resets')->where('email','=', request('email'))->where('code','=', request('code'))->first();        
         if(!$validate_password_request)
-            return response()->json(['status' => 'fail', 'message' => 'Invalid password reset code!'], 422);
+            return response()->json(['status' => 'fail', 'message' => 'Invalid password reset code!', 'error_type' => 'invalid_code'], 422);
             
         if(date("Y-m-d H:i:s", strtotime($validate_password_request->created_at . "+30 minutes")) < date('Y-m-d H:i:s'))
-            return response()->json(['status' => 'fail', 'message' => 'Password reset code is expired. Please request reset password again!'], 422);
+            return response()->json(['status' => 'fail', 'message' => 'Password reset code is expired. Please request reset password again!', 'error_type' => 'code_expired'], 422);
             
         return response()->json(['status' => 'success', 'message' => 'Please reset the password!']);
     }
@@ -497,18 +501,18 @@ class AuthController extends Controller
         ]);
         
         if($validation->fails())
-            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first()], 422);
+            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
             
         $user = \App\User::whereEmail(request('email'))->first();
         if(!$user)
-            return response()->json(['status' => 'fail', 'message' => 'We couldn\'t found any user with this email. Please try again!'], 422);
+            return response()->json(['status' => 'fail', 'message' => 'We couldn\'t found any user with this email. Please try again!', 'error_type' => 'no_user'], 422);
             
         $validate_password_request = \DB::table('password_resets')->where('email','=',request('email'))->where('code','=', request('code'))->first();
         if(!$validate_password_request)
-            return response()->json(['status' => 'fail', 'message' => 'Invalid password reset code!'], 422);
+            return response()->json(['status' => 'fail', 'message' => 'Invalid password reset code!', 'error_type' => 'invalid_code'], 422);
             
         if(date("Y-m-d H:i:s", strtotime($validate_password_request->created_at . "+30 minutes")) < date('Y-m-d H:i:s'))
-            return response()->json(['status' => 'fail', 'message' => 'Password reset code is expired. Please request reset password again!'], 422);
+            return response()->json(['status' => 'fail', 'message' => 'Password reset code is expired. Please request reset password again!', 'error_type' => 'code_expired'], 422);
             
         $user->password = bcrypt(request('password'));
         $user->save();

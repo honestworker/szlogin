@@ -68,7 +68,7 @@ class NotificationController extends Controller
         if ($image_y_type == 2) {
             $image_y = imagecreatefromjpeg($this->stamp_image_path);
         } else if ($image_y_type == 3) {
-            $image_y = imagecreatefrompng($this->stamp_image_path); 
+            $image_y = imagecreatefrompng($this->stamp_image_path);
         } else if ($image_y_type == 1) {
             $image_y = imagecreatefromgif($this->stamp_image_path);
         }
@@ -78,9 +78,9 @@ class NotificationController extends Controller
         imagesavealpha($image, true);
 
         $min_x = ($width_x > $height_x) ? $width_x : $height_x;
-        $ratio = $min_x / 1024 * (250 / $width_y);
-        $offset_x = 100 * $ratio;
-        $offset_y = (100 + $height_y) * $ratio;
+        $ratio = $min_x / 1024 * (60 / $width_y);
+        $offset_x = 120 * $ratio;
+        $offset_y = (120 + $height_y) * $ratio;
 
         $new_width = $width_y * $ratio;
         $new_height = $height_y * $ratio;
@@ -119,18 +119,18 @@ class NotificationController extends Controller
         ]);
         
         if($validation->fails())
-            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first()], 422);
+            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
             
         $group = \App\Group::find($profile->group_id);
         if(!$group)
-            return response()->json(['status' => 'fail', 'message' => 'You must be any group memeber!'], 422);
+            return response()->json(['status' => 'fail', 'message' => 'You must be any group memeber!', 'error_type' => 'no_member'], 422);
         
         if($request->hasfile('images')) {
             foreach($request->file('images') as $image)
             {
                 $extension = $image->getClientOriginalExtension();
                 if (!in_array($extension, $this->image_extensions)) {
-                    return response()->json(['status' => 'fail', 'message' => 'Your images must be jpeg, png, jpg!'], 422);
+                    return response()->json(['status' => 'fail', 'message' => 'Your images must be jpeg, png, jpg!', 'error_type' => 'image_type_error'], 422);
                 }
             }
         }
@@ -184,7 +184,7 @@ class NotificationController extends Controller
             
         $group = \App\Group::find($profile->group_id);
         if(!$group)
-            return response()->json(['status' => 'fail', 'message' => 'You must be any group memeber!'], 422);
+            return response()->json(['status' => 'fail', 'message' => 'You must be any group memeber!', 'error_type' => 'no_member'], 422);
         
         
         $notification = \App\Notification::with('user.profile');
@@ -203,11 +203,11 @@ class NotificationController extends Controller
             'notification_id' => 'required',
         ]);
         if($validation->fails())
-            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first()], 422);
+            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
         
         $group = \App\Group::find($profile->group_id);
         if(!$group)
-            return response()->json(['status' => 'fail', 'message' => 'You must be any group memeber!'], 422);
+            return response()->json(['status' => 'fail', 'message' => 'You must be any group memeber!', 'error_type' => 'no_member'], 422);
         
         $notification = \App\Notification::with('user.profile', 'images', 'comments.images', 'comments.user.profile');
         $notification->where('id', '=', request('notification_id'));
@@ -224,11 +224,11 @@ class NotificationController extends Controller
             'contents' => 'required',
         ]);
         if($validation->fails())
-            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first()], 422);
+            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
                 
         $notification = \App\Notification::find(request('notification_id'));
         if(!$notification)
-            return response()->json(['status' => 'fail', 'message' => 'Could not find the notification.'], 422);
+            return response()->json(['status' => 'fail', 'message' => 'Could not find the notification.', 'error_type' => 'no_notification'], 422);
         $notification->contents = request('contents');
         $notification->save();
         
@@ -257,19 +257,19 @@ class NotificationController extends Controller
             'contents' => 'required',
         ]);        
         if($validation->fails())
-            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first()], 422);
+            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
             
         $group = \App\Group::find($profile->group_id);
         if(!$group)
-            return response()->json(['status' => 'fail', 'message' => 'You must be any group memeber!'], 422);
+            return response()->json(['status' => 'fail', 'message' => 'You must be any group memeber!', 'error_type' => 'no_member'], 422);
         
         if(request('notification_id') == 0) {
-            return response()->json(['status' => 'fail', 'message' => 'You must specify the notificaion!'], 422);
+            return response()->json(['status' => 'fail', 'message' => 'You must specify the notificaion!', 'error_type' => 'no_notification'], 422);
         }
         
         $notification = \App\Notification::find(request('notification_id'));
         if(!$notification)
-            return response()->json(['status' => 'fail', 'message' => 'You specify the empty notification!'], 422);
+            return response()->json(['status' => 'fail', 'message' => 'You specify the empty notification!', 'error_type' => 'find_notification'], 422);
             
         
         if($request->hasfile('images')) {
@@ -277,7 +277,7 @@ class NotificationController extends Controller
             {
                 $extension = $image->getClientOriginalExtension();
                 if (!in_array($extension, $this->image_extensions)) {
-                    return response()->json(['status' => 'fail', 'message' => 'Your images must be jpeg, png, jpg!'], 422);
+                    return response()->json(['status' => 'fail', 'message' => 'Your images must be jpeg, png, jpg!', 'error_type' => 'image_type_error'], 422);
                 }
             }
         }
@@ -296,8 +296,6 @@ class NotificationController extends Controller
                 $mt = explode(' ', microtime());
                 $name = ((int)$mt[1]) * 1000000 + ((int)round($mt[0] * 1000000));
                 $file_name = $name . '.' . $extension;
-                $image->move($this->images_path, $file_name);
-                $file_name = $name . '.' . $extension;
 
                 if($this->stamp_image_path && \File::exists($this->stamp_image_path)) {
                     $file_tmp_name = $name . 'tmp.' . $extension;
@@ -308,7 +306,7 @@ class NotificationController extends Controller
                     $file = $image->move($this->images_path, $file_name);
                 }
 
-                list($width, $height) = getimagesize($this->images_path . $file_name);                
+                list($width, $height) = getimagesize($this->images_path . $file_name);
                 $comment_image = new \App\Image;
                 $comment_image->type = 'comment';
                 $comment_image->width = $width;

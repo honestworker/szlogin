@@ -198,7 +198,7 @@ class AdvertisementController extends Controller
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {
-            return response()->json(['status' => 'fail', 'authenticated' => false], 422);
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
         }
         
         $user = JWTAuth::parseToken()->authenticate();
@@ -236,18 +236,18 @@ class AdvertisementController extends Controller
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {
-            return response()->json(['status' => 'fail', 'authenticated' => false], 422);
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
         }
         
         $validation = Validator::make($request->all(), [
             'advertisement_id' => 'required'
         ]);
         if($validation->fails())
-            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first()], 422);
+            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
             
         $advertisement = \App\Advertisement::find(request('advertisement_id'));
         if(!$advertisement)
-            return response()->json(['status' => 'fail', 'message' => 'Could not find the advertisement!'], 422);
+            return response()->json(['status' => 'fail', 'message' => 'Could not find the advertisement!', 'error_type' => 'no_advertisement'], 422);
             
         $visitor = \App\AdvertisementCount::create([
             'ad_id' => $advertisement->id,

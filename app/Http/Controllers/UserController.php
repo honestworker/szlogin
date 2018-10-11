@@ -107,12 +107,12 @@ class UserController extends Controller
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {
-            return response()->json(['authenticated' => false], 422);
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
         }
 
         $user = \App\User::find($id);
         if(!$user)
-            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user!', 'data' => null], 422);
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user!', 'data' => null, 'error_type' => 'no_user'], 422);
             
         $profile = $user->Profile;
         $email = $user->email;
@@ -143,12 +143,12 @@ class UserController extends Controller
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {
-            return response()->json(['authenticated' => false], 422);
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
         }
 
         $user = JWTAuth::parseToken()->authenticate();
         if (!$user) {
-            return response()->json(['status' => 'fail', 'message' => 'Your token is invaild!']);
+            return response()->json(['status' => 'fail', 'message' => 'Your token is invaild!', 'error_type' => 'token_error']);
         }
         $profile = $user->Profile;
         $user_avatar = "";
@@ -162,12 +162,12 @@ class UserController extends Controller
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {
-            return response()->json(['authenticated' => false], 422);
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
         }
 
         $user = JWTAuth::parseToken()->authenticate();
         if (!$user) {
-            return response()->json(['status' => 'fail', 'message' => 'Your token is invaild!']);
+            return response()->json(['status' => 'fail', 'message' => 'Your token is invaild!', 'status' => 'no_user']);
         }
         
         $validation = Validator::make($request->all(),[
@@ -175,7 +175,7 @@ class UserController extends Controller
         ]);
         
         if($validation->fails())
-            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first()], 422);
+            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'status' => 'no_fill'], 422);
             
         $user->password = bcrypt(request('password'));
         $user->save();
@@ -187,7 +187,7 @@ class UserController extends Controller
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {
-            return response()->json(['authenticated' => false], 422);
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
         }
 
         $user = JWTAuth::parseToken()->authenticate();
@@ -201,18 +201,18 @@ class UserController extends Controller
         }
 
         if (!$is_manager) {
-            return response()->json(['status' => 'fail', 'message' => 'You do not have a manager permission.'], 422);
+            return response()->json(['status' => 'fail', 'message' => 'You do not have a manager permission.', 'error_type' => 'no_manager'], 422);
         }
 
         $profile = $user->Profile;
         $group_id = $profile->group_id;
         if (!$group_id) {
-            return response()->json(['status' => 'fail', 'message' => 'You must became a group member.'], 422);
+            return response()->json(['status' => 'fail', 'message' => 'You must became a group member.', 'error_type' => 'no_memeber'], 422);
         }
 		
         $group = \App\Group::find($group_id);
         if (!$group) {
-            return response()->json(['status' => 'fail', 'message' => 'Could not find the your group.'], 422);
+            return response()->json(['status' => 'fail', 'message' => 'Could not find the your group.', 'error_type' => 'no_group'], 422);
         }
 
         $users = \App\User::with('profile');
@@ -229,7 +229,7 @@ class UserController extends Controller
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {
-            return response()->json(['authenticated' => false], 422);
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
         }
 
         $validation = Validator::make($request->all(),[
@@ -240,7 +240,7 @@ class UserController extends Controller
         ]);
         
         if($validation->fails())
-            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first()], 422);
+            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
             
         $user = JWTAuth::parseToken()->authenticate();
         $profile = $user->Profile;
@@ -261,7 +261,7 @@ class UserController extends Controller
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {
-            return response()->json(['authenticated' => false], 422);
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
         }
 
         $validation = Validator::make($request->all(), [
@@ -269,7 +269,7 @@ class UserController extends Controller
         ]);
         
         if ($validation->fails())
-            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first()], 422);
+            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
             
         $user = JWTAuth::parseToken()->authenticate();
         $profile = $user->Profile;
@@ -292,12 +292,12 @@ class UserController extends Controller
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {
-            return response()->json(['authenticated' => false], 422);
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
         }
 
         $user = JWTAuth::parseToken()->authenticate();
         if(!$user)
-            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user!'], 422);
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user!', 'error_type' => 'no_user'], 422);
             
         if($user->avatar && \File::exists($this->avatar_path.$user->avatar))
             \File::delete($this->avatar_path.$user->avatar);
@@ -346,14 +346,14 @@ class UserController extends Controller
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {
-            return response()->json(['authenticated' => false], 422);
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
         }
 
         $user = JWTAuth::parseToken()->authenticate();
         
         $profile = $user->Profile;
         if(!$profile->avatar)
-            return response()->json(['status' => 'fail', 'message' => 'No avatar uploaded!'], 422);
+            return response()->json(['status' => 'fail', 'message' => 'No avatar uploaded!', 'error_type' => 'no_fill'], 422);
             
         if(\File::exists($this->avatar_path.$profile->avatar))
             \File::delete($this->avatar_path.$profile->avatar);
@@ -368,19 +368,34 @@ class UserController extends Controller
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {
-            return response()->json(['authenticated' => false], 422);
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
         }
           
         $validation = Validator::make($request->all(),[
             'id' => 'required',
         ]);
         if ($validation->fails())
-            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first()], 422);
+            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
         
+        $user = JWTAuth::parseToken()->authenticate();
+        $roles = $user->Profile->Roles;
+        $is_manager = 0;
+        foreach ($roles as $role) {
+            if ($role->role_id >= 3) {
+                $is_manager = 1;
+                break;
+            }
+        }
+
+        if (!$is_manager) {
+            return response()->json(['status' => 'fail', 'message' => 'You do not have a manager permission.', 'error_type' => 'no_manager'], 422);
+        }
+
         $user = \App\User::find(request('id'));
         if(!$user)
-            return response()->json(['status' => 'fail', 'message' => 'Could not find user!'], 422);
-            
+            return response()->json(['status' => 'fail', 'message' => 'Could not find user!', 'error_type' => 'no_user'], 422);
+
+
         if($user->avatar && \File::exists($this->avatar_path.$user->avatar))
             \File::delete($this->avatar_path.$user->avatar);
 
