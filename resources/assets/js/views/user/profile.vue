@@ -1,151 +1,181 @@
 <template>
-    <div>
-        <div class="row page-titles">
-            <div class="col-md-6 col-8 align-self-center">
-                <h3 class="text-themecolor m-b-0 m-t-0">Profile</h3>
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><router-link to="/dashboard">Dashboard</router-link></li>
-                    <li class="breadcrumb-item active">Profile</li>
-                </ol>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h4 class="card-title">Edit Profile</h4>
-                        <form @submit.prevent="updateProfile">
+    <form @submit.prevent="proceed">
+        <div class="view-user-profile">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-body">
                             <div class="form-group">
-                                <label for="">First Name</label>
-                                <input class="form-control" type="text" value="" v-model="profileForm.first_name">
-                            </div>
-                            <div class="form-group">
-                                <label for="">Family Name</label>
-                                <input class="form-control" type="text" value="" v-model="profileForm.family_name">
-                            </div>
-                            <div class="form-group">
-                                <label for="">Date of Birth</label>
-                                <datepicker v-model="profileForm.date_of_birth" :bootstrapStyling="true"></datepicker>
-                            </div>
-                            <div class="form-group">
-                                <label for="">Gender</label>
-                                <div class="radio radio-info">
-                                    <input type="radio" value="male" id="gender_male" v-model="profileForm.gender" :checked="profileForm.gender === 'male'">
-                                    <label for="gender_male"> Male </label>
-                                </div>
-                                <div class="radio radio-success">
-                                    <input type="radio" value="female" id="gender_female" v-model="profileForm.gender" :checked="profileForm.gender === 'female'">
-                                    <label for="gender_female"> Female </label>
+                                <strong><p>Avatar: </p></strong>
+                                <div class="profile-img"> <img :src="getAvatar" alt="user" /></div>
+                                <h4 class="card-title">Upload Avatar</h4>
+                                <div class="form-group text-center m-t-20">
+                                    <span id="fileselector">
+                                        <label class="btn btn-info">
+                                            <input type="file"  @change="uploadAvatar" id="avatarUpload" class="upload-button">
+                                            <i class="fa fa-upload margin-correction"></i>Choose Avatar
+                                        </label>
+                                    </span>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="">Facebook Profile</label>
-                                <input class="form-control" type="text" value="" v-model="profileForm.facebook_profile">
+                                <h4 class="card-title">Change Password</h4>
+                                <div class="form-group">
+                                    <label for="">Current Password</label>
+                                    <input class="form-control" type="password" value="" v-model="passwordForm.current_password">
+                                </div>
+                                <div class="form-group">
+                                    <label for="">New Password</label>
+                                    <input class="form-control" type="password" value="" v-model="passwordForm.new_password">
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Confirm Password</label>
+                                    <input class="form-control" type="password" value="" v-model="passwordForm.new_password_confirmation">
+                                </div>
+                                <button type="submit" class="btn btn-info waves-effect waves-light m-t-10" @click="changePassword">Change Password</button>
                             </div>
                             <div class="form-group">
-                                <label for="">Twitter Profile</label>
-                                <input class="form-control" type="text" value="" v-model="profileForm.twitter_profile">
+                                <strong><span>Email: </span></strong>
+                                <span v-text="userForm.email"></span>
                             </div>
                             <div class="form-group">
-                                <label for="">Google Plus Profile</label>
-                                <input class="form-control" type="text" value="" v-model="profileForm.google_plus_profile">
+                                <strong><span>User Role: </span></strong>
+                                <span v-text="userForm.role"></span>
                             </div>
-                            <button type="submit" class="btn btn-info waves-effect waves-light m-t-10">Update</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="pull-right">
-                            <click-confirm yes-class="btn btn-success" no-class="btn btn-danger">
-                                <button type="button" class="btn btn-sm btn-danger waves-effect waves-light m-t-10" v-if="defaultAvatar" @click="removeAvatar">Remove Avatar</button>
-                            </click-confirm>
-                        </div>
-                        <h4 class="card-title">Upload Avatar</h4>
-                        <div class="form-group text-center m-t-20">
-                            <span id="fileselector">
-                                <label class="btn btn-info">
-                                    <input type="file"  @change="previewAvatar" id="avatarUpload" class="upload-button">
-                                    <i class="fa fa-upload margin-correction"></i>Choose Avatar
-                                </label>
-                            </span>
-                        </div>
-                        <div class="form-group text-center">
-                            <img :src="avatar" class="img-responsive" style="max-width:200px;">
-                        </div>
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-info waves-effect waves-light m-t-10" v-if="avatar" @click="uploadAvatar">Upload</button>
-                            <button type="button" class="btn btn-danger waves-effect waves-light m-t-10" v-if="avatar" @click="cancelUploadAvatar">Cancel Upload</button>
+                            <div class="form-group">
+                                <strong><span>Created At: </span></strong>
+                                <span v-text="userForm.created_at"></span>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="card" v-if="!social_auth">
-                    <div class="card-body">
-                        <h4 class="card-title">Change Password</h4>
-                        <form @submit.prevent="changePassword">
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-body">
                             <div class="form-group">
-                                <label for="">Current Password</label>
-                                <input class="form-control" type="password" value="" v-model="passwordForm.current_password">
+                                <strong><span>Contact Person: </span></strong>
+                                <input class="form-control" type="text" value="" v-model="userForm.contact_person">
                             </div>
                             <div class="form-group">
-                                <label for="">New Password</label>
-                                <input class="form-control" type="password" value="" v-model="passwordForm.new_password">
+                                <strong><span>Group Name: </span></strong>
+                                <input class="form-control" type="text" value="" v-model="userForm.group_name">
                             </div>
                             <div class="form-group">
-                                <label for="">Confirm Password</label>
-                                <input class="form-control" type="password" value="" v-model="passwordForm.new_password_confirmation">
+                                <strong><span>Organization Number: </span></strong>
+                                <input class="form-control" type="text" value="" v-model="userForm.org_number">
                             </div>
-                            <button type="submit" class="btn btn-info waves-effect waves-light m-t-10">Change Password</button>
-                        </form>
+                            <div class="form-group">
+                                <strong><span>Group ID: </span></strong>
+                                <select name="groups" class="form-control">
+                                    <option value="0">None</option>
+                                    <option v-for="group in groups.data" v-bind:value="group.id" v-bind:selected="getGroupSelectedStatus(group.group_id)">{{ group.group_id }}</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <strong><span>First Name: </span></strong>
+                                <input class="form-control" type="text" value="" v-model="userForm.first_name">
+                            </div>
+                            <div class="form-group">
+                                <strong><span>Fmaily Name: </span></strong>
+                                <input class="form-control" type="text" value="" v-model="userForm.family_name">
+                            </div>
+                            <div class="form-group">
+                                <strong><span>Phone Number: </span></strong>
+                                <input class="form-control" type="text" value="" v-model="userForm.phone_number">
+                            </div>
+                            <div class="form-group">
+                                <strong><span>Street Address: </span></strong>
+                                <input class="form-control" type="text" value="" v-model="userForm.street_address">
+                            </div>
+                            <div class="form-group">
+                                <strong><span>Street Number: </span></strong>
+                                <input class="form-control" type="text" value="" v-model="userForm.street_number">
+                            </div>
+                            <div class="form-group">
+                                <strong><span>Postal Code: </span></strong>
+                                <input class="form-control" type="text" value="" v-model="userForm.postal_code">
+                            </div>
+                            <div class="form-group">
+                                <strong><span>Country: </span></strong>
+                                <select name="status" class="form-control" v-model="userForm.country">
+                                    <option value="">None</option>
+                                    <option v-for="country in countries.countries" v-bind:value="country" v-bind:selected="getCountrySelectedStatus(country)">{{country}}</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
+                    <button type="submit" class="btn btn-info waves-effect waves-light m-t-10" @click="updateProfile"><span>Save</span></button>
+                    <router-link to="/dashboard" class="btn btn-danger waves-effect waves-light m-t-10">Cancel</router-link>
                 </div>
             </div>
         </div>
-    </div>
+    </form>
 </template>
 
 <script>
-    import datepicker from 'vuejs-datepicker'
-    import ClickConfirm from 'click-confirm'
+    import helper from '../../services/helper'
 
     export default {
-        components : { datepicker, ClickConfirm },
         data() {
             return {
-                passwordForm: new Form({
-                    current_password : '',
-                    new_password : '',
-                    new_password_confirmation : ''
+                countries : {},
+                groups : {},
+                userForm: new Form({
+                    'contact_person' : '',
+                    'avatar' : '',
+                    'group_name' : '',
+                    'org_number' : '',
+                    'email' : '',
+                    'first_name' : '',
+                    'family_name' : '',
+                    'phone_number' : '',
+                    'street_address' : '',
+                    'street_number' : '',
+                    'postal_code' : '',
+                    'country' : '',
+                    'created_at' : '',
+                    'role' : '',
+                    'group_id' : '',
                 }),
-                profileForm: new Form({
-                    first_name : '',
-                    family_name : '',
-                    date_of_birth : '',
-                    gender : '',
-                    facebook_profile : '',
-                    twitter_profile : '',
-                    google_plus_profile : ''
-                }, false),
-                avatar: '',
-                social_auth: 0
+                passwordForm: new Form({
+                    'current_password' : '',
+                    'new_password' : '',
+                    'new_password_confirmation' : '',
+                }),
+                user_data : {}
             };
         },
-        mounted(){
-            axios.get('/api/auth/user').then(response => response.data).then(response => {
-                this.profileForm.first_name = response.profile.first_name;
-                this.profileForm.family_name = response.profile.family_name;
-                this.profileForm.date_of_birth = response.profile.date_of_birth;
-                this.profileForm.gender = response.profile.gender;
-                this.profileForm.facebook_profile = response.profile.facebook_profile;
-                this.profileForm.twitter_profile = response.profile.twitter_profile;
-                this.profileForm.google_plus_profile = response.profile.google_plus_profile;
-                this.social_auth = response.social_auth;
-            });
+        mounted() {
+            this.getUser();
+            this.getCountries();
+            this.getGroups();
         },
         methods: {
+            proceed(){
+            },
+            getCountries() {
+                axios.post('/api/country/all')
+                    .then(response => this.countries = response.data);
+            },
+            getCountrySelectedStatus(country) {
+                if (country == this.userForm.country) {
+                    return true;
+                } else {
+                    return false;
+                }
+            },
+            getGroups() {
+                axios.post('/api/group/all').then(response => {
+                    this.groups = response.data;
+                });
+            },
+            getGroupSelectedStatus(group_id) {
+                if (group_id == this.userForm.group_id) {
+                    return true;
+                } else {
+                    return false;
+                }
+            },
             changePassword() {
                 this.passwordForm.post('/api/user/change-password').then(response => {
                     toastr['success'](response.message);
@@ -153,67 +183,61 @@
                     toastr['error'](response.message);
                 });
             },
-            updateProfile() {
-                this.profileForm.date_of_birth = moment(this.profileForm.date_of_birth).format('YYYY-MM-DD');
-                this.profileForm.post('/api/user/update-profile').then(response => {
-                    toastr['success'](response.message);
-                    this.$store.dispatch('setAuthUserDetail',{
-                        first_name: this.profileForm.first_name,
-                        family_name: this.profileForm.family_name
-                    });
-                }).catch(response => {
+            getUser(){
+                axios.post('/api/user/profile')
+                .then(response => {
+                    this.user_data = response.data.data;
+                    this.userForm.contact_person =  this.user_data.profile.contact_person ? this.user_data.profile.contact_person : "";
+                    this.userForm.avatar = this.user_data.profile.avatar ? this.user_data.profile.avatar : "";
+                    this.userForm.group_name = this.user_data.profile.group_name ? this.user_data.profile.group_name : "";
+                    this.userForm.org_number = this.user_data.profile.org_number ? this.user_data.profile.org_number : "";
+                    this.userForm.email = this.user_data.email ? this.user_data.email : "";
+                    this.userForm.first_name = this.user_data.profile.first_name ? this.user_data.profile.first_name : "";
+                    this.userForm.family_name = this.user_data.profile.family_name ? this.user_data.profile.family_name : "";
+                    this.userForm.phone_number = this.user_data.profile.phone_number ? this.user_data.profile.phone_number : "";
+                    this.userForm.street_address = this.user_data.profile.street_address ? this.user_data.profile.street_address : "";
+                    this.userForm.street_number = this.user_data.profile.street_number ? this.user_data.profile.street_number : "";
+                    this.userForm.postal_code = this.user_data.profile.postal_code ? this.user_data.profile.postal_code : "";
+                    this.userForm.country = this.user_data.profile.country ? this.user_data.profile.country : "";
+                    this.userForm.created_at = this.user_data.profile.created_at ? this.user_data.profile.created_at : "";
+                    this.userForm.role = this.user_data.role ? this.user_data.role : "";
+                    this.userForm.group_id = this.user_data.group_id ? this.user_data.group_id : "";
+                })
+                .catch(response => {
                     toastr['error'](response.message);
                 });
-            },
-            previewAvatar(e) {
-                let files = e.target.files || e.dataTransfer.files;
-                if (!files.length)
-                    return;
-                this.createAvatar(files[0]);
-            },
-            createAvatar(file) {
-                let reader = new FileReader();
-                reader.onload = (e) => {
-                    this.avatar = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            },
-            cancelUploadAvatar(){
-                this.avatar = '';
             },
             uploadAvatar() {
                 let data = new FormData();
                 data.append('avatar', $('#avatarUpload')[0].files[0]);
-                axios.post('/api/user/update-avatar',data)
+                axios.post('/api/user/update-avatar', data)
                 .then(response => {
-                    this.$store.dispatch('setAuthUserDetail',{
+                    this.$store.dispatch('setAuthUserDetail', {
                         avatar: response.data.profile.avatar
                     });
-                    toastr['success'](response.data.message);
-                    this.avatar = '';
-                    $("#avatarUpload").val('');
-                }).catch(error => {
-                    toastr['error'](error.response.data.message);
-                });
-            },
-            removeAvatar() {
-                axios.post('/api/user/remove-avatar')
-                .then(response => {
-                    this.$store.dispatch('setAuthUserDetail',{
-                        avatar: null
-                    });
+                    this.userForm.avatar = response.data.profile.avatar;
                     toastr['success'](response.data.message);
                 }).catch(error => {
                     toastr['error'](error.response.data.message);
                 });
             },
-            getAuthUser(name){
-                return this.$store.getters.getAuthUser(name);
-            }
+            updateProfile() {
+                this.userForm.post('/api/user/update-profile').then(response => {
+                    toastr['success'](response.message);
+                }).catch(response => {
+                    toastr['error'](response.message);
+                });
+                this.getUser();
+            },
         },
         computed: {
-            defaultAvatar(){
-                return this.getAuthUser('avatar') !== '' ? true : false;
+            getAvatar(){
+                if (this.userForm.avatar) {
+                    return '/images/users/'+ this.userForm.avatar;
+                } else {
+                    return '/images/common/no-user.png';
+                }
+                
             }
         }
     }

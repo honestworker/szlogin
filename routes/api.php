@@ -59,10 +59,11 @@ Route::group(['middleware' => ['jwt.auth']], function () {
 
     ///// User
     Route::get('/user','UserController@index');
-    Route::post('/user/{id}','UserController@getUser');
-    Route::post('/user/change-password','AuthController@changePassword');
-    Route::post('/user/update-profile','UserController@updateProfile');
+    Route::post('/user/profile','UserController@getUserProfile');
     Route::post('/user/update-avatar','UserController@updateAvatar');
+    Route::post('/user/change-password','UserController@changePasswordBackend');
+    Route::post('/user/update-profile','UserController@updateProfile');
+    Route::post('/user/{id}','UserController@getUser');
     Route::post('/user/remove-avatar','UserController@removeAvatar');
     Route::delete('/user/{id}','UserController@deleteAccount');
     Route::get('/user/overview','UserController@overview');

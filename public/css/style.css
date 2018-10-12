@@ -11690,7 +11690,8 @@ File: scss
 }
 
 .topbar .profile-pic {
-  width: 30px;
+  width: 40px;
+  height: 40px;
   border-radius: 100%;
 }
 
@@ -11734,7 +11735,8 @@ File: scss
 }
 
 .topbar ul.dropdown-user li .dw-user-box .u-img img {
-  width: 100%;
+  width: 100px;
+  height: 100px;
   border-radius: 5px;
 }
 
@@ -16045,7 +16047,8 @@ use profile section
 }
 
 .user-profile .profile-img {
-  width: 50px;
+  width: 60px;
+  height: 60px;
   margin: 0 auto;
   border-radius: 100%;
 }
@@ -16114,7 +16117,8 @@ use profile section
 }
 
 .user-profile .profile-img img {
-  width: 100%;
+  width: 60px;
+  height: 60px;
   border-radius: 100%;
 }
 
@@ -16413,7 +16417,7 @@ File: scss
 */
 
 /*******************
-/*User mail widgets*/
+/* User mail widgets*/
 
 /*******************/
 
@@ -17347,6 +17351,34 @@ File: scss
 
 .profiletimeline .item-info p {
   margin-bottom: 10px !important;
+}
+
+/*******************/
+
+/* User Profile Widget */
+
+/*******************/
+
+.view-user-profile .profile-img {
+  width: 300px;
+  height: 300px;
+  margin: 0 auto;
+  border-radius: 100%;
+}
+
+.view-user-profile .profile-img img {
+  width: 300px;
+  height: 300px;
+  border-radius: 100%;
+}
+
+.view-user-profile .profile-text {
+  padding: 5px 0;
+  position: relative;
+}
+
+.view-user-profile .profile-text a {
+  color: #54667a;
 }
 
 /*

@@ -94,7 +94,7 @@ class UserController extends Controller
         } catch (JWTException $e) {
             return response()->json(['authenticated' => false], 422);
         }
-
+        
 		$roles = \App\Role::whereNotNull('id');
 		
         $roles->orderBy('id', 'ASC');
@@ -109,7 +109,7 @@ class UserController extends Controller
         } catch (JWTException $e) {
             return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
         }
-
+        
         $user = \App\User::find($id);
         if(!$user)
             return response()->json(['status' => 'fail', 'message' => 'Couldnot find user!', 'data' => null, 'error_type' => 'no_user'], 422);
@@ -139,13 +139,49 @@ class UserController extends Controller
 		return response()->json(['status' => 'success', 'message' => 'Get User Data Successfully!', 'data' => compact('profile','role','group_id', 'email')], 200);
     }
     
+	public function getUserProfile(Request $request){
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
+        
+        $user = JWTAuth::parseToken()->authenticate();
+        if(!$user)
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user!', 'data' => null, 'error_type' => 'no_user'], 422);
+            
+        $profile = $user->Profile;
+        $email = $user->email;
+        $group_id = $role = "";
+        
+        $user_roles = \App\UserRole::where('user_id', '=', $user->id)->pluck('role_id');
+        if (count($user_roles)) {
+            foreach ($user_roles as $user_role) {
+                $role_name = \App\Role::where('id', '=', $user_role)->pluck('name');
+                if (count($role_name)) {
+                    if ($role) {
+                        $role = $role . ", ";
+                    }
+                    $role = $role . $role_name[0];
+                }
+            }
+        }
+		
+        $user_group = \App\Group::where('id', '=', $profile->group_id)->pluck('group_id');
+        if (count($user_group)) {
+            $group_id = $user_group[0];
+        }
+		
+		return response()->json(['status' => 'success', 'message' => 'Get User Data Successfully!', 'data' => compact('profile','role','group_id', 'email')], 200);
+    }
+
     public function profile() {
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {
             return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
         }
-
+        
         $user = JWTAuth::parseToken()->authenticate();
         if (!$user) {
             return response()->json(['status' => 'fail', 'message' => 'Your token is invaild!', 'error_type' => 'token_error']);
@@ -164,7 +200,7 @@ class UserController extends Controller
         } catch (JWTException $e) {
             return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
         }
-
+        
         $user = JWTAuth::parseToken()->authenticate();
         if (!$user) {
             return response()->json(['status' => 'fail', 'message' => 'Your token is invaild!', 'status' => 'no_user']);
@@ -183,6 +219,30 @@ class UserController extends Controller
         return response()->json(['status' => 'success', 'message' => 'Your password has been updated!'], 200);
     }
     
+    public function changePasswordBackend(Request $request) {
+        if(env('IS_DEMO'))
+            return response()->json(['message' => 'You are not allowed to perform this action in this mode.'], 422);
+        
+        $validation = Validator::make($request->all(), [
+            'current_password' => 'required|min:6',
+            'new_password' => 'required|min:6',
+            'new_password_confirmation' => 'required|same:new_password'
+        ]);
+        
+        if($validation->fails())
+            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first()], 422);
+            
+        $user = JWTAuth::parseToken()->authenticate();
+        
+        if(!\Hash::check(request('current_password'), $user->password))
+            return response()->json(['status' => 'fail', 'message' => 'Old password does not match! Please try again!'], 422);
+            
+        $user->password = bcrypt(request('new_password'));
+        $user->save();
+                
+        return response()->json(['status' => 'success', 'message' => 'Your password has been changed successfully!']);
+    }
+
     public function getGroupUsers(Request $request) {
         try {
             JWTAuth::parseToken()->authenticate();
@@ -199,11 +259,11 @@ class UserController extends Controller
                 break;
             }
         }
-
+        
         if (!$is_manager) {
             return response()->json(['status' => 'fail', 'message' => 'You do not have a manager permission.', 'error_type' => 'no_manager'], 422);
         }
-
+        
         $profile = $user->Profile;
         $group_id = $profile->group_id;
         if (!$group_id) {
@@ -214,14 +274,14 @@ class UserController extends Controller
         if (!$group) {
             return response()->json(['status' => 'fail', 'message' => 'Could not find the your group.', 'error_type' => 'no_group'], 422);
         }
-
+        
         $users = \App\User::with('profile');
         $users->whereHas('profile', function($q) use ($group_id) {
             $q->where('group_id', $group_id);
         });
 
         $users->where('id', '!=', $user->id);
-
+        
         return response()->json(['status' => 'success', 'message' => 'Get Group User Data successfully!', 'users' => $users->select('id', 'email')->get()], 200);
     }
 
@@ -231,12 +291,11 @@ class UserController extends Controller
         } catch (JWTException $e) {
             return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
         }
-
+        
         $validation = Validator::make($request->all(),[
-            'first_name' => 'required|min:2',
-            'family_name' => 'required|min:2',
-            'date_of_birth' => 'required|date_format:Y-m-d',
-            'gender' => 'required|in:male,female'
+            'contact_person' => 'required|min:1',
+            'group_name' => 'required|min:1',
+            'org_number' => 'required|min:1',
         ]);
         
         if($validation->fails())
@@ -245,13 +304,16 @@ class UserController extends Controller
         $user = JWTAuth::parseToken()->authenticate();
         $profile = $user->Profile;
         
+        $profile->contact_person = request('contact_person');
+        $profile->group_name = request('group_name');
+        $profile->org_number = request('org_number');
         $profile->first_name = request('first_name');
         $profile->family_name = request('family_name');
-        $profile->date_of_birth = request('date_of_birth');
-        $profile->gender = request('gender');
-        $profile->twitter_profile = request('twitter_profile');
-        $profile->facebook_profile = request('facebook_profile');
-        $profile->google_plus_profile = request('google_plus_profile');
+        $profile->phone_number = request('phone_number');
+        $profile->street_address = request('street_address');
+        $profile->postal_code = request('postal_code');
+        $profile->country = request('country');
+        $profile->group_id = request('group_id');
         $profile->save();
         
         return response()->json(['message' => 'Your profile has been updated!','user' => $user]);
@@ -263,7 +325,7 @@ class UserController extends Controller
         } catch (JWTException $e) {
             return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
         }
-
+        
         $validation = Validator::make($request->all(), [
             'avatar' => 'required|image'
         ]);
@@ -306,10 +368,10 @@ class UserController extends Controller
         foreach ($roles as $role) {
             $role->delete();
         }
-
+        
         $profile = $user->Profile;
         $profile->delete();
-
+        
         $notifications = $user->Notification;
         if ($notifications) {
             foreach ($notifications as $notification) {
@@ -322,7 +384,7 @@ class UserController extends Controller
                 }
             }
         }
-
+        
         $comments = $user->Comments;
         if ($comments) {
             foreach ($comments as $comment) {
@@ -336,7 +398,7 @@ class UserController extends Controller
                 $comment->delete();
             }
         }
-
+    
         $user->delete();
         
         return response()->json(['status' => 'success', 'message' => 'The account has deleted successfully!'], 200);
@@ -348,7 +410,7 @@ class UserController extends Controller
         } catch (JWTException $e) {
             return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
         }
-
+        
         $user = JWTAuth::parseToken()->authenticate();
         
         $profile = $user->Profile;
@@ -386,7 +448,7 @@ class UserController extends Controller
                 break;
             }
         }
-
+        
         if (!$is_manager) {
             return response()->json(['status' => 'fail', 'message' => 'You do not have a manager permission.', 'error_type' => 'no_manager'], 422);
         }
@@ -394,11 +456,11 @@ class UserController extends Controller
         $user = \App\User::find(request('id'));
         if(!$user)
             return response()->json(['status' => 'fail', 'message' => 'Could not find user!', 'error_type' => 'no_user'], 422);
-
-
+            
+            
         if($user->avatar && \File::exists($this->avatar_path.$user->avatar))
             \File::delete($this->avatar_path.$user->avatar);
-
+            
         $profile = $user->Profile;
         $roles = $user->Profile->Roles;
         foreach ($roles as $role) {
@@ -406,7 +468,7 @@ class UserController extends Controller
         }
         
         $profile->delete();
-
+        
         $notifications = $user->Notification;
         if ($notifications) {
             foreach ($notifications as $notification) {
@@ -419,7 +481,7 @@ class UserController extends Controller
                 }
             }
         }
-
+        
         $comments = $user->Comments;
         if ($comments) {
             foreach ($comments as $comment) {
@@ -433,7 +495,7 @@ class UserController extends Controller
                 $comment->delete();
             }
         }
-
+        
         $user->delete();
         
         return response()->json(['status' => 'success', 'message' => 'User deleted!'], 200);

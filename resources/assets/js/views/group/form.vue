@@ -54,7 +54,6 @@
     </form>
 </template>
 
-
 <script>
     import helper from '../../services/helper'
 

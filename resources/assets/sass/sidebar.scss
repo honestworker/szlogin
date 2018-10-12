@@ -32,7 +32,8 @@ use profile section
     text-align: center;
     position: relative;
     .profile-img {
-        width: 50px;
+        width: 60px;
+        height: 60px;
         margin: 0 auto;
         border-radius: 100%;
         &::before {
@@ -88,7 +89,8 @@ use profile section
             }
         }
         img {
-            width: 100%;
+            width: 60px;
+            height: 60px;
             border-radius: 100%;
         }
     }

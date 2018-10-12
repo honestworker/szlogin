@@ -517,42 +517,6 @@ class AuthController extends Controller
         $user->password = bcrypt(request('password'));
         $user->save();
         
-        $user->notify(new PasswordResetted($user));
-        
-        return response()->json(['status' => 'success', 'message' => 'Your password has been changed successfully!. Please login again!']);
-    }
-
-    public function resetPasswordBackend(Request $request) {
-        if(env('IS_DEMO'))
-            return response()->json(['message' => 'You are not allowed to perform this action in this mode.'], 422);
-        
-        $validation = Validator::make($request->all(), [
-            'email' => 'required|email',
-            'password' => 'required|min:6',
-            'password_confirmation' => 'required|same:password'
-        ]);
-        
-        if($validation->fails())
-            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first()], 422);
-            
-        $user = \App\User::whereEmail(request('email'))->first();
-        
-        if(!$user)
-            return response()->json(['status' => 'fail', 'message' => 'We couldn\'t found any user with this email. Please try again!'], 422);
-            
-        $validate_password_request = \DB::table('password_resets')->where('email','=',request('email'))->where('code','=',request('code'))->first();
-        
-        if(!$validate_password_request)
-            return response()->json(['status' => 'fail', 'message' => 'Invalid password reset code!'], 422);
-            
-        if(date("Y-m-d H:i:s", strtotime($validate_password_request->created_at . "+30 minutes")) < date('Y-m-d H:i:s'))
-            return response()->json(['status' => 'fail', 'message' => 'Password reset code is expired. Please request reset password again!'], 422);
-            
-        $user->password = bcrypt(request('password'));
-        $user->save();
-        
-        $user->notify(new PasswordResetted($user));
-        
         return response()->json(['status' => 'success', 'message' => 'Your password has been changed successfully!. Please login again!']);
     }
 }
