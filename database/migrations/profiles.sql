@@ -31,18 +31,20 @@ SET time_zone = "+00:00";
 CREATE TABLE `profiles` (
   `id` int(10) NOT NULL,
   `user_id` int(10) DEFAULT '0',
-  `group_name` varchar(573) DEFAULT '',
-  `org_number` varchar(573) DEFAULT '',
-  `contact_person` varchar(573) DEFAULT '',
+  -- `group_name` varchar(573) DEFAULT '',
+  -- `org_number` varchar(573) DEFAULT '',
+  -- `contact_person` varchar(573) DEFAULT '',
   `phone_number` varchar(573) DEFAULT '',
   `group_id` int(11) DEFAULT '0',
   `first_name` varchar(573) DEFAULT '',
   `family_name` varchar(573) DEFAULT '',
+  `full_name` varchar(573) DEFAULT '',
   `avatar` varchar(573) DEFAULT '',
   `street_address` varchar(573) DEFAULT '',
   `street_number` varchar(573) DEFAULT '',
   `postal_code` varchar(573) DEFAULT '',
   `country` varchar(512) DEFAULT '',
+  `city` varchar(512) DEFAULT '',
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;

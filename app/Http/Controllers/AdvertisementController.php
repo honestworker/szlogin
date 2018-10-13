@@ -7,6 +7,8 @@ use Validator;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
+date_default_timezone_set("Europe/Stockholm");
+
 class AdvertisementController extends Controller
 {
     protected $images_path = 'images/advertisements/';
@@ -38,7 +40,7 @@ class AdvertisementController extends Controller
                 ->where('end_date', request('end_date_oper'), request('end_date'));
         }
         
-        $advertisements->select('id', 'country', 'image', 'link', 'name', 'start_date', 'end_date', 'status', \DB::raw('(select count(*) from ads_count where ads_count.ad_id = ads.id and ads_count.type = \'show\') as show_count'), \DB::raw('(select count(*) from ads_count where ads_count.ad_id = ads.id and ads_count.type = \'click\') as click_count'));
+        $advertisements->select('id', 'country', 'image', 'link', 'name', 'start_date', 'end_date', 'status', \DB::raw('(select count(*) from ads_count where ads_count.ad_id = ads.id and ads_count.type = \'show\') as show_count'), \DB::raw('(select sum(count) from ads_count where ads_count.ad_id = ads.id and ads_count.type = \'show\') as show_sum'), \DB::raw('(select count(*) from ads_count where ads_count.ad_id = ads.id and ads_count.type = \'click\') as click_count'), \DB::raw('(select sum(count) from ads_count where ads_count.ad_id = ads.id and ads_count.type = \'click\') as click_sum'));
 
         //$advertisements->orderBy(request('sortBy'), request('order'));
         
@@ -217,17 +219,67 @@ class AdvertisementController extends Controller
         if ($advertisements_result) {
             $advertisements_count = count($advertisements_result);
         }
-        
         if (!$advertisements_count) {
-            return response()->json(['status' => 'success', 'message' => 'Advertisement!', 'id' => 0, 'image' => basename($this->images_base_path), 'link' => url('/'), 'now_data' => $now_date], 200);
+            return response()->json(['status' => 'success', 'message' => 'Advertisement!', 'id' => 0, 'image' => basename($this->images_base_path), 'link' => url('/')], 200);
         }
-        $advertisement_index = rand(1, $advertisements_count);
-        $advertisement = $advertisements_result[$advertisement_index - 1];
         
-        $visitor = \App\AdvertisementCount::create([
-            'ad_id' => $advertisement->id,
-            'type' => 'show',
-        ]);
+        $min_count = \App\AdvertisementCount::whereUserId($user->id)->whereViewDate($now_date)->whereType('show')->orderBy('count', 'asc')->first();
+        if (!$min_count) {
+            $advertisement_index = rand(1, $advertisements_count);
+            $advertisement = $advertisements_result[$advertisement_index - 1];
+            
+            $advertisement_count = \App\AdvertisementCount::create([
+                'ad_id' => $advertisement->id,
+                'type' => 'show',
+                'user_id' => $user->id,
+                'view_date' => $now_date,
+                'count ' => 1,
+            ]);
+        } else {
+            $new_advertisements = array();
+            $new_advertisements_exist = array();
+            $all_show = 1;
+            foreach ($advertisements_result as $advertisement) {
+                $count = \App\AdvertisementCount::whereUserId($user->id)->whereViewDate($now_date)->whereType('show')->whereAdId($advertisement->id)->first();
+                if (!$count) {
+                    $all_show = 0;
+                }
+            }
+            
+            foreach ($advertisements_result as $advertisement) {
+                $count = \App\AdvertisementCount::whereUserId($user->id)->whereViewDate($now_date)->whereType('show')->whereAdId($advertisement->id)->first();
+                if (!$count) {
+                    $new_advertisements[] = $advertisement;
+                    $new_advertisements_exist[] = 0;
+                } else {
+                    if ($all_show) {
+                        if ($count->count <= $min_count->count) {
+                            $new_advertisements[] = $advertisement;
+                            $new_advertisements_exist[] = 1;
+                        }
+                    }
+                }
+            }
+            
+            $new_advertisements_count = count($new_advertisements);
+            $advertisement_index = rand(1, $new_advertisements_count);
+            $advertisement = $new_advertisements[$advertisement_index - 1];
+            $advertisement_exist = $new_advertisements_exist[$advertisement_index - 1];
+            
+            if ($advertisement_exist) {
+                $advertisement_count = \App\AdvertisementCount::whereUserId($user->id)->whereViewDate($now_date)->whereType('show')->whereAdId($advertisement->id)->first();
+                $advertisement_count->count = $advertisement_count->count + 1;
+                $advertisement_count->save();
+            } else {
+                $advertisement_count = \App\AdvertisementCount::create([
+                    'ad_id' => $advertisement->id,
+                    'type' => 'show',
+                    'user_id' => $user->id,
+                    'view_date' => $now_date,
+                    'count ' => 1,
+                ]);
+            }
+        }
         
         return response()->json(['status' => 'success', 'message' => 'Advertisement!', 'id' => $advertisement->id, 'image' => $advertisement->image, 'link' => $advertisement->link], 200);
     }
@@ -249,10 +301,21 @@ class AdvertisementController extends Controller
         if(!$advertisement)
             return response()->json(['status' => 'fail', 'message' => 'Could not find the advertisement!', 'error_type' => 'no_advertisement'], 422);
             
-        $visitor = \App\AdvertisementCount::create([
-            'ad_id' => $advertisement->id,
-            'type' => 'click',
-        ]);
+        $user = JWTAuth::parseToken()->authenticate();
+        $now_date = date("Y-m-d");
+        $advertisement_count = \App\AdvertisementCount::whereUserId($user->id)->whereViewDate($now_date)->whereType('click')->whereAdId($advertisement->id)->first();
+        if ($advertisement_count) {
+            $advertisement_count->count = $advertisement_count->count + 1;
+            $advertisement_count->save();
+        } else {
+            $advertisement_count_new = \App\AdvertisementCount::create([
+                'ad_id' => $advertisement->id,
+                'type' => 'click',
+                'user_id' => $user->id,
+                'view_date' => $now_date,
+                'count ' => 1,
+            ]);
+        }
         
         return response()->json(['status' => 'success', 'message' => 'Advertisement Clicked!'], 200);
     }
@@ -272,23 +335,40 @@ class AdvertisementController extends Controller
         $show_count_infor = $click_count_infor = [];
         for ($month_index = 1; $month_index <= $month; $month_index++) {
             $advertisement_counts = \App\AdvertisementCount::whereNotNull('id');
-            $show_count_infor[] = count($advertisement_counts->whereYear('created_at', '=',  $year)->whereMonth('created_at', '=',   $month_index )->where('type', '=',  'show')->get());
+            $show_unique_count_infor = count($advertisement_counts->whereYear('view_date', '=',  $year)->whereMonth('view_date', '=',   $month_index )->where('type', '=',  'show')->get());
             $advertisement_counts = \App\AdvertisementCount::whereNotNull('id');
-            $click_count_infor[] = count($advertisement_counts->whereYear('created_at', '=',  $year)->whereMonth('created_at', '=',   $month_index )->where('type', '=',  'click')->get());
+            $show_count_infor_all = $advertisement_counts->whereYear('view_date', '=',  $year)->whereMonth('view_date', '=',   $month_index )->where('type', '=',  'show')->sum('count');
+            $show_count_infor[] = [$show_unique_count_infor, $show_count_infor_all];
+
+            $advertisement_counts = \App\AdvertisementCount::whereNotNull('id');
+            $click_unique_count_infor = count($advertisement_counts->whereYear('view_date', '=',  $year)->whereMonth('view_date', '=',   $month_index )->where('type', '=',  'click')->get());
+            $advertisement_counts = \App\AdvertisementCount::whereNotNull('id');
+            $click_count_infor_all = $advertisement_counts->whereYear('view_date', '=',  $year)->whereMonth('view_date', '=',   $month_index )->where('type', '=',  'click')->sum('count');
+            $click_count_infor[] = [$click_unique_count_infor, $click_count_infor_all];
         }
         
         $statistics = [];
         $advertisements = \App\Advertisement::whereNotNull('id')->get();
         foreach ($advertisements as $advertisement) {
             $advertisement_counts = \App\AdvertisementCount::whereNotNull('id');
-            $show_all = count($advertisement_counts->where('type', '=',  'show')->where('ad_id', '=',  $advertisement->id)->get());
+            $show_unique_all = count($advertisement_counts->where('type', '=',  'show')->where('ad_id', '=',  $advertisement->id)->get());
             $advertisement_counts = \App\AdvertisementCount::whereNotNull('id');
-            $show_month = count($advertisement_counts->where('created_at', '>=',  $month_before)->where('type', '=',  'show')->where('ad_id', '=',  $advertisement->id)->get());
+            $show_unique_month = count($advertisement_counts->where('created_at', '>=',  $month_before)->where('type', '=',  'show')->where('ad_id', '=',  $advertisement->id)->get());
             $advertisement_counts = \App\AdvertisementCount::whereNotNull('id');
-            $click_all = count($advertisement_counts->where('type', '=',  'click')->where('ad_id', '=',  $advertisement->id)->get());
+            $click_unique_all = count($advertisement_counts->where('type', '=',  'click')->where('ad_id', '=',  $advertisement->id)->get());
             $advertisement_counts = \App\AdvertisementCount::whereNotNull('id');
-            $click_month = count($advertisement_counts->where('created_at', '>=',  $month_before)->where('type', '=',  'click')->where('ad_id', '=',  $advertisement->id)->get());
-            $statistics[] = [$advertisement->name, $show_all, $show_month, $click_all, $click_month];
+            $click_unique_month = count($advertisement_counts->where('created_at', '>=',  $month_before)->where('type', '=',  'click')->where('ad_id', '=',  $advertisement->id)->get());
+            
+            $advertisement_counts = \App\AdvertisementCount::whereNotNull('id');
+            $show_all = $advertisement_counts->where('type', '=',  'show')->where('ad_id', '=',  $advertisement->id)->sum('count');
+            $advertisement_counts = \App\AdvertisementCount::whereNotNull('id');
+            $show_month = $advertisement_counts->where('created_at', '>=',  $month_before)->where('type', '=',  'show')->where('ad_id', '=',  $advertisement->id)->sum('count');
+            $advertisement_counts = \App\AdvertisementCount::whereNotNull('id');
+            $click_all = $advertisement_counts->where('type', '=',  'click')->where('ad_id', '=',  $advertisement->id)->sum('count');
+            $advertisement_counts = \App\AdvertisementCount::whereNotNull('id');
+            $click_month = $advertisement_counts->where('created_at', '>=',  $month_before)->where('type', '=',  'click')->where('ad_id', '=',  $advertisement->id)->sum('count');
+
+            $statistics[] = [$advertisement->name, $show_all, $show_unique_all, $show_month, $show_unique_month, $click_all, $click_unique_all, $click_month, $click_unique_month];
         }
         return response()->json(['status' => 'success', 'message' => 'Advertisement Overview!', 'data' => compact('show_count_infor', 'click_count_infor', 'statistics')], 200);
     }

@@ -160,13 +160,15 @@
                                     <thead>
                                         <tr>
                                             <th>Date</th>
+                                            <th>Unique Quantity</th>
                                             <th>Quantity</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr v-for="(show_count, index) in show_count_infor">
                                             <td v-text="monthNames[index]"></td>
-                                            <td v-text="show_count"></td>
+                                            <td v-text="show_count[0]"></td>
+                                            <td v-text="show_count[1]"></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -177,13 +179,15 @@
                                     <thead>
                                         <tr>
                                             <th>Date</th>
+                                            <th>Unique Quantity</th>
                                             <th>Quantity</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr v-for="(click_count, index) in click_count_infor">
                                             <td v-text="monthNames[index]"></td>
-                                            <td v-text="click_count"></td>
+                                            <td v-text="click_count[0]"></td>
+                                            <td v-text="click_count[1]"></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -201,18 +205,26 @@
                                 <tr>
                                     <th>Ads Banner</th>
                                     <th>Views</th>
+                                    <th>Unique Views</th>
                                     <th>Views 30 days</th>
+                                    <th>Unique Views 30 days</th>
                                     <th>Clicks</th>
+                                    <th>Unique Clicks</th>
                                     <th>Clicks 30 days</th>
+                                    <th>Unique Clicks 30 days</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr v-for="(statistic, index) in statistics">
                                     <td v-text="statistic[0]"></td>
-                                    <td v-text="statistic[1]"></td>
-                                    <td v-text="statistic[2]"></td>
-                                    <td v-text="statistic[3]"></td>
-                                    <td v-text="statistic[4]"></td>
+                                    <td v-text="statistic[1] ? statistic[1] : 0"></td>
+                                    <td v-text="statistic[2] ? statistic[2] : 0"></td>
+                                    <td v-text="statistic[3] ? statistic[3] : 0"></td>
+                                    <td v-text="statistic[4] ? statistic[4] : 0"></td>
+                                    <td v-text="statistic[5] ? statistic[5] : 0"></td>
+                                    <td v-text="statistic[6] ? statistic[6] : 0"></td>
+                                    <td v-text="statistic[7] ? statistic[7] : 0"></td>
+                                    <td v-text="statistic[8] ? statistic[8] : 0"></td>
                                 </tr>
                             </tbody>
                         </table>

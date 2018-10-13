@@ -18,7 +18,7 @@ Route::group(['prefix' => 'auth'], function () {
     Route::post('/login_backend','AuthController@login');
     Route::post('/logout','AuthController@logout');
     Route::post('/check','AuthController@check');
-    Route::post('/register','AuthController@register');
+    //Route::post('/register','AuthController@register');
     Route::post('/signup_backend','AuthController@signupBackend');
     Route::post('/signup','AuthController@signup');
     Route::get('/activate/{token}','AuthController@activate');
@@ -89,6 +89,11 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::post('/create-notification','NotificationController@createNotification');
     Route::post('/get-notification-detail','NotificationController@getNotificationDetail');
     Route::patch('/update-notification','NotificationController@updateNotification');
+
+    Route::post('/notification-delete','NotificationController@deleteNotification');
+    Route::post('/notification-image-delete','NotificationController@deleteNotificationImage');
+    Route::post('/comment-delete','NotificationController@deleteComment');
+    Route::post('/comment-image-delete','NotificationController@deleteCommentImage');
 
     // Comment app only
     Route::post('/create-comment','NotificationController@createComment');

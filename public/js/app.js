@@ -22826,18 +22826,6 @@ var render = function() {
           _c(
             "li",
             [
-              _c("router-link", { attrs: { to: "/user/new", exact: "" } }, [
-                _c("i", { staticClass: "fa fa-user-plus" }),
-                _vm._v(" "),
-                _c("span", { staticClass: "hide-menu" }, [_vm._v("New Users")])
-              ])
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "li",
-            [
               _c("router-link", { attrs: { to: "/user", exact: "" } }, [
                 _c("i", { staticClass: "fa fa-user" }),
                 _vm._v(" "),
@@ -23805,6 +23793,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -24190,7 +24190,11 @@ var render = function() {
                         }),
                         _vm._v(" "),
                         _c("td", {
-                          domProps: { textContent: _vm._s(show_count) }
+                          domProps: { textContent: _vm._s(show_count[0]) }
+                        }),
+                        _vm._v(" "),
+                        _c("td", {
+                          domProps: { textContent: _vm._s(show_count[1]) }
                         })
                       ])
                     })
@@ -24217,7 +24221,11 @@ var render = function() {
                         }),
                         _vm._v(" "),
                         _c("td", {
-                          domProps: { textContent: _vm._s(click_count) }
+                          domProps: { textContent: _vm._s(click_count[0]) }
+                        }),
+                        _vm._v(" "),
+                        _c("td", {
+                          domProps: { textContent: _vm._s(click_count[1]) }
                         })
                       ])
                     })
@@ -24248,19 +24256,51 @@ var render = function() {
                     }),
                     _vm._v(" "),
                     _c("td", {
-                      domProps: { textContent: _vm._s(statistic[1]) }
+                      domProps: {
+                        textContent: _vm._s(statistic[1] ? statistic[1] : 0)
+                      }
                     }),
                     _vm._v(" "),
                     _c("td", {
-                      domProps: { textContent: _vm._s(statistic[2]) }
+                      domProps: {
+                        textContent: _vm._s(statistic[2] ? statistic[2] : 0)
+                      }
                     }),
                     _vm._v(" "),
                     _c("td", {
-                      domProps: { textContent: _vm._s(statistic[3]) }
+                      domProps: {
+                        textContent: _vm._s(statistic[3] ? statistic[3] : 0)
+                      }
                     }),
                     _vm._v(" "),
                     _c("td", {
-                      domProps: { textContent: _vm._s(statistic[4]) }
+                      domProps: {
+                        textContent: _vm._s(statistic[4] ? statistic[4] : 0)
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("td", {
+                      domProps: {
+                        textContent: _vm._s(statistic[5] ? statistic[5] : 0)
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("td", {
+                      domProps: {
+                        textContent: _vm._s(statistic[6] ? statistic[6] : 0)
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("td", {
+                      domProps: {
+                        textContent: _vm._s(statistic[7] ? statistic[7] : 0)
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("td", {
+                      domProps: {
+                        textContent: _vm._s(statistic[8] ? statistic[8] : 0)
+                      }
                     })
                   ])
                 })
@@ -24355,6 +24395,8 @@ var staticRenderFns = [
       _c("tr", [
         _c("th", [_vm._v("Date")]),
         _vm._v(" "),
+        _c("th", [_vm._v("Unique Quantity")]),
+        _vm._v(" "),
         _c("th", [_vm._v("Quantity")])
       ])
     ])
@@ -24366,6 +24408,8 @@ var staticRenderFns = [
     return _c("thead", [
       _c("tr", [
         _c("th", [_vm._v("Date")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Unique Quantity")]),
         _vm._v(" "),
         _c("th", [_vm._v("Quantity")])
       ])
@@ -24381,11 +24425,19 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Views")]),
         _vm._v(" "),
+        _c("th", [_vm._v("Unique Views")]),
+        _vm._v(" "),
         _c("th", [_vm._v("Views 30 days")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Unique Views 30 days")]),
         _vm._v(" "),
         _c("th", [_vm._v("Clicks")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Clicks 30 days")])
+        _c("th", [_vm._v("Unique Clicks")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Clicks 30 days")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Unique Clicks 30 days")])
       ])
     ])
   }
@@ -25991,6 +26043,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -26000,18 +26060,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             countries: {},
             groups: {},
             userForm: new Form({
-                'contact_person': '',
+                // 'contact_person' : '',
                 'avatar': '',
-                'group_name': '',
-                'org_number': '',
+                // 'group_name' : '',
+                // 'org_number' : '',
                 'email': '',
                 'first_name': '',
                 'family_name': '',
+                'full_name': '',
                 'phone_number': '',
                 'street_address': '',
                 'street_number': '',
                 'postal_code': '',
                 'country': '',
+                'city': '',
                 'created_at': '',
                 'role': '',
                 'group_id': ''
@@ -26072,18 +26134,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             axios.post('/api/user/profile').then(function (response) {
                 _this3.user_data = response.data.data;
-                _this3.userForm.contact_person = _this3.user_data.profile.contact_person ? _this3.user_data.profile.contact_person : "";
+                // this.userForm.contact_person =  this.user_data.profile.contact_person ? this.user_data.profile.contact_person : "";
                 _this3.userForm.avatar = _this3.user_data.profile.avatar ? _this3.user_data.profile.avatar : "";
-                _this3.userForm.group_name = _this3.user_data.profile.group_name ? _this3.user_data.profile.group_name : "";
-                _this3.userForm.org_number = _this3.user_data.profile.org_number ? _this3.user_data.profile.org_number : "";
+                // this.userForm.group_name = this.user_data.profile.group_name ? this.user_data.profile.group_name : "";
+                // this.userForm.org_number = this.user_data.profile.org_number ? this.user_data.profile.org_number : "";
                 _this3.userForm.email = _this3.user_data.email ? _this3.user_data.email : "";
                 _this3.userForm.first_name = _this3.user_data.profile.first_name ? _this3.user_data.profile.first_name : "";
                 _this3.userForm.family_name = _this3.user_data.profile.family_name ? _this3.user_data.profile.family_name : "";
+                _this3.userForm.full_name = _this3.userForm.first_name + " " + _this3.userForm.family_name;
                 _this3.userForm.phone_number = _this3.user_data.profile.phone_number ? _this3.user_data.profile.phone_number : "";
                 _this3.userForm.street_address = _this3.user_data.profile.street_address ? _this3.user_data.profile.street_address : "";
                 _this3.userForm.street_number = _this3.user_data.profile.street_number ? _this3.user_data.profile.street_number : "";
                 _this3.userForm.postal_code = _this3.user_data.profile.postal_code ? _this3.user_data.profile.postal_code : "";
                 _this3.userForm.country = _this3.user_data.profile.country ? _this3.user_data.profile.country : "";
+                _this3.userForm.city = _this3.user_data.profile.city ? _this3.user_data.profile.city : "";
                 _this3.userForm.created_at = _this3.user_data.profile.created_at ? _this3.user_data.profile.created_at : "";
                 _this3.userForm.role = _this3.user_data.role ? _this3.user_data.role : "";
                 _this3.userForm.group_id = _this3.user_data.group_id ? _this3.user_data.group_id : "";
@@ -26179,6 +26243,30 @@ var render = function() {
                       ])
                     ])
                   ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _vm._m(1),
+                  _vm._v(" "),
+                  _c("span", {
+                    domProps: { textContent: _vm._s(_vm.userForm.email) }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _vm._m(2),
+                  _vm._v(" "),
+                  _c("span", {
+                    domProps: { textContent: _vm._s(_vm.userForm.role) }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _vm._m(3),
+                  _vm._v(" "),
+                  _c("span", {
+                    domProps: { textContent: _vm._s(_vm.userForm.created_at) }
+                  })
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group" }, [
@@ -26294,30 +26382,6 @@ var render = function() {
                     },
                     [_vm._v("Change Password")]
                   )
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "form-group" }, [
-                  _vm._m(1),
-                  _vm._v(" "),
-                  _c("span", {
-                    domProps: { textContent: _vm._s(_vm.userForm.email) }
-                  })
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "form-group" }, [
-                  _vm._m(2),
-                  _vm._v(" "),
-                  _c("span", {
-                    domProps: { textContent: _vm._s(_vm.userForm.role) }
-                  })
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "form-group" }, [
-                  _vm._m(3),
-                  _vm._v(" "),
-                  _c("span", {
-                    domProps: { textContent: _vm._s(_vm.userForm.created_at) }
-                  })
                 ])
               ])
             ])
@@ -26331,96 +26395,6 @@ var render = function() {
                 _c("div", { staticClass: "card-body" }, [
                   _c("div", { staticClass: "form-group" }, [
                     _vm._m(4),
-                    _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.userForm.contact_person,
-                          expression: "userForm.contact_person"
-                        }
-                      ],
-                      staticClass: "form-control",
-                      attrs: { type: "text", value: "" },
-                      domProps: { value: _vm.userForm.contact_person },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(
-                            _vm.userForm,
-                            "contact_person",
-                            $event.target.value
-                          )
-                        }
-                      }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "form-group" }, [
-                    _vm._m(5),
-                    _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.userForm.group_name,
-                          expression: "userForm.group_name"
-                        }
-                      ],
-                      staticClass: "form-control",
-                      attrs: { type: "text", value: "" },
-                      domProps: { value: _vm.userForm.group_name },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(
-                            _vm.userForm,
-                            "group_name",
-                            $event.target.value
-                          )
-                        }
-                      }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "form-group" }, [
-                    _vm._m(6),
-                    _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.userForm.org_number,
-                          expression: "userForm.org_number"
-                        }
-                      ],
-                      staticClass: "form-control",
-                      attrs: { type: "text", value: "" },
-                      domProps: { value: _vm.userForm.org_number },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(
-                            _vm.userForm,
-                            "org_number",
-                            $event.target.value
-                          )
-                        }
-                      }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "form-group" }, [
-                    _vm._m(7),
                     _vm._v(" "),
                     _c(
                       "select",
@@ -26453,7 +26427,37 @@ var render = function() {
                   ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "form-group" }, [
-                    _vm._m(8),
+                    _vm._m(5),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.userForm.full_name,
+                          expression: "userForm.full_name"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: { type: "text", value: "" },
+                      domProps: { value: _vm.userForm.full_name },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(
+                            _vm.userForm,
+                            "full_name",
+                            $event.target.value
+                          )
+                        }
+                      }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-group" }, [
+                    _vm._m(6),
                     _vm._v(" "),
                     _c("input", {
                       directives: [
@@ -26483,7 +26487,7 @@ var render = function() {
                   ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "form-group" }, [
-                    _vm._m(9),
+                    _vm._m(7),
                     _vm._v(" "),
                     _c("input", {
                       directives: [
@@ -26513,7 +26517,7 @@ var render = function() {
                   ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "form-group" }, [
-                    _vm._m(10),
+                    _vm._m(8),
                     _vm._v(" "),
                     _c("input", {
                       directives: [
@@ -26543,7 +26547,7 @@ var render = function() {
                   ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "form-group" }, [
-                    _vm._m(11),
+                    _vm._m(9),
                     _vm._v(" "),
                     _c("input", {
                       directives: [
@@ -26573,7 +26577,7 @@ var render = function() {
                   ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "form-group" }, [
-                    _vm._m(12),
+                    _vm._m(10),
                     _vm._v(" "),
                     _c("input", {
                       directives: [
@@ -26603,7 +26607,7 @@ var render = function() {
                   ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "form-group" }, [
-                    _vm._m(13),
+                    _vm._m(11),
                     _vm._v(" "),
                     _c("input", {
                       directives: [
@@ -26633,7 +26637,7 @@ var render = function() {
                   ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "form-group" }, [
-                    _vm._m(14),
+                    _vm._m(12),
                     _vm._v(" "),
                     _c(
                       "select",
@@ -26688,6 +26692,32 @@ var render = function() {
                       ],
                       2
                     )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-group" }, [
+                    _vm._m(13),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.userForm.city,
+                          expression: "userForm.city"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: { type: "text", value: "" },
+                      domProps: { value: _vm.userForm.city },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(_vm.userForm, "city", $event.target.value)
+                        }
+                      }
+                    })
                   ])
                 ])
               ]),
@@ -26747,25 +26777,13 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("strong", [_c("span", [_vm._v("Contact Person: ")])])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("strong", [_c("span", [_vm._v("Group Name: ")])])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("strong", [_c("span", [_vm._v("Organization Number: ")])])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
     return _c("strong", [_c("span", [_vm._v("Group ID: ")])])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("strong", [_c("span", [_vm._v("Full Name: ")])])
   },
   function() {
     var _vm = this
@@ -26808,6 +26826,12 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("strong", [_c("span", [_vm._v("Country: ")])])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("strong", [_c("span", [_vm._v("City: ")])])
   }
 ]
 render._withStripped = true
@@ -27827,6 +27851,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 
@@ -27842,10 +27872,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             groups: {},
             user_roles: {}
         }, _defineProperty(_ref, 'user_roles', {}), _defineProperty(_ref, 'filterUserForm', {
-            sortBy: 'contact_pserson',
+            sortBy: 'full_name',
             order: 'desc',
             org_num: '',
-            contact_person: '',
+            // contact_person : '',
+            full_name: '',
             phone_number: '',
             email: '',
             user_role: 0,
@@ -27897,7 +27928,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             return user_role;
         },
         getUserStatus: function getUserStatus(user) {
-            if (user.status == 'pending') return '<span class="label label-warning">Pending</span>';else if (user.status == 'activated') return '<span class="label label-success">Activated</span>';else if (user.status == 'pending_activated') return '<span class="label label-primary">Pending Activated</span>';else if (user.status == 'assigned') return '<span class="label label-info">Assigned</span>';else if (user.status == 'banned') return '<span class="label label-danger">Banned</span>';else return;
+            if (user.status == 'pending') return '<span class="label label-warning">Pending</span>';else if (user.status == 'activated') return '<span class="label label-success">Activated</span>';else if (user.status == 'pending_activated') return '<span class="label label-primary">Pending Activated</span>';
+            // else if(user.status == 'assigned')
+            //     return '<span class="label label-info">Assigned</span>';
+            else if (user.status == 'banned') return '<span class="label label-danger">Banned</span>';else return;
         },
         viewUserProfile: function viewUserProfile(user) {
             this.$router.push('/user/' + user.id + '/view');
@@ -27926,7 +27960,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             });
         },
         isGroupManager: function isGroupManager(user) {
-            if (user.status == 'activated') {
+            if (user.status != 'banned' && user.status != 'pending') {
                 if (user.profile.group_id) {
                     if (user.profile.roles) {
                         for (var role_no = 0; role_no < user.profile.roles.length; role_no++) {
@@ -28092,21 +28126,19 @@ var render = function() {
             _c("div", { staticClass: "row m-t-20" }, [
               _c("div", { staticClass: "col-md-3" }, [
                 _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: "" } }, [
-                    _vm._v("Contact Person")
-                  ]),
+                  _c("label", { attrs: { for: "" } }, [_vm._v("Full Name")]),
                   _vm._v(" "),
                   _c("input", {
                     directives: [
                       {
                         name: "model",
                         rawName: "v-model",
-                        value: _vm.filterUserForm.contact_person,
-                        expression: "filterUserForm.contact_person"
+                        value: _vm.filterUserForm.full_name,
+                        expression: "filterUserForm.full_name"
                       }
                     ],
                     staticClass: "form-control",
-                    domProps: { value: _vm.filterUserForm.contact_person },
+                    domProps: { value: _vm.filterUserForm.full_name },
                     on: {
                       blur: _vm.getUsers,
                       input: function($event) {
@@ -28115,7 +28147,7 @@ var render = function() {
                         }
                         _vm.$set(
                           _vm.filterUserForm,
-                          "contact_person",
+                          "full_name",
                           $event.target.value
                         )
                       }
@@ -28406,7 +28438,7 @@ var render = function() {
                         return _c("tr", [
                           _c("td", {
                             domProps: {
-                              textContent: _vm._s(user.profile.contact_person)
+                              textContent: _vm._s(user.profile.full_name)
                             }
                           }),
                           _vm._v(" "),
@@ -28981,7 +29013,7 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("thead", [
       _c("tr", [
-        _c("th", [_vm._v("Contact Person")]),
+        _c("th", [_vm._v("Full Name")]),
         _vm._v(" "),
         _c("th", [_vm._v("Group ID")]),
         _vm._v(" "),
@@ -29298,6 +29330,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -29306,18 +29346,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return {
             countries: {},
             userForm: new Form({
-                'contact_person': '',
+                // 'contact_person' : '',
                 'avatar': '',
-                'group_name': '',
-                'org_number': '',
+                // 'group_name' : '',
+                // 'org_number' : '',
                 'email': '',
                 'first_name': '',
                 'family_name': '',
+                'full_name': '',
                 'phone_number': '',
                 'street_address': '',
                 'street_number': '',
                 'postal_code': '',
                 'country': '',
+                'city': '',
                 'created_at': '',
                 'role': '',
                 'group_id': ''
@@ -29339,19 +29381,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this = this;
 
             axios.post('/api/user/' + this.id).then(function (response) {
-                _this.user_data = response.data.data;
-                _this.userForm.contact_person = _this.user_data.profile.contact_person ? _this.user_data.profile.contact_person : "";
+                // this.user_data = response.data.data;
+                // this.userForm.contact_person =  this.user_data.profile.contact_person ? this.user_data.profile.contact_person : "";
                 _this.userForm.avatar = _this.user_data.profile.avatar ? _this.user_data.profile.avatar : "";
-                _this.userForm.group_name = _this.user_data.profile.group_name ? _this.user_data.profile.group_name : "";
-                _this.userForm.org_number = _this.user_data.profile.org_number ? _this.user_data.profile.org_number : "";
+                // this.userForm.group_name = this.user_data.profile.group_name ? this.user_data.profile.group_name : "";
+                // this.userForm.org_number = this.user_data.profile.org_number ? this.user_data.profile.org_number : "";
                 _this.userForm.email = _this.user_data.email ? _this.user_data.email : "";
                 _this.userForm.first_name = _this.user_data.profile.first_name ? _this.user_data.profile.first_name : "";
                 _this.userForm.family_name = _this.user_data.profile.family_name ? _this.user_data.profile.family_name : "";
+                _this.userForm.full_name = _this.userForm.first_name + " " + _this.userForm.family_name;
                 _this.userForm.phone_number = _this.user_data.profile.phone_number ? _this.user_data.profile.phone_number : "";
                 _this.userForm.street_address = _this.user_data.profile.street_address ? _this.user_data.profile.street_address : "";
                 _this.userForm.street_number = _this.user_data.profile.street_number ? _this.user_data.profile.street_number : "";
                 _this.userForm.postal_code = _this.user_data.profile.postal_code ? _this.user_data.profile.postal_code : "";
                 _this.userForm.country = _this.user_data.profile.country ? _this.user_data.profile.country : "";
+                _this.userForm.city = _this.user_data.profile.city ? _this.user_data.profile.city : "";
                 _this.userForm.created_at = _this.user_data.profile.created_at ? _this.user_data.profile.created_at : "";
                 _this.userForm.role = _this.user_data.role ? _this.user_data.role : "";
                 _this.userForm.group_id = _this.user_data.group_id ? _this.user_data.group_id : "";
@@ -29410,9 +29454,7 @@ var render = function() {
                     _vm._m(1),
                     _vm._v(" "),
                     _c("span", {
-                      domProps: {
-                        textContent: _vm._s(_vm.userForm.contact_person)
-                      }
+                      domProps: { textContent: _vm._s(_vm.userForm.full_name) }
                     })
                   ]),
                   _vm._v(" "),
@@ -29428,28 +29470,12 @@ var render = function() {
                     _vm._m(3),
                     _vm._v(" "),
                     _c("span", {
-                      domProps: { textContent: _vm._s(_vm.userForm.group_name) }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "form-group" }, [
-                    _vm._m(4),
-                    _vm._v(" "),
-                    _c("span", {
-                      domProps: { textContent: _vm._s(_vm.userForm.org_number) }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "form-group" }, [
-                    _vm._m(5),
-                    _vm._v(" "),
-                    _c("span", {
                       domProps: { textContent: _vm._s(_vm.userForm.role) }
                     })
                   ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "form-group" }, [
-                    _vm._m(6),
+                    _vm._m(4),
                     _vm._v(" "),
                     _c("span", {
                       domProps: { textContent: _vm._s(_vm.userForm.created_at) }
@@ -29482,7 +29508,7 @@ var render = function() {
             _c("div", { staticClass: "card" }, [
               _c("div", { staticClass: "card-body" }, [
                 _c("div", { staticClass: "form-group" }, [
-                  _vm._m(7),
+                  _vm._m(5),
                   _vm._v(" "),
                   _c("span", {
                     domProps: { textContent: _vm._s(_vm.userForm.group_id) }
@@ -29490,7 +29516,7 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group" }, [
-                  _vm._m(8),
+                  _vm._m(6),
                   _vm._v(" "),
                   _c("span", {
                     domProps: { textContent: _vm._s(_vm.userForm.first_name) }
@@ -29498,7 +29524,7 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group" }, [
-                  _vm._m(9),
+                  _vm._m(7),
                   _vm._v(" "),
                   _c("span", {
                     domProps: { textContent: _vm._s(_vm.userForm.family_name) }
@@ -29506,7 +29532,7 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group" }, [
-                  _vm._m(10),
+                  _vm._m(8),
                   _vm._v(" "),
                   _c("span", {
                     domProps: { textContent: _vm._s(_vm.userForm.phone_number) }
@@ -29514,7 +29540,7 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group" }, [
-                  _vm._m(11),
+                  _vm._m(9),
                   _vm._v(" "),
                   _c("span", {
                     domProps: {
@@ -29524,7 +29550,7 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group" }, [
-                  _vm._m(12),
+                  _vm._m(10),
                   _vm._v(" "),
                   _c("span", {
                     domProps: {
@@ -29534,7 +29560,7 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group" }, [
-                  _vm._m(13),
+                  _vm._m(11),
                   _vm._v(" "),
                   _c("span", {
                     domProps: { textContent: _vm._s(_vm.userForm.postal_code) }
@@ -29542,10 +29568,18 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group" }, [
-                  _vm._m(14),
+                  _vm._m(12),
                   _vm._v(" "),
                   _c("span", {
                     domProps: { textContent: _vm._s(_vm.userForm.country) }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _vm._m(13),
+                  _vm._v(" "),
+                  _c("span", {
+                    domProps: { textContent: _vm._s(_vm.userForm.city) }
                   })
                 ])
               ])
@@ -29567,25 +29601,13 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("strong", [_c("span", [_vm._v("Contact Person: ")])])
+    return _c("strong", [_c("span", [_vm._v("Full Name: ")])])
   },
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("strong", [_c("span", [_vm._v("Email: ")])])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("strong", [_c("span", [_vm._v("Group Name: ")])])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("strong", [_c("span", [_vm._v("Organization Number: ")])])
   },
   function() {
     var _vm = this
@@ -29646,6 +29668,12 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("strong", [_c("span", [_vm._v("Country: ")])])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("strong", [_c("span", [_vm._v("City: ")])])
   }
 ]
 render._withStripped = true
@@ -33206,6 +33234,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
 
 
 
@@ -34007,7 +34039,23 @@ var render = function() {
                           _c("td", {
                             domProps: {
                               textContent: _vm._s(
+                                _vm.numberToString(ad.show_sum)
+                              )
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("td", {
+                            domProps: {
+                              textContent: _vm._s(
                                 _vm.numberToString(ad.show_count)
+                              )
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("td", {
+                            domProps: {
+                              textContent: _vm._s(
+                                _vm.numberToString(ad.click_sum)
                               )
                             }
                           }),
@@ -34259,7 +34307,11 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Show Count")]),
         _vm._v(" "),
+        _c("th", [_vm._v("Unique Show Count")]),
+        _vm._v(" "),
         _c("th", [_vm._v("Click Count")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Unique Click Count")]),
         _vm._v(" "),
         _c("th", [_vm._v("Status")]),
         _vm._v(" "),

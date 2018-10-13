@@ -17,10 +17,16 @@
                         <h4 class="card-title">Filter User</h4>
                         
                         <div class="row m-t-20">
-                            <div class="col-md-3">
+                            <!-- <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Contact Person</label>
                                     <input class="form-control" v-model="filterUserForm.contact_person" @blur="getUsers">
+                                </div>
+                            </div> -->
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="">Full Name</label>
+                                    <input class="form-control" v-model="filterUserForm.full_name" @blur="getUsers">
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -78,7 +84,7 @@
                             <table class="table" v-if="users.total">
                                 <thead>
                                     <tr>
-                                        <th>Contact Person</th>
+                                        <th>Full Name</th>
                                         <th>Group ID</th>
                                         <th>Phone Number</th>
                                         <th>Email</th>
@@ -89,7 +95,7 @@
                                 </thead>
                                 <tbody>
                                     <tr v-for="user in users.data">
-                                        <td v-text="user.profile.contact_person"></td>
+                                        <td v-text="user.profile.full_name"></td>
                                         <td v-html="getUserGroupID(user)"></td>
                                         <td v-text="user.profile.phone_number"></td>
                                         <td v-text="user.email"></td>
@@ -281,10 +287,11 @@
                 user_roles: {},
                 user_roles: {},
                 filterUserForm: {
-                    sortBy : 'contact_pserson',
+                    sortBy : 'full_name',
                     order: 'desc',
                     org_num : '',
-                    contact_person : '',
+                    // contact_person : '',
+                    full_name : '',
                     phone_number : '',
                     email : '',
                     user_role : 0,
@@ -348,8 +355,8 @@
                     return '<span class="label label-success">Activated</span>';
                 else if(user.status == 'pending_activated')
                     return '<span class="label label-primary">Pending Activated</span>';
-                else if(user.status == 'assigned')
-                    return '<span class="label label-info">Assigned</span>';
+                // else if(user.status == 'assigned')
+                //     return '<span class="label label-info">Assigned</span>';
                 else if(user.status == 'banned')
                     return '<span class="label label-danger">Banned</span>';
                 else
@@ -382,7 +389,7 @@
             },
 
             isGroupManager(user) {
-                if (user.status == 'activated') {
+                if (user.status != 'banned' && user.status != 'pending') {
                     if (user.profile.group_id) {
                         if (user.profile.roles) {
                             for (var role_no = 0; role_no < user.profile.roles.length; role_no++) {

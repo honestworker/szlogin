@@ -14,6 +14,8 @@ use App\Notifications\GroupManager;
 use App\Notifications\PasswordReset;
 use App\Notifications\PasswordResetted;
 
+date_default_timezone_set("Europe/Stockholm");
+
 class AuthController extends Controller
 {
     protected $avatar_path = 'images/users/';
@@ -196,7 +198,7 @@ class AuthController extends Controller
         return response()->json(['status' => 'success', 'message' => 'You have registered successfully. We will send you Group ID!'], 200);
     }
 
-    public function signup(Request $request)
+    public function signup_origin(Request $request)
     {
         $validation = Validator::make($request->all(), [
             'group_id' => 'required',
@@ -263,6 +265,69 @@ class AuthController extends Controller
             $profile->avatar = $filename.".".$extension;
         }
         
+        $user->profile()->save($profile);
+        
+        return response()->json(['status' => 'success', 'message' => 'You have signed up successfully.']);
+    }
+
+    public function signup(Request $request)
+    {
+        $validation = Validator::make($request->all(), [
+            'group_id' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|min:6',
+            'first_name' => 'required',
+            'family_name' => 'required',
+            'street_address' => 'required',
+            'street_number' => 'required',
+            'postal_code' => 'required',
+            'phone_number' => 'required',
+            'country' => 'required',
+            'city' => 'required',
+            // 'password_confirmation' => 'required|same:password'
+        ]);
+        
+        if($validation->fails())
+            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
+            
+        $user = \App\User::whereEmail(request('email'))->first();
+        //
+        if ($user) {
+            return response()->json(['status' => 'fail', 'message' => 'Your email already have registed! Please try with other email again.', 'error_type' => 'email_exist'], 422);
+        }
+        
+        $group = \App\Group::where('group_id', '=', request('group_id'))->first();
+        // Check Activate Status
+        if (!$group) {
+            return response()->json(['status' => 'fail', 'message' => 'The Group ID you have requested does not exist!', 'error_type' => 'match_group'], 422);
+        }
+        
+        $user = \App\User::create([
+            'email' => request('email'),
+            'status' => 'activated',
+            'password' => bcrypt(request('password'))
+        ]);
+        
+        $profile = new \App\Profile;
+        $profile->group_id = $group->id;
+        $profile->first_name = request('first_name');
+        $profile->family_name = request('family_name');
+        $profile->full_name = request('first_name') . " " . request('family_name');
+        $profile->street_address = request('street_address');
+        $profile->street_number = request('street_number');
+        $profile->postal_code = request('postal_code');
+        $profile->phone_number = request('phone_number');
+        $profile->country = request('country');
+        $profile->city = request('city');
+        
+		if(request()->file('avatar')) {
+            $extension = $request->file('avatar')->getClientOriginalExtension();
+            $filename = time('Ymdhis');
+            $file = $request->file('avatar')->move($this->avatar_path, $filename.".".$extension);
+            $img = \Image::make($this->avatar_path.$filename.".".$extension);
+            $img->save($this->avatar_path.$filename.".".$extension);
+            $profile->avatar = $filename.".".$extension;
+        }        
         $user->profile()->save($profile);
         
         return response()->json(['status' => 'success', 'message' => 'You have signed up successfully.']);
@@ -399,7 +464,7 @@ class AuthController extends Controller
                 } else if ($user_role_admin == 2) {
                     $role->role_id = 2;
                     $user->activation_token = generateUuid();
-                    $user->status = 'pending_activation_admin';
+                    $user->status = 'pending_activated';
                     $user->save();
                     $user->notify(new Activation($user));
                 }
@@ -422,7 +487,7 @@ class AuthController extends Controller
         if($user->status == 'activated')
             return response()->json(['message' => 'Your account has already been activated!'], 422);
         
-        if($user->status != 'pending_activation_admin')
+        if($user->status != 'pending_activated')
             return response()->json(['message' => 'Invalid activation token!'], 422);
         
         $user->status = 'activated';

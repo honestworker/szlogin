@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Validator;
 
+date_default_timezone_set("Europe/Stockholm");
+
 class GroupController extends Controller
 {
 

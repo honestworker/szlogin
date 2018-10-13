@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+date_default_timezone_set("Europe/Stockholm");
+
 class SettingController extends Controller
 {
 	public function store(Request $request){

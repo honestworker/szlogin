@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Validator;
 use JWTAuth;
 
+date_default_timezone_set("Europe/Stockholm");
+
 class UserController extends Controller
 {
 
@@ -40,9 +42,9 @@ class UserController extends Controller
         //         $q->where('family_name','like','%'.request('family_name').'%');
         //     });
             
-		if(request()->has('contact_person'))
+		if(request()->has('full_name'))
             $users->whereHas('profile',function($q) {
-                $q->where('contact_person','like','%'.request('contact_person').'%');
+                $q->where('full_name','like', '%'.request('full_name').'%');
             });
         
 		if(request()->has('phone_number'))
@@ -191,7 +193,7 @@ class UserController extends Controller
         if ($profile->avatar) {
             $user_avatar = url('/') . '/images/users/' . $profile->avatar;
         }
-        return response()->json(['status' => 'success', 'first_name' => $profile->first_name, 'family_name' => $profile->family_name, 'email' => $user->email, 'phone_number' => $profile->phone_number, 'avatar' => $user_avatar]);
+        return response()->json(['status' => 'success', 'first_name' => $profile->first_name, 'family_name' => $profile->family_name, 'full_name' => $profile->full_name, 'email' => $user->email, 'phone_number' => $profile->phone_number, 'avatar' => $user_avatar]);
     }
     
     public function changePassword(Request $request) {
@@ -292,23 +294,24 @@ class UserController extends Controller
             return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
         }
         
-        $validation = Validator::make($request->all(),[
-            'contact_person' => 'required|min:1',
-            'group_name' => 'required|min:1',
-            'org_number' => 'required|min:1',
-        ]);
+        // $validation = Validator::make($request->all(),[
+        //     'contact_person' => 'required|min:1',
+        //     'group_name' => 'required|min:1',
+        //     'org_number' => 'required|min:1',
+        // ]);
         
-        if($validation->fails())
-            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
+        // if($validation->fails())
+        //     return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
             
         $user = JWTAuth::parseToken()->authenticate();
         $profile = $user->Profile;
         
-        $profile->contact_person = request('contact_person');
-        $profile->group_name = request('group_name');
-        $profile->org_number = request('org_number');
+        // $profile->contact_person = request('contact_person');
+        // $profile->group_name = request('group_name');
+        // $profile->org_number = request('org_number');
         $profile->first_name = request('first_name');
         $profile->family_name = request('family_name');
+        $profile->full_name = request('first_name') . " " . request('family_name');
         $profile->phone_number = request('phone_number');
         $profile->street_address = request('street_address');
         $profile->postal_code = request('postal_code');
@@ -393,7 +396,6 @@ class UserController extends Controller
                     foreach ($images as $image) {
                         $image->delete();
                     }
-                    $notification->delete();
                 }
                 $comment->delete();
             }
@@ -426,19 +428,13 @@ class UserController extends Controller
         return response()->json(['status' => 'success', 'message' => 'Avatar removed!'], 200);
     }
 
-    public function deleteAccount(Request $request){
+    public function deleteAccount(Request $request, $id){
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {
             return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
         }
-          
-        $validation = Validator::make($request->all(),[
-            'id' => 'required',
-        ]);
-        if ($validation->fails())
-            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
-        
+                
         $user = JWTAuth::parseToken()->authenticate();
         $roles = $user->Profile->Roles;
         $is_manager = 0;
@@ -453,10 +449,9 @@ class UserController extends Controller
             return response()->json(['status' => 'fail', 'message' => 'You do not have a manager permission.', 'error_type' => 'no_manager'], 422);
         }
 
-        $user = \App\User::find(request('id'));
+        $user = \App\User::find($id);
         if(!$user)
-            return response()->json(['status' => 'fail', 'message' => 'Could not find user!', 'error_type' => 'no_user'], 422);
-            
+            return response()->json(['status' => 'fail', 'message' => 'Could not find user!', 'error_type' => 'no_user'], 422);            
             
         if($user->avatar && \File::exists($this->avatar_path.$user->avatar))
             \File::delete($this->avatar_path.$user->avatar);
@@ -490,7 +485,6 @@ class UserController extends Controller
                     foreach ($images as $image) {
                         $image->delete();
                     }
-                    $notification->delete();
                 }
                 $comment->delete();
             }
@@ -501,7 +495,7 @@ class UserController extends Controller
         return response()->json(['status' => 'success', 'message' => 'User deleted!'], 200);
     }
 
-    public function overview(){
+    public function overview() {
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {
@@ -516,24 +510,29 @@ class UserController extends Controller
         $month = date('m', strtotime($now_date));
         for ($month_index = 1; $month_index <= $month; $month_index++) {
             $users = \App\User::whereNotNull('id');
-            $infor[] = count($users->whereStatus('activated')->whereYear('created_at', '=',  $year)->whereMonth('created_at', '=',   $month_index )->get());
+            //$infor[] = count($users->whereStatus('activated')->whereYear('created_at', '=',  $year)->whereMonth('created_at', '=',   $month_index )->get());
+            $infor[] = count($users->whereYear('created_at', '=',  $year)->whereMonth('created_at', '=',   $month_index )->get());
         }
         
         $visitor_infor = array();
         $day_before = date("Y-m-d H:i:s", strtotime("$now_date  -1 day"));
         $users = \App\User::whereNotNull('id');
-        $visitor_infor[] = count($users->whereStatus('activated')->where('created_at', '>=',  $day_before)->get());
+        //$visitor_infor[] = count($users->whereStatus('activated')->where('created_at', '>=',  $day_before)->get());
+        $visitor_infor[] = count($users->where('created_at', '>=',  $day_before)->get());
 
         $week_before = date("Y-m-d H:i:s", strtotime("$now_date  -7 days"));
         $users = \App\User::whereNotNull('id');
-        $visitor_infor[] = count($users->whereStatus('activated')->where('created_at', '>=',  $week_before)->get());
+        //$visitor_infor[] = count($users->whereStatus('activated')->where('created_at', '>=',  $week_before)->get());
+        $visitor_infor[] = count($users->where('created_at', '>=',  $week_before)->get());
 
         $month_before = date("Y-m-d H:i:s", strtotime("$now_date  -30 days"));
         $users = \App\User::whereNotNull('id');
-        $visitor_infor[] = count($users->whereStatus('activated')->where('created_at', '>=',  $month_before)->get());
+        //$visitor_infor[] = count($users->whereStatus('activated')->where('created_at', '>=',  $month_before)->get());
+        $visitor_infor[] = count($users->where('created_at', '>=',  $month_before)->get());
 
         $users = \App\User::whereNotNull('id');
-        $visitor_infor[] = count($users->whereStatus('activated')->whereYear('created_at', '=',  $year)->get());
+        //$visitor_infor[] = count($users->whereStatus('activated')->whereYear('created_at', '=',  $year)->get());
+        $visitor_infor[] = count($users->whereYear('created_at', '=',  $year)->get());
 
         $visitors_infor = $visitor_infor1 = $visitor_infor2 = array();
         for ($month_index = 1; $month_index <= 12; $month_index++) {
@@ -555,7 +554,8 @@ class UserController extends Controller
         $visitors_infor = [$visitor_infor1, $visitor_infor2];
 
         $users = \App\User::whereNotNull('id');
-        $activated_users = count($users->whereStatus('activated')->where('activated_at', '>=',  $month_before)->get());
+        //$activated_users = count($users->whereStatus('activated')->where('activated_at', '>=',  $month_before)->get());
+        $activated_users = count($users->where('activated_at', '>=',  $month_before)->get());
 
         return response()->json(['status' => 'success', 'message' => 'User and Visitor Overview!', 'data' => compact('total','infor','activated_users','visitor_infor','visitors_infor')]);
     }

@@ -139,7 +139,9 @@
                                         <th>Start Date</th>
                                         <th>End Date</th>
                                         <th>Show Count</th>
+                                        <th>Unique Show Count</th>
                                         <th>Click Count</th>
+                                        <th>Unique Click Count</th>
                                         <th>Status</th>
                                         <th style="width:180px;">Action</th>
                                     </tr>
@@ -152,7 +154,9 @@
                                         <td v-text="ad.link"></td>
                                         <td v-text="ad.start_date"></td>
                                         <td v-text="ad.end_date"></td>
+                                        <td v-text="numberToString(ad.show_sum)"></td>
                                         <td v-text="numberToString(ad.show_count)"></td>
+                                        <td v-text="numberToString(ad.click_sum)"></td>
                                         <td v-text="numberToString(ad.click_count)"></td>
                                         <td v-html="getAdStatus(ad)"></td>
                                         <td>

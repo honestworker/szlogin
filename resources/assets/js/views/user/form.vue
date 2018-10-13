@@ -9,22 +9,26 @@
                                 <strong><p>Avatar: </p></strong>
                                 <div class="profile-img"> <img :src="getAvatar" alt="user" /></div>
                             </div>
-                            <div class="form-group">
+                            <!-- <div class="form-group">
                                 <strong><span>Contact Person: </span></strong>
                                 <span v-text="userForm.contact_person"></span>
+                            </div> -->
+                            <div class="form-group">
+                                <strong><span>Full Name: </span></strong>
+                                <span v-text="userForm.full_name"></span>
                             </div>
                             <div class="form-group">
                                 <strong><span>Email: </span></strong>
                                 <span v-text="userForm.email"></span>
                             </div>
-                            <div class="form-group">
+                            <!-- <div class="form-group">
                                 <strong><span>Group Name: </span></strong>
                                 <span v-text="userForm.group_name"></span>
                             </div>
                             <div class="form-group">
                                 <strong><span>Organization Number: </span></strong>
                                 <span v-text="userForm.org_number"></span>
-                            </div>
+                            </div> -->
                             <div class="form-group">
                                 <strong><span>User Role: </span></strong>
                                 <span v-text="userForm.role"></span>
@@ -72,6 +76,10 @@
                                 <strong><span>Country: </span></strong>
                                 <span v-text="userForm.country"></span>
                             </div>
+                            <div class="form-group">
+                                <strong><span>City: </span></strong>
+                                <span v-text="userForm.city"></span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -88,18 +96,20 @@
             return {
                 countries : {},
                 userForm: new Form({
-                    'contact_person' : '',
+                    // 'contact_person' : '',
                     'avatar' : '',
-                    'group_name' : '',
-                    'org_number' : '',
+                    // 'group_name' : '',
+                    // 'org_number' : '',
                     'email' : '',
                     'first_name' : '',
                     'family_name' : '',
+                    'full_name' : '',
                     'phone_number' : '',
                     'street_address' : '',
                     'street_number' : '',
                     'postal_code' : '',
                     'country' : '',
+                    'city' : '',
                     'created_at' : '',
                     'role' : '',
                     'group_id' : '',
@@ -120,19 +130,21 @@
             getUser(){
                 axios.post('/api/user/'+this.id)
                 .then(response => {
-                    this.user_data = response.data.data;
-                    this.userForm.contact_person =  this.user_data.profile.contact_person ? this.user_data.profile.contact_person : "";
+                    // this.user_data = response.data.data;
+                    // this.userForm.contact_person =  this.user_data.profile.contact_person ? this.user_data.profile.contact_person : "";
                     this.userForm.avatar = this.user_data.profile.avatar ? this.user_data.profile.avatar : "";
-                    this.userForm.group_name = this.user_data.profile.group_name ? this.user_data.profile.group_name : "";
-                    this.userForm.org_number = this.user_data.profile.org_number ? this.user_data.profile.org_number : "";
+                    // this.userForm.group_name = this.user_data.profile.group_name ? this.user_data.profile.group_name : "";
+                    // this.userForm.org_number = this.user_data.profile.org_number ? this.user_data.profile.org_number : "";
                     this.userForm.email = this.user_data.email ? this.user_data.email : "";
                     this.userForm.first_name = this.user_data.profile.first_name ? this.user_data.profile.first_name : "";
                     this.userForm.family_name = this.user_data.profile.family_name ? this.user_data.profile.family_name : "";
+                    this.userForm.full_name = this.userForm.first_name + " " + this.userForm.family_name;
                     this.userForm.phone_number = this.user_data.profile.phone_number ? this.user_data.profile.phone_number : "";
                     this.userForm.street_address = this.user_data.profile.street_address ? this.user_data.profile.street_address : "";
                     this.userForm.street_number = this.user_data.profile.street_number ? this.user_data.profile.street_number : "";
                     this.userForm.postal_code = this.user_data.profile.postal_code ? this.user_data.profile.postal_code : "";
                     this.userForm.country = this.user_data.profile.country ? this.user_data.profile.country : "";
+                    this.userForm.city = this.user_data.profile.city ? this.user_data.profile.city : "";
                     this.userForm.created_at = this.user_data.profile.created_at ? this.user_data.profile.created_at : "";
                     this.userForm.role = this.user_data.role ? this.user_data.role : "";
                     this.userForm.group_id = this.user_data.group_id ? this.user_data.group_id : "";

@@ -7,6 +7,8 @@ use Validator;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
+date_default_timezone_set("Europe/Stockholm");
+
 class NotificationController extends Controller
 {
     protected $images_path = 'images/notifications/';
@@ -54,7 +56,7 @@ class NotificationController extends Controller
         /// Get dimensions for specified images
         list($width_x, $height_x, $image_x_type) = getimagesize($filename_x);
         list($width_y, $height_y, $image_y_type) = getimagesize($this->stamp_image_path);
-
+        
         //$image_x_type = image_type_to_extension($filename_x);
         if ($image_x_type == 2) {
             $image_x = imagecreatefromjpeg($filename_x);
@@ -63,7 +65,7 @@ class NotificationController extends Controller
         } else if ($image_x_type == 1) {
             $image_x = imagecreatefromgif($filename_x);
         }
-
+        
         //$image_y_type = image_type_to_extension($this->stamp_image_path);
         if ($image_y_type == 2) {
             $image_y = imagecreatefromjpeg($this->stamp_image_path);
@@ -72,26 +74,26 @@ class NotificationController extends Controller
         } else if ($image_y_type == 1) {
             $image_y = imagecreatefromgif($this->stamp_image_path);
         }
-
+        
         $image = imagecreatetruecolor($width_x, $height_x);
         imagealphablending($image, true);
         imagesavealpha($image, true);
 
         $min_x = ($width_x > $height_x) ? $width_x : $height_x;
-        $ratio = $min_x / 1024 * (60 / $width_y);
+        $ratio = $min_x / 1024 * (120 / $width_y);
         $offset_x = 120 * $ratio;
         $offset_y = (120 + $height_y) * $ratio;
-
+        
         $new_width = $width_y * $ratio;
         $new_height = $height_y * $ratio;
         $image_tmp = imagecreate($new_width, $new_height);
         imagealphablending($image_tmp, true);
         imagesavealpha($image_tmp, true);
         imagecopyresampled($image_tmp, $image_y, 0, 0, 0, 0, $new_width, $new_height, $width_y, $height_y);
-
+        
         imagecopy($image, $image_x, 0, 0, 0, 0, $width_x, $height_x);
         imagecopy($image, $image_tmp, $offset_x, $height_x - $offset_y, 0, 0, $new_width, $new_height);
-
+        
         $lowerFileName = strtolower($filename_result); 
         if (substr_count($lowerFileName, '.jpg') > 0 || substr_count($lowerFileName, '.jpeg') > 0) {
             imagejpeg($image, $filename_result);
@@ -100,7 +102,7 @@ class NotificationController extends Controller
         } else if( substr_count($lowerFileName, '.gif') > 0) {
             imagegif($image, $filename_result); 
         }
-
+        
         // Clean up
         imagedestroy($image);
         imagedestroy($image_tmp);
@@ -141,18 +143,16 @@ class NotificationController extends Controller
         $notification->status = 1;
         $notification->save();
         
-        $file_count = 0;
         if($request->hasfile('images')) {
             if (is_array($request->file('images'))) {
                 if (count($request->file('images'))) {
                     foreach($request->file('images') as $image)
                     {
-                        $file_count = $file_count + 1;
                         $extension = $image->getClientOriginalExtension();
                         $mt = explode(' ', microtime());
                         $name = ((int)$mt[1]) * 1000000 + ((int)round($mt[0] * 1000000));
                         $file_name = $name . '.' . $extension;
-
+                        
                         if($this->stamp_image_path && \File::exists($this->stamp_image_path)) {
                             $file_tmp_name = $name . 'tmp.' . $extension;
                             $file = $image->move($this->images_path, $file_tmp_name);
@@ -161,7 +161,7 @@ class NotificationController extends Controller
                         } else {
                             $file = $image->move($this->images_path, $file_name);
                         }
-
+                        
                         list($width, $height) = getimagesize($this->images_path . $file_name);
                         $notificaion_image = new \App\Image;
                         $notificaion_image->type = 'notification';
@@ -175,7 +175,7 @@ class NotificationController extends Controller
             }
         }
         
-        return response()->json(['status' => 'success', 'message' => 'Notification has created succesfully!', 'file_count' => $file_count], 200);
+        return response()->json(['status' => 'success', 'message' => 'Notification has created succesfully!', 'notification_id' => $notification->id], 200);
     }
     
     public function getNotification(Request $request) {
@@ -185,7 +185,6 @@ class NotificationController extends Controller
         $group = \App\Group::find($profile->group_id);
         if(!$group)
             return response()->json(['status' => 'fail', 'message' => 'You must be any group memeber!', 'error_type' => 'no_member'], 422);
-        
         
         $notification = \App\Notification::with('user.profile');
         $notification->whereStatus(1);
@@ -198,7 +197,7 @@ class NotificationController extends Controller
     public function getNotificationDetail(Request $request) {
         $user = JWTAuth::parseToken()->authenticate();
         $profile = $user->Profile;
-
+        
         $validation = Validator::make($request->all(), [
             'notification_id' => 'required',
         ]);
@@ -218,7 +217,7 @@ class NotificationController extends Controller
     public function updateNotification(Request $request) {
         $user = JWTAuth::parseToken()->authenticate();
         $profile = $user->Profile;
-
+        
         $validation = Validator::make($request->all(), [
             'notification_id' => 'required',
             'contents' => 'required',
@@ -236,17 +235,87 @@ class NotificationController extends Controller
     }
 
     public function toggleStatus(Request $request){
-        $notificaioin = \App\Notification::find(request('id'));
+        $notification = \App\Notification::find(request('id'));
         
-        if(!$notificaioin)
+        if(!$notification)
             return response()->json(['status' => 'fail', 'message' => 'Couldnot find notificaioin!'], 422);
             
-        $notificaioin->status = !$notificaioin->status;
-        $notificaioin->save();
+        $notification->status = !$notification->status;
+        $notification->save();
         
         return response()->json(['status' => 'success', 'message' => 'Notification updated!'], 200);
     }
     
+    public function deleteNotification(Request $request){
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
+        
+        $validation = Validator::make($request->all(),[
+            'notification_id' => 'required',
+        ]);
+        if ($validation->fails())
+            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
+
+        $notification = \App\Notification::find(request('notification_id'));
+        if(!$notification)
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find notificaioin!'], 422);
+            
+        $images = $notification->Images;
+        if ($images) {
+            foreach ($images as $image) {
+                $image->delete();
+            }
+        }
+        $comments = $notification->comments;
+        if ($comments) {
+            foreach ($comments as $comment) {
+                $images = $comment->Images;
+                if ($images) {
+                    foreach ($images as $image) {
+                        $image->delete();
+                    }
+                }
+                $comment->delete();
+            }
+        }
+        $notification->delete();
+        
+        return response()->json(['status' => 'success', 'message' => 'Notification deleted!'], 200);
+    }
+    
+    public function deleteNotificationImage(Request $request){
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
+          
+        $validation = Validator::make($request->all(),[
+            'notification_id' => 'required',
+            'url' => 'required',
+        ]);
+        if ($validation->fails())
+            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
+
+        $notification = \App\Notification::find(request('notification_id'));
+        if(!$notification)
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find notificaioin!'], 422);
+            
+        $images = $notification->Images;
+        if ($images) {
+            foreach ($images as $image) {
+                if ($image->url == request('url')) {
+                    $image->delete();
+                }
+            }
+        }
+        
+        return response()->json(['status' => 'success', 'message' => 'Notification Image deleted!'], 200);
+    }
+
 	// Comments
     public function createComment(Request $request){
         $user = JWTAuth::parseToken()->authenticate();
@@ -305,7 +374,7 @@ class NotificationController extends Controller
                 } else {
                     $file = $image->move($this->images_path, $file_name);
                 }
-
+                
                 list($width, $height) = getimagesize($this->images_path . $file_name);
                 $comment_image = new \App\Image;
                 $comment_image->type = 'comment';
@@ -319,7 +388,7 @@ class NotificationController extends Controller
         
         $notification->save();
         
-        return response()->json(['status' => 'success', 'message' => 'Comment has created succesfully!'], 200);
+        return response()->json(['status' => 'success', 'message' => 'Comment has created succesfully!', 'comment_id' => $comment->id], 200);
     }
 
     public function toggleCommentStatus(Request $request){
@@ -334,6 +403,64 @@ class NotificationController extends Controller
         return response()->json(['status' => 'success', 'message' => 'Comment updated!'], 200);
     }
     
+    public function deleteComment(Request $request){
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
+          
+        $validation = Validator::make($request->all(),[
+            'comment_id' => 'required',
+        ]);
+        if ($validation->fails())
+            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
+            
+        $comment = \App\Comment::find(request('comment_id'));
+        if(!$comment)
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find comment!'], 422);
+            
+        $images = $comment->Images;
+        if ($images) {
+            foreach ($images as $image) {
+                $image->delete();
+            }
+        }
+        $comment->delete();
+        
+        return response()->json(['status' => 'success', 'message' => 'Comment deleted!'], 200);
+    }
+
+    public function deleteCommentImage(Request $request){
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
+          
+        $validation = Validator::make($request->all(),[
+            'comment_id' => 'required',
+            'url' => 'required',
+        ]);
+        if ($validation->fails())
+            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
+
+        $comment = \App\Comment::find(request('comment_id'));
+        if(!$comment)
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find comment!'], 422);
+            
+        $images = $comment->Images;
+        if ($images) {
+            foreach ($images as $image) {
+                if ($image->url == request('url')) {
+                    $image->delete();
+                }
+            }
+        }
+        
+        return response()->json(['status' => 'success', 'message' => 'Comment Image deleted!'], 200);
+    }
+
     // Notification Type
 	public function indexType(){
 		$notification_type = \App\NotificationType::whereNotNull('id');
