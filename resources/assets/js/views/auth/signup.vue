@@ -7,7 +7,7 @@
                     <h3 class="box-title text-center m-b-20">Sign Up</h3>
                     <div class="form-group ">
                         <div class="col-xs-12">
-                            <input type="text" name="contact_person" class="form-control" placeholder="Contact Person" v-model="signupForm.contact_person">
+                            <input type="text" name="full_name" class="form-control" placeholder="Full Name" v-model="signupForm.full_name">
                         </div>
                     </div>
                     <div class="form-group">
@@ -50,7 +50,7 @@
         data() {
             return {
                 signupForm: {
-                    contact_person: '',
+                    full_name: '',
                     email: '',
                     password: '',
                     password_confirmation: '',

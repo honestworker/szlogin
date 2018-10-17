@@ -25,7 +25,7 @@ let routes = [
             },
             {
                 path: '/profile',
-                component: require('./views/user/profile')
+                component: require('./views/admin/profile')
             },
             {
                 path: '/group/:id/edit',
@@ -62,6 +62,14 @@ let routes = [
             {
                 path: '/advertisement/:id',
                 component: require('./views/advertisement/edit')
+            },
+            {
+                path: '/admin',
+                component: require('./views/admin/index')
+            },
+            {
+                path: '/admin/:id/view',
+                component: require('./views/admin/view')
             },
         ]
     },

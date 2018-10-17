@@ -24,6 +24,7 @@ class Profile extends Eloquent {
                             'postal_code',
                             'country',
                             'city',
+                            'is_admin',
                         ];
     protected $primaryKey = 'id';
     protected $table = 'profiles';
@@ -41,10 +42,5 @@ class Profile extends Eloquent {
     public function group()
     {
         return $this->hasOne('App\Group', 'id', 'group_id');
-    }
-    
-    public function roles()
-    {
-        return $this->hasMany('App\UserRole', 'user_id', 'user_id');
     }
 }

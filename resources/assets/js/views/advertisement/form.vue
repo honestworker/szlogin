@@ -6,6 +6,7 @@
                 <br><br>
                 <div class="col-md-12">
                     <input type="file" multiple="multiple" id="uploadImages" @change="uploadFieldChange">
+                    <span>You must upload the jpg, jpeg, gif file.</span>
                     <hr>
                     <div class="col-md-12">
                         <div class="attachment-holder animated fadeIn" v-cloak v-for="(image, index) in uploadImages"> 

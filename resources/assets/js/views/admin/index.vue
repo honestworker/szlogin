@@ -2,10 +2,10 @@
 	<div>
         <div class="row page-titles">
             <div class="col-md-6 col-8 align-self-center">
-                <h3 class="text-themecolor m-b-0 m-t-0">User</h3>
+                <h3 class="text-themecolor m-b-0 m-t-0">Administrator</h3>
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><router-link to="/dashboard">Dashboard</router-link></li>
-                    <li class="breadcrumb-item active">User</li>
+                    <li class="breadcrumb-item active">Administrator</li>
                 </ol>
             </div>
         </div>
@@ -14,54 +14,37 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">Filter User</h4>
+                        <h4 class="card-title">Filter Administrator</h4>
                         
                         <div class="row m-t-20">
                             <!-- <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Contact Person</label>
-                                    <input class="form-control" v-model="filterUserForm.contact_person" @change="getUsers">
+                                    <input class="form-control" v-model="filterAdminForm.contact_person" @change="getAdmins">
                                 </div>
                             </div> -->
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Full Name</label>
-                                    <input class="form-control" v-model="filterUserForm.full_name" @change="getUsers">
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="">Group ID</label>
-                                    <input class="form-control" v-model="filterUserForm.group_id" @change="getUsers">
+                                    <input class="form-control" v-model="filterAdminForm.full_name" @change="getAdmins">
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Phone Number</label>
-                                    <input class="form-control" v-model="filterUserForm.phone_number" @change="getUsers">
+                                    <input class="form-control" v-model="filterAdminForm.phone_number" @change="getAdmins">
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Email</label>
-                                    <input class="form-control" v-model="filterUserForm.email" @change="getUsers">
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="">User Role</label>
-                                    <select name="groups" class="form-control" v-model="filterUserForm.is_admin" @change="getUsers">
-                                        <option value="-1">All</option>
-                                        <option value="1">Group Manager</option>
-                                        <option value="0">User</option>
-                                    </select>
+                                    <input class="form-control" v-model="filterAdminForm.email" @change="getAdmins">
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Sort By</label>
-                                    <select name="sortBy" class="form-control" v-model="filterUserForm.sortBy" @change="getUsers">
-                                        <option value="group_id">Group ID</option>
+                                    <select name="sortBy" class="form-control" v-model="filterAdminForm.sortBy" @change="getAdmins">
                                         <option value="full_name">Full Name</option>
                                         <option value="phone_number">Phone Number</option>
                                         <option value="email">Email</option>
@@ -71,7 +54,7 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Order</label>
-                                    <select name="order" class="form-control" v-model="filterUserForm.order" @change="getUsers">
+                                    <select name="order" class="form-control" v-model="filterAdminForm.order" @change="getAdmins">
                                         <option value="asc">Asc</option>
                                         <option value="desc">Desc</option>
                                     </select>
@@ -80,40 +63,37 @@
                         </div>
                         
                         <h4 class="card-title">User List</h4>
-                        <h6 class="card-subtitle" v-if="users.total">Total {{users.total}} result found!</h6>
+                        <h6 class="card-subtitle" v-if="admins.total">Total {{admins.total}} result found!</h6>
                         <h6 class="card-subtitle" v-else>No result found!</h6>
                         <div class="table-responsive">
-                            <table class="table" v-if="users.total">
+                            <table class="table" v-if="admins.total">
                                 <thead>
                                     <tr>
                                         <th>Full Name</th>
-                                        <th>Group ID</th>
                                         <th>Phone Number</th>
                                         <th>Email</th>
-                                        <th>User Role</th>
                                         <th>Status</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="user in users.data">
-                                        <td v-text="user.profile.full_name"></td>
-                                        <td v-html="getUserGroupID(user)"></td>
-                                        <td v-text="user.profile.phone_number"></td>
-                                        <td v-text="user.email"></td>
-                                        <td v-html="getUserRole(user)"></td>
-                                        <td v-html="getUserStatus(user)"></td>
+                                    <tr v-for="admin in admins.data">
+                                        <td v-text="admin.profile.full_name"></td>
+                                        <td v-text="admin.profile.phone_number"></td>
+                                        <td v-text="admin.email"></td>
+                                        <td v-html="getAdminStatus(admin)"></td>
                                         <td>
-                                            <button class="btn btn-info btn-sm" @click.prevent="viewUserProfile(user)" data-toggle="tooltip" title="View User Profile"><i class="fa fa-eye"></i></button>
-                                            <span v-if="isGroupManager(user) > -1">
-                                                <button v-if="isGroupManager(user) == 0" class="btn btn-primary btn-sm" @click.prevent="modalMakeGroupManager(user)" data-toggle="tooltip" title="Make Group Manager"><i class="fa fa-check"></i></button>
-                                                <button v-else class="btn btn-primary btn-sm" @click.prevent="modalDisableGroupManager(user)" data-toggle="tooltip" title="Disable Group Manager"><i class="fa fa-times"></i></button>
+                                            <button class="btn btn-info btn-sm" @click.prevent="viewAdminProfile(admin)" data-toggle="tooltip" title="View User Profile"><i class="fa fa-eye"></i></button>
+
+                                            <span v-if="isAdministrator(admin) > -1">
+                                                <button v-if="isAdministrator(admin) == 0" class="btn btn-success btn-sm" @click.prevent="modalMakeAdministrator(admin)" data-toggle="tooltip" title="Make Administrator"><i class="fa fa-check"></i></button>
+                                                <button v-else class="btn btn-success btn-sm" @click.prevent="modalDisableAdministrator(admin)" data-toggle="tooltip" title="Disable Administrator"><i class="fa fa-times"></i></button> 
                                             </span>
                                             <span v-else>
-                                                <button class="btn btn-secondary btn-sm" @click.prevent="modalMakeGroupManager(user)" data-toggle="tooltip" title="Make Group Manager" disabled><i class="fa fa-check"></i></button>
+                                                <button class="btn btn-secondary btn-sm" @click.prevent="modalMakeAdministrator(admin)" data-toggle="tooltip" title="Make Administrator" disabled><i class="fa fa-check"></i></button>
                                             </span>
 
-                                            <button class="btn btn-danger btn-sm" @click.prevent="modalDeleteUser(user)" data-toggle="tooltip" title="Delete User"><i class="fa fa-trash"></i></button>
+                                            <button class="btn btn-danger btn-sm" @click.prevent="modalDeleteAdmin(admin)" data-toggle="tooltip" title="Delete User"><i class="fa fa-trash"></i></button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -121,11 +101,11 @@
 
                             <div class="row">
                                 <div class="col-md-8">
-                                    <pagination :data="users" :limit=3 v-on:pagination-change-page="getUsers"></pagination>
+                                    <pagination :data="admins" :limit=3 v-on:pagination-change-page="getAdmins"></pagination>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="float-right">
-                                        <select name="pageLength" class="form-control" v-model="filterUserForm.pageLength" @change="getUsers" v-if="users.total">
+                                        <select name="pageLength" class="form-control" v-model="filterAdminForm.pageLength" @change="getAdmins" v-if="admins.total">
                                             <option value="5">5 per page</option>
                                             <option value="10">10 per page</option>
                                             <option value="25">25 per page</option>
@@ -140,24 +120,24 @@
             </div>
         </div>
         
-        <!-- Delete User Modal -->
-        <div class="modal" id="modal-delete-user" tabindex="-1" role="dialog">
-            <div class="modal-dialog" v-if="deletingUser">
+        <!-- Delete Administrator Modal -->
+        <div class="modal" id="modal-delete-admin" tabindex="-1" role="dialog">
+            <div class="modal-dialog" v-if="deletingAdmin">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">
-                            Delete User
+                            Delete Administrator
                         </h5>
                     </div>
 
                     <div class="modal-body">
-                        Are you sure you want to delete this User?
+                        Are you sure you want to delete this Administrator?
                     </div>
 
                     <!-- Modal Actions -->
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">No, Go Back</button>
-                        <button type="button" class="btn btn-danger" @click.prevent="deleteUser()">
+                        <button type="button" class="btn btn-danger" @click.prevent="deleteAdmin()">
                             Yes, Delete
                         </button>
                     </div>
@@ -165,49 +145,49 @@
             </div>
         </div>
 
-        <!-- Make Group Manager -->
-        <div class="modal" id="modal-group-manager" tabindex="-1" role="dialog">
-            <div class="modal-dialog" v-if="groupManagerPermission">
+        <!-- Make Administrator -->
+        <div class="modal" id="modal-administrator" tabindex="-1" role="dialog">
+            <div class="modal-dialog" v-if="adminPermission">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">
-                            Make Group Manager Permission
+                            Make Administrator Permission
                         </h5>
                     </div>
 
                     <div class="modal-body">
-                        Are you sure you want to make this User as the group manager?
+                        Are you sure you want to make this User as the Administrator?
                     </div>
 
                     <!-- Modal Actions -->
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">No, Go Back</button>
-                        <button type="button" class="btn btn-success" @click.prevent="makeGroupManager()">
+                        <button type="button" class="btn btn-success" @click.prevent="makeAdministrator()">
                             Yes, Make
                         </button>
                     </div>
                 </div>
             </div>
         </div>
-        
-        <!-- Disable Group Manager -->
-        <div class="modal" id="modal-disable-group-manager" tabindex="-1" role="dialog">
-            <div class="modal-dialog" v-if="groupManagerPermission">
+
+        <!-- Disable Administrator -->
+        <div class="modal" id="modal-disable-administrator" tabindex="-1" role="dialog">
+            <div class="modal-dialog" v-if="adminPermission">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">
-                            Disable Group Manager Permission
+                            Disable Administrator Permission
                         </h5>
                     </div>
 
                     <div class="modal-body">
-                        Are you sure you want to disable this User as the group manager?
+                        Are you sure you want to disable this User as the Administrator?
                     </div>
 
                     <!-- Modal Actions -->
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">No, Go Back</button>
-                        <button type="button" class="btn btn-danger" @click.prevent="disableGroupManager()">
+                        <button type="button" class="btn btn-danger" @click.prevent="disableAdministrator()">
                             Yes, Disable
                         </button>
                     </div>
@@ -226,81 +206,54 @@
         components : { pagination, ClickConfirm },
         data() {
             return {
-                users: {},
-                groups: {},
-                filterUserForm: {
-                    sortBy : 'group_id',
+                admins: {},
+                filterAdminForm: {
+                    sortBy : 'full_name',
                     order: 'desc',
-                    // org_num : '',
+                    org_num : '',
                     // contact_person : '',
-                    group_id : '',
                     full_name : '',
                     phone_number : '',
                     email : '',
-                    is_admin : -1,
-                    user_role : 0,
+                    backend : 1,
                     pageLength: 100
                 },
-                deletingUser : 1,
-                groupManagerPermission : 1,
-                administratorPermission : 1,
-                user_id: 0
+                deletingAdmin : 1,
+                adminPermission : 1,
+                admin_id: 0
             }
         },
         mounted() {
-            this.getUsers();
+            this.getAdmins();
         },
         methods: {
-            getUsers(page) {
+            getAdmins(page) {
                 if (typeof page === 'undefined') {
                     page = 1;
                 }
-                let url = helper.getFilterURL(this.filterUserForm);
+                let url = helper.getFilterURL(this.filterAdminForm);
                 axios.get('/api/user?&page=' + page + url)
-                    .then(response => this.users = response.data );
+                    .then(response => this.admins = response.data );
             },
-            getUserGroupID(user) {
-                let group_id = '';
-                if (typeof user.profile.group !== 'undefined') {
-                    if (user.profile.group) {
-                        group_id = user.profile.group.group_id
-                    }
-                }
-                return group_id;
-            },
-            getUserRole(user){
-                let user_role = '';
-                if (user.profile.is_admin == 1)
-                    user_role = user_role + '<span class="label label-primary">Group</span>';
-                else
-                    user_role = user_role + '<span class="label label-success">User</span>';
-                return user_role;
-            },
-            getUserStatus(user){
-                if(user.status == 'pending')
+            getAdminStatus(admin){
+                if(admin.status == 'pending')
                     return '<span class="label label-warning">Pending</span>';
-                else if(user.status == 'activated')
+                else if(admin.status == 'activated')
                     return '<span class="label label-success">Activated</span>';
-                // else if(user.status == 'assigned')
-                //     return '<span class="label label-info">Assigned</span>';
-                else if(user.status == 'banned')
-                    return '<span class="label label-danger">Banned</span>';
-                else
-                    return;
             },
-            viewUserProfile(user) {
-                this.$router.push('/user/'+user.id+'/view');
+            viewAdminProfile(admin) {
+                this.$router.push('/admin/' + admin.id + '/view');
             },
 
-            modalDeleteUser(user) {
-                this.user_id = user.id;
-                $('#modal-delete-user').modal('show');
+            modalDeleteAdmin(admin) {
+                this.admin_id = admin.id;
+                $('#modal-delete-admin').modal('show');
             },
-            deleteUser() {
-                axios.delete('/api/user/' + this.user_id).then(response => {
+            deleteAdmin() {
+                axios.delete('/api/user/' + this.admin_id).then(response => {
                     toastr['success'](response.data.message);
-                    $('#modal-delete-user').modal('hide');
-                    this.getUsers();
+                    $('#modal-delete-admin').modal('hide');
+                    this.getAdmins();
                 }).catch(error => {
                     if (error.response.data) {
                         if (error.response.data.message) {
@@ -314,22 +267,22 @@
                 });
             },
 
-            isGroupManager(user) {
-                if (user.status != 'banned' && user.status != 'pending') {
-                    return user.profile.is_admin;
-                }
-                return -1;
+            isAdministrator(admin) {
+                if(admin.status == 'pending')
+                    return 0;
+                else if(admin.status == 'activated')
+                    return 1;
             },
 
-            modalMakeGroupManager(user) {
-                this.user_id = user.id;
-                $('#modal-group-manager').modal('show');
+            modalMakeAdministrator(admin) {
+                this.admin_id = admin.id;
+                $('#modal-administrator').modal('show');
             },
-            makeGroupManager() {
-                axios.post('/api/user/group/' + this.user_id).then(response => {
+            makeAdministrator() {
+                axios.post('/api/user/admin/' + this.admin_id).then(response => {
                     toastr['success'](response.data.message);
-                    $('#modal-group-manager').modal('hide');
-                    this.getUsers();
+                    $('#modal-administrator').modal('hide');
+                    this.getAdmins();
                 }).catch(error => {
                     if (error.response.data) {
                         if (error.response.data.message) {
@@ -343,15 +296,15 @@
                 });
             },
 
-            modalDisableGroupManager(user) {
-                this.user_id = user.id;
-                $('#modal-disable-group-manager').modal('show');
+            modalDisableAdministrator(admin) {
+                this.admin_id = admin.id;
+                $('#modal-disable-administrator').modal('show');
             },
-            disableGroupManager() {
-                axios.delete('/api/user/group/' + this.user_id).then(response => {
+            disableAdministrator() {
+                axios.delete('/api/user/admin/' + this.admin_id).then(response => {
                     toastr['success'](response.data.message);
-                    $('#modal-disable-group-manager').modal('hide');
-                    this.getUsers();
+                    $('#modal-disable-administrator').modal('hide');
+                    this.getAdmins();
                 }).catch(error => {
                     if (error.response.data) {
                         if (error.response.data.message) {

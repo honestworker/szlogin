@@ -29,37 +29,37 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Group ID</label>
-                                    <input name="search" class="form-control" v-model="filterGroupForm.group_id" @blur="getGroups">
+                                    <input name="search" class="form-control" v-model="filterGroupForm.group_id" @change="getGroups">
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Organization Number</label>
-                                    <input class="form-control" v-model="filterGroupForm.org_number" @blur="getGroups">
+                                    <input class="form-control" v-model="filterGroupForm.org_number" @change="getGroups">
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Contact Person</label>
-                                    <input class="form-control" v-model="filterGroupForm.contact_person" @blur="getGroups">
+                                    <input class="form-control" v-model="filterGroupForm.contact_person" @change="getGroups">
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Organization Name</label>
-                                    <input class="form-control" v-model="filterGroupForm.org_name" @blur="getGroups">
+                                    <input class="form-control" v-model="filterGroupForm.org_name" @change="getGroups">
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Email</label>
-                                    <input class="form-control" v-model="filterGroupForm.email" @blur="getGroups">
+                                    <input class="form-control" v-model="filterGroupForm.email" @change="getGroups">
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Mobile Number</label>
-                                    <input class="form-control" v-model="filterGroupForm.mobile_number" @blur="getGroups">
+                                    <input class="form-control" v-model="filterGroupForm.mobile_number" @change="getGroups">
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -215,7 +215,7 @@
                     email : '',
                     mobile_number : '',
                     country : '',
-                    pageLength: 5
+                    pageLength: 100
                 },
                 group_id : 0,
                 deletingGroup : 1

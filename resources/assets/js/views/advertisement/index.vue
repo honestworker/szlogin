@@ -29,7 +29,7 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Name</label>
-                                    <input name="search" class="form-control" v-model="filterAdForm.name" @blur="getAds">
+                                    <input name="search" class="form-control" v-model="filterAdForm.name" @change="getAds">
                                 </div>
                             </div>
                             <div class="col-md-2">
@@ -55,7 +55,7 @@
                                                     <option value="<"><</option>
                                                     <option value="<="><=</option>
                                                 </select>
-                                                <input class="form-control col-md-7" v-model="filterAdForm.show_count" @blur="getAds">
+                                                <input class="form-control col-md-7" v-model="filterAdForm.show_count" @change="getAds">
                                             </div>
                                         </div>
                                     </div>
@@ -71,7 +71,7 @@
                                                     <option value="<"><</option>
                                                     <option value="<="><=</option>
                                                 </select>
-                                                <input class="form-control col-md-7" v-model="filterAdForm.click_count" @blur="getAds">
+                                                <input class="form-control col-md-7" v-model="filterAdForm.click_count" @change="getAds">
                                             </div>
                                         </div>
                                     </div>
@@ -91,7 +91,7 @@
                                                     <option value="<"><</option>
                                                     <option value="<="><=</option>
                                                 </select>
-                                                <datepicker class="col-md-7" v-model="filterAdForm.start_date" :bootstrapStyling="true" @blur="getAds"></datepicker>
+                                                <datepicker class="col-md-7" v-model="filterAdForm.start_date" :bootstrapStyling="true" @change="getAds"></datepicker>
                                             </div>
                                         </div>
                                     </div>
@@ -107,7 +107,7 @@
                                                     <option value="<"><</option>
                                                     <option value="<="><=</option>
                                                 </select>
-                                                <datepicker class="col-md-7" v-model="filterAdForm.end_date" :bootstrapStyling="true" @blur="getAds"></datepicker>
+                                                <datepicker class="col-md-7" v-model="filterAdForm.end_date" :bootstrapStyling="true" @change="getAds"></datepicker>
                                             </div>
                                         </div>
                                     </div>
@@ -241,7 +241,7 @@
                     start_date_oper : '',
                     end_date : '',
                     end_date_oper : '',
-                    pageLength: 5
+                    pageLength: 100
                 },
                 ad_id : 0,
                 deletingAd : 1

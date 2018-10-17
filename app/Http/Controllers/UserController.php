@@ -21,16 +21,8 @@ class UserController extends Controller
         }
 
         $user = JWTAuth::parseToken()->authenticate();
-        $roles = $user->Profile->Roles;
-        $is_super = 0;
-        foreach ($roles as $role) {
-            if ($role->role_id == 1) {
-                $is_super = 1;
-                break;
-            }
-        }
         
-		$users = \App\User::with('profile', 'profile.group', 'profile.roles')->whereNotNull('id');
+		$users = \App\User::with('profile', 'profile.group')->whereNotNull('id');
 		
 		// if(request()->has('first_name'))
         //     $users->whereHas('profile',function($q) use ($request){
@@ -60,49 +52,31 @@ class UserController extends Controller
                 $q->where('group_id','like','%'.request('group_id').'%');
             });
             
+		if(request()->has('backend')) {
+            $users->whereBackend(request('backend'));
+        } else {
+            $users->whereBackend(0);
+        }
+
+		if(request()->has('is_admin'))
+            if(request('is_admin') >= 0)
+                $users->whereHas('profile',function($q) {
+                    $q->where('is_admin','=', request('is_admin'));
+                });
+
         if(request()->has('status'))
             $users->whereStatus(request('status'));
-        
-        if(request()->has('user_role')) {
-            $role_id = request('user_role');
-            if (request('user_role') != '0') {
-                $users->whereHas('profile.roles', function($q) use ($role_id) {
-                    $q->where('role_id', $role_id);
-                });
-            }
-        }
-            
-		if (!$is_super) {
-            $users->whereHas('profile.roles', function($q) {
-                $q->where('role_id', '>', 1);
-            });
-		}
-        
+                
         if(request()->has('sortBy') && request()->has('order')) {
             if(request('sortBy') == 'status' || request('sortBy') == 'email')
                 $users->select('id', 'email', 'status')->orderBy(request('sortBy'), request('order'));
-            else if(request('sortBy') == 'contact_person' || request('sortBy') == 'phone_number')
+            else if(request('sortBy') == 'contact_person' || request('sortBy') == 'phone_number' || request('sortBy') == 'full_name' || request('sortBy') == 'group_id')
                 $users->select('id', 'email', 'status', \DB::raw('(select ' . request('sortBy') . ' from profiles where users.id = profiles.user_id) as '. request('sortBy')))->orderBy(request('sortBy'), request('order'));
-            // else if(request('sortBy') == 'group_id')
-            //     $users->select('id', 'email', 'status', \DB::raw('(select group_id from groups where ' .  .' = groups.id) as group_id'))->orderBy('group_id', request('order'));
+            else if(request('sortBy') == 'group_id')
+                $users->select('id', 'email', 'status', \DB::raw('(select ' . request('sortBy') . ' from groups where profiles.user_id = groups.group_id) as '. request('sortBy')))->orderBy(request('sortBy'), request('order'));
         }
         
 		return $users->paginate(request('pageLength'));
-	}
-
-	public function allRole(){
-        try {
-            JWTAuth::parseToken()->authenticate();
-        } catch (JWTException $e) {
-            return response()->json(['authenticated' => false], 422);
-        }
-        
-		$roles = \App\Role::whereNotNull('id');
-		
-        $roles->orderBy('id', 'ASC');
-        $roles->where('id', '>', 1);
-        
-		return response()->json(['status' => 'success', 'message' => 'Get User Role Data Successfully!', 'data' => $roles->get()], 200);
 	}
 
 	public function getUser(Request $request, $id){
@@ -119,26 +93,13 @@ class UserController extends Controller
         $profile = $user->Profile;
         $email = $user->email;
         $group_id = $role = "";
-        
-        $user_roles = \App\UserRole::where('user_id', '=', $id)->pluck('role_id');
-        if (count($user_roles)) {
-            foreach ($user_roles as $user_role) {
-                $role_name = \App\Role::where('id', '=', $user_role)->pluck('name');
-                if (count($role_name)) {
-                    if ($role) {
-                        $role = $role . ", ";
-                    }
-                    $role = $role . $role_name[0];
-                }
-            }
-        }
-		
+        		
         $user_group = \App\Group::where('id', '=', $profile->group_id)->pluck('group_id');
         if (count($user_group)) {
             $group_id = $user_group[0];
         }
 		
-		return response()->json(['status' => 'success', 'message' => 'Get User Data Successfully!', 'data' => compact('profile','role','group_id', 'email')], 200);
+		return response()->json(['status' => 'success', 'message' => 'Get User Data Successfully!', 'data' => compact('profile', 'group_id', 'email')], 200);
     }
     
 	public function getUserProfile(Request $request){
@@ -155,26 +116,13 @@ class UserController extends Controller
         $profile = $user->Profile;
         $email = $user->email;
         $group_id = $role = "";
-        
-        $user_roles = \App\UserRole::where('user_id', '=', $user->id)->pluck('role_id');
-        if (count($user_roles)) {
-            foreach ($user_roles as $user_role) {
-                $role_name = \App\Role::where('id', '=', $user_role)->pluck('name');
-                if (count($role_name)) {
-                    if ($role) {
-                        $role = $role . ", ";
-                    }
-                    $role = $role . $role_name[0];
-                }
-            }
-        }
-		
+        		
         $user_group = \App\Group::where('id', '=', $profile->group_id)->pluck('group_id');
         if (count($user_group)) {
             $group_id = $user_group[0];
         }
 		
-		return response()->json(['status' => 'success', 'message' => 'Get User Data Successfully!', 'data' => compact('profile','role','group_id', 'email')], 200);
+		return response()->json(['status' => 'success', 'message' => 'Get User Data Successfully!', 'data' => compact('profile', 'group_id', 'email')], 200);
     }
 
     public function profile() {
@@ -253,14 +201,7 @@ class UserController extends Controller
         }
 
         $user = JWTAuth::parseToken()->authenticate();
-        $roles = $user->Profile->Roles;
-        $is_manager = 0;
-        foreach ($roles as $role) {
-            if ($role->role_id >= 3) {
-                $is_manager = 1;
-                break;
-            }
-        }
+        $is_manager = $user->Profile->is_admin;
         
         if (!$is_manager) {
             return response()->json(['status' => 'fail', 'message' => 'You do not have a manager permission.', 'error_type' => 'no_manager'], 422);
@@ -366,11 +307,6 @@ class UserController extends Controller
             
         if($user->avatar && \File::exists($this->avatar_path.$user->avatar))
             \File::delete($this->avatar_path.$user->avatar);
-            
-        $roles = $user->Profile->Roles;
-        foreach ($roles as $role) {
-            $role->delete();
-        }
         
         $profile = $user->Profile;
         $profile->delete();
@@ -428,40 +364,28 @@ class UserController extends Controller
         return response()->json(['status' => 'success', 'message' => 'Avatar removed!'], 200);
     }
 
-    public function deleteAccount(Request $request, $id){
+    public function deleteAccountBackend(Request $request, $id){
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {
             return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
         }
-                
+        
         $user = JWTAuth::parseToken()->authenticate();
-        $roles = $user->Profile->Roles;
-        $is_manager = 0;
-        foreach ($roles as $role) {
-            if ($role->role_id >= 3) {
-                $is_manager = 1;
-                break;
-            }
-        }
+        $is_manager = $user->Profile->is_admin;
         
         if (!$is_manager) {
             return response()->json(['status' => 'fail', 'message' => 'You do not have a manager permission.', 'error_type' => 'no_manager'], 422);
         }
-
+        
         $user = \App\User::find($id);
         if(!$user)
-            return response()->json(['status' => 'fail', 'message' => 'Could not find user!', 'error_type' => 'no_user'], 422);            
+            return response()->json(['status' => 'fail', 'message' => 'Could not find user!', 'error_type' => 'no_user'], 422);
             
         if($user->avatar && \File::exists($this->avatar_path.$user->avatar))
             \File::delete($this->avatar_path.$user->avatar);
             
         $profile = $user->Profile;
-        $roles = $user->Profile->Roles;
-        foreach ($roles as $role) {
-            $role->delete();
-        }
-        
         $profile->delete();
         
         $notifications = $user->Notification;
@@ -495,15 +419,137 @@ class UserController extends Controller
         return response()->json(['status' => 'success', 'message' => 'User deleted!'], 200);
     }
 
+    public function deleteAccount(Request $request){
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
+          
+        $validation = Validator::make($request->all(),[
+            'id' => 'required',
+        ]);
+        if ($validation->fails())
+            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
+        
+        $user = JWTAuth::parseToken()->authenticate();
+        $is_manager = $user->Profile->is_admin;
+        
+        if (!$is_manager) {
+            return response()->json(['status' => 'fail', 'message' => 'You do not have a manager permission.', 'error_type' => 'no_manager'], 422);
+        }
+        
+        $user = \App\User::find(request('id'));
+        if(!$user)
+            return response()->json(['status' => 'fail', 'message' => 'Could not find user!', 'error_type' => 'no_user'], 422);
+            
+            
+        if($user->avatar && \File::exists($this->avatar_path.$user->avatar))
+            \File::delete($this->avatar_path.$user->avatar);
+            
+        $profile = $user->Profile;        
+        $profile->delete();
+        
+        $notifications = $user->Notification;
+        if ($notifications) {
+            foreach ($notifications as $notification) {
+                $images = $notification->Images;
+                if ($images) {
+                    foreach ($images as $image) {
+                        $image->delete();
+                    }
+                    $notification->delete();
+                }
+            }
+        }
+        
+        $comments = $user->Comments;
+        if ($comments) {
+            foreach ($comments as $comment) {
+                $images = $comment->Images;
+                if ($images) {
+                    foreach ($images as $image) {
+                        $image->delete();
+                    }
+                }
+                $comment->delete();
+            }
+        }
+        
+        $user->delete();
+        
+        return response()->json(['status' => 'success', 'message' => 'User deleted!'], 200);
+    }
+
+    public function makeGroupManager(Request $request, $id){
+        $user = \App\User::find($id);
+        if(!$user)
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user!'], 422);
+        
+        $profile = $user->Profile;
+        
+        if ($profile->is_admin)
+            return response()->json(['status' => 'fail', 'message' => 'This user already is group manager!'], 422);
+        
+        $profile->is_admin = 1;
+        $profile->save();
+        
+        return response()->json(['status' => 'success', 'message' => 'The user is made as a group manager successfully.', 'user' => $user]);
+    }
+
+    public function disableGroupManager(Request $request, $id){
+        $user = \App\User::find($id);
+        if(!$user)
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user!'], 422);
+        
+        $profile = $user->Profile;
+        
+        if (!$profile->is_admin)
+            return response()->json(['status' => 'fail', 'message' => 'This user already is not group manager!'], 422);
+        
+        $profile->is_admin = 0;
+        $profile->save();
+        
+        return response()->json(['status' => 'success', 'message' => 'The user is made as not group manager successfully.', 'user' => $user]);
+    }
+
+    public function makeAdministrator(Request $request, $id){
+        $user = \App\User::find($id);
+        if(!$user)
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user!'], 422);
+        
+        if ($user->status == 'activated')
+            return response()->json(['status' => 'fail', 'message' => 'This user already is administrator!'], 422);
+            
+        $user->status = 'activated';
+        $user->save();
+        
+        return response()->json(['status' => 'success', 'message' => 'The user is made as a administrator successfully.', 'user' => $user]);
+    }
+
+    public function disableAdministrator(Request $request, $id){
+        $user = \App\User::find($id);
+        if(!$user)
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user!'], 422);
+        
+        if ($user->status == 'pending')
+            return response()->json(['status' => 'fail', 'message' => 'This user already is not administrator!'], 422);
+            
+        $user->status = 'pending';
+        $user->save();
+        
+        return response()->json(['status' => 'success', 'message' => 'The user is made as not administrator successfully.', 'user' => $user]);
+    }
+
     public function overview() {
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {
             return response()->json(['authenticated' => false], 422);
         }
-
+        
         $total = \App\User::count();
-
+        
         $infor = array();
         $now_date = date("Y-m-d");
         $year = date('Y', strtotime($now_date));
@@ -511,29 +557,29 @@ class UserController extends Controller
         for ($month_index = 1; $month_index <= $month; $month_index++) {
             $users = \App\User::whereNotNull('id');
             //$infor[] = count($users->whereStatus('activated')->whereYear('created_at', '=',  $year)->whereMonth('created_at', '=',   $month_index )->get());
-            $infor[] = count($users->whereYear('created_at', '=',  $year)->whereMonth('created_at', '=',   $month_index )->get());
+            $infor[] = count($users->where('backend', '=', '0')->whereYear('created_at', '=',  $year)->whereMonth('created_at', '=',   $month_index )->get());
         }
         
         $visitor_infor = array();
         $day_before = date("Y-m-d H:i:s", strtotime("$now_date  -1 day"));
         $users = \App\User::whereNotNull('id');
         //$visitor_infor[] = count($users->whereStatus('activated')->where('created_at', '>=',  $day_before)->get());
-        $visitor_infor[] = count($users->where('created_at', '>=',  $day_before)->get());
-
+        $visitor_infor[] = count($users->where('backend', '=', '0')->where('created_at', '>=',  $day_before)->get());
+        
         $week_before = date("Y-m-d H:i:s", strtotime("$now_date  -7 days"));
         $users = \App\User::whereNotNull('id');
         //$visitor_infor[] = count($users->whereStatus('activated')->where('created_at', '>=',  $week_before)->get());
-        $visitor_infor[] = count($users->where('created_at', '>=',  $week_before)->get());
-
+        $visitor_infor[] = count($users->where('backend', '=', '0')->where('created_at', '>=',  $week_before)->get());
+        
         $month_before = date("Y-m-d H:i:s", strtotime("$now_date  -30 days"));
         $users = \App\User::whereNotNull('id');
         //$visitor_infor[] = count($users->whereStatus('activated')->where('created_at', '>=',  $month_before)->get());
-        $visitor_infor[] = count($users->where('created_at', '>=',  $month_before)->get());
-
+        $visitor_infor[] = count($users->where('backend', '=', '0')->where('created_at', '>=',  $month_before)->get());
+        
         $users = \App\User::whereNotNull('id');
         //$visitor_infor[] = count($users->whereStatus('activated')->whereYear('created_at', '=',  $year)->get());
-        $visitor_infor[] = count($users->whereYear('created_at', '=',  $year)->get());
-
+        $visitor_infor[] = count($users->where('backend', '=', '0')->whereYear('created_at', '=',  $year)->get());
+        
         $visitors_infor = $visitor_infor1 = $visitor_infor2 = array();
         for ($month_index = 1; $month_index <= 12; $month_index++) {
             $visitor = \App\Visitor::where('year', '=', $year - 1)->where('month', '=', $month_index)->first();
@@ -552,10 +598,10 @@ class UserController extends Controller
             }
         }
         $visitors_infor = [$visitor_infor1, $visitor_infor2];
-
+        
         $users = \App\User::whereNotNull('id');
         //$activated_users = count($users->whereStatus('activated')->where('activated_at', '>=',  $month_before)->get());
-        $activated_users = count($users->where('activated_at', '>=',  $month_before)->get());
+        $activated_users = count($users->where('backend', '=', '0')->where('activated_at', '>=',  $month_before)->get());
 
         return response()->json(['status' => 'success', 'message' => 'User and Visitor Overview!', 'data' => compact('total','infor','activated_users','visitor_infor','visitors_infor')]);
     }

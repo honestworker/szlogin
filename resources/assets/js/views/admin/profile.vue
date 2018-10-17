@@ -20,15 +20,11 @@
                             </div>
                             <div class="form-group">
                                 <strong><span>Email: </span></strong>
-                                <span v-text="userForm.email"></span>
-                            </div>
-                            <div class="form-group">
-                                <strong><span>User Role: </span></strong>
-                                <span v-text="userForm.role"></span>
+                                <span v-text="adminForm.email"></span>
                             </div>
                             <div class="form-group">
                                 <strong><span>Created At: </span></strong>
-                                <span v-text="userForm.created_at"></span>
+                                <span v-text="adminForm.created_at"></span>
                             </div>
                             <div class="form-group">
                                 <h4 class="card-title">Change Password</h4>
@@ -54,61 +50,54 @@
                         <div class="card-body">
                             <!-- <div class="form-group">
                                 <strong><span>Contact Person: </span></strong>
-                                <input class="form-control" type="text" value="" v-model="userForm.contact_person">
+                                <input class="form-control" type="text" value="" v-model="adminForm.contact_person">
                             </div>
                             <div class="form-group">
                                 <strong><span>Group Name: </span></strong>
-                                <input class="form-control" type="text" value="" v-model="userForm.group_name">
+                                <input class="form-control" type="text" value="" v-model="adminForm.group_name">
                             </div>
                             <div class="form-group">
                                 <strong><span>Organization Number: </span></strong>
-                                <input class="form-control" type="text" value="" v-model="userForm.org_number">
+                                <input class="form-control" type="text" value="" v-model="adminForm.org_number">
                             </div> -->
                             <div class="form-group">
-                                <strong><span>Group ID: </span></strong>
-                                <select name="groups" class="form-control">
-                                    <option value="0">None</option>
-                                    <option v-for="group in groups.data" v-bind:value="group.id" v-bind:selected="getGroupSelectedStatus(group.group_id)">{{ group.group_id }}</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
                                 <strong><span>Full Name: </span></strong>
-                                <input class="form-control" type="text" value="" v-model="userForm.full_name">
+                                <input class="form-control" type="text" value="" v-model="adminForm.full_name">
                             </div>
                             <div class="form-group">
                                 <strong><span>First Name: </span></strong>
-                                <input class="form-control" type="text" value="" v-model="userForm.first_name">
+                                <input class="form-control" type="text" value="" v-model="adminForm.first_name">
                             </div>
                             <div class="form-group">
                                 <strong><span>Fmaily Name: </span></strong>
-                                <input class="form-control" type="text" value="" v-model="userForm.family_name">
+                                <input class="form-control" type="text" value="" v-model="adminForm.family_name">
                             </div>
                             <div class="form-group">
                                 <strong><span>Phone Number: </span></strong>
-                                <input class="form-control" type="text" value="" v-model="userForm.phone_number">
+                                <input class="form-control" type="text" value="" v-model="adminForm.phone_number">
                             </div>
                             <div class="form-group">
                                 <strong><span>Street Address: </span></strong>
-                                <input class="form-control" type="text" value="" v-model="userForm.street_address">
+                                <input class="form-control" type="text" value="" v-model="adminForm.street_address">
                             </div>
-                            <div class="form-group">
+                            <!-- <div class="form-group">
                                 <strong><span>Street Number: </span></strong>
-                                <input class="form-control" type="text" value="" v-model="userForm.street_number">
-                            </div>
+                                <input class="form-control" type="text" value="" v-model="adminForm.street_number">
+                            </div> -->
                             <div class="form-group">
                                 <strong><span>Postal Code: </span></strong>
-                                <input class="form-control" type="text" value="" v-model="userForm.postal_code">
+                                <input class="form-control" type="text" value="" v-model="adminForm.postal_code">
                             </div>
                             <div class="form-group">
                                 <strong><span>Country: </span></strong>
-                                <select name="status" class="form-control" v-model="userForm.country">
+                                <select name="status" class="form-control" v-model="adminForm.country">
                                     <option value="">None</option>
                                     <option v-for="country in countries.countries" v-bind:value="country" v-bind:selected="getCountrySelectedStatus(country)">{{country}}</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <strong><span>City: </span></strong>
-                                <input class="form-control" type="text" value="" v-model="userForm.city">
+                                <input class="form-control" type="text" value="" v-model="adminForm.city">
                             </div>
                         </div>
                     </div>
@@ -128,7 +117,7 @@
             return {
                 countries : {},
                 groups : {},
-                userForm: new Form({
+                adminForm: new Form({
                     // 'contact_person' : '',
                     'avatar' : '',
                     // 'group_name' : '',
@@ -139,13 +128,11 @@
                     'full_name' : '',
                     'phone_number' : '',
                     'street_address' : '',
-                    'street_number' : '',
+                    // 'street_number' : '',
                     'postal_code' : '',
                     'country' : '',
                     'city' : '',
                     'created_at' : '',
-                    'role' : '',
-                    'group_id' : '',
                 }),
                 passwordForm: new Form({
                     'current_password' : '',
@@ -158,7 +145,6 @@
         mounted() {
             this.getUser();
             this.getCountries();
-            this.getGroups();
         },
         methods: {
             proceed(){
@@ -168,19 +154,7 @@
                     .then(response => this.countries = response.data);
             },
             getCountrySelectedStatus(country) {
-                if (country == this.userForm.country) {
-                    return true;
-                } else {
-                    return false;
-                }
-            },
-            getGroups() {
-                axios.post('/api/group/all').then(response => {
-                    this.groups = response.data;
-                });
-            },
-            getGroupSelectedStatus(group_id) {
-                if (group_id == this.userForm.group_id) {
+                if (country == this.adminForm.country) {
                     return true;
                 } else {
                     return false;
@@ -197,23 +171,21 @@
                 axios.post('/api/user/profile')
                 .then(response => {
                     this.user_data = response.data.data;
-                    // this.userForm.contact_person =  this.user_data.profile.contact_person ? this.user_data.profile.contact_person : "";
-                    this.userForm.avatar = this.user_data.profile.avatar ? this.user_data.profile.avatar : "";
-                    // this.userForm.group_name = this.user_data.profile.group_name ? this.user_data.profile.group_name : "";
-                    // this.userForm.org_number = this.user_data.profile.org_number ? this.user_data.profile.org_number : "";
-                    this.userForm.email = this.user_data.email ? this.user_data.email : "";
-                    this.userForm.first_name = this.user_data.profile.first_name ? this.user_data.profile.first_name : "";
-                    this.userForm.family_name = this.user_data.profile.family_name ? this.user_data.profile.family_name : "";
-                    this.userForm.full_name = this.userForm.first_name + " " + this.userForm.family_name;
-                    this.userForm.phone_number = this.user_data.profile.phone_number ? this.user_data.profile.phone_number : "";
-                    this.userForm.street_address = this.user_data.profile.street_address ? this.user_data.profile.street_address : "";
-                    this.userForm.street_number = this.user_data.profile.street_number ? this.user_data.profile.street_number : "";
-                    this.userForm.postal_code = this.user_data.profile.postal_code ? this.user_data.profile.postal_code : "";
-                    this.userForm.country = this.user_data.profile.country ? this.user_data.profile.country : "";
-                    this.userForm.city = this.user_data.profile.city ? this.user_data.profile.city : "";
-                    this.userForm.created_at = this.user_data.profile.created_at ? this.user_data.profile.created_at : "";
-                    this.userForm.role = this.user_data.role ? this.user_data.role : "";
-                    this.userForm.group_id = this.user_data.group_id ? this.user_data.group_id : "";
+                    // this.adminForm.contact_person =  this.user_data.profile.contact_person ? this.user_data.profile.contact_person : "";
+                    this.adminForm.avatar = this.user_data.profile.avatar ? this.user_data.profile.avatar : "";
+                    // this.adminForm.group_name = this.user_data.profile.group_name ? this.user_data.profile.group_name : "";
+                    // this.adminForm.org_number = this.user_data.profile.org_number ? this.user_data.profile.org_number : "";
+                    this.adminForm.email = this.user_data.email ? this.user_data.email : "";
+                    this.adminForm.first_name = this.user_data.profile.first_name ? this.user_data.profile.first_name : "";
+                    this.adminForm.family_name = this.user_data.profile.family_name ? this.user_data.profile.family_name : "";
+                    this.adminForm.full_name = this.adminForm.full_name;
+                    this.adminForm.phone_number = this.user_data.profile.phone_number ? this.user_data.profile.phone_number : "";
+                    this.adminForm.street_address = this.user_data.profile.street_address ? this.user_data.profile.street_address : "";
+                    // this.adminForm.street_number = this.user_data.profile.street_number ? this.user_data.profile.street_number : "";
+                    this.adminForm.postal_code = this.user_data.profile.postal_code ? this.user_data.profile.postal_code : "";
+                    this.adminForm.country = this.user_data.profile.country ? this.user_data.profile.country : "";
+                    this.adminForm.city = this.user_data.profile.city ? this.user_data.profile.city : "";
+                    this.adminForm.created_at = this.user_data.profile.created_at ? this.user_data.profile.created_at : "";
                 })
                 .catch(response => {
                     toastr['error'](response.message);
@@ -227,14 +199,14 @@
                     this.$store.dispatch('setAuthUserDetail', {
                         avatar: response.data.profile.avatar
                     });
-                    this.userForm.avatar = response.data.profile.avatar;
+                    this.adminForm.avatar = response.data.profile.avatar;
                     toastr['success'](response.data.message);
                 }).catch(error => {
                     toastr['error'](error.response.data.message);
                 });
             },
             updateProfile() {
-                this.userForm.post('/api/user/update-profile').then(response => {
+                this.adminForm.post('/api/user/update-profile').then(response => {
                     toastr['success'](response.message);
                 }).catch(response => {
                     toastr['error'](response.message);
@@ -244,8 +216,8 @@
         },
         computed: {
             getAvatar(){
-                if (this.userForm.avatar) {
-                    return '/images/users/'+ this.userForm.avatar;
+                if (this.adminForm.avatar) {
+                    return '/images/users/'+ this.adminForm.avatar;
                 } else {
                     return '/images/common/no-user.png';
                 }

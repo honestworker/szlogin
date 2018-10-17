@@ -118,6 +118,7 @@ class NotificationController extends Controller
         $validation = Validator::make($request->all(), [
             'type' => 'required',
             'contents' => 'required|min:1',
+            'datetime' => 'required',
         ]);
         
         if($validation->fails())
@@ -137,10 +138,12 @@ class NotificationController extends Controller
             }
         }
         $notification = new \App\Notification;
-        $notification->fill(request()->all());
+        $notification->type = request('type');
+        $notification->contents = request('contents');
         $notification->user_id = $user->id;
         $notification->group_id = $group->id;
         $notification->status = 1;
+        $notification->created_at = request('datetime');
         $notification->save();
         
         if($request->hasfile('images')) {
@@ -324,6 +327,7 @@ class NotificationController extends Controller
         $validation = Validator::make($request->all(), [
             'notification_id' => 'required',
             'contents' => 'required',
+            'datetime' => 'required',
         ]);        
         if($validation->fails())
             return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
@@ -356,6 +360,7 @@ class NotificationController extends Controller
         $comment->contents = request('contents');
         $comment->user_id = $user->id;
         $comment->status = 1;
+        $comment->created_at = request('datetime');
         $comment->save();
         
         if($request->hasfile('images')) {

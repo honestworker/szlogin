@@ -20,31 +20,31 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Group Name</label>
-                                    <input class="form-control" v-model="filterUserForm.group_name" @blur="getUsers">
+                                    <input class="form-control" v-model="filterUserForm.group_name" @change="getUsers">
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Organization Number</label>
-                                    <input class="form-control" v-model="filterUserForm.org_number" @blur="getUsers">
+                                    <input class="form-control" v-model="filterUserForm.org_number" @change="getUsers">
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Contact Person</label>
-                                    <input class="form-control" v-model="filterUserForm.contact_person" @blur="getUsers">
+                                    <input class="form-control" v-model="filterUserForm.contact_person" @change="getUsers">
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Phone Number</label>
-                                    <input class="form-control" v-model="filterUserForm.phone_number" @blur="getUsers">
+                                    <input class="form-control" v-model="filterUserForm.phone_number" @change="getUsers">
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Email</label>
-                                    <input class="form-control" v-model="filterUserForm.email" @blur="getUsers">
+                                    <input class="form-control" v-model="filterUserForm.email" @change="getUsers">
                                 </div>
                             </div>
                             <div class="col-md-3">

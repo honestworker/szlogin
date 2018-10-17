@@ -71,7 +71,7 @@ class GroupController extends Controller
         ]);
         
         if($validation->fails())
-        	return response()->json(['status' => 'success', 'message' => $validation->messages()->first()],422);
+        	return response()->json(['status' => 'success', 'message' => $validation->messages()->first()], 422);
 
         $user = \JWTAuth::parseToken()->authenticate();
         $group = new \App\Group;
@@ -86,7 +86,7 @@ class GroupController extends Controller
         $group = \App\Group::find($request->input('id'));
         
         if(!$group)
-            return response()->json(['status' => 'fail', 'message' => 'Couldnot find group!'],422);
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find group!'], 422);
             
         $group->status = !$group->status;
         $group->save();
@@ -121,7 +121,7 @@ class GroupController extends Controller
         ]);
         
         if($validation->fails())
-            return response()->json(['status' => 'success', 'message' => $validation->messages()->first()],422);
+            return response()->json(['status' => 'success', 'message' => $validation->messages()->first()], 422);
             
         $group->group_id = request('group_id');
         $group->org_number = request('org_number');
@@ -132,7 +132,18 @@ class GroupController extends Controller
         $group->country = request('country');
         $group->save();
         
-        return response()->json(['message' => 'Group updated!', 'data' => $group]);
+        return response()->json(['status' => 'success', 'message' => 'Group updated!', 'data' => $group], 200);
+    }
+    
+    public function destroy(Request $request, $id){
+        $group = \App\Group::find($id);
+        
+        if(!$group)
+            return response()->json(['message' => 'Couldnot find group!'], 422);
+            
+        $group->delete();
+        
+        return response()->json(['status' => 'success', 'message' => 'Group deleted!'], 200);
     }
 
     public function overview(Request $request) {

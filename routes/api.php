@@ -35,7 +35,6 @@ Route::group(['middleware' => ['jwt.auth']], function () {
 
     Route::get('/auth/user','AuthController@getAuthUser');
     Route::post('/user/assign','AuthController@assignGroup');
-    Route::post('/user/role','AuthController@changeRole');
 
     ///// Group
     Route::get('/group','GroupController@index');
@@ -65,9 +64,13 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::post('/user/update-profile','UserController@updateProfile');
     Route::post('/user/{id}','UserController@getUser');
     Route::post('/user/remove-avatar','UserController@removeAvatar');
-    Route::delete('/user/{id}','UserController@deleteAccount');
+    Route::delete('/user/{id}','UserController@deleteAccountBackend');
     Route::get('/user/overview','UserController@overview');
-    Route::post('/user-roles','UserController@allRole');
+    
+    Route::post('/user/group/{id}','UserController@makeGroupManager');
+    Route::delete('/user/group/{id}','UserController@disableGroupManager');
+    Route::post('/user/admin/{id}','UserController@makeAdministrator');
+    Route::delete('/user/admin/{id}','UserController@disableAdministrator');
     
     // User app only
     Route::post('/get-group-users','UserController@getGroupUsers');

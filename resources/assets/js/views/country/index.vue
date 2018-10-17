@@ -28,13 +28,13 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Index</label>
-                                    <input name="search" class="form-control" v-model="filterCountryForm.idx" @blur="getCountries">
+                                    <input name="search" class="form-control" v-model="filterCountryForm.idx" @change="getCountries">
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Name</label>
-                                    <input class="form-control" v-model="filterCountryForm.name" @blur="getCountries">
+                                    <input class="form-control" v-model="filterCountryForm.name" @change="getCountries">
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -160,7 +160,7 @@
                     order: 'desc',
                     idx : '',
                     name : '',
-                    pageLength: 5
+                    pageLength: 100
                 },
                 id: 0,
                 idx: '',

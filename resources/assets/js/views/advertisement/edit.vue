@@ -6,7 +6,8 @@
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><router-link to="/dashboard">Dashboard</router-link></li>
                     <li class="breadcrumb-item"><router-link to="/advertisement">Advertisement</router-link></li>
-                    <li class="breadcrumb-item active">Edit Advertisement</li>
+                    <li class="breadcrumb-item active" v-if="id != 0">Edit Advertisement</li>
+                    <li class="breadcrumb-item active" v-else>Create Advertisement</li>
                 </ol>
             </div>
         </div>
@@ -15,7 +16,8 @@
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">Edit Advertisement</h4>
+                        <h4 class="card-title" v-if="id != 0">Edit Advertisement</h4>
+                        <h4 class="card-title" v-else>Create Advertisement</h4>
                         <advertisement-form :id="id"></advertisement-form>
                     </div>
                 </div>
@@ -32,7 +34,7 @@
         components : { AdvertisementForm },
         data() {
             return {
-                id:this.$route.params.id
+                id: this.$route.params.id
             }
         },
     }

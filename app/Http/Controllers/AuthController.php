@@ -32,9 +32,9 @@ class AuthController extends Controller
             return response()->json(['status' => 'fail', 'message' => 'This is something wrong. Please try again!'], 500);
         }
         
-        $user = \App\User::whereEmail(request('email'))->first();        
+        $user = \App\User::whereEmail(request('email'))->first();
         if($user->status == 'pending')
-            return response()->json(['status' => 'fail', 'message' => 'Your account hasn\'t been activated. Please check your email & activate account.'], 422);
+            return response()->json(['status' => 'fail', 'message' => 'Your account is disabled administrator permission.'], 422);
             
         if($user->status == 'banned')
             return response()->json(['status' => 'fail', 'message' => 'Your account is banned. Please contact system administrator.'], 422);
@@ -42,16 +42,7 @@ class AuthController extends Controller
         if($user->status != 'activated')
             return response()->json(['status' => 'fail', 'message' => 'There is something wrong with your account. Please contact system administrator.'], 422);
         
-        $admin = false;
-        $roles = \App\UserRole::where('user_id', '=', $user->id)->get();
-        foreach ($roles as $role) {
-            if ($role->role_id <= 2) {
-                $admin = true;
-                break;
-            }
-        }
-        
-        if ($admin == true) {
+        if ($user->backend == 1) {
             return response()->json(['status' => 'success', 'message' => 'You are successfully logged in!', 'token' => $token], 200);
         } else {
             return response()->json(['status' => 'fail', 'message' => 'You do not have the administrator permission!'], 422);
@@ -100,21 +91,20 @@ class AuthController extends Controller
         if($user->status == 'banned')
             return response()->json(['status' => 'fail', 'message' => 'Your account is banned. Please contact system administrator.', 'error_type' => 'banned'], 422);
             
-        if($user->status != 'activated')
+        if($user->status != 'activated' && $user->status != 'pending_activated')
             return response()->json(['status' => 'fail', 'message' => 'There is something wrong with your account. Please contact system administrator.', 'error_type' => 'no_signup'], 422);
         
+        // if ($user->backend == 1)
+        //     return response()->json(['status' => 'fail', 'message' => '', 'error_type' => 'admin'], 422);
+
         $this->calculateVisitor($user);
         
-        $mamager = false;
-        $roles = $user->Profile->Roles;
-        foreach ($roles as $role) {
-            if ($role->role_id == 3) {
-                $mamager = true;
-                break;
-            }
-        }
+        if ($user->Profile->is_admin == 1)
+            $manager = true;
+        else
+            $manager = false;
         
-        return response()->json(['status' => 'success', 'message' => 'You are successfully logged in!', 'token' => $token, 'manager' => $mamager], 200);
+        return response()->json(['status' => 'success', 'message' => 'You are successfully logged in!', 'token' => $token, 'manager' => $manager], 200);
     }
 
     public function getAuthUser(){
@@ -139,7 +129,12 @@ class AuthController extends Controller
             return response(['authenticated' => false]);
         }
         
-        return response(['authenticated' => true]);
+        $user = JWTAuth::parseToken()->authenticate();
+        if ($user) {
+            return response(['authenticated' => true]);
+        } else {
+            return response(['authenticated' => false]);
+        }
     }
 
     public function logout()
@@ -189,11 +184,6 @@ class AuthController extends Controller
         $profile->contact_person = request('contact_person');
         $profile->phone_number = request('phone_number');
         $user->profile()->save($profile);
-        
-        $role = new \App\UserRole;
-        $role->user_id = $user->id;
-        $role->role_id = 4;
-        $profile->roles()->save($role);
         
         return response()->json(['status' => 'success', 'message' => 'You have registered successfully. We will send you Group ID!'], 200);
     }
@@ -279,7 +269,7 @@ class AuthController extends Controller
             'first_name' => 'required',
             'family_name' => 'required',
             'street_address' => 'required',
-            'street_number' => 'required',
+            // 'street_number' => 'required',
             'postal_code' => 'required',
             'phone_number' => 'required',
             'country' => 'required',
@@ -314,7 +304,7 @@ class AuthController extends Controller
         $profile->family_name = request('family_name');
         $profile->full_name = request('first_name') . " " . request('family_name');
         $profile->street_address = request('street_address');
-        $profile->street_number = request('street_number');
+        // $profile->street_number = request('street_number');
         $profile->postal_code = request('postal_code');
         $profile->phone_number = request('phone_number');
         $profile->country = request('country');
@@ -329,13 +319,13 @@ class AuthController extends Controller
             $profile->avatar = $filename.".".$extension;
         }        
         $user->profile()->save($profile);
-        
+                
         return response()->json(['status' => 'success', 'message' => 'You have signed up successfully.']);
     }
 
     public function signupBackend(Request $request){
         $validation = Validator::make($request->all(), [
-            'contact_person' => 'required',
+            'full_name' => 'required',
             'email' => 'required|email',
             'password' => 'required|min:6',
             'password_confirmation' => 'required|same:password'
@@ -352,18 +342,14 @@ class AuthController extends Controller
         $user = \App\User::create([
             'email' => request('email'),
             'status' => 'pending',
+            'backend' => 1,
         ]);
         $user->password = bcrypt(request('password'));
         $user->save();
         
         $profile = new \App\Profile;
-        $profile->contact_person = request('contact_person');
+        $profile->full_name = request('full_name');
         $user->profile()->save($profile);
-        
-        $role = new \App\UserRole;
-        $role->user_id = $user->id;
-        $role->role_id = 4;
-        $profile->roles()->save($role);
         
         return response()->json(['status' => 'success', 'message' => 'You have signed up successfully.']);
     }
@@ -397,85 +383,6 @@ class AuthController extends Controller
         $user->notify(new Assign($group));
         
         return response()->json(['status' => 'success', 'message' => 'Group Id has assigned successfully!', 'user' => $user]);
-    }
-
-    public function changeRole(Request $request){
-        if(env('IS_DEMO'))
-            return response()->json(['status' => 'fail', 'message' => 'You are not allowed to perform this action in this mode.'], 422);
-        
-		if(!request()->has('id'))
-            return response()->json(['status' => 'fail', 'message' => 'You must specify user ID!'], 422);
-        
-		if(!request()->has('group') && !request()->has('admin') )
-            return response()->json(['status' => 'fail', 'message' => 'You must specify user role type!'], 422);
-        
-        $user = \App\User::find(request('id'));
-        if(!$user)
-            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user!'], 422);
-        
-        $user_role_group = $user_role_admin = 0;
-        if (request()->has('group')) {
-            $user_role_group = request('group') + 1;
-        }
-        if (request()->has('admin')) {
-            $user_role_admin = request('admin') + 1;
-        }
-        
-        $sucess = 'success';
-        $message = 'The operation of the user role have done successfully!';
-        
-        $role_save = 0;
-        $roles = \App\UserRole::where('user_id', '=', $user->id)->get();
-        if ($roles) {
-            foreach ($roles as $role) {
-                if ($user_role_group) {
-                    if ($role->role_id == 3 && $user_role_group == 1) {
-                        $role->role_id = 4;
-                        $role->save();
-                        $role_save = 1;
-                        $user->notify(new GroupManager(0));
-                    } else if ($role->role_id == 4 && $user_role_group == 2) {
-                        $role->role_id = 3;
-                        $role->save();
-                        $role_save = 1;
-                        $user->notify(new GroupManager(1));
-                    } else if ($role->role_id == 3 && $user_role_group == 2) {
-                        $role_save = -1;
-                    } else if ($role->role_id == 4 && $user_role_group == 1) {
-                        $role_save = -1;
-                    }
-                } else if ($user_role_admin) {
-                    if ($role->role_id == 2 && $user_role_admin == 1) {
-                        $role->delete();
-                        $role_save = 1;
-                        $user->notify(new Administrator());
-                    } else if ($role->role_id == 2 && $user_role_admin == 2) {
-                        $role_save = -1;
-                    }
-                }
-            }
-        }
-        if ($role_save == 0) {
-            if ($user_role_group == 2 || $user_role_admin == 2) {
-                $role = new \App\UserRole;
-                $role->user_id = request('id');
-                if ($user_role_group == 2) {
-                    $role->role_id = 3;
-                } else if ($user_role_admin == 2) {
-                    $role->role_id = 2;
-                    $user->activation_token = generateUuid();
-                    $user->status = 'pending_activated';
-                    $user->save();
-                    $user->notify(new Activation($user));
-                }
-                $user->Profile->roles()->save($role);
-            }
-        } else if ($role_save == -1) {
-            $sucess = 'fail';
-            $message = 'The operation of the user role have already done!';
-        }
-        
-        return response()->json(['status' => $sucess, 'message' => $message, 'user' => $user]);
     }
 
     public function activate($activation_token){
@@ -548,7 +455,7 @@ class AuthController extends Controller
         $validate_password_request = \DB::table('password_resets')->where('email','=', request('email'))->where('code','=', request('code'))->first();        
         if(!$validate_password_request)
             return response()->json(['status' => 'fail', 'message' => 'Invalid password reset code!', 'error_type' => 'invalid_code'], 422);
-            
+        
         if(date("Y-m-d H:i:s", strtotime($validate_password_request->created_at . "+30 minutes")) < date('Y-m-d H:i:s'))
             return response()->json(['status' => 'fail', 'message' => 'Password reset code is expired. Please request reset password again!', 'error_type' => 'code_expired'], 422);
             

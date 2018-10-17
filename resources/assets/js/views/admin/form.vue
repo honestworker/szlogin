@@ -11,74 +11,66 @@
                             </div>
                             <!-- <div class="form-group">
                                 <strong><span>Contact Person: </span></strong>
-                                <span v-text="userForm.contact_person"></span>
+                                <span v-text="adminForm.contact_person"></span>
                             </div> -->
                             <div class="form-group">
                                 <strong><span>Full Name: </span></strong>
-                                <span v-text="userForm.full_name"></span>
+                                <span v-text="adminForm.full_name"></span>
                             </div>
                             <div class="form-group">
                                 <strong><span>Email: </span></strong>
-                                <span v-text="userForm.email"></span>
+                                <span v-text="adminForm.email"></span>
                             </div>
                             <!-- <div class="form-group">
                                 <strong><span>Group Name: </span></strong>
-                                <span v-text="userForm.group_name"></span>
+                                <span v-text="adminForm.group_name"></span>
                             </div>
                             <div class="form-group">
                                 <strong><span>Organization Number: </span></strong>
-                                <span v-text="userForm.org_number"></span>
+                                <span v-text="adminForm.org_number"></span>
                             </div> -->
                             <div class="form-group">
-                                <strong><span>User Role: </span></strong>
-                                <span v-text="userForm.role"></span>
-                            </div>
-                            <div class="form-group">
                                 <strong><span>Created At: </span></strong>
-                                <span v-text="userForm.created_at"></span>
+                                <span v-text="adminForm.created_at"></span>
                             </div>
                         </div>
                     </div>
-                    <router-link to="/user" class="btn btn-danger waves-effect waves-light m-t-10" v-show="id">Cancel</router-link>
+                    <router-link to="/admin" class="btn btn-danger waves-effect waves-light m-t-10" v-show="id">Cancel</router-link>
                 </div>
                 <div class="col-lg-6">
                     <div class="card">
                         <div class="card-body">
                             <div class="form-group">
-                                <strong><span>Group ID: </span></strong>
-                                <span v-text="userForm.group_id"></span>
-                            </div>
-                            <div class="form-group">
                                 <strong><span>First Name: </span></strong>
-                                <span v-text="userForm.first_name"></span>
+                                <span v-text="adminForm.first_name"></span>
                             </div>
                             <div class="form-group">
                                 <strong><span>Fmaily Name: </span></strong>
-                                <span v-text="userForm.family_name"></span>
+                                <span v-text="adminForm.family_name"></span>
                             </div>
                             <div class="form-group">
                                 <strong><span>Phone Number: </span></strong>
-                                <span v-text="userForm.phone_number"></span>
+                                <span v-text="adminForm.phone_number"></span>
                             </div>
                             <div class="form-group">
                                 <strong><span>Street Address: </span></strong>
-                                <span v-text="userForm.street_address"></span>
+                                <span v-text="adminForm.street_address"></span>
                             </div>
                             <!-- <div class="form-group">
                                 <strong><span>Street Number: </span></strong>
-                                <span v-text="userForm.street_number"></span>
+                                <span v-text="adminForm.street_number"></span>
                             </div> -->
                             <div class="form-group">
                                 <strong><span>Postal Code: </span></strong>
-                                <span v-text="userForm.postal_code"></span>
+                                <span v-text="adminForm.postal_code"></span>
                             </div>
                             <div class="form-group">
                                 <strong><span>Country: </span></strong>
-                                <span v-text="userForm.country"></span>
+                                <span v-text="adminForm.country"></span>
                             </div>
                             <div class="form-group">
                                 <strong><span>City: </span></strong>
-                                <span v-text="userForm.city"></span>
+                                <span v-text="adminForm.city"></span>
                             </div>
                         </div>
                     </div>
@@ -95,7 +87,7 @@
         data() {
             return {
                 countries : {},
-                userForm: new Form({
+                adminForm: new Form({
                     // 'contact_person' : '',
                     'avatar' : '',
                     // 'group_name' : '',
@@ -111,10 +103,8 @@
                     'country' : '',
                     'city' : '',
                     'created_at' : '',
-                    'role' : '',
-                    'group_id' : '',
                 }),
-                user_data : {}
+                admin_data : {}
             };
         },
         props: ['id'],
@@ -130,24 +120,22 @@
             getUser(){
                 axios.post('/api/user/'+this.id)
                 .then(response => {
-                    this.user_data = response.data.data;
-                    // this.userForm.contact_person =  this.user_data.profile.contact_person ? this.user_data.profile.contact_person : "";
-                    this.userForm.avatar = this.user_data.profile.avatar ? this.user_data.profile.avatar : "";
-                    // this.userForm.group_name = this.user_data.profile.group_name ? this.user_data.profile.group_name : "";
-                    // this.userForm.org_number = this.user_data.profile.org_number ? this.user_data.profile.org_number : "";
-                    this.userForm.email = this.user_data.email ? this.user_data.email : "";
-                    this.userForm.first_name = this.user_data.profile.first_name ? this.user_data.profile.first_name : "";
-                    this.userForm.family_name = this.user_data.profile.family_name ? this.user_data.profile.family_name : "";
-                    this.userForm.full_name = this.userForm.first_name + " " + this.userForm.family_name;
-                    this.userForm.phone_number = this.user_data.profile.phone_number ? this.user_data.profile.phone_number : "";
-                    this.userForm.street_address = this.user_data.profile.street_address ? this.user_data.profile.street_address : "";
-                    // this.userForm.street_number = this.user_data.profile.street_number ? this.user_data.profile.street_number : "";
-                    this.userForm.postal_code = this.user_data.profile.postal_code ? this.user_data.profile.postal_code : "";
-                    this.userForm.country = this.user_data.profile.country ? this.user_data.profile.country : "";
-                    this.userForm.city = this.user_data.profile.city ? this.user_data.profile.city : "";
-                    this.userForm.created_at = this.user_data.profile.created_at ? this.user_data.profile.created_at : "";
-                    this.userForm.role = (this.user_data.profile.is_admin == 1) ? "Manager" : "User";
-                    this.userForm.group_id = this.user_data.group_id ? this.user_data.group_id : "";
+                    this.admin_data = response.data.data;
+                    // this.adminForm.contact_person =  this.admin_data.profile.contact_person ? this.admin_data.profile.contact_person : "";
+                    this.adminForm.avatar = this.admin_data.profile.avatar ? this.admin_data.profile.avatar : "";
+                    // this.adminForm.group_name = this.admin_data.profile.group_name ? this.admin_data.profile.group_name : "";
+                    // this.adminForm.org_number = this.admin_data.profile.org_number ? this.admin_data.profile.org_number : "";
+                    this.adminForm.email = this.admin_data.email ? this.admin_data.email : "";
+                    this.adminForm.first_name = this.admin_data.profile.first_name ? this.admin_data.profile.first_name : "";
+                    this.adminForm.family_name = this.admin_data.profile.family_name ? this.admin_data.profile.family_name : "";
+                    this.adminForm.full_name = this.admin_data.profile.full_name;
+                    this.adminForm.phone_number = this.admin_data.profile.phone_number ? this.admin_data.profile.phone_number : "";
+                    this.adminForm.street_address = this.admin_data.profile.street_address ? this.admin_data.profile.street_address : "";
+                    // this.adminForm.street_number = this.admin_data.profile.street_number ? this.admin_data.profile.street_number : "";
+                    this.adminForm.postal_code = this.admin_data.profile.postal_code ? this.admin_data.profile.postal_code : "";
+                    this.adminForm.country = this.admin_data.profile.country ? this.admin_data.profile.country : "";
+                    this.adminForm.city = this.admin_data.profile.city ? this.admin_data.profile.city : "";
+                    this.adminForm.created_at = this.admin_data.profile.created_at ? this.admin_data.profile.created_at : "";
                 })
                 .catch(response => {
                     toastr['error'](response.message);
@@ -156,8 +144,8 @@
         },
         computed: {
             getAvatar(){
-                if (this.userForm.avatar) {
-                    return '/images/users/'+ this.userForm.avatar;
+                if (this.adminForm.avatar) {
+                    return '/images/users/'+ this.adminForm.avatar;
                 } else {
                     return '/images/common/no-user.png';
                 }

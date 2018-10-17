@@ -28,7 +28,7 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Name</label>
-                                    <input class="form-control" v-model="filterNotificationTypeForm.name" @blur="getNotificationTypes">
+                                    <input class="form-control" v-model="filterNotificationTypeForm.name" @change="getNotificationTypes">
                                 </div>
                             </div>
                             <div class="col-md-3">

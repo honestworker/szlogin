@@ -579,9 +579,9 @@ module.exports = {
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(129)
+var __vue_script__ = __webpack_require__(138)
 /* template */
-var __vue_template__ = __webpack_require__(130)
+var __vue_template__ = __webpack_require__(139)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -19109,7 +19109,7 @@ module.exports=function(e){function t(i){if(n[i])return n[i].exports;var r=n[i]=
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(21);
-module.exports = __webpack_require__(165);
+module.exports = __webpack_require__(174);
 
 
 /***/ }),
@@ -22041,48 +22041,54 @@ var routes = [{
     }, {
         path: '/advertisement/:id',
         component: __webpack_require__(118)
+    }, {
+        path: '/admin',
+        component: __webpack_require__(124)
+    }, {
+        path: '/admin/:id/view',
+        component: __webpack_require__(127)
     }]
 }, {
     path: '/',
-    component: __webpack_require__(124),
+    component: __webpack_require__(133),
     meta: { requiresGuest: true },
     children: [{
         path: '/login',
-        component: __webpack_require__(127)
+        component: __webpack_require__(136)
     }, {
         path: '/password',
-        component: __webpack_require__(132)
-    }, {
-        path: '/register',
-        component: __webpack_require__(135)
-    }, {
-        path: '/success_register',
-        component: __webpack_require__(138)
-    }, {
-        path: '/signup',
         component: __webpack_require__(141)
     }, {
-        path: '/msignup',
+        path: '/register',
         component: __webpack_require__(144)
     }, {
-        path: '/success_signup',
+        path: '/success_register',
         component: __webpack_require__(147)
     }, {
-        path: '/auth/:token/activate',
+        path: '/signup',
         component: __webpack_require__(150)
     }, {
-        path: '/password/reset/:token',
+        path: '/msignup',
         component: __webpack_require__(153)
     }, {
-        path: '/auth/social',
+        path: '/success_signup',
         component: __webpack_require__(156)
+    }, {
+        path: '/auth/:token/activate',
+        component: __webpack_require__(159)
+    }, {
+        path: '/password/reset/:token',
+        component: __webpack_require__(162)
+    }, {
+        path: '/auth/social',
+        component: __webpack_require__(165)
     }]
 }, {
     path: '*',
-    component: __webpack_require__(159),
+    component: __webpack_require__(168),
     children: [{
         path: '*',
-        component: __webpack_require__(162)
+        component: __webpack_require__(171)
     }]
 }];
 
@@ -22525,11 +22531,6 @@ var staticRenderFns = [
           _c("img", {
             staticClass: "dark-logo",
             attrs: { src: "/images/logo-icon.png", alt: "home" }
-          }),
-          _vm._v(" "),
-          _c("img", {
-            staticClass: "light-logo",
-            attrs: { src: "/images/logo-light-icon.png", alt: "dashboard" }
           })
         ]),
         _vm._v(" "),
@@ -22537,11 +22538,6 @@ var staticRenderFns = [
           _c("img", {
             staticClass: "dark-logo",
             attrs: { src: "/images/logo-text.png", alt: "home" }
-          }),
-          _vm._v(" "),
-          _c("img", {
-            staticClass: "light-logo",
-            attrs: { src: "/images/logo-light-text.png", alt: "dashboard" }
           })
         ])
       ])
@@ -22641,6 +22637,9 @@ module.exports = Component.exports
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__services_helper__ = __webpack_require__(1);
+//
+//
+//
 //
 //
 //
@@ -22806,6 +22805,20 @@ var render = function() {
                 _c("i", { staticClass: "fa fa-dashboard" }),
                 _vm._v(" "),
                 _c("span", { staticClass: "hide-menu" }, [_vm._v("Dashboard")])
+              ])
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "li",
+            [
+              _c("router-link", { attrs: { to: "/admin", exact: "" } }, [
+                _c("i", { staticClass: "\tfa fa-user-secret" }),
+                _vm._v(" "),
+                _c("span", { staticClass: "hide-menu" }, [
+                  _vm._v("Administrators")
+                ])
               ])
             ],
             1
@@ -24986,7 +24999,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 email: '',
                 mobile_number: '',
                 country: '',
-                pageLength: 5
+                pageLength: 100
             },
             group_id: 0,
             deletingGroup: 1
@@ -25135,7 +25148,7 @@ var render = function() {
                     attrs: { name: "search" },
                     domProps: { value: _vm.filterGroupForm.group_id },
                     on: {
-                      blur: _vm.getGroups,
+                      change: _vm.getGroups,
                       input: function($event) {
                         if ($event.target.composing) {
                           return
@@ -25169,7 +25182,7 @@ var render = function() {
                     staticClass: "form-control",
                     domProps: { value: _vm.filterGroupForm.org_number },
                     on: {
-                      blur: _vm.getGroups,
+                      change: _vm.getGroups,
                       input: function($event) {
                         if ($event.target.composing) {
                           return
@@ -25203,7 +25216,7 @@ var render = function() {
                     staticClass: "form-control",
                     domProps: { value: _vm.filterGroupForm.contact_person },
                     on: {
-                      blur: _vm.getGroups,
+                      change: _vm.getGroups,
                       input: function($event) {
                         if ($event.target.composing) {
                           return
@@ -25237,7 +25250,7 @@ var render = function() {
                     staticClass: "form-control",
                     domProps: { value: _vm.filterGroupForm.org_name },
                     on: {
-                      blur: _vm.getGroups,
+                      change: _vm.getGroups,
                       input: function($event) {
                         if ($event.target.composing) {
                           return
@@ -25269,7 +25282,7 @@ var render = function() {
                     staticClass: "form-control",
                     domProps: { value: _vm.filterGroupForm.email },
                     on: {
-                      blur: _vm.getGroups,
+                      change: _vm.getGroups,
                       input: function($event) {
                         if ($event.target.composing) {
                           return
@@ -25303,7 +25316,7 @@ var render = function() {
                     staticClass: "form-control",
                     domProps: { value: _vm.filterGroupForm.mobile_number },
                     on: {
-                      blur: _vm.getGroups,
+                      change: _vm.getGroups,
                       input: function($event) {
                         if ($event.target.composing) {
                           return
@@ -25901,7 +25914,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources/assets/js/views/user/profile.vue"
+Component.options.__file = "resources/assets/js/views/admin/profile.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -25910,9 +25923,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-3877d7d0", Component.options)
+    hotAPI.createRecord("data-v-63c66074", Component.options)
   } else {
-    hotAPI.reload("data-v-3877d7d0", Component.options)
+    hotAPI.reload("data-v-63c66074", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -26040,17 +26053,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
@@ -26059,7 +26061,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return {
             countries: {},
             groups: {},
-            userForm: new Form({
+            adminForm: new Form({
                 // 'contact_person' : '',
                 'avatar': '',
                 // 'group_name' : '',
@@ -26070,13 +26072,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 'full_name': '',
                 'phone_number': '',
                 'street_address': '',
-                'street_number': '',
+                // 'street_number' : '',
                 'postal_code': '',
                 'country': '',
                 'city': '',
-                'created_at': '',
-                'role': '',
-                'group_id': ''
+                'created_at': ''
             }),
             passwordForm: new Form({
                 'current_password': '',
@@ -26089,7 +26089,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     mounted: function mounted() {
         this.getUser();
         this.getCountries();
-        this.getGroups();
     },
 
     methods: {
@@ -26102,21 +26101,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
         },
         getCountrySelectedStatus: function getCountrySelectedStatus(country) {
-            if (country == this.userForm.country) {
-                return true;
-            } else {
-                return false;
-            }
-        },
-        getGroups: function getGroups() {
-            var _this2 = this;
-
-            axios.post('/api/group/all').then(function (response) {
-                _this2.groups = response.data;
-            });
-        },
-        getGroupSelectedStatus: function getGroupSelectedStatus(group_id) {
-            if (group_id == this.userForm.group_id) {
+            if (country == this.adminForm.country) {
                 return true;
             } else {
                 return false;
@@ -26130,48 +26115,46 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
         },
         getUser: function getUser() {
-            var _this3 = this;
+            var _this2 = this;
 
             axios.post('/api/user/profile').then(function (response) {
-                _this3.user_data = response.data.data;
-                // this.userForm.contact_person =  this.user_data.profile.contact_person ? this.user_data.profile.contact_person : "";
-                _this3.userForm.avatar = _this3.user_data.profile.avatar ? _this3.user_data.profile.avatar : "";
-                // this.userForm.group_name = this.user_data.profile.group_name ? this.user_data.profile.group_name : "";
-                // this.userForm.org_number = this.user_data.profile.org_number ? this.user_data.profile.org_number : "";
-                _this3.userForm.email = _this3.user_data.email ? _this3.user_data.email : "";
-                _this3.userForm.first_name = _this3.user_data.profile.first_name ? _this3.user_data.profile.first_name : "";
-                _this3.userForm.family_name = _this3.user_data.profile.family_name ? _this3.user_data.profile.family_name : "";
-                _this3.userForm.full_name = _this3.userForm.first_name + " " + _this3.userForm.family_name;
-                _this3.userForm.phone_number = _this3.user_data.profile.phone_number ? _this3.user_data.profile.phone_number : "";
-                _this3.userForm.street_address = _this3.user_data.profile.street_address ? _this3.user_data.profile.street_address : "";
-                _this3.userForm.street_number = _this3.user_data.profile.street_number ? _this3.user_data.profile.street_number : "";
-                _this3.userForm.postal_code = _this3.user_data.profile.postal_code ? _this3.user_data.profile.postal_code : "";
-                _this3.userForm.country = _this3.user_data.profile.country ? _this3.user_data.profile.country : "";
-                _this3.userForm.city = _this3.user_data.profile.city ? _this3.user_data.profile.city : "";
-                _this3.userForm.created_at = _this3.user_data.profile.created_at ? _this3.user_data.profile.created_at : "";
-                _this3.userForm.role = _this3.user_data.role ? _this3.user_data.role : "";
-                _this3.userForm.group_id = _this3.user_data.group_id ? _this3.user_data.group_id : "";
+                _this2.user_data = response.data.data;
+                // this.adminForm.contact_person =  this.user_data.profile.contact_person ? this.user_data.profile.contact_person : "";
+                _this2.adminForm.avatar = _this2.user_data.profile.avatar ? _this2.user_data.profile.avatar : "";
+                // this.adminForm.group_name = this.user_data.profile.group_name ? this.user_data.profile.group_name : "";
+                // this.adminForm.org_number = this.user_data.profile.org_number ? this.user_data.profile.org_number : "";
+                _this2.adminForm.email = _this2.user_data.email ? _this2.user_data.email : "";
+                _this2.adminForm.first_name = _this2.user_data.profile.first_name ? _this2.user_data.profile.first_name : "";
+                _this2.adminForm.family_name = _this2.user_data.profile.family_name ? _this2.user_data.profile.family_name : "";
+                _this2.adminForm.full_name = _this2.adminForm.full_name;
+                _this2.adminForm.phone_number = _this2.user_data.profile.phone_number ? _this2.user_data.profile.phone_number : "";
+                _this2.adminForm.street_address = _this2.user_data.profile.street_address ? _this2.user_data.profile.street_address : "";
+                // this.adminForm.street_number = this.user_data.profile.street_number ? this.user_data.profile.street_number : "";
+                _this2.adminForm.postal_code = _this2.user_data.profile.postal_code ? _this2.user_data.profile.postal_code : "";
+                _this2.adminForm.country = _this2.user_data.profile.country ? _this2.user_data.profile.country : "";
+                _this2.adminForm.city = _this2.user_data.profile.city ? _this2.user_data.profile.city : "";
+                _this2.adminForm.created_at = _this2.user_data.profile.created_at ? _this2.user_data.profile.created_at : "";
             }).catch(function (response) {
                 toastr['error'](response.message);
             });
         },
         uploadAvatar: function uploadAvatar() {
-            var _this4 = this;
+            var _this3 = this;
 
             var data = new FormData();
             data.append('avatar', $('#avatarUpload')[0].files[0]);
             axios.post('/api/user/update-avatar', data).then(function (response) {
-                _this4.$store.dispatch('setAuthUserDetail', {
+                _this3.$store.dispatch('setAuthUserDetail', {
                     avatar: response.data.profile.avatar
                 });
-                _this4.userForm.avatar = response.data.profile.avatar;
+                _this3.adminForm.avatar = response.data.profile.avatar;
                 toastr['success'](response.data.message);
             }).catch(function (error) {
                 toastr['error'](error.response.data.message);
             });
         },
         updateProfile: function updateProfile() {
-            this.userForm.post('/api/user/update-profile').then(function (response) {
+            this.adminForm.post('/api/user/update-profile').then(function (response) {
                 toastr['success'](response.message);
             }).catch(function (response) {
                 toastr['error'](response.message);
@@ -26181,8 +26164,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     computed: {
         getAvatar: function getAvatar() {
-            if (this.userForm.avatar) {
-                return '/images/users/' + this.userForm.avatar;
+            if (this.adminForm.avatar) {
+                return '/images/users/' + this.adminForm.avatar;
             } else {
                 return '/images/common/no-user.png';
             }
@@ -26249,7 +26232,7 @@ var render = function() {
                   _vm._m(1),
                   _vm._v(" "),
                   _c("span", {
-                    domProps: { textContent: _vm._s(_vm.userForm.email) }
+                    domProps: { textContent: _vm._s(_vm.adminForm.email) }
                   })
                 ]),
                 _vm._v(" "),
@@ -26257,15 +26240,7 @@ var render = function() {
                   _vm._m(2),
                   _vm._v(" "),
                   _c("span", {
-                    domProps: { textContent: _vm._s(_vm.userForm.role) }
-                  })
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "form-group" }, [
-                  _vm._m(3),
-                  _vm._v(" "),
-                  _c("span", {
-                    domProps: { textContent: _vm._s(_vm.userForm.created_at) }
+                    domProps: { textContent: _vm._s(_vm.adminForm.created_at) }
                   })
                 ]),
                 _vm._v(" "),
@@ -26394,36 +26369,63 @@ var render = function() {
               _c("div", { staticClass: "card" }, [
                 _c("div", { staticClass: "card-body" }, [
                   _c("div", { staticClass: "form-group" }, [
+                    _vm._m(3),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.adminForm.full_name,
+                          expression: "adminForm.full_name"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: { type: "text", value: "" },
+                      domProps: { value: _vm.adminForm.full_name },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(
+                            _vm.adminForm,
+                            "full_name",
+                            $event.target.value
+                          )
+                        }
+                      }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-group" }, [
                     _vm._m(4),
                     _vm._v(" "),
-                    _c(
-                      "select",
-                      {
-                        staticClass: "form-control",
-                        attrs: { name: "groups" }
-                      },
-                      [
-                        _c("option", { attrs: { value: "0" } }, [
-                          _vm._v("None")
-                        ]),
-                        _vm._v(" "),
-                        _vm._l(_vm.groups.data, function(group) {
-                          return _c(
-                            "option",
-                            {
-                              domProps: {
-                                value: group.id,
-                                selected: _vm.getGroupSelectedStatus(
-                                  group.group_id
-                                )
-                              }
-                            },
-                            [_vm._v(_vm._s(group.group_id))]
-                          )
-                        })
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.adminForm.first_name,
+                          expression: "adminForm.first_name"
+                        }
                       ],
-                      2
-                    )
+                      staticClass: "form-control",
+                      attrs: { type: "text", value: "" },
+                      domProps: { value: _vm.adminForm.first_name },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(
+                            _vm.adminForm,
+                            "first_name",
+                            $event.target.value
+                          )
+                        }
+                      }
+                    })
                   ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "form-group" }, [
@@ -26434,21 +26436,21 @@ var render = function() {
                         {
                           name: "model",
                           rawName: "v-model",
-                          value: _vm.userForm.full_name,
-                          expression: "userForm.full_name"
+                          value: _vm.adminForm.family_name,
+                          expression: "adminForm.family_name"
                         }
                       ],
                       staticClass: "form-control",
                       attrs: { type: "text", value: "" },
-                      domProps: { value: _vm.userForm.full_name },
+                      domProps: { value: _vm.adminForm.family_name },
                       on: {
                         input: function($event) {
                           if ($event.target.composing) {
                             return
                           }
                           _vm.$set(
-                            _vm.userForm,
-                            "full_name",
+                            _vm.adminForm,
+                            "family_name",
                             $event.target.value
                           )
                         }
@@ -26464,21 +26466,21 @@ var render = function() {
                         {
                           name: "model",
                           rawName: "v-model",
-                          value: _vm.userForm.first_name,
-                          expression: "userForm.first_name"
+                          value: _vm.adminForm.phone_number,
+                          expression: "adminForm.phone_number"
                         }
                       ],
                       staticClass: "form-control",
                       attrs: { type: "text", value: "" },
-                      domProps: { value: _vm.userForm.first_name },
+                      domProps: { value: _vm.adminForm.phone_number },
                       on: {
                         input: function($event) {
                           if ($event.target.composing) {
                             return
                           }
                           _vm.$set(
-                            _vm.userForm,
-                            "first_name",
+                            _vm.adminForm,
+                            "phone_number",
                             $event.target.value
                           )
                         }
@@ -26494,21 +26496,21 @@ var render = function() {
                         {
                           name: "model",
                           rawName: "v-model",
-                          value: _vm.userForm.family_name,
-                          expression: "userForm.family_name"
+                          value: _vm.adminForm.street_address,
+                          expression: "adminForm.street_address"
                         }
                       ],
                       staticClass: "form-control",
                       attrs: { type: "text", value: "" },
-                      domProps: { value: _vm.userForm.family_name },
+                      domProps: { value: _vm.adminForm.street_address },
                       on: {
                         input: function($event) {
                           if ($event.target.composing) {
                             return
                           }
                           _vm.$set(
-                            _vm.userForm,
-                            "family_name",
+                            _vm.adminForm,
+                            "street_address",
                             $event.target.value
                           )
                         }
@@ -26524,21 +26526,21 @@ var render = function() {
                         {
                           name: "model",
                           rawName: "v-model",
-                          value: _vm.userForm.phone_number,
-                          expression: "userForm.phone_number"
+                          value: _vm.adminForm.postal_code,
+                          expression: "adminForm.postal_code"
                         }
                       ],
                       staticClass: "form-control",
                       attrs: { type: "text", value: "" },
-                      domProps: { value: _vm.userForm.phone_number },
+                      domProps: { value: _vm.adminForm.postal_code },
                       on: {
                         input: function($event) {
                           if ($event.target.composing) {
                             return
                           }
                           _vm.$set(
-                            _vm.userForm,
-                            "phone_number",
+                            _vm.adminForm,
+                            "postal_code",
                             $event.target.value
                           )
                         }
@@ -26549,96 +26551,6 @@ var render = function() {
                   _c("div", { staticClass: "form-group" }, [
                     _vm._m(9),
                     _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.userForm.street_address,
-                          expression: "userForm.street_address"
-                        }
-                      ],
-                      staticClass: "form-control",
-                      attrs: { type: "text", value: "" },
-                      domProps: { value: _vm.userForm.street_address },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(
-                            _vm.userForm,
-                            "street_address",
-                            $event.target.value
-                          )
-                        }
-                      }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "form-group" }, [
-                    _vm._m(10),
-                    _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.userForm.street_number,
-                          expression: "userForm.street_number"
-                        }
-                      ],
-                      staticClass: "form-control",
-                      attrs: { type: "text", value: "" },
-                      domProps: { value: _vm.userForm.street_number },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(
-                            _vm.userForm,
-                            "street_number",
-                            $event.target.value
-                          )
-                        }
-                      }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "form-group" }, [
-                    _vm._m(11),
-                    _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.userForm.postal_code,
-                          expression: "userForm.postal_code"
-                        }
-                      ],
-                      staticClass: "form-control",
-                      attrs: { type: "text", value: "" },
-                      domProps: { value: _vm.userForm.postal_code },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(
-                            _vm.userForm,
-                            "postal_code",
-                            $event.target.value
-                          )
-                        }
-                      }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "form-group" }, [
-                    _vm._m(12),
-                    _vm._v(" "),
                     _c(
                       "select",
                       {
@@ -26646,8 +26558,8 @@ var render = function() {
                           {
                             name: "model",
                             rawName: "v-model",
-                            value: _vm.userForm.country,
-                            expression: "userForm.country"
+                            value: _vm.adminForm.country,
+                            expression: "adminForm.country"
                           }
                         ],
                         staticClass: "form-control",
@@ -26663,7 +26575,7 @@ var render = function() {
                                 return val
                               })
                             _vm.$set(
-                              _vm.userForm,
+                              _vm.adminForm,
                               "country",
                               $event.target.multiple
                                 ? $$selectedVal
@@ -26695,26 +26607,26 @@ var render = function() {
                   ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "form-group" }, [
-                    _vm._m(13),
+                    _vm._m(10),
                     _vm._v(" "),
                     _c("input", {
                       directives: [
                         {
                           name: "model",
                           rawName: "v-model",
-                          value: _vm.userForm.city,
-                          expression: "userForm.city"
+                          value: _vm.adminForm.city,
+                          expression: "adminForm.city"
                         }
                       ],
                       staticClass: "form-control",
                       attrs: { type: "text", value: "" },
-                      domProps: { value: _vm.userForm.city },
+                      domProps: { value: _vm.adminForm.city },
                       on: {
                         input: function($event) {
                           if ($event.target.composing) {
                             return
                           }
-                          _vm.$set(_vm.userForm, "city", $event.target.value)
+                          _vm.$set(_vm.adminForm, "city", $event.target.value)
                         }
                       }
                     })
@@ -26765,19 +26677,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("strong", [_c("span", [_vm._v("User Role: ")])])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
     return _c("strong", [_c("span", [_vm._v("Created At: ")])])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("strong", [_c("span", [_vm._v("Group ID: ")])])
   },
   function() {
     var _vm = this
@@ -26813,12 +26713,6 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("strong", [_c("span", [_vm._v("Street Number: ")])])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
     return _c("strong", [_c("span", [_vm._v("Postal Code: ")])])
   },
   function() {
@@ -26839,7 +26733,7 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-3877d7d0", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-63c66074", module.exports)
   }
 }
 
@@ -26899,6 +26793,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__form__ = __webpack_require__(86);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__form___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__form__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_helper__ = __webpack_require__(1);
+//
+//
 //
 //
 //
@@ -27487,9 +27383,13 @@ var render = function() {
             1
           ),
           _vm._v(" "),
-          _c("li", { staticClass: "breadcrumb-item active" }, [
-            _vm._v("Edit Group")
-          ])
+          _vm.id != 0
+            ? _c("li", { staticClass: "breadcrumb-item active" }, [
+                _vm._v("Edit Group")
+              ])
+            : _c("li", { staticClass: "breadcrumb-item active" }, [
+                _vm._v("Create Group")
+              ])
         ])
       ])
     ]),
@@ -27501,7 +27401,13 @@ var render = function() {
             "div",
             { staticClass: "card-body" },
             [
-              _c("h4", { staticClass: "card-title" }, [_vm._v("Edit Group")]),
+              _vm.id != 0
+                ? _c("h4", { staticClass: "card-title" }, [
+                    _vm._v("Edit Group")
+                  ])
+                : _c("h4", { staticClass: "card-title" }, [
+                    _vm._v("Create Group")
+                  ]),
               _vm._v(" "),
               _c("group-form", { attrs: { id: _vm.id } })
             ],
@@ -27580,64 +27486,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_helper__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_click_confirm__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_click_confirm___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_click_confirm__);
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -27865,27 +27713,30 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 /* harmony default export */ __webpack_exports__["default"] = ({
     components: { pagination: __WEBPACK_IMPORTED_MODULE_0_laravel_vue_pagination___default.a, ClickConfirm: __WEBPACK_IMPORTED_MODULE_2_click_confirm___default.a },
     data: function data() {
-        var _ref;
-
-        return _ref = {
+        return {
             users: {},
             groups: {},
-            user_roles: {}
-        }, _defineProperty(_ref, 'user_roles', {}), _defineProperty(_ref, 'filterUserForm', {
-            sortBy: 'full_name',
-            order: 'desc',
-            org_num: '',
-            // contact_person : '',
-            full_name: '',
-            phone_number: '',
-            email: '',
-            user_role: 0,
-            pageLength: 5
-        }), _defineProperty(_ref, 'deletingUser', 1), _defineProperty(_ref, 'groupManagerPermission', 1), _defineProperty(_ref, 'administratorPermission', 1), _defineProperty(_ref, 'user_id', 0), _ref;
+            filterUserForm: {
+                sortBy: 'group_id',
+                order: 'desc',
+                // org_num : '',
+                // contact_person : '',
+                group_id: '',
+                full_name: '',
+                phone_number: '',
+                email: '',
+                is_admin: -1,
+                user_role: 0,
+                pageLength: 100
+            },
+            deletingUser: 1,
+            groupManagerPermission: 1,
+            administratorPermission: 1,
+            user_id: 0
+        };
     },
     mounted: function mounted() {
         this.getUsers();
-        this.getUserRoles();
     },
 
     methods: {
@@ -27900,13 +27751,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 return _this.users = response.data;
             });
         },
-        getUserRoles: function getUserRoles() {
-            var _this2 = this;
-
-            axios.post('/api/user-roles').then(function (response) {
-                _this2.user_roles = response.data;
-            });
-        },
         getUserGroupID: function getUserGroupID(user) {
             var group_id = '';
             if (typeof user.profile.group !== 'undefined') {
@@ -27918,17 +27762,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         },
         getUserRole: function getUserRole(user) {
             var user_role = '';
-            if (typeof user.profile.roles !== 'undefined') {
-                if (user.profile.roles) {
-                    for (var role_no = 0; role_no < user.profile.roles.length; role_no++) {
-                        if (user.profile.roles[role_no].role_id == 1) user_role = user_role + '<span class="label label-danger">Super</span>';else if (user.profile.roles[role_no].role_id == 2) user_role = user_role + '<span class="label label-info">Admin</span>';else if (user.profile.roles[role_no].role_id == 3) user_role = user_role + '<span class="label label-primary">Group</span>';else if (user.profile.roles[role_no].role_id == 4) user_role = user_role + '<span class="label label-success">User</span>';
-                    }
-                }
-            }
+            if (user.profile.is_admin == 1) user_role = user_role + '<span class="label label-primary">Group</span>';else user_role = user_role + '<span class="label label-success">User</span>';
             return user_role;
         },
         getUserStatus: function getUserStatus(user) {
-            if (user.status == 'pending') return '<span class="label label-warning">Pending</span>';else if (user.status == 'activated') return '<span class="label label-success">Activated</span>';else if (user.status == 'pending_activated') return '<span class="label label-primary">Pending Activated</span>';
+            if (user.status == 'pending') return '<span class="label label-warning">Pending</span>';else if (user.status == 'activated') return '<span class="label label-success">Activated</span>';
             // else if(user.status == 'assigned')
             //     return '<span class="label label-info">Assigned</span>';
             else if (user.status == 'banned') return '<span class="label label-danger">Banned</span>';else return;
@@ -27941,12 +27779,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             $('#modal-delete-user').modal('show');
         },
         deleteUser: function deleteUser() {
-            var _this3 = this;
+            var _this2 = this;
 
             axios.delete('/api/user/' + this.user_id).then(function (response) {
                 toastr['success'](response.data.message);
                 $('#modal-delete-user').modal('hide');
-                _this3.getUsers();
+                _this2.getUsers();
             }).catch(function (error) {
                 if (error.response.data) {
                     if (error.response.data.message) {
@@ -27961,31 +27799,21 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         },
         isGroupManager: function isGroupManager(user) {
             if (user.status != 'banned' && user.status != 'pending') {
-                if (user.profile.group_id) {
-                    if (user.profile.roles) {
-                        for (var role_no = 0; role_no < user.profile.roles.length; role_no++) {
-                            if (user.profile.roles[role_no].role_id == 3) {
-                                return 1;
-                            } else if (user.profile.roles[role_no].role_id == 4) {
-                                return 0;
-                            }
-                        }
-                    }
-                }
+                return user.profile.is_admin;
             }
             return -1;
         },
-        modalMakeGroupMnanager: function modalMakeGroupMnanager(user) {
+        modalMakeGroupManager: function modalMakeGroupManager(user) {
             this.user_id = user.id;
             $('#modal-group-manager').modal('show');
         },
         makeGroupManager: function makeGroupManager() {
-            var _this4 = this;
+            var _this3 = this;
 
-            axios.post('/api/user/role?group=1&id=' + this.user_id).then(function (response) {
+            axios.post('/api/user/group/' + this.user_id).then(function (response) {
                 toastr['success'](response.data.message);
                 $('#modal-group-manager').modal('hide');
-                _this4.getUsers();
+                _this3.getUsers();
             }).catch(function (error) {
                 if (error.response.data) {
                     if (error.response.data.message) {
@@ -27998,77 +27826,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 }
             });
         },
-        modalDisableGroupMnanager: function modalDisableGroupMnanager(user) {
+        modalDisableGroupManager: function modalDisableGroupManager(user) {
             this.user_id = user.id;
             $('#modal-disable-group-manager').modal('show');
         },
         disableGroupManager: function disableGroupManager() {
-            var _this5 = this;
+            var _this4 = this;
 
-            axios.post('/api/user/role?group=0&id=' + this.user_id).then(function (response) {
+            axios.delete('/api/user/group/' + this.user_id).then(function (response) {
                 toastr['success'](response.data.message);
                 $('#modal-disable-group-manager').modal('hide');
-                _this5.getUsers();
-            }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.message) {
-                        toastr['error'](error.response.data.message);
-                    } else {
-                        toastr['error']('The token is expired! Please refresh and try again!');
-                    }
-                } else {
-                    toastr['error']('The token is expired! Please refresh and try again!');
-                }
-            });
-        },
-        isAdministrator: function isAdministrator(user) {
-            if (user.status != 'banned') {
-                if (user.profile.roles) {
-                    for (var role_no = 0; role_no < user.profile.roles.length; role_no++) {
-                        if (user.profile.roles[role_no].role_id <= 2) {
-                            return 1;
-                        }
-                    }
-                }
-            } else {
-                return -1;
-            }
-            return 0;
-        },
-        modalMakeAdministrator: function modalMakeAdministrator(user) {
-            this.user_id = user.id;
-            $('#modal-administrator').modal('show');
-        },
-        makeAdministrator: function makeAdministrator() {
-            var _this6 = this;
-
-            axios.post('/api/user/role?admin=1&id=' + this.user_id).then(function (response) {
-                toastr['success'](response.data.message);
-                $('#modal-administrator').modal('hide');
-                _this6.getUsers();
-            }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.message) {
-                        toastr['error'](error.response.data.message);
-                    } else {
-                        toastr['error']('The token is expired! Please refresh and try again!');
-                    }
-                } else {
-                    toastr['error']('The token is expired! Please refresh and try again!');
-                }
-            });
-        },
-        modalDisableAdministrator: function modalDisableAdministrator(user) {
-            this.user_id = user.id;
-            $('#modal-disable-administrator').modal('show');
-        },
-        disableAdministrator: function disableAdministrator() {
-            var _this7 = this;
-
-            axios.post('/api/user/role?admin=0&id=' + this.user_id).then(function (response) {
-                toastr['success'](response.data.message);
-                $('modal-disable-administrator').modal('hide');
-                _this7.getUsers();
+                _this4.getUsers();
             }).catch(function (error) {
                 if (error.response.data) {
                     if (error.response.data.message) {
@@ -28140,7 +27908,7 @@ var render = function() {
                     staticClass: "form-control",
                     domProps: { value: _vm.filterUserForm.full_name },
                     on: {
-                      blur: _vm.getUsers,
+                      change: _vm.getUsers,
                       input: function($event) {
                         if ($event.target.composing) {
                           return
@@ -28172,7 +27940,7 @@ var render = function() {
                     staticClass: "form-control",
                     domProps: { value: _vm.filterUserForm.group_id },
                     on: {
-                      blur: _vm.getUsers,
+                      change: _vm.getUsers,
                       input: function($event) {
                         if ($event.target.composing) {
                           return
@@ -28204,7 +27972,7 @@ var render = function() {
                     staticClass: "form-control",
                     domProps: { value: _vm.filterUserForm.phone_number },
                     on: {
-                      blur: _vm.getUsers,
+                      change: _vm.getUsers,
                       input: function($event) {
                         if ($event.target.composing) {
                           return
@@ -28236,7 +28004,7 @@ var render = function() {
                     staticClass: "form-control",
                     domProps: { value: _vm.filterUserForm.email },
                     on: {
-                      blur: _vm.getUsers,
+                      change: _vm.getUsers,
                       input: function($event) {
                         if ($event.target.composing) {
                           return
@@ -28263,45 +28031,44 @@ var render = function() {
                         {
                           name: "model",
                           rawName: "v-model",
-                          value: _vm.filterUserForm.user_role,
-                          expression: "filterUserForm.user_role"
+                          value: _vm.filterUserForm.is_admin,
+                          expression: "filterUserForm.is_admin"
                         }
                       ],
                       staticClass: "form-control",
                       attrs: { name: "groups" },
                       on: {
-                        blur: _vm.getUsers,
-                        change: function($event) {
-                          var $$selectedVal = Array.prototype.filter
-                            .call($event.target.options, function(o) {
-                              return o.selected
-                            })
-                            .map(function(o) {
-                              var val = "_value" in o ? o._value : o.value
-                              return val
-                            })
-                          _vm.$set(
-                            _vm.filterUserForm,
-                            "user_role",
-                            $event.target.multiple
-                              ? $$selectedVal
-                              : $$selectedVal[0]
-                          )
-                        }
+                        change: [
+                          function($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function(o) {
+                                return o.selected
+                              })
+                              .map(function(o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.$set(
+                              _vm.filterUserForm,
+                              "is_admin",
+                              $event.target.multiple
+                                ? $$selectedVal
+                                : $$selectedVal[0]
+                            )
+                          },
+                          _vm.getUsers
+                        ]
                       }
                     },
                     [
-                      _c("option", { attrs: { value: "0" } }, [_vm._v("All")]),
+                      _c("option", { attrs: { value: "-1" } }, [_vm._v("All")]),
                       _vm._v(" "),
-                      _vm._l(_vm.user_roles.data, function(user_role) {
-                        return _c(
-                          "option",
-                          { domProps: { value: user_role.id } },
-                          [_vm._v(_vm._s(user_role.name))]
-                        )
-                      })
-                    ],
-                    2
+                      _c("option", { attrs: { value: "1" } }, [
+                        _vm._v("Group Manager")
+                      ]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "0" } }, [_vm._v("User")])
+                    ]
                   )
                 ])
               ]),
@@ -28347,8 +28114,12 @@ var render = function() {
                       }
                     },
                     [
-                      _c("option", { attrs: { value: "contact_person" } }, [
-                        _vm._v("Contact Person")
+                      _c("option", { attrs: { value: "group_id" } }, [
+                        _vm._v("Group ID")
+                      ]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "full_name" } }, [
+                        _vm._v("Full Name")
                       ]),
                       _vm._v(" "),
                       _c("option", { attrs: { value: "phone_number" } }, [
@@ -28503,7 +28274,7 @@ var render = function() {
                                           on: {
                                             click: function($event) {
                                               $event.preventDefault()
-                                              _vm.modalMakeGroupMnanager(user)
+                                              _vm.modalMakeGroupManager(user)
                                             }
                                           }
                                         },
@@ -28524,9 +28295,7 @@ var render = function() {
                                           on: {
                                             click: function($event) {
                                               $event.preventDefault()
-                                              _vm.modalDisableGroupMnanager(
-                                                user
-                                              )
+                                              _vm.modalDisableGroupManager(user)
                                             }
                                           }
                                         },
@@ -28550,76 +28319,7 @@ var render = function() {
                                       on: {
                                         click: function($event) {
                                           $event.preventDefault()
-                                          _vm.modalMakeGroupMnanager(user)
-                                        }
-                                      }
-                                    },
-                                    [_c("i", { staticClass: "fa fa-check" })]
-                                  )
-                                ]),
-                            _vm._v(" "),
-                            _vm.isAdministrator(user) > -1
-                              ? _c("span", [
-                                  _vm.isAdministrator(user) == 0
-                                    ? _c(
-                                        "button",
-                                        {
-                                          staticClass: "btn btn-success btn-sm",
-                                          attrs: {
-                                            "data-toggle": "tooltip",
-                                            title: "Make Administrator"
-                                          },
-                                          on: {
-                                            click: function($event) {
-                                              $event.preventDefault()
-                                              _vm.modalMakeAdministrator(user)
-                                            }
-                                          }
-                                        },
-                                        [
-                                          _c("i", {
-                                            staticClass: "fa fa-check"
-                                          })
-                                        ]
-                                      )
-                                    : _c(
-                                        "button",
-                                        {
-                                          staticClass: "btn btn-success btn-sm",
-                                          attrs: {
-                                            "data-toggle": "tooltip",
-                                            title: "Disable Administrator"
-                                          },
-                                          on: {
-                                            click: function($event) {
-                                              $event.preventDefault()
-                                              _vm.modalDisableAdministrator(
-                                                user
-                                              )
-                                            }
-                                          }
-                                        },
-                                        [
-                                          _c("i", {
-                                            staticClass: "fa fa-times"
-                                          })
-                                        ]
-                                      )
-                                ])
-                              : _c("span", [
-                                  _c(
-                                    "button",
-                                    {
-                                      staticClass: "btn btn-secondary btn-sm",
-                                      attrs: {
-                                        "data-toggle": "tooltip",
-                                        title: "Make Administrator",
-                                        disabled: ""
-                                      },
-                                      on: {
-                                        click: function($event) {
-                                          $event.preventDefault()
-                                          _vm.modalMakeAdministrator(user)
+                                          _vm.modalMakeGroupManager(user)
                                         }
                                       }
                                     },
@@ -28893,116 +28593,6 @@ var render = function() {
             ])
           : _vm._e()
       ]
-    ),
-    _vm._v(" "),
-    _c(
-      "div",
-      {
-        staticClass: "modal",
-        attrs: { id: "modal-administrator", tabindex: "-1", role: "dialog" }
-      },
-      [
-        _vm.administratorPermission
-          ? _c("div", { staticClass: "modal-dialog" }, [
-              _c("div", { staticClass: "modal-content" }, [
-                _vm._m(4),
-                _vm._v(" "),
-                _c("div", { staticClass: "modal-body" }, [
-                  _vm._v(
-                    "\n                        Are you sure you want to make this User as the administrator?\n                    "
-                  )
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "modal-footer" }, [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-default",
-                      attrs: { type: "button", "data-dismiss": "modal" }
-                    },
-                    [_vm._v("No, Go Back")]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-success",
-                      attrs: { type: "button" },
-                      on: {
-                        click: function($event) {
-                          $event.preventDefault()
-                          _vm.makeAdministrator()
-                        }
-                      }
-                    },
-                    [
-                      _vm._v(
-                        "\n                            Yes, Make\n                        "
-                      )
-                    ]
-                  )
-                ])
-              ])
-            ])
-          : _vm._e()
-      ]
-    ),
-    _vm._v(" "),
-    _c(
-      "div",
-      {
-        staticClass: "modal",
-        attrs: {
-          id: "modal-disable-administrator",
-          tabindex: "-1",
-          role: "dialog"
-        }
-      },
-      [
-        _vm.administratorPermission
-          ? _c("div", { staticClass: "modal-dialog" }, [
-              _c("div", { staticClass: "modal-content" }, [
-                _vm._m(5),
-                _vm._v(" "),
-                _c("div", { staticClass: "modal-body" }, [
-                  _vm._v(
-                    "\n                        Are you sure you want to disable this User as the administrator?\n                    "
-                  )
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "modal-footer" }, [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-default",
-                      attrs: { type: "button", "data-dismiss": "modal" }
-                    },
-                    [_vm._v("No, Go Back")]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-danger",
-                      attrs: { type: "button" },
-                      on: {
-                        click: function($event) {
-                          $event.preventDefault()
-                          _vm.disableAdministrator()
-                        }
-                      }
-                    },
-                    [
-                      _vm._v(
-                        "\n                            Yes, Disable\n                        "
-                      )
-                    ]
-                  )
-                ])
-              ])
-            ])
-          : _vm._e()
-      ]
     )
   ])
 }
@@ -29061,30 +28651,6 @@ var staticRenderFns = [
       _c("h5", { staticClass: "modal-title" }, [
         _vm._v(
           "\n                            Disable Group Manager Permission\n                        "
-        )
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "modal-header" }, [
-      _c("h5", { staticClass: "modal-title" }, [
-        _vm._v(
-          "\n                            Make Administrator Permission\n                        "
-        )
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "modal-header" }, [
-      _c("h5", { staticClass: "modal-title" }, [
-        _vm._v(
-          "\n                            Disable Administrator Permission\n                        "
         )
       ])
     ])
@@ -29356,7 +28922,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 'full_name': '',
                 'phone_number': '',
                 'street_address': '',
-                'street_number': '',
+                // 'street_number' : '',
                 'postal_code': '',
                 'country': '',
                 'city': '',
@@ -29381,7 +28947,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this = this;
 
             axios.post('/api/user/' + this.id).then(function (response) {
-                // this.user_data = response.data.data;
+                _this.user_data = response.data.data;
                 // this.userForm.contact_person =  this.user_data.profile.contact_person ? this.user_data.profile.contact_person : "";
                 _this.userForm.avatar = _this.user_data.profile.avatar ? _this.user_data.profile.avatar : "";
                 // this.userForm.group_name = this.user_data.profile.group_name ? this.user_data.profile.group_name : "";
@@ -29392,12 +28958,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this.userForm.full_name = _this.userForm.first_name + " " + _this.userForm.family_name;
                 _this.userForm.phone_number = _this.user_data.profile.phone_number ? _this.user_data.profile.phone_number : "";
                 _this.userForm.street_address = _this.user_data.profile.street_address ? _this.user_data.profile.street_address : "";
-                _this.userForm.street_number = _this.user_data.profile.street_number ? _this.user_data.profile.street_number : "";
+                // this.userForm.street_number = this.user_data.profile.street_number ? this.user_data.profile.street_number : "";
                 _this.userForm.postal_code = _this.user_data.profile.postal_code ? _this.user_data.profile.postal_code : "";
                 _this.userForm.country = _this.user_data.profile.country ? _this.user_data.profile.country : "";
                 _this.userForm.city = _this.user_data.profile.city ? _this.user_data.profile.city : "";
                 _this.userForm.created_at = _this.user_data.profile.created_at ? _this.user_data.profile.created_at : "";
-                _this.userForm.role = _this.user_data.role ? _this.user_data.role : "";
+                _this.userForm.role = _this.user_data.profile.is_admin == 1 ? "Manager" : "User";
                 _this.userForm.group_id = _this.user_data.group_id ? _this.user_data.group_id : "";
             }).catch(function (response) {
                 toastr['error'](response.message);
@@ -29553,9 +29119,7 @@ var render = function() {
                   _vm._m(10),
                   _vm._v(" "),
                   _c("span", {
-                    domProps: {
-                      textContent: _vm._s(_vm.userForm.street_number)
-                    }
+                    domProps: { textContent: _vm._s(_vm.userForm.postal_code) }
                   })
                 ]),
                 _vm._v(" "),
@@ -29563,20 +29127,12 @@ var render = function() {
                   _vm._m(11),
                   _vm._v(" "),
                   _c("span", {
-                    domProps: { textContent: _vm._s(_vm.userForm.postal_code) }
-                  })
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "form-group" }, [
-                  _vm._m(12),
-                  _vm._v(" "),
-                  _c("span", {
                     domProps: { textContent: _vm._s(_vm.userForm.country) }
                   })
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group" }, [
-                  _vm._m(13),
+                  _vm._m(12),
                   _vm._v(" "),
                   _c("span", {
                     domProps: { textContent: _vm._s(_vm.userForm.city) }
@@ -29650,12 +29206,6 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("strong", [_c("span", [_vm._v("Street Address: ")])])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("strong", [_c("span", [_vm._v("Street Number: ")])])
   },
   function() {
     var _vm = this
@@ -30133,7 +29683,7 @@ var render = function() {
                     staticClass: "form-control",
                     domProps: { value: _vm.filterUserForm.group_name },
                     on: {
-                      blur: _vm.getUsers,
+                      change: _vm.getUsers,
                       input: function($event) {
                         if ($event.target.composing) {
                           return
@@ -30167,7 +29717,7 @@ var render = function() {
                     staticClass: "form-control",
                     domProps: { value: _vm.filterUserForm.org_number },
                     on: {
-                      blur: _vm.getUsers,
+                      change: _vm.getUsers,
                       input: function($event) {
                         if ($event.target.composing) {
                           return
@@ -30201,7 +29751,7 @@ var render = function() {
                     staticClass: "form-control",
                     domProps: { value: _vm.filterUserForm.contact_person },
                     on: {
-                      blur: _vm.getUsers,
+                      change: _vm.getUsers,
                       input: function($event) {
                         if ($event.target.composing) {
                           return
@@ -30233,7 +29783,7 @@ var render = function() {
                     staticClass: "form-control",
                     domProps: { value: _vm.filterUserForm.phone_number },
                     on: {
-                      blur: _vm.getUsers,
+                      change: _vm.getUsers,
                       input: function($event) {
                         if ($event.target.composing) {
                           return
@@ -30265,7 +29815,7 @@ var render = function() {
                     staticClass: "form-control",
                     domProps: { value: _vm.filterUserForm.email },
                     on: {
-                      blur: _vm.getUsers,
+                      change: _vm.getUsers,
                       input: function($event) {
                         if ($event.target.composing) {
                           return
@@ -30912,7 +30462,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 order: 'desc',
                 idx: '',
                 name: '',
-                pageLength: 5
+                pageLength: 100
             },
             id: 0,
             idx: '',
@@ -31327,7 +30877,7 @@ var render = function() {
                     attrs: { name: "search" },
                     domProps: { value: _vm.filterCountryForm.idx },
                     on: {
-                      blur: _vm.getCountries,
+                      change: _vm.getCountries,
                       input: function($event) {
                         if ($event.target.composing) {
                           return
@@ -31359,7 +30909,7 @@ var render = function() {
                     staticClass: "form-control",
                     domProps: { value: _vm.filterCountryForm.name },
                     on: {
-                      blur: _vm.getCountries,
+                      change: _vm.getCountries,
                       input: function($event) {
                         if ($event.target.composing) {
                           return
@@ -32469,7 +32019,7 @@ var render = function() {
                     staticClass: "form-control",
                     domProps: { value: _vm.filterNotificationTypeForm.name },
                     on: {
-                      blur: _vm.getNotificationTypes,
+                      change: _vm.getNotificationTypes,
                       input: function($event) {
                         if ($event.target.composing) {
                           return
@@ -33262,7 +32812,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 start_date_oper: '',
                 end_date: '',
                 end_date_oper: '',
-                pageLength: 5
+                pageLength: 100
             },
             ad_id: 0,
             deletingAd: 1
@@ -33467,7 +33017,7 @@ var render = function() {
                     attrs: { name: "search" },
                     domProps: { value: _vm.filterAdForm.name },
                     on: {
-                      blur: _vm.getAds,
+                      change: _vm.getAds,
                       input: function($event) {
                         if ($event.target.composing) {
                           return
@@ -33620,7 +33170,7 @@ var render = function() {
                           staticClass: "form-control col-md-7",
                           domProps: { value: _vm.filterAdForm.show_count },
                           on: {
-                            blur: _vm.getAds,
+                            change: _vm.getAds,
                             input: function($event) {
                               if ($event.target.composing) {
                                 return
@@ -33722,7 +33272,7 @@ var render = function() {
                           staticClass: "form-control col-md-7",
                           domProps: { value: _vm.filterAdForm.click_count },
                           on: {
-                            blur: _vm.getAds,
+                            change: _vm.getAds,
                             input: function($event) {
                               if ($event.target.composing) {
                                 return
@@ -33822,7 +33372,7 @@ var render = function() {
                           _c("datepicker", {
                             staticClass: "col-md-7",
                             attrs: { bootstrapStyling: true },
-                            on: { blur: _vm.getAds },
+                            on: { change: _vm.getAds },
                             model: {
                               value: _vm.filterAdForm.start_date,
                               callback: function($$v) {
@@ -33914,7 +33464,7 @@ var render = function() {
                           _c("datepicker", {
                             staticClass: "col-md-7",
                             attrs: { bootstrapStyling: true },
-                            on: { blur: _vm.getAds },
+                            on: { change: _vm.getAds },
                             model: {
                               value: _vm.filterAdForm.end_date,
                               callback: function($$v) {
@@ -34423,6 +33973,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 
 
@@ -34494,6 +34046,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_click_confirm__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_click_confirm___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_click_confirm__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_helper__ = __webpack_require__(1);
+//
 //
 //
 //
@@ -34803,6 +34356,8 @@ var render = function() {
                 },
                 on: { change: _vm.uploadFieldChange }
               }),
+              _vm._v(" "),
+              _c("span", [_vm._v("You must upload the jpg, jpeg, gif file.")]),
               _vm._v(" "),
               _c("hr"),
               _vm._v(" "),
@@ -35119,9 +34674,13 @@ var render = function() {
             1
           ),
           _vm._v(" "),
-          _c("li", { staticClass: "breadcrumb-item active" }, [
-            _vm._v("Edit Advertisement")
-          ])
+          _vm.id != 0
+            ? _c("li", { staticClass: "breadcrumb-item active" }, [
+                _vm._v("Edit Advertisement")
+              ])
+            : _c("li", { staticClass: "breadcrumb-item active" }, [
+                _vm._v("Create Advertisement")
+              ])
         ])
       ])
     ]),
@@ -35133,9 +34692,13 @@ var render = function() {
             "div",
             { staticClass: "card-body" },
             [
-              _c("h4", { staticClass: "card-title" }, [
-                _vm._v("Edit Advertisement")
-              ]),
+              _vm.id != 0
+                ? _c("h4", { staticClass: "card-title" }, [
+                    _vm._v("Edit Advertisement")
+                  ])
+                : _c("h4", { staticClass: "card-title" }, [
+                    _vm._v("Create Advertisement")
+                  ]),
               _vm._v(" "),
               _c("advertisement-form", { attrs: { id: _vm.id } })
             ],
@@ -35182,6 +34745,1709 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
+Component.options.__file = "resources/assets/js/views/admin/index.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-b53c20a2", Component.options)
+  } else {
+    hotAPI.reload("data-v-b53c20a2", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 125 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_laravel_vue_pagination__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_laravel_vue_pagination___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_laravel_vue_pagination__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_helper__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_click_confirm__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_click_confirm___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_click_confirm__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    components: { pagination: __WEBPACK_IMPORTED_MODULE_0_laravel_vue_pagination___default.a, ClickConfirm: __WEBPACK_IMPORTED_MODULE_2_click_confirm___default.a },
+    data: function data() {
+        return {
+            admins: {},
+            filterAdminForm: {
+                sortBy: 'full_name',
+                order: 'desc',
+                org_num: '',
+                // contact_person : '',
+                full_name: '',
+                phone_number: '',
+                email: '',
+                backend: 1,
+                pageLength: 100
+            },
+            deletingAdmin: 1,
+            adminPermission: 1,
+            admin_id: 0
+        };
+    },
+    mounted: function mounted() {
+        this.getAdmins();
+    },
+
+    methods: {
+        getAdmins: function getAdmins(page) {
+            var _this = this;
+
+            if (typeof page === 'undefined') {
+                page = 1;
+            }
+            var url = __WEBPACK_IMPORTED_MODULE_1__services_helper__["a" /* default */].getFilterURL(this.filterAdminForm);
+            axios.get('/api/user?&page=' + page + url).then(function (response) {
+                return _this.admins = response.data;
+            });
+        },
+        getAdminStatus: function getAdminStatus(admin) {
+            if (admin.status == 'pending') return '<span class="label label-warning">Pending</span>';else if (admin.status == 'activated') return '<span class="label label-success">Activated</span>';
+        },
+        viewAdminProfile: function viewAdminProfile(admin) {
+            this.$router.push('/admin/' + admin.id + '/view');
+        },
+        modalDeleteAdmin: function modalDeleteAdmin(admin) {
+            this.admin_id = admin.id;
+            $('#modal-delete-admin').modal('show');
+        },
+        deleteAdmin: function deleteAdmin() {
+            var _this2 = this;
+
+            axios.delete('/api/user/' + this.admin_id).then(function (response) {
+                toastr['success'](response.data.message);
+                $('#modal-delete-admin').modal('hide');
+                _this2.getAdmins();
+            }).catch(function (error) {
+                if (error.response.data) {
+                    if (error.response.data.message) {
+                        toastr['error'](error.response.data.message);
+                    } else {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                    }
+                } else {
+                    toastr['error']('The token is expired! Please refresh and try again!');
+                }
+            });
+        },
+        isAdministrator: function isAdministrator(admin) {
+            if (admin.status == 'pending') return 0;else if (admin.status == 'activated') return 1;
+        },
+        modalMakeAdministrator: function modalMakeAdministrator(admin) {
+            this.admin_id = admin.id;
+            $('#modal-administrator').modal('show');
+        },
+        makeAdministrator: function makeAdministrator() {
+            var _this3 = this;
+
+            axios.post('/api/user/admin/' + this.admin_id).then(function (response) {
+                toastr['success'](response.data.message);
+                $('#modal-administrator').modal('hide');
+                _this3.getAdmins();
+            }).catch(function (error) {
+                if (error.response.data) {
+                    if (error.response.data.message) {
+                        toastr['error'](error.response.data.message);
+                    } else {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                    }
+                } else {
+                    toastr['error']('The token is expired! Please refresh and try again!');
+                }
+            });
+        },
+        modalDisableAdministrator: function modalDisableAdministrator(admin) {
+            this.admin_id = admin.id;
+            $('#modal-disable-administrator').modal('show');
+        },
+        disableAdministrator: function disableAdministrator() {
+            var _this4 = this;
+
+            axios.delete('/api/user/admin/' + this.admin_id).then(function (response) {
+                toastr['success'](response.data.message);
+                $('#modal-disable-administrator').modal('hide');
+                _this4.getAdmins();
+            }).catch(function (error) {
+                if (error.response.data) {
+                    if (error.response.data.message) {
+                        toastr['error'](error.response.data.message);
+                    } else {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                    }
+                } else {
+                    toastr['error']('The token is expired! Please refresh and try again!');
+                }
+            });
+        }
+    },
+    filters: {}
+});
+
+/***/ }),
+/* 126 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("div", { staticClass: "row page-titles" }, [
+      _c("div", { staticClass: "col-md-6 col-8 align-self-center" }, [
+        _c("h3", { staticClass: "text-themecolor m-b-0 m-t-0" }, [
+          _vm._v("Administrator")
+        ]),
+        _vm._v(" "),
+        _c("ol", { staticClass: "breadcrumb" }, [
+          _c(
+            "li",
+            { staticClass: "breadcrumb-item" },
+            [
+              _c("router-link", { attrs: { to: "/dashboard" } }, [
+                _vm._v("Dashboard")
+              ])
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c("li", { staticClass: "breadcrumb-item active" }, [
+            _vm._v("Administrator")
+          ])
+        ])
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-lg-12" }, [
+        _c("div", { staticClass: "card" }, [
+          _c("div", { staticClass: "card-body" }, [
+            _c("h4", { staticClass: "card-title" }, [
+              _vm._v("Filter Administrator")
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "row m-t-20" }, [
+              _c("div", { staticClass: "col-md-3" }, [
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "" } }, [_vm._v("Full Name")]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.filterAdminForm.full_name,
+                        expression: "filterAdminForm.full_name"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    domProps: { value: _vm.filterAdminForm.full_name },
+                    on: {
+                      change: _vm.getAdmins,
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.filterAdminForm,
+                          "full_name",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-3" }, [
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "" } }, [_vm._v("Phone Number")]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.filterAdminForm.phone_number,
+                        expression: "filterAdminForm.phone_number"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    domProps: { value: _vm.filterAdminForm.phone_number },
+                    on: {
+                      change: _vm.getAdmins,
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.filterAdminForm,
+                          "phone_number",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-3" }, [
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "" } }, [_vm._v("Email")]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.filterAdminForm.email,
+                        expression: "filterAdminForm.email"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    domProps: { value: _vm.filterAdminForm.email },
+                    on: {
+                      change: _vm.getAdmins,
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.filterAdminForm,
+                          "email",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-3" }, [
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "" } }, [_vm._v("Sort By")]),
+                  _vm._v(" "),
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.filterAdminForm.sortBy,
+                          expression: "filterAdminForm.sortBy"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: { name: "sortBy" },
+                      on: {
+                        change: [
+                          function($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function(o) {
+                                return o.selected
+                              })
+                              .map(function(o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.$set(
+                              _vm.filterAdminForm,
+                              "sortBy",
+                              $event.target.multiple
+                                ? $$selectedVal
+                                : $$selectedVal[0]
+                            )
+                          },
+                          _vm.getAdmins
+                        ]
+                      }
+                    },
+                    [
+                      _c("option", { attrs: { value: "full_name" } }, [
+                        _vm._v("Full Name")
+                      ]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "phone_number" } }, [
+                        _vm._v("Phone Number")
+                      ]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "email" } }, [
+                        _vm._v("Email")
+                      ])
+                    ]
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-3" }, [
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "" } }, [_vm._v("Order")]),
+                  _vm._v(" "),
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.filterAdminForm.order,
+                          expression: "filterAdminForm.order"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: { name: "order" },
+                      on: {
+                        change: [
+                          function($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function(o) {
+                                return o.selected
+                              })
+                              .map(function(o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.$set(
+                              _vm.filterAdminForm,
+                              "order",
+                              $event.target.multiple
+                                ? $$selectedVal
+                                : $$selectedVal[0]
+                            )
+                          },
+                          _vm.getAdmins
+                        ]
+                      }
+                    },
+                    [
+                      _c("option", { attrs: { value: "asc" } }, [
+                        _vm._v("Asc")
+                      ]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "desc" } }, [
+                        _vm._v("Desc")
+                      ])
+                    ]
+                  )
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("h4", { staticClass: "card-title" }, [_vm._v("User List")]),
+            _vm._v(" "),
+            _vm.admins.total
+              ? _c("h6", { staticClass: "card-subtitle" }, [
+                  _vm._v("Total " + _vm._s(_vm.admins.total) + " result found!")
+                ])
+              : _c("h6", { staticClass: "card-subtitle" }, [
+                  _vm._v("No result found!")
+                ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "table-responsive" }, [
+              _vm.admins.total
+                ? _c("table", { staticClass: "table" }, [
+                    _vm._m(0),
+                    _vm._v(" "),
+                    _c(
+                      "tbody",
+                      _vm._l(_vm.admins.data, function(admin) {
+                        return _c("tr", [
+                          _c("td", {
+                            domProps: {
+                              textContent: _vm._s(admin.profile.full_name)
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("td", {
+                            domProps: {
+                              textContent: _vm._s(admin.profile.phone_number)
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("td", {
+                            domProps: { textContent: _vm._s(admin.email) }
+                          }),
+                          _vm._v(" "),
+                          _c("td", {
+                            domProps: {
+                              innerHTML: _vm._s(_vm.getAdminStatus(admin))
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("td", [
+                            _c(
+                              "button",
+                              {
+                                staticClass: "btn btn-info btn-sm",
+                                attrs: {
+                                  "data-toggle": "tooltip",
+                                  title: "View User Profile"
+                                },
+                                on: {
+                                  click: function($event) {
+                                    $event.preventDefault()
+                                    _vm.viewAdminProfile(admin)
+                                  }
+                                }
+                              },
+                              [_c("i", { staticClass: "fa fa-eye" })]
+                            ),
+                            _vm._v(" "),
+                            _vm.isAdministrator(admin) > -1
+                              ? _c("span", [
+                                  _vm.isAdministrator(admin) == 0
+                                    ? _c(
+                                        "button",
+                                        {
+                                          staticClass: "btn btn-success btn-sm",
+                                          attrs: {
+                                            "data-toggle": "tooltip",
+                                            title: "Make Administrator"
+                                          },
+                                          on: {
+                                            click: function($event) {
+                                              $event.preventDefault()
+                                              _vm.modalMakeAdministrator(admin)
+                                            }
+                                          }
+                                        },
+                                        [
+                                          _c("i", {
+                                            staticClass: "fa fa-check"
+                                          })
+                                        ]
+                                      )
+                                    : _c(
+                                        "button",
+                                        {
+                                          staticClass: "btn btn-success btn-sm",
+                                          attrs: {
+                                            "data-toggle": "tooltip",
+                                            title: "Disable Administrator"
+                                          },
+                                          on: {
+                                            click: function($event) {
+                                              $event.preventDefault()
+                                              _vm.modalDisableAdministrator(
+                                                admin
+                                              )
+                                            }
+                                          }
+                                        },
+                                        [
+                                          _c("i", {
+                                            staticClass: "fa fa-times"
+                                          })
+                                        ]
+                                      )
+                                ])
+                              : _c("span", [
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass: "btn btn-secondary btn-sm",
+                                      attrs: {
+                                        "data-toggle": "tooltip",
+                                        title: "Make Administrator",
+                                        disabled: ""
+                                      },
+                                      on: {
+                                        click: function($event) {
+                                          $event.preventDefault()
+                                          _vm.modalMakeAdministrator(admin)
+                                        }
+                                      }
+                                    },
+                                    [_c("i", { staticClass: "fa fa-check" })]
+                                  )
+                                ]),
+                            _vm._v(" "),
+                            _c(
+                              "button",
+                              {
+                                staticClass: "btn btn-danger btn-sm",
+                                attrs: {
+                                  "data-toggle": "tooltip",
+                                  title: "Delete User"
+                                },
+                                on: {
+                                  click: function($event) {
+                                    $event.preventDefault()
+                                    _vm.modalDeleteAdmin(admin)
+                                  }
+                                }
+                              },
+                              [_c("i", { staticClass: "fa fa-trash" })]
+                            )
+                          ])
+                        ])
+                      })
+                    )
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _c("div", { staticClass: "row" }, [
+                _c(
+                  "div",
+                  { staticClass: "col-md-8" },
+                  [
+                    _c("pagination", {
+                      attrs: { data: _vm.admins, limit: 3 },
+                      on: { "pagination-change-page": _vm.getAdmins }
+                    })
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-md-4" }, [
+                  _c("div", { staticClass: "float-right" }, [
+                    _vm.admins.total
+                      ? _c(
+                          "select",
+                          {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.filterAdminForm.pageLength,
+                                expression: "filterAdminForm.pageLength"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            attrs: { name: "pageLength" },
+                            on: {
+                              change: [
+                                function($event) {
+                                  var $$selectedVal = Array.prototype.filter
+                                    .call($event.target.options, function(o) {
+                                      return o.selected
+                                    })
+                                    .map(function(o) {
+                                      var val =
+                                        "_value" in o ? o._value : o.value
+                                      return val
+                                    })
+                                  _vm.$set(
+                                    _vm.filterAdminForm,
+                                    "pageLength",
+                                    $event.target.multiple
+                                      ? $$selectedVal
+                                      : $$selectedVal[0]
+                                  )
+                                },
+                                _vm.getAdmins
+                              ]
+                            }
+                          },
+                          [
+                            _c("option", { attrs: { value: "5" } }, [
+                              _vm._v("5 per page")
+                            ]),
+                            _vm._v(" "),
+                            _c("option", { attrs: { value: "10" } }, [
+                              _vm._v("10 per page")
+                            ]),
+                            _vm._v(" "),
+                            _c("option", { attrs: { value: "25" } }, [
+                              _vm._v("25 per page")
+                            ]),
+                            _vm._v(" "),
+                            _c("option", { attrs: { value: "100" } }, [
+                              _vm._v("100 per page")
+                            ])
+                          ]
+                        )
+                      : _vm._e()
+                  ])
+                ])
+              ])
+            ])
+          ])
+        ])
+      ])
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal",
+        attrs: { id: "modal-delete-admin", tabindex: "-1", role: "dialog" }
+      },
+      [
+        _vm.deletingAdmin
+          ? _c("div", { staticClass: "modal-dialog" }, [
+              _c("div", { staticClass: "modal-content" }, [
+                _vm._m(1),
+                _vm._v(" "),
+                _c("div", { staticClass: "modal-body" }, [
+                  _vm._v(
+                    "\n                        Are you sure you want to delete this Administrator?\n                    "
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "modal-footer" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-default",
+                      attrs: { type: "button", "data-dismiss": "modal" }
+                    },
+                    [_vm._v("No, Go Back")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-danger",
+                      attrs: { type: "button" },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          _vm.deleteAdmin()
+                        }
+                      }
+                    },
+                    [
+                      _vm._v(
+                        "\n                            Yes, Delete\n                        "
+                      )
+                    ]
+                  )
+                ])
+              ])
+            ])
+          : _vm._e()
+      ]
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal",
+        attrs: { id: "modal-administrator", tabindex: "-1", role: "dialog" }
+      },
+      [
+        _vm.adminPermission
+          ? _c("div", { staticClass: "modal-dialog" }, [
+              _c("div", { staticClass: "modal-content" }, [
+                _vm._m(2),
+                _vm._v(" "),
+                _c("div", { staticClass: "modal-body" }, [
+                  _vm._v(
+                    "\n                        Are you sure you want to make this User as the Administrator?\n                    "
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "modal-footer" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-default",
+                      attrs: { type: "button", "data-dismiss": "modal" }
+                    },
+                    [_vm._v("No, Go Back")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-success",
+                      attrs: { type: "button" },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          _vm.makeAdministrator()
+                        }
+                      }
+                    },
+                    [
+                      _vm._v(
+                        "\n                            Yes, Make\n                        "
+                      )
+                    ]
+                  )
+                ])
+              ])
+            ])
+          : _vm._e()
+      ]
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal",
+        attrs: {
+          id: "modal-disable-administrator",
+          tabindex: "-1",
+          role: "dialog"
+        }
+      },
+      [
+        _vm.adminPermission
+          ? _c("div", { staticClass: "modal-dialog" }, [
+              _c("div", { staticClass: "modal-content" }, [
+                _vm._m(3),
+                _vm._v(" "),
+                _c("div", { staticClass: "modal-body" }, [
+                  _vm._v(
+                    "\n                        Are you sure you want to disable this User as the Administrator?\n                    "
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "modal-footer" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-default",
+                      attrs: { type: "button", "data-dismiss": "modal" }
+                    },
+                    [_vm._v("No, Go Back")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-danger",
+                      attrs: { type: "button" },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          _vm.disableAdministrator()
+                        }
+                      }
+                    },
+                    [
+                      _vm._v(
+                        "\n                            Yes, Disable\n                        "
+                      )
+                    ]
+                  )
+                ])
+              ])
+            ])
+          : _vm._e()
+      ]
+    )
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("Full Name")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Phone Number")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Email")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Status")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Action")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c("h5", { staticClass: "modal-title" }, [
+        _vm._v(
+          "\n                            Delete Administrator\n                        "
+        )
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c("h5", { staticClass: "modal-title" }, [
+        _vm._v(
+          "\n                            Make Administrator Permission\n                        "
+        )
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c("h5", { staticClass: "modal-title" }, [
+        _vm._v(
+          "\n                            Disable Administrator Permission\n                        "
+        )
+      ])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-b53c20a2", module.exports)
+  }
+}
+
+/***/ }),
+/* 127 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(0)
+/* script */
+var __vue_script__ = __webpack_require__(128)
+/* template */
+var __vue_template__ = __webpack_require__(132)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/views/admin/view.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-66e008d8", Component.options)
+  } else {
+    hotAPI.reload("data-v-66e008d8", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 128 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__form__ = __webpack_require__(129);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__form___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__form__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_helper__ = __webpack_require__(1);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    components: { AdminForm: __WEBPACK_IMPORTED_MODULE_0__form___default.a },
+    data: function data() {
+        return {
+            id: this.$route.params.id
+        };
+    }
+});
+
+/***/ }),
+/* 129 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(0)
+/* script */
+var __vue_script__ = __webpack_require__(130)
+/* template */
+var __vue_template__ = __webpack_require__(131)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/views/admin/form.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-3bd4b377", Component.options)
+  } else {
+    hotAPI.reload("data-v-3bd4b377", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 130 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__services_helper__ = __webpack_require__(1);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            countries: {},
+            adminForm: new Form({
+                // 'contact_person' : '',
+                'avatar': '',
+                // 'group_name' : '',
+                // 'org_number' : '',
+                'email': '',
+                'first_name': '',
+                'family_name': '',
+                'full_name': '',
+                'phone_number': '',
+                'street_address': '',
+                // 'street_number' : '',
+                'postal_code': '',
+                'country': '',
+                'city': '',
+                'created_at': ''
+            }),
+            admin_data: {}
+        };
+    },
+
+    props: ['id'],
+    mounted: function mounted() {
+        if (this.id != 0) this.getUser();
+    },
+
+    methods: {
+        proceed: function proceed() {
+            if (this.id != 0) this.getUser();
+        },
+        getUser: function getUser() {
+            var _this = this;
+
+            axios.post('/api/user/' + this.id).then(function (response) {
+                _this.admin_data = response.data.data;
+                // this.adminForm.contact_person =  this.admin_data.profile.contact_person ? this.admin_data.profile.contact_person : "";
+                _this.adminForm.avatar = _this.admin_data.profile.avatar ? _this.admin_data.profile.avatar : "";
+                // this.adminForm.group_name = this.admin_data.profile.group_name ? this.admin_data.profile.group_name : "";
+                // this.adminForm.org_number = this.admin_data.profile.org_number ? this.admin_data.profile.org_number : "";
+                _this.adminForm.email = _this.admin_data.email ? _this.admin_data.email : "";
+                _this.adminForm.first_name = _this.admin_data.profile.first_name ? _this.admin_data.profile.first_name : "";
+                _this.adminForm.family_name = _this.admin_data.profile.family_name ? _this.admin_data.profile.family_name : "";
+                _this.adminForm.full_name = _this.admin_data.profile.full_name;
+                _this.adminForm.phone_number = _this.admin_data.profile.phone_number ? _this.admin_data.profile.phone_number : "";
+                _this.adminForm.street_address = _this.admin_data.profile.street_address ? _this.admin_data.profile.street_address : "";
+                // this.adminForm.street_number = this.admin_data.profile.street_number ? this.admin_data.profile.street_number : "";
+                _this.adminForm.postal_code = _this.admin_data.profile.postal_code ? _this.admin_data.profile.postal_code : "";
+                _this.adminForm.country = _this.admin_data.profile.country ? _this.admin_data.profile.country : "";
+                _this.adminForm.city = _this.admin_data.profile.city ? _this.admin_data.profile.city : "";
+                _this.adminForm.created_at = _this.admin_data.profile.created_at ? _this.admin_data.profile.created_at : "";
+            }).catch(function (response) {
+                toastr['error'](response.message);
+            });
+        }
+    },
+    computed: {
+        getAvatar: function getAvatar() {
+            if (this.adminForm.avatar) {
+                return '/images/users/' + this.adminForm.avatar;
+            } else {
+                return '/images/common/no-user.png';
+            }
+        }
+    }
+});
+
+/***/ }),
+/* 131 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "form",
+    {
+      on: {
+        submit: function($event) {
+          $event.preventDefault()
+          return _vm.proceed($event)
+        }
+      }
+    },
+    [
+      _c("div", { staticClass: "view-user-profile" }, [
+        _c("div", { staticClass: "row" }, [
+          _c(
+            "div",
+            { staticClass: "col-lg-6" },
+            [
+              _c("div", { staticClass: "card" }, [
+                _c("div", { staticClass: "card-body" }, [
+                  _c("div", { staticClass: "form-group" }, [
+                    _vm._m(0),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "profile-img" }, [
+                      _c("img", { attrs: { src: _vm.getAvatar, alt: "user" } })
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-group" }, [
+                    _vm._m(1),
+                    _vm._v(" "),
+                    _c("span", {
+                      domProps: { textContent: _vm._s(_vm.adminForm.full_name) }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-group" }, [
+                    _vm._m(2),
+                    _vm._v(" "),
+                    _c("span", {
+                      domProps: { textContent: _vm._s(_vm.adminForm.email) }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-group" }, [
+                    _vm._m(3),
+                    _vm._v(" "),
+                    _c("span", {
+                      domProps: {
+                        textContent: _vm._s(_vm.adminForm.created_at)
+                      }
+                    })
+                  ])
+                ])
+              ]),
+              _vm._v(" "),
+              _c(
+                "router-link",
+                {
+                  directives: [
+                    {
+                      name: "show",
+                      rawName: "v-show",
+                      value: _vm.id,
+                      expression: "id"
+                    }
+                  ],
+                  staticClass: "btn btn-danger waves-effect waves-light m-t-10",
+                  attrs: { to: "/admin" }
+                },
+                [_vm._v("Cancel")]
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-lg-6" }, [
+            _c("div", { staticClass: "card" }, [
+              _c("div", { staticClass: "card-body" }, [
+                _c("div", { staticClass: "form-group" }, [
+                  _vm._m(4),
+                  _vm._v(" "),
+                  _c("span", {
+                    domProps: { textContent: _vm._s(_vm.adminForm.first_name) }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _vm._m(5),
+                  _vm._v(" "),
+                  _c("span", {
+                    domProps: { textContent: _vm._s(_vm.adminForm.family_name) }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _vm._m(6),
+                  _vm._v(" "),
+                  _c("span", {
+                    domProps: {
+                      textContent: _vm._s(_vm.adminForm.phone_number)
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _vm._m(7),
+                  _vm._v(" "),
+                  _c("span", {
+                    domProps: {
+                      textContent: _vm._s(_vm.adminForm.street_address)
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _vm._m(8),
+                  _vm._v(" "),
+                  _c("span", {
+                    domProps: { textContent: _vm._s(_vm.adminForm.postal_code) }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _vm._m(9),
+                  _vm._v(" "),
+                  _c("span", {
+                    domProps: { textContent: _vm._s(_vm.adminForm.country) }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _vm._m(10),
+                  _vm._v(" "),
+                  _c("span", {
+                    domProps: { textContent: _vm._s(_vm.adminForm.city) }
+                  })
+                ])
+              ])
+            ])
+          ])
+        ])
+      ])
+    ]
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("strong", [_c("p", [_vm._v("Avatar: ")])])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("strong", [_c("span", [_vm._v("Full Name: ")])])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("strong", [_c("span", [_vm._v("Email: ")])])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("strong", [_c("span", [_vm._v("Created At: ")])])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("strong", [_c("span", [_vm._v("First Name: ")])])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("strong", [_c("span", [_vm._v("Fmaily Name: ")])])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("strong", [_c("span", [_vm._v("Phone Number: ")])])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("strong", [_c("span", [_vm._v("Street Address: ")])])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("strong", [_c("span", [_vm._v("Postal Code: ")])])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("strong", [_c("span", [_vm._v("Country: ")])])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("strong", [_c("span", [_vm._v("City: ")])])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-3bd4b377", module.exports)
+  }
+}
+
+/***/ }),
+/* 132 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("div", { staticClass: "row page-titles" }, [
+      _c("div", { staticClass: "col-md-6 col-8 align-self-center" }, [
+        _c("h3", { staticClass: "text-themecolor m-b-0 m-t-0" }, [
+          _vm._v("View Administrator Profile")
+        ]),
+        _vm._v(" "),
+        _c("ol", { staticClass: "breadcrumb" }, [
+          _c(
+            "li",
+            { staticClass: "breadcrumb-item" },
+            [
+              _c("router-link", { attrs: { to: "/dashboard" } }, [
+                _vm._v("Dashboard")
+              ])
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "li",
+            { staticClass: "breadcrumb-item" },
+            [
+              _c("router-link", { attrs: { to: "/admin" } }, [
+                _vm._v("Administrator")
+              ])
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c("li", { staticClass: "breadcrumb-item active" }, [
+            _vm._v("View Administrator Profile")
+          ])
+        ])
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-sm-12" }, [
+        _c("div", { staticClass: "card" }, [
+          _c(
+            "div",
+            { staticClass: "card-body" },
+            [
+              _c("h4", { staticClass: "card-title" }, [
+                _vm._v("View Administrator Profile")
+              ]),
+              _vm._v(" "),
+              _c("admin-form", { attrs: { id: _vm.id } })
+            ],
+            1
+          )
+        ])
+      ])
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-66e008d8", module.exports)
+  }
+}
+
+/***/ }),
+/* 133 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(0)
+/* script */
+var __vue_script__ = __webpack_require__(134)
+/* template */
+var __vue_template__ = __webpack_require__(135)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
 Component.options.__file = "resources/assets/js/layouts/guest-page.vue"
 
 /* hot reload */
@@ -35204,7 +36470,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 125 */
+/* 134 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -35239,7 +36505,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 126 */
+/* 135 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -35259,15 +36525,15 @@ if (false) {
 }
 
 /***/ }),
-/* 127 */
+/* 136 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(128)
+var __vue_script__ = __webpack_require__(137)
 /* template */
-var __vue_template__ = __webpack_require__(131)
+var __vue_template__ = __webpack_require__(140)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -35306,7 +36572,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 128 */
+/* 137 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -35373,7 +36639,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         submit: function submit(e) {
             var _this = this;
 
-            axios.post('/api/auth/login', this.loginForm).then(function (response) {
+            axios.post('/api/auth/login_backend', this.loginForm).then(function (response) {
                 localStorage.setItem('auth_token', response.data.token);
                 axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('auth_token');
                 toastr['success'](response.data.message);
@@ -35386,7 +36652,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 129 */
+/* 138 */
 /***/ (function(module, exports) {
 
 //
@@ -35398,7 +36664,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 
 /***/ }),
-/* 130 */
+/* 139 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -35440,7 +36706,7 @@ if (false) {
 }
 
 /***/ }),
-/* 131 */
+/* 140 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -35626,15 +36892,15 @@ if (false) {
 }
 
 /***/ }),
-/* 132 */
+/* 141 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(133)
+var __vue_script__ = __webpack_require__(142)
 /* template */
-var __vue_template__ = __webpack_require__(134)
+var __vue_template__ = __webpack_require__(143)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -35673,7 +36939,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 133 */
+/* 142 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -35742,7 +37008,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 134 */
+/* 143 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -35878,15 +37144,15 @@ if (false) {
 }
 
 /***/ }),
-/* 135 */
+/* 144 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(136)
+var __vue_script__ = __webpack_require__(145)
 /* template */
-var __vue_template__ = __webpack_require__(137)
+var __vue_template__ = __webpack_require__(146)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -35925,7 +37191,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 136 */
+/* 145 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -36026,7 +37292,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 137 */
+/* 146 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -36320,15 +37586,15 @@ if (false) {
 }
 
 /***/ }),
-/* 138 */
+/* 147 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(139)
+var __vue_script__ = __webpack_require__(148)
 /* template */
-var __vue_template__ = __webpack_require__(140)
+var __vue_template__ = __webpack_require__(149)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -36367,7 +37633,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 139 */
+/* 148 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -36426,7 +37692,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 140 */
+/* 149 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -36552,15 +37818,15 @@ if (false) {
 }
 
 /***/ }),
-/* 141 */
+/* 150 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(142)
+var __vue_script__ = __webpack_require__(151)
 /* template */
-var __vue_template__ = __webpack_require__(143)
+var __vue_template__ = __webpack_require__(152)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -36599,7 +37865,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 142 */
+/* 151 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -36658,7 +37924,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     data: function data() {
         return {
             signupForm: {
-                contact_person: '',
+                full_name: '',
                 email: '',
                 password: '',
                 password_confirmation: ''
@@ -36686,7 +37952,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 143 */
+/* 152 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -36732,17 +37998,17 @@ var render = function() {
                           {
                             name: "model",
                             rawName: "v-model",
-                            value: _vm.signupForm.contact_person,
-                            expression: "signupForm.contact_person"
+                            value: _vm.signupForm.full_name,
+                            expression: "signupForm.full_name"
                           }
                         ],
                         staticClass: "form-control",
                         attrs: {
                           type: "text",
-                          name: "contact_person",
-                          placeholder: "Contact Person"
+                          name: "full_name",
+                          placeholder: "Full Name"
                         },
-                        domProps: { value: _vm.signupForm.contact_person },
+                        domProps: { value: _vm.signupForm.full_name },
                         on: {
                           input: function($event) {
                             if ($event.target.composing) {
@@ -36750,7 +38016,7 @@ var render = function() {
                             }
                             _vm.$set(
                               _vm.signupForm,
-                              "contact_person",
+                              "full_name",
                               $event.target.value
                             )
                           }
@@ -36927,15 +38193,15 @@ if (false) {
 }
 
 /***/ }),
-/* 144 */
+/* 153 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(145)
+var __vue_script__ = __webpack_require__(154)
 /* template */
-var __vue_template__ = __webpack_require__(146)
+var __vue_template__ = __webpack_require__(155)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -36974,7 +38240,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 145 */
+/* 154 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -37102,7 +38368,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 146 */
+/* 155 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -37532,15 +38798,15 @@ if (false) {
 }
 
 /***/ }),
-/* 147 */
+/* 156 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(148)
+var __vue_script__ = __webpack_require__(157)
 /* template */
-var __vue_template__ = __webpack_require__(149)
+var __vue_template__ = __webpack_require__(158)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -37579,7 +38845,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 148 */
+/* 157 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -37637,7 +38903,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 149 */
+/* 158 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -37761,15 +39027,15 @@ if (false) {
 }
 
 /***/ }),
-/* 150 */
+/* 159 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(151)
+var __vue_script__ = __webpack_require__(160)
 /* template */
-var __vue_template__ = __webpack_require__(152)
+var __vue_template__ = __webpack_require__(161)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -37808,7 +39074,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 151 */
+/* 160 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -37865,7 +39131,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 152 */
+/* 161 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -37942,15 +39208,15 @@ if (false) {
 }
 
 /***/ }),
-/* 153 */
+/* 162 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(154)
+var __vue_script__ = __webpack_require__(163)
 /* template */
-var __vue_template__ = __webpack_require__(155)
+var __vue_template__ = __webpack_require__(164)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -37989,7 +39255,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 154 */
+/* 163 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -38090,7 +39356,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 155 */
+/* 164 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -38310,15 +39576,15 @@ if (false) {
 }
 
 /***/ }),
-/* 156 */
+/* 165 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(157)
+var __vue_script__ = __webpack_require__(166)
 /* template */
-var __vue_template__ = __webpack_require__(158)
+var __vue_template__ = __webpack_require__(167)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -38357,7 +39623,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 157 */
+/* 166 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -38410,7 +39676,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 158 */
+/* 167 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -38476,15 +39742,15 @@ if (false) {
 }
 
 /***/ }),
-/* 159 */
+/* 168 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(160)
+var __vue_script__ = __webpack_require__(169)
 /* template */
-var __vue_template__ = __webpack_require__(161)
+var __vue_template__ = __webpack_require__(170)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -38523,7 +39789,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 160 */
+/* 169 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -38544,7 +39810,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 161 */
+/* 170 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -38564,15 +39830,15 @@ if (false) {
 }
 
 /***/ }),
-/* 162 */
+/* 171 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(163)
+var __vue_script__ = __webpack_require__(172)
 /* template */
-var __vue_template__ = __webpack_require__(164)
+var __vue_template__ = __webpack_require__(173)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -38611,7 +39877,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 163 */
+/* 172 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -38634,7 +39900,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 164 */
+/* 173 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -38689,7 +39955,7 @@ if (false) {
 }
 
 /***/ }),
-/* 165 */
+/* 174 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

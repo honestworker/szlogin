@@ -16,6 +16,9 @@
                     <li>
                         <router-link to="/dashboard" exact><i class="fa fa-dashboard"></i> <span class="hide-menu">Dashboard</span></router-link>
                     </li>
+                    <li>
+                        <router-link to="/admin" exact><i class="	fa fa-user-secret"></i> <span class="hide-menu">Administrators</span></router-link>
+                    </li>
                     <!-- <li>
                         <router-link to="/setting" exact><i class="fa fa-cog"></i> <span class="hide-menu">Settings</span></router-link>
                     </li> -->
