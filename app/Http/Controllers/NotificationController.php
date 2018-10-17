@@ -194,7 +194,7 @@ class NotificationController extends Controller
         $notification = \App\Notification::with('user.profile');
         $notification->whereStatus(1);
         $notification->whereIn('group_id', $user_groups);
-        $notification->orderBy('updated_at', 'DESC');
+        $notification->orderBy('created_at', 'DESC');
         
         return response()->json(['status' => 'success', 'message' => 'Get Notification Data Successfully!', 'notifications' => $notification->get()], 200);
     }

@@ -311,13 +311,15 @@
             },
             deleteUser() {
                 axios.delete('/api/user/' + this.user_id).then(response => {
-                    toastr['success'](response.data.message);
                     $('#modal-delete-user').modal('hide');
+                    toastr['success'](response.data.message);
                     this.getUsers();
                 }).catch(error => {
                     if (error.response.data) {
                         if (error.response.data.message) {
+                            $('#modal-delete-user').modal('hide');
                             toastr['error'](error.response.data.message);
+                            this.getUsers();
                         } else {
                             toastr['error']('The token is expired! Please refresh and try again!');
                             this.$router.push('/login');
@@ -342,13 +344,15 @@
             },
             makeGroupManager() {
                 axios.post('/api/user/group/' + this.user_id).then(response => {
-                    toastr['success'](response.data.message);
                     $('#modal-group-manager').modal('hide');
+                    toastr['success'](response.data.message);
                     this.getUsers();
                 }).catch(error => {
                     if (error.response.data) {
                         if (error.response.data.message) {
                             toastr['error'](error.response.data.message);
+                            $('#modal-group-manager').modal('hide');
+                            this.getUsers();
                         } else {
                             toastr['error']('The token is expired! Please refresh and try again!');
                             this.$router.push('/login');
@@ -366,13 +370,15 @@
             },
             disableGroupManager() {
                 axios.delete('/api/user/group/' + this.user_id).then(response => {
-                    toastr['success'](response.data.message);
                     $('#modal-disable-group-manager').modal('hide');
+                    toastr['success'](response.data.message);
                     this.getUsers();
                 }).catch(error => {
                     if (error.response.data) {
                         if (error.response.data.message) {
+                            $('#modal-disable-group-manager').modal('hide');
                             toastr['error'](error.response.data.message);
+                            this.getUsers();
                         } else {
                             toastr['error']('The token is expired! Please refresh and try again!');
                             this.$router.push('/login');

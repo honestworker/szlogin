@@ -28413,13 +28413,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this3 = this;
 
             axios.delete('/api/group/' + this.group_id).then(function (response) {
-                toastr['success'](response.data.message);
                 $('#modal-delete-group').modal('hide');
+                toastr['success'](response.data.message);
                 _this3.getGroups();
             }).catch(function (error) {
                 if (error.response.data) {
                     if (error.response.data.message) {
+                        $('#modal-delete-group').modal('hide');
                         toastr['error'](error.response.data.message);
+                        _this3.getGroups();
                     } else {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this3.$router.push('/login');
@@ -31264,13 +31266,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this2 = this;
 
             axios.delete('/api/user/' + this.user_id).then(function (response) {
-                toastr['success'](response.data.message);
                 $('#modal-delete-user').modal('hide');
+                toastr['success'](response.data.message);
                 _this2.getUsers();
             }).catch(function (error) {
                 if (error.response.data) {
                     if (error.response.data.message) {
+                        $('#modal-delete-user').modal('hide');
                         toastr['error'](error.response.data.message);
+                        _this2.getUsers();
                     } else {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this2.$router.push('/login');
@@ -31295,13 +31299,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this3 = this;
 
             axios.post('/api/user/group/' + this.user_id).then(function (response) {
-                toastr['success'](response.data.message);
                 $('#modal-group-manager').modal('hide');
+                toastr['success'](response.data.message);
                 _this3.getUsers();
             }).catch(function (error) {
                 if (error.response.data) {
                     if (error.response.data.message) {
                         toastr['error'](error.response.data.message);
+                        $('#modal-group-manager').modal('hide');
+                        _this3.getUsers();
                     } else {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this3.$router.push('/login');
@@ -31320,13 +31326,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this4 = this;
 
             axios.delete('/api/user/group/' + this.user_id).then(function (response) {
-                toastr['success'](response.data.message);
                 $('#modal-disable-group-manager').modal('hide');
+                toastr['success'](response.data.message);
                 _this4.getUsers();
             }).catch(function (error) {
                 if (error.response.data) {
                     if (error.response.data.message) {
+                        $('#modal-disable-group-manager').modal('hide');
                         toastr['error'](error.response.data.message);
+                        _this4.getUsers();
                     } else {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this4.$router.push('/login');
@@ -34034,13 +34042,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this2 = this;
 
             axios.delete('/api/country/' + this.country_id).then(function (response) {
-                toastr['success'](response.data.message);
                 $('#modal-delete-country').modal('hide');
+                toastr['success'](response.data.message);
                 _this2.getCountries();
             }).catch(function (error) {
                 if (error.response.data) {
                     if (error.response.data.message) {
+                        $('#modal-delete-country').modal('hide');
                         toastr['error'](error.response.data.message);
+                        _this2.getCountries();
                     } else {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this2.$router.push('/login');
@@ -36520,14 +36530,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this3 = this;
 
             axios.delete('/api/advertisement/' + this.ad_id).then(function (response) {
-                toastr['success'](response.data.message);
                 $('#modal-delete-ad').modal('hide');
-                _this3.getUsers();
+                toastr['success'](response.data.message);
                 _this3.getAds();
             }).catch(function (error) {
                 if (error.response.data) {
                     if (error.response.data.message) {
+                        $('#modal-delete-ad').modal('hide');
                         toastr['error'](error.response.data.message);
+                        _this3.getAds();
                     } else {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this3.$router.push('/login');
@@ -36653,11 +36664,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 __WEBPACK_IMPORTED_MODULE_4_xlsx___default.a.utils.book_append_sheet(wb, exportSheet, 'report');
                 __WEBPACK_IMPORTED_MODULE_4_xlsx___default.a.writeFile(wb, 'report.xlsx');
 
-                toastr['success'](response.data.message);
                 $('#modal-export-ad').modal('hide');
+                toastr['success'](response.data.message);
             }).catch(function (error) {
                 if (error.response.data) {
                     if (error.response.data.message) {
+                        $('#modal-export-ad').modal('hide');
                         toastr['error'](error.response.data.message);
                     } else {
                         toastr['error']('The token is expired! Please refresh and try again!');
@@ -69900,13 +69912,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this2 = this;
 
             axios.delete('/api/user/' + this.admin_id).then(function (response) {
-                toastr['success'](response.data.message);
                 $('#modal-delete-admin').modal('hide');
+                toastr['success'](response.data.message);
                 _this2.getAdmins();
             }).catch(function (error) {
                 if (error.response.data) {
                     if (error.response.data.message) {
+                        $('#modal-delete-admin').modal('hide');
                         toastr['error'](error.response.data.message);
+                        _this2.getAdmins();
                     } else {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this2.$router.push('/login');
@@ -69928,13 +69942,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this3 = this;
 
             axios.post('/api/user/admin/' + this.admin_id).then(function (response) {
-                toastr['success'](response.data.message);
                 $('#modal-administrator').modal('hide');
+                toastr['success'](response.data.message);
                 _this3.getAdmins();
             }).catch(function (error) {
                 if (error.response.data) {
                     if (error.response.data.message) {
+                        $('#modal-administrator').modal('hide');
                         toastr['error'](error.response.data.message);
+                        _this3.getAdmins();
                     } else {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this3.$router.push('/login');
@@ -69953,13 +69969,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this4 = this;
 
             axios.delete('/api/user/admin/' + this.admin_id).then(function (response) {
-                toastr['success'](response.data.message);
                 $('#modal-disable-administrator').modal('hide');
+                toastr['success'](response.data.message);
                 _this4.getAdmins();
             }).catch(function (error) {
                 if (error.response.data) {
                     if (error.response.data.message) {
+                        $('#modal-administrator').modal('hide');
                         toastr['error'](error.response.data.message);
+                        _this4.getAdmins();
                     } else {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this4.$router.push('/login');

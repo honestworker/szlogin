@@ -347,7 +347,7 @@
                 this.processDataTimes();
                 let url = helper.getFilterURL(this.filterAdForm);
                 axios.get('/api/advertisement?page=' + page + url).then(response => {
-                    this.ads = response.data
+                    this.ads = response.data;
                 }).catch(error => {
                     if (error.response.data) {
                         if (error.response.data.message) {
@@ -385,14 +385,15 @@
             },
             deleteAd() {
                 axios.delete('/api/advertisement/' + this.ad_id).then(response => {
-                    toastr['success'](response.data.message);
                     $('#modal-delete-ad').modal('hide');
-                    this.getUsers();
+                    toastr['success'](response.data.message);
                     this.getAds();
                 }).catch(error => {
                     if (error.response.data) {
                         if (error.response.data.message) {
+                            $('#modal-delete-ad').modal('hide');
                             toastr['error'](error.response.data.message);
+                            this.getAds();
                         } else {
                             toastr['error']('The token is expired! Please refresh and try again!');
                             this.$router.push('/login');
@@ -514,11 +515,12 @@
                     XLSX.utils.book_append_sheet(wb, exportSheet, 'report');
                     XLSX.writeFile(wb, 'report.xlsx');
 
-                    toastr['success'](response.data.message);                    
                     $('#modal-export-ad').modal('hide');
+                    toastr['success'](response.data.message);
                 }).catch(error => {
                     if (error.response.data) {
                         if (error.response.data.message) {
+                            $('#modal-export-ad').modal('hide');
                             toastr['error'](error.response.data.message);
                         } else {
                             toastr['error']('The token is expired! Please refresh and try again!');

@@ -488,6 +488,10 @@ class UserController extends Controller
         
         $profile = $user->Profile;
         
+        $group = \App\Group::find($profile->group_id);
+        if(!$group)
+            return response()->json(['status' => 'fail', 'message' => 'This user is not any group member.'], 422);
+
         if ($profile->is_admin)
             return response()->json(['status' => 'fail', 'message' => 'This user already is group manager!'], 422);
         

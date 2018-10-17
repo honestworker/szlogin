@@ -272,13 +272,15 @@
             },
             deleteGroup() {
                 axios.delete('/api/group/' + this.group_id).then(response => {
-                    toastr['success'](response.data.message);
                     $('#modal-delete-group').modal('hide');
+                    toastr['success'](response.data.message);
                     this.getGroups();
                 }).catch(error => {
                     if (error.response.data) {
                         if (error.response.data.message) {
+                            $('#modal-delete-group').modal('hide');
                             toastr['error'](error.response.data.message);
+                            this.getGroups();
                         } else {
                             toastr['error']('The token is expired! Please refresh and try again!');
                             this.$router.push('/login');

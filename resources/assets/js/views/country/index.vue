@@ -203,13 +203,15 @@
             },
             deleteCountry() {
                 axios.delete('/api/country/' + this.country_id).then(response => {
-                    toastr['success'](response.data.message);
                     $('#modal-delete-country').modal('hide');
+                    toastr['success'](response.data.message);
                     this.getCountries();
                 }).catch(error => {
                     if (error.response.data) {
                         if (error.response.data.message) {
+                            $('#modal-delete-country').modal('hide');
                             toastr['error'](error.response.data.message);
+                            this.getCountries();
                         } else {
                             toastr['error']('The token is expired! Please refresh and try again!');
                             this.$router.push('/login');

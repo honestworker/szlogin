@@ -264,13 +264,15 @@
             },
             deleteAdmin() {
                 axios.delete('/api/user/' + this.admin_id).then(response => {
-                    toastr['success'](response.data.message);
                     $('#modal-delete-admin').modal('hide');
+                    toastr['success'](response.data.message);
                     this.getAdmins();
                 }).catch(error => {
                     if (error.response.data) {
                         if (error.response.data.message) {
+                            $('#modal-delete-admin').modal('hide');
                             toastr['error'](error.response.data.message);
+                            this.getAdmins();
                         } else {
                             toastr['error']('The token is expired! Please refresh and try again!');
                             this.$router.push('/login');
@@ -295,13 +297,15 @@
             },
             makeAdministrator() {
                 axios.post('/api/user/admin/' + this.admin_id).then(response => {
-                    toastr['success'](response.data.message);
                     $('#modal-administrator').modal('hide');
+                    toastr['success'](response.data.message);
                     this.getAdmins();
                 }).catch(error => {
                     if (error.response.data) {
                         if (error.response.data.message) {
+                            $('#modal-administrator').modal('hide');
                             toastr['error'](error.response.data.message);
+                            this.getAdmins();
                         } else {
                             toastr['error']('The token is expired! Please refresh and try again!');
                             this.$router.push('/login');
@@ -319,13 +323,15 @@
             },
             disableAdministrator() {
                 axios.delete('/api/user/admin/' + this.admin_id).then(response => {
-                    toastr['success'](response.data.message);
                     $('#modal-disable-administrator').modal('hide');
+                    toastr['success'](response.data.message);
                     this.getAdmins();
                 }).catch(error => {
                     if (error.response.data) {
                         if (error.response.data.message) {
+                            $('#modal-administrator').modal('hide');
                             toastr['error'](error.response.data.message);
+                            this.getAdmins();
                         } else {
                             toastr['error']('The token is expired! Please refresh and try again!');
                             this.$router.push('/login');
