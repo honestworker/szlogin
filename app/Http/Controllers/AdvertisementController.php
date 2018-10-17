@@ -320,6 +320,92 @@ class AdvertisementController extends Controller
         return response()->json(['status' => 'success', 'message' => 'Advertisement Clicked!'], 200);
     }
 
+    public function infor(Request $request) {
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false], 422);
+        }
+        
+        $now_date = date("Y-m-d");
+        $year = date('Y', strtotime($now_date));
+        $month = date('m', strtotime($now_date));
+        $month_before = date("Y-m-d H:i:s", strtotime("$now_date  -1 month"));
+        $month2_before = date("Y-m-d H:i:s", strtotime("$now_date  -2 months"));
+        $month3_before = date("Y-m-d H:i:s", strtotime("$now_date  -3 months"));
+        
+        $ad_infor = array();
+		if(request()->has('selectedAds')) {
+            $advertisements = \App\Advertisement::whereIn('id', explode(',', request('selectedAds')))->get();
+            foreach($advertisements as $advertisement) {
+                $advertisement_counts = \App\AdvertisementCount::whereNotNull('id');
+                $show_month = $advertisement_counts->where('created_at', '>=',  $month_before)->where('type', '=',  'show')->where('ad_id', '=',  $advertisement->id)->sum('count');
+                $advertisement_counts = \App\AdvertisementCount::whereNotNull('id');
+                $show_month2 = $advertisement_counts->where('created_at', '>=',  $month2_before)->where('type', '=',  'show')->where('ad_id', '=',  $advertisement->id)->sum('count');
+                $advertisement_counts = \App\AdvertisementCount::whereNotNull('id');
+                $show_month3 = $advertisement_counts->where('created_at', '>=',  $month3_before)->where('type', '=',  'show')->where('ad_id', '=',  $advertisement->id)->sum('count');
+                $advertisement_counts = \App\AdvertisementCount::whereNotNull('id');
+                if ($advertisement->start_date)
+                    $advertisement_counts->where('created_at', '>=',  $advertisement->start_date);
+                if ($advertisement->end_date)
+                    $advertisement_counts->where('created_at', '<=',  $advertisement->end_date);
+                $show_lifetime = $advertisement_counts->where('type', '=',  'show')->where('ad_id', '=',  $advertisement->id)->sum('count');
+                $advertisement_counts = \App\AdvertisementCount::whereNotNull('id');
+                $show_year = $advertisement_counts->whereYear('view_date', '=',  $year)->where('type', '=',  'show')->where('ad_id', '=',  $advertisement->id)->sum('count');
+                $advertisement_counts = \App\AdvertisementCount::whereNotNull('id');
+                $show_all = $advertisement_counts->whereYear('view_date', '=',  $year)->where('type', '=',  'show')->where('ad_id', '=',  $advertisement->id)->sum('count');
+                
+                $advertisement_counts = \App\AdvertisementCount::whereNotNull('id');
+                $click_month = $advertisement_counts->where('created_at', '>=',  $month_before)->where('type', '=',  'click')->where('ad_id', '=',  $advertisement->id)->sum('count');
+                $advertisement_counts = \App\AdvertisementCount::whereNotNull('id');
+                $click_month2 = $advertisement_counts->where('created_at', '>=',  $month2_before)->where('type', '=',  'click')->where('ad_id', '=',  $advertisement->id)->sum('count');
+                $advertisement_counts = \App\AdvertisementCount::whereNotNull('id');
+                $click_month3 = $advertisement_counts->where('created_at', '>=',  $month3_before)->where('type', '=',  'click')->where('ad_id', '=',  $advertisement->id)->sum('count');
+                $advertisement_counts = \App\AdvertisementCount::whereNotNull('id');
+                if ($advertisement->start_date)
+                    $advertisement_counts->where('created_at', '>=',  $advertisement->start_date);
+                if ($advertisement->end_date)
+                    $advertisement_counts->where('created_at', '<=',  $advertisement->end_date);
+                $click_lifetime = $advertisement_counts->where('type', '=',  'click')->where('ad_id', '=',  $advertisement->id)->sum('count');
+                $advertisement_counts = \App\AdvertisementCount::whereNotNull('id');
+                $click_year = $advertisement_counts->whereYear('view_date', '=',  $year)->where('type', '=',  'click')->where('ad_id', '=',  $advertisement->id)->sum('count');
+                $advertisement_counts = \App\AdvertisementCount::whereNotNull('id');
+                $click_unique = count($advertisement_counts->whereYear('view_date', '=',  $year)->where('type', '=',  'click')->where('ad_id', '=',  $advertisement->id)->get());
+                
+                $ad_infor = array('Name' => $advertisement->name, 'Link' => $advertisement->link);
+                if(request()->has('show_month'))
+                    $ad_infor['Total number of app visitors last 30 days'] = $show_month;
+                if(request()->has('show_month2'))
+                    $ad_infor['Total number of app visitors last 90 days'] = $show_month2;
+                if(request()->has('show_month3'))
+                    $ad_infor['Total number of app visitors last 90 days'] = $show_month3;
+                if(request()->has('show_lifetime'))
+                    $ad_infor['Total number of app visitors during publishing time'] = $show_lifetime;
+                if(request()->has('show_year'))
+                    $ad_infor['Total number of app visitors this year'] = $show_year;
+                if(request()->has('show_all'))
+                    $ad_infor['Total number of app visitors in total (since start of the app)'] = $show_all;
+                if(request()->has('click_month'))
+                    $ad_infor['Total number of clicks on banner last 30 days'] = $click_month;
+                if(request()->has('click_month2'))
+                    $ad_infor['Total number of clicks on banner last 60 days'] = $click_month2;
+                if(request()->has('click_month3'))
+                    $ad_infor['Total number of clicks on banner last 90 days'] = $click_month3;
+                if(request()->has('click_lifetime'))
+                    $ad_infor['Total number of clicks on banner during publishing time'] = $click_lifetime;
+                if(request()->has('click_year'))
+                    $ad_infor['Total number of clicks on banner this year'] = $click_year;
+                if(request()->has('click_unique'))
+                    $ad_infor['Total number of clicks on banner by unique visitors during publishing time'] = $click_unique;
+
+                //$ad_infors[] = array('Name' => $advertisement->name, 'Link' => $advertisement->link, 'Total number of app visitors last 30 days' => $show_month, 'Total number of app visitors last 60 days' => $show_month2, 'Total number of app visitors last 90 days' => $show_month3, 'Total number of app visitors during publishing time' => $show_lifetime, 'Total number of app visitors this year' => $show_year, 'Total number of app visitors in total (since start of the app)' => $show_all, 'Total number of clicks on banner last 30 days' => $click_month, 'Total number of clicks on banner last 60 days' => $click_month2, 'Total number of clicks on banner last 90 days' => $click_month3, 'Total number of clicks on banner during publishing time' => $click_lifetime, 'Total number of clicks on banner this year' => $click_year, 'Total number of clicks on banner by unique visitors during publishing time' => $click_unique);
+                $ad_infors[] = $ad_infor;
+            }
+        }
+        
+        return response()->json(['status' => 'success', 'message' => 'Advertisement Infor!', 'data' => $ad_infors], 200);
+    }
+
     public function overview(Request $request) {
         try {
             JWTAuth::parseToken()->authenticate();
@@ -339,7 +425,7 @@ class AdvertisementController extends Controller
             $advertisement_counts = \App\AdvertisementCount::whereNotNull('id');
             $show_count_infor_all = $advertisement_counts->whereYear('view_date', '=',  $year)->whereMonth('view_date', '=',   $month_index )->where('type', '=',  'show')->sum('count');
             $show_count_infor[] = [$show_unique_count_infor, $show_count_infor_all];
-
+            
             $advertisement_counts = \App\AdvertisementCount::whereNotNull('id');
             $click_unique_count_infor = count($advertisement_counts->whereYear('view_date', '=',  $year)->whereMonth('view_date', '=',   $month_index )->where('type', '=',  'click')->get());
             $advertisement_counts = \App\AdvertisementCount::whereNotNull('id');
@@ -367,7 +453,7 @@ class AdvertisementController extends Controller
             $click_all = $advertisement_counts->where('type', '=',  'click')->where('ad_id', '=',  $advertisement->id)->sum('count');
             $advertisement_counts = \App\AdvertisementCount::whereNotNull('id');
             $click_month = $advertisement_counts->where('created_at', '>=',  $month_before)->where('type', '=',  'click')->where('ad_id', '=',  $advertisement->id)->sum('count');
-
+            
             $statistics[] = [$advertisement->name, $show_all, $show_unique_all, $show_month, $show_unique_month, $click_all, $click_unique_all, $click_month, $click_unique_month];
         }
         return response()->json(['status' => 'success', 'message' => 'Advertisement Overview!', 'data' => compact('show_count_infor', 'click_count_infor', 'statistics')], 200);

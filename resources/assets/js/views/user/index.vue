@@ -256,8 +256,21 @@
                     page = 1;
                 }
                 let url = helper.getFilterURL(this.filterUserForm);
-                axios.get('/api/user?&page=' + page + url)
-                    .then(response => this.users = response.data );
+                axios.get('/api/user?&page=' + page + url).then(response => {
+                    this.users = response.data;
+                }).catch(error => {
+                    if (error.response.data) {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('The token is expired! Please refresh and try again!');
+                            this.$router.push('/login');
+                        }
+                    } else {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                        this.$router.push('/login');
+                    }
+                });
             },
             getUserGroupID(user) {
                 let group_id = '';
@@ -307,9 +320,11 @@
                             toastr['error'](error.response.data.message);
                         } else {
                             toastr['error']('The token is expired! Please refresh and try again!');
+                            this.$router.push('/login');
                         }
                     } else {
                         toastr['error']('The token is expired! Please refresh and try again!');
+                        this.$router.push('/login');
                     }
                 });
             },
@@ -336,9 +351,11 @@
                             toastr['error'](error.response.data.message);
                         } else {
                             toastr['error']('The token is expired! Please refresh and try again!');
+                            this.$router.push('/login');
                         }
                     } else {
                         toastr['error']('The token is expired! Please refresh and try again!');
+                        this.$router.push('/login');
                     }
                 });
             },
@@ -358,9 +375,11 @@
                             toastr['error'](error.response.data.message);
                         } else {
                             toastr['error']('The token is expired! Please refresh and try again!');
+                            this.$router.push('/login');
                         }
                     } else {
                         toastr['error']('The token is expired! Please refresh and try again!');
+                        this.$router.push('/login');
                     }
                 });
             },

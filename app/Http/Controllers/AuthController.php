@@ -32,7 +32,9 @@ class AuthController extends Controller
             return response()->json(['status' => 'fail', 'message' => 'This is something wrong. Please try again!'], 500);
         }
         
-        $user = \App\User::whereEmail(request('email'))->first();
+        $user = \App\User::whereEmail(request('email'))->where('backend', '=', 1)->first();
+        if (!$user)
+            return response()->json(['status' => 'fail', 'message' => 'You do not have any administrator account. Please sign up.'], 422);
         if($user->status == 'pending')
             return response()->json(['status' => 'fail', 'message' => 'Your account is disabled administrator permission.'], 422);
             
@@ -41,12 +43,6 @@ class AuthController extends Controller
             
         if($user->status != 'activated')
             return response()->json(['status' => 'fail', 'message' => 'There is something wrong with your account. Please contact system administrator.'], 422);
-        
-        if ($user->backend == 1) {
-            return response()->json(['status' => 'success', 'message' => 'You are successfully logged in!', 'token' => $token], 200);
-        } else {
-            return response()->json(['status' => 'fail', 'message' => 'You do not have the administrator permission!'], 422);
-        }
     }
 
     private function calculateVisitor($user) {
@@ -84,7 +80,7 @@ class AuthController extends Controller
             return response()->json(['status' => 'fail', 'message' => 'This is something wrong. Please try again!', 'error_type' => 'token_error'], 500);
         }
         
-        $user = \App\User::whereEmail(request('email'))->first();
+        $user = \App\User::whereEmail(request('email'))->where('backend', '=', 0)->first();
         if($user->status == 'pending')
             return response()->json(['status' => 'fail', 'message' => 'Your account hasn\'t been activated. Please check your email & activate account.', 'error_type' => 'no_groupid'], 422);
             
@@ -94,17 +90,14 @@ class AuthController extends Controller
         if($user->status != 'activated' && $user->status != 'pending_activated')
             return response()->json(['status' => 'fail', 'message' => 'There is something wrong with your account. Please contact system administrator.', 'error_type' => 'no_signup'], 422);
         
-        // if ($user->backend == 1)
-        //     return response()->json(['status' => 'fail', 'message' => '', 'error_type' => 'admin'], 422);
-
         $this->calculateVisitor($user);
-        
+                
         if ($user->Profile->is_admin == 1)
             $manager = true;
         else
             $manager = false;
         
-        return response()->json(['status' => 'success', 'message' => 'You are successfully logged in!', 'token' => $token, 'manager' => $manager], 200);
+        return response()->json(['status' => 'success', 'message' => 'You are successfully logged in!', 'token' => $token, 'group_id' => $user->Profile->group_id, 'manager' => $manager], 200);
     }
 
     public function getAuthUser(){
@@ -144,8 +137,10 @@ class AuthController extends Controller
             
             if ($token) {
                 $user = JWTAuth::parseToken()->authenticate();
-                $user->deactivated_at = date('Y-m-d H:i:s');
-                $user->save();
+                if ($user) {
+                    $user->deactivated_at = date('Y-m-d H:i:s');
+                    $user->save();
+                }
                 JWTAuth::invalidate($token);
             }
             
@@ -280,7 +275,7 @@ class AuthController extends Controller
         if($validation->fails())
             return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
             
-        $user = \App\User::whereEmail(request('email'))->first();
+        $user = \App\User::whereEmail(request('email'))->where('backend', '=', 0)->first();
         //
         if ($user) {
             return response()->json(['status' => 'fail', 'message' => 'Your email already have registed! Please try with other email again.', 'error_type' => 'email_exist'], 422);
@@ -334,7 +329,7 @@ class AuthController extends Controller
         if($validation->fails())
             return response()->json(['status' => 'fail', 'message' => $validation->messages()->first()], 422);
             
-        $user = \App\User::whereEmail(request('email'))->first();
+        $user = \App\User::whereEmail(request('email'))->where('backend', '=', 1)->first();
         if ($user) {
             return response()->json(['status' => 'fail', 'message' => 'Your email already registerd! Please try again!'], 422);
         }

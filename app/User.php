@@ -41,4 +41,9 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Notification', 'user_id', 'id');
     }
+
+    public function groups()
+    {
+        return $this->hasOne('App\UserGroups', 'user_id', 'id');
+    }
 }

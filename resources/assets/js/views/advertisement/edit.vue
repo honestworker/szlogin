@@ -2,7 +2,8 @@
 	<div>
         <div class="row page-titles">
             <div class="col-md-6 col-8 align-self-center">
-                <h3 class="text-themecolor m-b-0 m-t-0">Edit Advertisement</h3>
+                <h3 class="text-themecolor m-b-0 m-t-0" v-if="id != 0">Edit Advertisement</h3>
+                <h3 class="text-themecolor m-b-0 m-t-0" v-else>Create Advertisement</h3>
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><router-link to="/dashboard">Dashboard</router-link></li>
                     <li class="breadcrumb-item"><router-link to="/advertisement">Advertisement</router-link></li>

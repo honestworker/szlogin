@@ -548,7 +548,7 @@ class UserController extends Controller
             return response()->json(['authenticated' => false], 422);
         }
         
-        $total = \App\User::count();
+        $total = count(\App\User::where('backend', '=', 0)->get());
         
         $infor = array();
         $now_date = date("Y-m-d");
@@ -603,6 +603,6 @@ class UserController extends Controller
         //$activated_users = count($users->whereStatus('activated')->where('activated_at', '>=',  $month_before)->get());
         $activated_users = count($users->where('backend', '=', '0')->where('activated_at', '>=',  $month_before)->get());
 
-        return response()->json(['status' => 'success', 'message' => 'User and Visitor Overview!', 'data' => compact('total','infor','activated_users','visitor_infor','visitors_infor')]);
+        return response()->json(['status' => 'success', 'message' => 'User and Visitor Overview!', 'data' => compact('total', 'infor', 'activated_users', 'visitor_infor', 'visitors_infor')]);
     }
 }

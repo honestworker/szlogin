@@ -180,8 +180,21 @@
                     page = 1;
                 }
                 let url = helper.getFilterURL(this.filterCountryForm);
-                axios.get('/api/country?page=' + page + url)
-                    .then(response => this.countries = response.data);
+                axios.get('/api/country?page=' + page + url).then(response => {
+                    this.countries = response.data;
+                }).catch(error => {
+                    if (error.response.data) {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('The token is expired! Please refresh and try again!');
+                            this.$router.push('/login');
+                        }
+                    } else {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                        this.$router.push('/login');
+                    }
+                });
             },
 
             modalDeleteCountry(country) {
@@ -199,9 +212,11 @@
                             toastr['error'](error.response.data.message);
                         } else {
                             toastr['error']('The token is expired! Please refresh and try again!');
+                            this.$router.push('/login');
                         }
                     } else {
                         toastr['error']('The token is expired! Please refresh and try again!');
+                        this.$router.push('/login');
                     }
                 });
             },
@@ -222,6 +237,18 @@
             toggleCountryStatus(country){
                 axios.post('/api/country/status', {id: country.id}).then((response) => {
                     this.getCountries();
+                }).catch(error => {
+                    if (error.response.data) {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('The token is expired! Please refresh and try again!');
+                            this.$router.push('/login');
+                        }
+                    } else {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                        this.$router.push('/login');
+                    }
                 });
             }
         }

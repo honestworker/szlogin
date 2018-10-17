@@ -128,10 +128,14 @@
                         <h4 class="card-title">Advertisement List</h4>
                         <h6 class="card-subtitle" v-if="ads.total">Total {{ads.total}} result found!</h6>
                         <h6 class="card-subtitle" v-else>No result found!</h6>
+                        <button type="submit" class="btn btn-info waves-effect waves-light m-t-10" @click="modalExportPDF" style="float: right; text-align: right;">
+                            <span>Export</span>
+                        </button>
                         <div class="table-responsive">
                             <table class="table" v-if="ads.total">
                                 <thead>
                                     <tr>
+                                        <th><input type='checkbox' v-model='isCheckAll' @click="selectAll"></th>
                                         <th>Name</th>
                                         <th>Photo</th>
                                         <th>Country</th>
@@ -148,6 +152,7 @@
                                 </thead>
                                 <tbody>
                                     <tr v-for="ad in ads.data">
+                                        <td><input type="checkbox" :value="ad.id" id="ad_check" v-model="exportAdForm.selectedAds"></td>
                                         <td v-text="ad.name"></td>
                                         <td><img :src="getImageUrl(ad.image)" class="img-responsive" style="max-width: 200px;"></td>
                                         <td v-text="ad.country"></td>
@@ -214,6 +219,54 @@
                 </div>
             </div>
         </div>
+        
+        <!-- Export Advertisement Modal -->
+        <div class="modal" id="modal-export-ad" tabindex="-1" role="dialog">
+            <div class="modal-dialog" v-if="exportAd">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            Export Advertisement
+                        </h5>
+                    </div>
+
+                    <div class="modal-body">
+                        <input type="checkbox" :value="exportAdForm.show_month" v-model="exportAdForm.show_month">Total number of app visitors last 30 days
+                        <br>
+                        <input type="checkbox" :value="exportAdForm.show_month2" v-model="exportAdForm.show_month2">Total number of app visitors last 60 days
+                        <br>
+                        <input type="checkbox" :value="exportAdForm.show_month3" v-model="exportAdForm.show_month3">Total number of app visitors last 90 days
+                        <br>
+                        <input type="checkbox" :value="exportAdForm.show_lifetime" v-model="exportAdForm.show_lifetime">Total number of app visitors during publishing time
+                        <br>
+                        <input type="checkbox" :value="exportAdForm.show_year" v-model="exportAdForm.show_year">Total number of app visitors this year
+                        <br>
+                        <input type="checkbox" :value="exportAdForm.show_all" v-model="exportAdForm.show_all">Total number of app visitors in total (since start of the app)
+                        <br>
+                        <input type="checkbox" :value="exportAdForm.click_month" v-model="exportAdForm.click_month">Total number of clicks on banner last 30 days
+                        <br>
+                        <input type="checkbox" :value="exportAdForm.click_month2" v-model="exportAdForm.click_month2">Total number of clicks on banner last 60 days
+                        <br>
+                        <input type="checkbox" :value="exportAdForm.click_month3" v-model="exportAdForm.click_month3">Total number of clicks on banner last 90 days
+                        <br>
+                        <input type="checkbox" :value="exportAdForm.click_lifetime" v-model="exportAdForm.click_lifetime">Total number of clicks on banner during publishing time
+                        <br>
+                        <input type="checkbox" :value="exportAdForm.click_year" v-model="exportAdForm.click_year">Total number of clicks on banner this year
+                        <br>
+                        <input type="checkbox" :value="exportAdForm.click_unique" v-model="exportAdForm.click_unique">Total number of clicks on banner by unique visitors during publishing time
+                        <br>
+                    </div>
+
+                    <!-- Modal Actions -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">No, Go Back</button>
+                        <button type="button" class="btn btn-primary" @click.prevent="exportPDF">
+                            Export Advertisements
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -222,6 +275,9 @@
     import pagination from 'laravel-vue-pagination'
     import helper from '../../services/helper'
     import ClickConfirm from 'click-confirm'
+    import XLSX from 'xlsx'
+    // var jsPDF = require('jspdf');
+    // require('jspdf-autotable');
 
     export default {
         components : { datepicker, pagination, ClickConfirm },
@@ -244,7 +300,25 @@
                     pageLength: 100
                 },
                 ad_id : 0,
-                deletingAd : 1
+                deletingAd : 1,
+                exportAd : 1,
+
+                exportAdForm: {
+                    selectedAds : [],
+                    show_month: 1,
+                    show_month2: 1,
+                    show_month3: 1,
+                    show_lifetime: 1,
+                    show_year: 1,
+                    show_all: 1,
+                    click_month: 1,
+                    click_month2: 1,
+                    click_month3: 1,
+                    click_lifetime: 1,
+                    click_year: 1,
+                    click_unique: 1,
+                },
+                isCheckAll : false,
             }
         },
 
@@ -272,12 +346,38 @@
                 }
                 this.processDataTimes();
                 let url = helper.getFilterURL(this.filterAdForm);
-                axios.get('/api/advertisement?page=' + page + url)
-                    .then(response => this.ads = response.data);
+                axios.get('/api/advertisement?page=' + page + url).then(response => {
+                    this.ads = response.data
+                }).catch(error => {
+                    if (error.response.data) {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('The token is expired! Please refresh and try again!');
+                            this.$router.push('/login');
+                        }
+                    } else {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                        this.$router.push('/login');
+                    }
+                });
             },
             getCountries() {
-                axios.post('/api/country/all')
-                    .then(response => this.countries = response.data);
+                axios.post('/api/country/all').then(response => {
+                    this.countries = response.data;
+                }).catch(error => {
+                    if (error.response.data) {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('The token is expired! Please refresh and try again!');
+                            this.$router.push('/login');
+                        }
+                    } else {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                        this.$router.push('/login');
+                    }
+                });
             },
             modalDeleteAd(ad) {
                 this.ad_id = ad.id;
@@ -288,18 +388,20 @@
                     toastr['success'](response.data.message);
                     $('#modal-delete-ad').modal('hide');
                     this.getUsers();
+                    this.getAds();
                 }).catch(error => {
                     if (error.response.data) {
                         if (error.response.data.message) {
                             toastr['error'](error.response.data.message);
                         } else {
                             toastr['error']('The token is expired! Please refresh and try again!');
+                            this.$router.push('/login');
                         }
                     } else {
                         toastr['error']('The token is expired! Please refresh and try again!');
+                        this.$router.push('/login');
                     }
                 });
-                this.getAds();
             },
             viewAd(ad){
                 this.$router.push('/advertisement/' + ad.id);
@@ -310,6 +412,18 @@
             toggleAdStatus(ad){
                 axios.post('/api/ad/status', {id: ad.id}).then((response) => {
                     this.getAds();
+                }).catch(error => {
+                    if (error.response.data) {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('The token is expired! Please refresh and try again!');
+                            this.$router.push('/login');
+                        }
+                    } else {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                        this.$router.push('/login');
+                    }
                 });
             },
             numberToString(number) {
@@ -350,6 +464,83 @@
                     this.getAds();
                 }
             },
-        }
+            modalExportPDF() {
+                $('#modal-export-ad').modal('show');
+            },
+            exportPDF() {
+                let url = helper.getFilterURL(this.exportAdForm);
+                axios.post('/api/advertisement/infor?' + url).then(response => {
+                    var exportedPDFdata = response.data.data;
+
+                    // var columns = [];
+                    // columns.push({title: 'Name', dataKey: 'name'});
+                    // columns.push({title: 'Link', dataKey: 'link'});
+                    // if (this.exportAdForm.show_month)
+                    //     columns.push({title: 'Total number\n of app visitors\n last 30 days', dataKey: 'show_month'});
+                    // if (this.exportAdForm.show_month2)
+                    //     columns.push({title: 'Total number\n of app visitors\n last 60 days', dataKey: 'show_month2'});
+                    // if (this.exportAdForm.show_month3)
+                    //     columns.push({title: 'Total number\n of app visitors\n last 90 days', dataKey: 'show_month3'});
+                    // if (this.exportAdForm.show_lifetime)
+                    //     columns.push({title: 'Total number\n of app visitors\n during publishing time', dataKey: 'show_lifetime'});
+                    // if (this.exportAdForm.show_year)
+                    //     columns.push({title: 'Total number\n of app visitors\n this year', dataKey: 'show_year'});
+                    // if (this.exportAdForm.show_all)
+                    //     columns.push({title: 'Total number\n of app visitors\n in total \n(since start of the app)', dataKey: 'show_all'});
+
+                    // if (this.exportAdForm.click_month)
+                    //     columns.push({title: 'Total number\n of clicks on banner\n last 30 days', dataKey: 'click_month'});
+                    // if (this.exportAdForm.click_month2)
+                    //     columns.push({title: 'Total number\n of clicks on banner\n last 60 days', dataKey: 'click_month2'});
+                    // if (this.exportAdForm.click_month3)
+                    //     columns.push({title: 'Total number\n of clicks on banner\n last 90 days', dataKey: 'click_month3'});
+                    // if (this.exportAdForm.click_lifetime)
+                    //     columns.push({title: 'Total number\n of clicks on banner\n during publishing time', dataKey: 'click_lifetime'});
+                    // if (this.exportAdForm.click_year)
+                    //     columns.push({title: 'Total number\n of clicks on banner\n this year', dataKey: 'click_year'});
+                    // if (this.exportAdForm.click_unique)
+                    //     columns.push({title: 'Total number\n of clicks on banner\n by unique visitors\n during publishing time', dataKey: 'click_unique'});
+
+                    // let pdfName = 'report.pdf';
+                    // var doc = new jsPDF('p', 'pt');
+                    // //doc.text("Hello World", 10, 10);
+                    // doc.autoTable(columns, exportedPDFdata);
+                    // doc.save(pdfName);
+                    
+                    var columns = exportedPDFdata;
+                    var exportSheet = XLSX.utils.json_to_sheet(exportedPDFdata);
+
+                    var wb = XLSX.utils.book_new();
+                    XLSX.utils.book_append_sheet(wb, exportSheet, 'report');
+                    XLSX.writeFile(wb, 'report.xlsx');
+
+                    toastr['success'](response.data.message);                    
+                    $('#modal-export-ad').modal('hide');
+                }).catch(error => {
+                    if (error.response.data) {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('The token is expired! Please refresh and try again!');
+                            this.$router.push('/login');
+                        }
+                    } else {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                        this.$router.push('/login');
+                    }
+                });
+            },
+            selectAll() {
+                var selected = [];
+
+                if (!this.isCheckAll) {
+                    this.ads.data.forEach(function (ad) {
+                        selected.push(ad.id);
+                    });
+                }
+                
+                this.exportAdForm.selectedAds = selected;
+            }
+        },
     }
 </script>

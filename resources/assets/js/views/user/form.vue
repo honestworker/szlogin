@@ -148,9 +148,18 @@
                     this.userForm.created_at = this.user_data.profile.created_at ? this.user_data.profile.created_at : "";
                     this.userForm.role = (this.user_data.profile.is_admin == 1) ? "Manager" : "User";
                     this.userForm.group_id = this.user_data.group_id ? this.user_data.group_id : "";
-                })
-                .catch(response => {
-                    toastr['error'](response.message);
+                }).catch(error => {
+                    if (error.response.data) {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('The token is expired! Please refresh and try again!');
+                            this.$router.push('/login');
+                        }
+                    } else {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                        this.$router.push('/login');
+                    }
                 });
             },
         },

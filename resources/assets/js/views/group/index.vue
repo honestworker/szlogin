@@ -233,12 +233,38 @@
                     page = 1;
                 }
                 let url = helper.getFilterURL(this.filterGroupForm);
-                axios.get('/api/group?page=' + page + url)
-                    .then(response => this.groups = response.data);
+                axios.get('/api/group?page=' + page + url).then(response => {
+                    this.groups = response.data;                    
+                }).catch(error => {
+                    if (error.response.data) {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('The token is expired! Please refresh and try again!');
+                            this.$router.push('/login');
+                        }
+                    } else {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                        this.$router.push('/login');
+                    }
+                });
             },
             getCountries() {
-                axios.post('/api/country/all')
-                    .then(response => this.countries = response.data);
+                axios.post('/api/country/all').then(response => {
+                    this.countries = response.data;
+                }).catch(error => {
+                    if (error.response.data) {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('The token is expired! Please refresh and try again!');
+                            this.$router.push('/login');
+                        }
+                    } else {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                        this.$router.push('/login');
+                    }
+                });
             },
             modalDeleteGroup(group) {
                 this.group_id = group.id;
@@ -255,9 +281,11 @@
                             toastr['error'](error.response.data.message);
                         } else {
                             toastr['error']('The token is expired! Please refresh and try again!');
+                            this.$router.push('/login');
                         }
                     } else {
                         toastr['error']('The token is expired! Please refresh and try again!');
+                        this.$router.push('/login');
                     }
                 });
             },
@@ -270,6 +298,18 @@
             toggleGroupStatus(group){
                 axios.post('/api/group/status', {id: group.id}).then((response) => {
                     this.getGroups();
+                }).catch(error => {
+                    if (error.response.data) {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('The token is expired! Please refresh and try again!');
+                            this.$router.push('/login');
+                        }
+                    } else {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                        this.$router.push('/login');
+                    }
                 });
             }
         }

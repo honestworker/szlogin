@@ -84,7 +84,6 @@ class GroupController extends Controller
 
     public function toggleStatus(Request $request){
         $group = \App\Group::find($request->input('id'));
-        
         if(!$group)
             return response()->json(['status' => 'fail', 'message' => 'Couldnot find group!'], 422);
             
@@ -103,10 +102,8 @@ class GroupController extends Controller
         return $group;
     }
 
-    public function update(Request $request, $id) {
-        
+    public function update(Request $request, $id) {        
         $group = \App\Group::whereId($id)->first();
-        
         if(!$group)
             return response()->json(['status' => 'fail', 'message' => 'Couldnot find group!']);
             
@@ -121,7 +118,7 @@ class GroupController extends Controller
         ]);
         
         if($validation->fails())
-            return response()->json(['status' => 'success', 'message' => $validation->messages()->first()], 422);
+            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first()], 422);
             
         $group->group_id = request('group_id');
         $group->org_number = request('org_number');
@@ -137,15 +134,75 @@ class GroupController extends Controller
     
     public function destroy(Request $request, $id){
         $group = \App\Group::find($id);
-        
         if(!$group)
             return response()->json(['message' => 'Couldnot find group!'], 422);
-            
+
         $group->delete();
         
         return response()->json(['status' => 'success', 'message' => 'Group deleted!'], 200);
     }
+    
+    public function attachGroup(Request $request){
+        $validation = Validator::make($request->all(), [
+            'group_id' => 'required',
+        ]);
+        
+        if($validation->fails())
+            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
+        
+        $group = \App\Group::where('group_id', '=', request('group_id'))->first();
+        if(!$group)
+            return response()->json(['message' => 'Couldnot find group!', 'error_type' => 'no_group'], 422);
+            
+        $user = \JWTAuth::parseToken()->authenticate();
+        $profile = $user->Profile;
+        if($profile->group_id == request('group_id'))
+            return response()->json(['status' => 'fail', 'message' => 'You are already this group member!', 'error_type' => 'is_member'], 422);
+            
+        $user_groups = \App\UserGroups::create([
+            'user_id' => $user->id,
+            'group_id' => $group->id
+        ]);
+        
+        return response()->json(['status' => 'success', 'message' => 'Group attached!', 'group_id' => $group->id], 200);
+    }
 
+    public function deleteAttachGroup(Request $request) {
+        $validation = Validator::make($request->all(), [
+            'group_id' => 'required',
+        ]);
+        
+        if($validation->fails())
+            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
+        
+        $group = \App\Group::where('group_id', '=', request('group_id'))->first();
+        if(!$group)
+            return response()->json(['message' => 'Couldnot find group!', 'error_type' => 'no_group'], 422);
+            
+        $user = \JWTAuth::parseToken()->authenticate();
+        $user_group = \App\UserGroups::where('group_id', '=', $group->id)->where('user_id', '=', $user->id)->first();
+        if(!$user_group)
+            return response()->json(['message' => 'You are not attached this group!', 'error_type' => 'no_attach'], 422);
+        
+        $user_group->delete();
+        
+        return response()->json(['status' => 'success', 'message' => 'Attached Group deleted!'], 200);
+    }
+
+    public function getAttachedGroups(Request $request){
+        $user = \JWTAuth::parseToken()->authenticate();
+        $profile = $user->Profile;
+        
+        $main_group = \App\Group::find($profile->group_id);
+        if(!$main_group)
+            return response()->json(['message' => 'Couldnot find group!', 'error_type' => 'no_group'], 422);
+            
+        $user_groups = \App\UserGroups::where('user_id', '=', $user->id)->pluck('group_id');
+        $other_groups = \App\Group::whereIn('id', $user_groups)->pluck('group_id');
+        
+        return response()->json(['status' => 'success', 'message' => 'Group attached!', 'main' => $main_group->group_id, 'others' => $other_groups], 200);
+    }
+    
     public function overview(Request $request) {
         $total = \App\Group::count();
         

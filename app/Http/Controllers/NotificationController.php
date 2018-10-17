@@ -189,9 +189,11 @@ class NotificationController extends Controller
         if(!$group)
             return response()->json(['status' => 'fail', 'message' => 'You must be any group memeber!', 'error_type' => 'no_member'], 422);
         
+        $user_groups = array_merge(array($profile->group_id), \App\UserGroups::where('user_id', '=', $user->id)->select('group_id')->get()->toArray());
+
         $notification = \App\Notification::with('user.profile');
         $notification->whereStatus(1);
-        $notification->where('group_id', '=', $group->id);
+        $notification->whereIn('group_id', $user_groups);
         $notification->orderBy('updated_at', 'DESC');
         
         return response()->json(['status' => 'success', 'message' => 'Get Notification Data Successfully!', 'notifications' => $notification->get()], 200);

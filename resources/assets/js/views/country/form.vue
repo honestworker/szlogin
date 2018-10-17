@@ -63,9 +63,11 @@
                             toastr['error'](error.response.data.message);
                         } else {
                             toastr['error']('The token is expired! Please refresh and try again!');
+                            this.$router.push('/login');
                         }
                     } else {
                         toastr['error']('The token is expired! Please refresh and try again!');
+                        this.$router.push('/login');
                     }
                 });
             },
@@ -74,18 +76,20 @@
                 .then(response => {
                     toastr['success'](response.message);
                     this.$emit('completed',response.country);
+                    this.cancelCountry();
                 }).catch(error => {
                     if (error.response.data) {
                         if (error.response.data.message) {
                             toastr['error'](error.response.data.message);
                         } else {
                             toastr['error']('The token is expired! Please refresh and try again!');
+                            this.$router.push('/login');
                         }
                     } else {
                         toastr['error']('The token is expired! Please refresh and try again!');
+                        this.$router.push('/login');
                     }
                 });
-                this.cancelCountry();
             }
         }
     }

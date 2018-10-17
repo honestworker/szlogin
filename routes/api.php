@@ -45,6 +45,11 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::patch('/group/{id}','GroupController@update');
     Route::post('/group/status','GroupController@toggleStatus');
 
+    // User app only
+    Route::post('/group/attach','GroupController@attachGroup');
+    Route::post('/group/delete-attach','GroupController@deleteAttachGroup');
+    Route::post('/group/attached','GroupController@getAttachedGroups');
+
     Route::post('/group/overview','GroupController@overview');
     
     ///// Country
@@ -118,6 +123,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::patch('/advertisement/{id}','AdvertisementController@update');
     Route::post('/advertisement/status','AdvertisementController@toggleStatus');
     Route::post('/advertisement/all','AdvertisementController@all');
+    Route::post('/advertisement/infor','AdvertisementController@infor');
     Route::post('/advertisement/overview','AdvertisementController@overview');
 
     // Advertisement app only

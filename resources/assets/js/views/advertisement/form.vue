@@ -6,7 +6,7 @@
                 <br><br>
                 <div class="col-md-12">
                     <input type="file" multiple="multiple" id="uploadImages" @change="uploadFieldChange">
-                    <span>You must upload the jpg, jpeg, gif file.</span>
+                    <p>You must upload the jpg, jpeg, png file.</p>
                     <hr>
                     <div class="col-md-12">
                         <div class="attachment-holder animated fadeIn" v-cloak v-for="(image, index) in uploadImages"> 
@@ -126,8 +126,21 @@
                 this.storeAdvertisement();
             },
             getCountries() {
-                axios.post('/api/country/all')
-                    .then(response => this.countries = response.data);
+                axios.post('/api/country/all').then(response => {
+                    this.countries = response.data;
+                }).catch(error => {
+                    if (error.response.data) {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('The token is expired! Please refresh and try again!');
+                            this.$router.push('/login');
+                        }
+                    } else {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                        this.$router.push('/login');
+                    }
+                });
             },
             changeCountry(e) {
                 if(e.target.options.selectedIndex > -1) {
@@ -154,9 +167,18 @@
                     this.advertisementForm.start_date = (response.data.start_date != "") ? response.data.start_date : 0;
                     this.advertisementForm.end_date = (response.data.end_date != "") ? response.data.end_date : 0;
                     this.advertisementForm.country = response.data.country;
-                })
-                .catch(response => {
-                    toastr['error'](response.message);
+                }).catch(error => {
+                    if (error.response.data) {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('The token is expired! Please refresh and try again!');
+                            this.$router.push('/login');
+                        }
+                    } else {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                        this.$router.push('/login');
+                    }
                 });
             },
             updateAdvertisement() {
@@ -179,9 +201,11 @@
                             toastr['error'](error.response.data.message);
                         } else {
                             toastr['error']('The token is expired! Please refresh and try again!');
+                            this.$router.push('/login');
                         }
                     } else {
                         toastr['error']('The token is expired! Please refresh and try again!');
+                        this.$router.push('/login');
                     }
                 });
             },
@@ -205,9 +229,11 @@
                             toastr['error'](error.response.data.message);
                         } else {
                             toastr['error']('The token is expired! Please refresh and try again!');
+                            this.$router.push('/login');
                         }
                     } else {
                         toastr['error']('The token is expired! Please refresh and try again!');
+                        this.$router.push('/login');
                     }
                 });
             },

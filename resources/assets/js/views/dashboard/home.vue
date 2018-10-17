@@ -292,6 +292,18 @@
                     for (var index = 1; index <= this.groups_infor.length; index++){
                         this.groupChartData[index] = [this.monthNames[index - 1], this.groups_infor[index - 1]];
                     }
+                }).catch(error => {
+                    if (error.response.data) {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('The token is expired! Please refresh and try again!');
+                            this.$router.push('/login');
+                        }
+                    } else {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                        this.$router.push('/login');
+                    }
                 });
             },
             getUserInfor(){
@@ -316,6 +328,18 @@
                     this.userPieChartData.push(["Active last 30 days", this.activated_users]);
                     this.userPieChartData.push(["Non active last 30 days", this.users_total - this.activated_users]);
                     
+                }).catch(error => {
+                    if (error.response.data) {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('The token is expired! Please refresh and try again!');
+                            this.$router.push('/login');
+                        }
+                    } else {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                        this.$router.push('/login');
+                    }
                 });
             },
             getAdsCountsInfor(){
@@ -323,6 +347,18 @@
                     this.show_count_infor = response.data.data.show_count_infor;
                     this.click_count_infor = response.data.data.click_count_infor;
                     this.statistics = response.data.data.statistics;
+                }).catch(error => {
+                    if (error.response.data) {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('The token is expired! Please refresh and try again!');
+                            this.$router.push('/login');
+                        }
+                    } else {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                        this.$router.push('/login');
+                    }
                 });
             },
             loadData() {

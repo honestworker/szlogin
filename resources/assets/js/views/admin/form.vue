@@ -136,9 +136,18 @@
                     this.adminForm.country = this.admin_data.profile.country ? this.admin_data.profile.country : "";
                     this.adminForm.city = this.admin_data.profile.city ? this.admin_data.profile.city : "";
                     this.adminForm.created_at = this.admin_data.profile.created_at ? this.admin_data.profile.created_at : "";
-                })
-                .catch(response => {
-                    toastr['error'](response.message);
+                }).catch(error => {
+                    if (error.response.data) {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('The token is expired! Please refresh and try again!');
+                            this.$router.push('/login');
+                        }
+                    } else {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                        this.$router.push('/login');
+                    }
                 });
             },
         },
