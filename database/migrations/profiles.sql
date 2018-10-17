@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Oct 09, 2018 at 06:35 AM
+-- Generation Time: Oct 17, 2018 at 10:45 PM
 -- Server version: 10.1.35-MariaDB-cll-lve
 -- PHP Version: 5.6.30
 
@@ -31,20 +31,17 @@ SET time_zone = "+00:00";
 CREATE TABLE `profiles` (
   `id` int(10) NOT NULL,
   `user_id` int(10) DEFAULT '0',
-  -- `group_name` varchar(573) DEFAULT '',
-  -- `org_number` varchar(573) DEFAULT '',
-  -- `contact_person` varchar(573) DEFAULT '',
-  `phone_number` varchar(573) DEFAULT '',
   `group_id` int(11) DEFAULT '0',
+  `phone_number` varchar(512) DEFAULT '',
   `first_name` varchar(573) DEFAULT '',
   `family_name` varchar(573) DEFAULT '',
   `full_name` varchar(573) DEFAULT '',
   `avatar` varchar(573) DEFAULT '',
   `street_address` varchar(573) DEFAULT '',
-  `street_number` varchar(573) DEFAULT '',
   `postal_code` varchar(573) DEFAULT '',
   `country` varchar(512) DEFAULT '',
   `city` varchar(512) DEFAULT '',
+  `is_admin` int(11) DEFAULT '0',
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -63,7 +60,7 @@ ALTER TABLE `profiles`
 -- AUTO_INCREMENT for table `profiles`
 --
 ALTER TABLE `profiles`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Oct 11, 2018 at 03:40 PM
+-- Generation Time: Oct 17, 2018 at 10:46 PM
 -- Server version: 10.1.35-MariaDB-cll-lve
 -- PHP Version: 5.6.30
 
@@ -33,14 +33,11 @@ CREATE TABLE `users` (
   `email` varchar(573) NOT NULL,
   `password` varchar(573) DEFAULT '',
   `status` varchar(75) DEFAULT 'pending',
-  `provider` varchar(573) DEFAULT NULL,
-  `provider_unique_id` varchar(573) DEFAULT NULL,
-  `activation_token` varchar(191) DEFAULT NULL,
-  `remember_token` varchar(300) DEFAULT NULL,
+  `backend` int(11) DEFAULT '0',
   `activated_at` datetime DEFAULT NULL,
   `deactivated_at` datetime DEFAULT NULL,
-  `created_at` timestamp NOT NULL,
-  `updated_at` timestamp NOT NULL
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -57,7 +54,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

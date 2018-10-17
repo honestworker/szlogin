@@ -43,6 +43,8 @@ class AuthController extends Controller
             
         if($user->status != 'activated')
             return response()->json(['status' => 'fail', 'message' => 'There is something wrong with your account. Please contact system administrator.'], 422);
+
+        return response()->json(['status' => 'success', 'message' => 'You are successfully logged in!', 'token' => $token], 200);
     }
 
     private function calculateVisitor($user) {

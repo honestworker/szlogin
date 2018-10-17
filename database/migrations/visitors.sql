@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Oct 09, 2018 at 06:35 AM
+-- Generation Time: Oct 17, 2018 at 10:46 PM
 -- Server version: 10.1.35-MariaDB-cll-lve
 -- PHP Version: 5.6.30
 
@@ -25,18 +25,22 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `roles`
+-- Table structure for table `visitors`
 --
 
-CREATE TABLE `roles` (
+CREATE TABLE `visitors` (
   `id` int(11) NOT NULL,
-  `name` varchar(30) NOT NULL
+  `year` int(11) NOT NULL,
+  `month` int(11) NOT NULL,
+  `value` int(11) NOT NULL DEFAULT '0',
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Indexes for table `roles`
+-- Indexes for table `visitors`
 --
-ALTER TABLE `roles`
+ALTER TABLE `visitors`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -44,10 +48,10 @@ ALTER TABLE `roles`
 --
 
 --
--- AUTO_INCREMENT for table `roles`
+-- AUTO_INCREMENT for table `visitors`
 --
-ALTER TABLE `roles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+ALTER TABLE `visitors`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

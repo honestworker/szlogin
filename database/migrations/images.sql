@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Oct 09, 2018 at 06:33 AM
+-- Generation Time: Oct 17, 2018 at 10:44 PM
 -- Server version: 10.1.35-MariaDB-cll-lve
 -- PHP Version: 5.6.30
 
@@ -53,7 +53,7 @@ ALTER TABLE `images`
 -- AUTO_INCREMENT for table `images`
 --
 ALTER TABLE `images`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

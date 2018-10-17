@@ -55,10 +55,10 @@
         methods: {
             submit(e){
                 axios.post('/api/auth/login_backend', this.loginForm).then(response =>  {
-                    localStorage.setItem('auth_token',response.data.token);
+                    localStorage.setItem('auth_token', response.data.token);
                     axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('auth_token');
                     toastr['success'](response.data.message);
-                    this.$router.push('/dashboard')
+                    this.$router.push('/dashboard');
                 }).catch(error => {
                     toastr['error'](error.response.data.message);
                 });
