@@ -18,10 +18,12 @@ class GroupManager extends Notification
      */
 
     protected $enable;
+    protected $country;
 
-    public function __construct($enable)
+    public function __construct($enable, $country)
     {
         $this->enable = $enable;
+        $this->country = $country;
     }
 
     /**
@@ -44,13 +46,25 @@ class GroupManager extends Notification
     public function toMail($notifiable)
     {
         if ($this->enable) {
-            return (new MailMessage)
-                        ->greeting('Hello!')
-                        ->line('Your account has an group manager permission.');
+            if ($this->country == 'Sweden') {
+                return (new MailMessage)
+                            ->greeting('Hey!')
+                            ->line('Du har nu administratörstatus på ditt konto.');
+            } else {
+                return (new MailMessage)
+                ->greeting('Hello!')
+                ->line('Your account has an group manager permission.');
+            }
         } else {
-            return (new MailMessage)
-                        ->greeting('Hello!')
-                        ->line('The adminstrator disable your group manager permission.');
+            if ($this->country == 'Sweden') {
+                return (new MailMessage)
+                            ->greeting('Hey!')
+                            ->line('Du är inte längre administratör för gruppen.');
+            } else {
+                return (new MailMessage)
+                            ->greeting('Hello!')
+                            ->line('The adminstrator disable your group manager permission.');
+            }
         }
     }
 

@@ -18,10 +18,12 @@ class PasswordResetted extends Notification
      */
 
     protected $user;
+    protected $country;
 
-    public function __construct($user)
+    public function __construct($user, $country)
     {
         $this->user = $user;
+        $this->country = $country;
     }
 
     /**
@@ -45,15 +47,21 @@ class PasswordResetted extends Notification
     {
         $url = url('/');
 
-        return (new MailMessage)
-                    ->greeting('Hello!')
-                    ->line('Your password has been reset successfully!')
-                    ->line('Click on the below link to continue login.')
-                    ->action('Login', $url)
-                    ->line('If you haven\'t changed your password, please contact administrator.')
-                    ->line('Thank you!');
+        if ($this->country == 'Sweden') {
+            return (new MailMessage)
+                        ->greeting('Hello!')
+                        ->line('Your password has been reset successfully!')
+                        ->line('Click on the below link to continue login.')
+                        ->action('Login', $url);
+        } else {
+            return (new MailMessage)
+                        ->greeting('Hello!')
+                        ->line('Ditt lösenord har återställts!')
+                        ->line('Klicka på länken nedan för att fortsätta logga in.')
+                        ->action('Logga in', $url);
+        }        
     }
-
+        
     /**
      * Get the array representation of the notification.
      *

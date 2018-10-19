@@ -6,11 +6,12 @@ use Illuminate\Http\Request;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Validator;
+
 use App\Notifications\Activation;
 use App\Notifications\Activated;
 use App\Notifications\Assign;
 use App\Notifications\Administrator;
-use App\Notifications\GroupManager;
+
 use App\Notifications\PasswordReset;
 use App\Notifications\PasswordResetted;
 
@@ -99,7 +100,9 @@ class AuthController extends Controller
         else
             $manager = false;
         
-        return response()->json(['status' => 'success', 'message' => 'You are successfully logged in!', 'token' => $token, 'group_id' => $user->Profile->group_id, 'manager' => $manager], 200);
+        $user = \App\User::with('profile')->whereEmail(request('email'))->where('backend', '=', 0)->select('id', 'email')->get();
+
+        return response()->json(['status' => 'success', 'message' => 'You are successfully logged in!', 'token' => $token, 'user' => $user], 200);
     }
 
     public function getAuthUser(){
@@ -433,7 +436,7 @@ class AuthController extends Controller
             ]);
         }
         
-        $user->notify(new PasswordReset($user, $code));
+        $user->notify(new PasswordReset($user, $code, $user->Profile->country));
         
         return response()->json(['status' => 'success', 'message' => 'We have sent the verification code to your email. Please check your inbox!']);
     }
@@ -486,6 +489,8 @@ class AuthController extends Controller
         $user->password = bcrypt(request('password'));
         $user->save();
         
+        $user->notify(new PasswordResetted($user, $user->Profile->country));
+
         return response()->json(['status' => 'success', 'message' => 'Your password has been changed successfully!. Please login again!']);
     }
 }

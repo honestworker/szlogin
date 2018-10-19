@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Validator;
 use JWTAuth;
 
+use App\Notifications\GroupManager;
+
 date_default_timezone_set("Europe/Stockholm");
 
 class UserController extends Controller
@@ -372,10 +374,10 @@ class UserController extends Controller
         }
         
         $user = JWTAuth::parseToken()->authenticate();
-        $is_manager = $user->Profile->is_admin;
+        $is_manager = $user->backend;
         
         if (!$is_manager) {
-            return response()->json(['status' => 'fail', 'message' => 'You do not have a manager permission.', 'error_type' => 'no_manager'], 422);
+            return response()->json(['status' => 'fail', 'message' => 'You do not have a administrator permission.', 'error_type' => 'no_admin'], 422);
         }
         
         $user = \App\User::find($id);
@@ -498,6 +500,8 @@ class UserController extends Controller
         $profile->is_admin = 1;
         $profile->save();
         
+        $user->notify(new GroupManager(true, $profile->country));
+
         return response()->json(['status' => 'success', 'message' => 'The user is made as a group manager successfully.', 'user' => $user]);
     }
 
@@ -514,6 +518,8 @@ class UserController extends Controller
         $profile->is_admin = 0;
         $profile->save();
         
+        $user->notify(new GroupManager(false, $profile->country));
+
         return response()->json(['status' => 'success', 'message' => 'The user is made as not group manager successfully.', 'user' => $user]);
     }
 

@@ -19,11 +19,13 @@ class PasswordReset extends Notification
 
     protected $user;
     protected $code;
+    protected $country;
 
-    public function __construct($user, $code)
+    public function __construct($user, $code, $country)
     {
         $this->user = $user;
         $this->code = $code;
+        $this->country = $country;
     }
 
     /**
@@ -47,13 +49,21 @@ class PasswordReset extends Notification
     {
         $url = url('/password/reset/'.$this->code);
 
-        return (new MailMessage)
-                    ->greeting('Hello!')
-                    ->line('We have recevied password reset request from you!')
-                    ->line('Verification Code: ' . $this->code . '.')
-                    ->line('Thank you!');
+        if ($this->country == 'Sweden') {
+            return (new MailMessage)
+                        ->greeting('Hej!')
+                        ->line('Vi har mottagit begäran om återställning av lösenord från dig!')
+                        ->line('Verifierings kod: ' . $this->code . '.')
+                        ->line('Tack!');
+        } else {            
+            return (new MailMessage)
+                        ->greeting('Hello!')
+                        ->line('We have recevied password reset request from you!')
+                        ->line('Verification Code: ' . $this->code . '.')
+                        ->line('Thank you!');
+        }
     }
-
+    
     /**
      * Get the array representation of the notification.
      *
