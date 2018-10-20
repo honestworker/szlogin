@@ -49,8 +49,8 @@
                     <div class="card">
                         <div class="card-body">
                             <!-- <div class="form-group">
-                                <strong><span>Contact Person: </span></strong>
-                                <input class="form-control" type="text" value="" v-model="adminForm.contact_person">
+                                <strong><span>Full Name: </span></strong>
+                                <input class="form-control" type="text" value="" v-model="adminForm.full_name">
                             </div>
                             <div class="form-group">
                                 <strong><span>Group Name: </span></strong>
@@ -62,7 +62,7 @@
                             </div> -->
                             <div class="form-group">
                                 <strong><span>Full Name: </span></strong>
-                                <input class="form-control" type="text" value="" v-model="adminForm.full_name">
+                                <span v-text="adminForm.full_name"></span>
                             </div>
                             <div class="form-group">
                                 <strong><span>First Name: </span></strong>
@@ -117,23 +117,25 @@
             return {
                 countries : {},
                 groups : {},
-                adminForm: new Form({
-                    // 'contact_person' : '',
-                    'avatar' : '',
-                    // 'group_name' : '',
-                    // 'org_number' : '',
-                    'email' : '',
-                    'first_name' : '',
-                    'family_name' : '',
-                    'full_name' : '',
-                    'phone_number' : '',
-                    'street_address' : '',
-                    // 'street_number' : '',
-                    'postal_code' : '',
-                    'country' : '',
-                    'city' : '',
-                    'created_at' : '',
-                }),
+                adminForm : {},
+                // adminForm: new Form({
+                //     // 'contact_person' : '',
+                //     'avatar' : '',
+                //     // 'group_name' : '',
+                //     // 'org_number' : '',
+                //     'email' : '',
+                //     'full_name' : '',
+                //     'first_name' : '',
+                //     'family_name' : '',
+                //     'full_name' : '',
+                //     'phone_number' : '',
+                //     'street_address' : '',
+                //     // 'street_number' : '',
+                //     'postal_code' : '',
+                //     'country' : '',
+                //     'city' : '',
+                //     'created_at' : '',
+                // }),
                 passwordForm: new Form({
                     'current_password' : '',
                     'new_password' : '',
@@ -195,13 +197,31 @@
                 .then(response => {
                     this.user_data = response.data.data;
                     // this.adminForm.contact_person =  this.user_data.profile.contact_person ? this.user_data.profile.contact_person : "";
+                    this.adminForm = new Form({
+                        // 'contact_person' : '',
+                        'avatar' : '',
+                        // 'group_name' : '',
+                        // 'org_number' : '',
+                        'email' : '',
+                        'full_name' : '',
+                        'first_name' : '',
+                        'family_name' : '',
+                        'full_name' : '',
+                        'phone_number' : '',
+                        'street_address' : '',
+                        // 'street_number' : '',
+                        'postal_code' : '',
+                        'country' : '',
+                        'city' : '',
+                        'created_at' : '',
+                    }),
                     this.adminForm.avatar = this.user_data.profile.avatar ? this.user_data.profile.avatar : "";
                     // this.adminForm.group_name = this.user_data.profile.group_name ? this.user_data.profile.group_name : "";
                     // this.adminForm.org_number = this.user_data.profile.org_number ? this.user_data.profile.org_number : "";
                     this.adminForm.email = this.user_data.email ? this.user_data.email : "";
                     this.adminForm.first_name = this.user_data.profile.first_name ? this.user_data.profile.first_name : "";
                     this.adminForm.family_name = this.user_data.profile.family_name ? this.user_data.profile.family_name : "";
-                    this.adminForm.full_name = this.adminForm.full_name;
+                    this.adminForm.full_name = this.user_data.profile.full_name ? this.user_data.profile.full_name : "";
                     this.adminForm.phone_number = this.user_data.profile.phone_number ? this.user_data.profile.phone_number : "";
                     this.adminForm.street_address = this.user_data.profile.street_address ? this.user_data.profile.street_address : "";
                     // this.adminForm.street_number = this.user_data.profile.street_number ? this.user_data.profile.street_number : "";
@@ -209,6 +229,7 @@
                     this.adminForm.country = this.user_data.profile.country ? this.user_data.profile.country : "";
                     this.adminForm.city = this.user_data.profile.city ? this.user_data.profile.city : "";
                     this.adminForm.created_at = this.user_data.profile.created_at ? this.user_data.profile.created_at : "";
+                    console.log("OK");
                 }).catch(error => {
                     if (error.response.data) {
                         if (error.response.data.message) {
@@ -272,9 +293,8 @@
                     return '/images/users/'+ this.adminForm.avatar;
                 } else {
                     return '/images/common/no-user.png';
-                }
-                
-            }
+                }                
+            },
         }
     }
 </script>

@@ -63,7 +63,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
 
     ///// User
     Route::get('/user','UserController@index');
-    Route::post('/user/profile','UserController@getUserProfile');
+    Route::post('/user/profile','UserController@getMyProfile');
     Route::post('/user/update-avatar','UserController@updateAvatar');
     Route::post('/user/change-password','UserController@changePasswordBackend');
     Route::post('/user/update-profile','UserController@updateProfile');
@@ -102,6 +102,8 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::post('/notification-image-delete','NotificationController@deleteNotificationImage');
     Route::post('/comment-delete','NotificationController@deleteComment');
     Route::post('/comment-image-delete','NotificationController@deleteCommentImage');
+
+    Route::post('/get-alarms','NotificationController@getAlarms');
 
     // Comment app only
     Route::post('/create-comment','NotificationController@createComment');

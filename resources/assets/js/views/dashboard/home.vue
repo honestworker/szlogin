@@ -65,7 +65,7 @@
                     <div class="card-body">
                         <h4 class="card-title">Graph of visitors month by month</h4>
                         <div class="col-lg-9 col-md-9">
-                            <GChart type="LineChart" :data="visitorChartData" :options="chartOptions" />
+                            <GChart type="LineChart" :data="visitorChartData" :options="visitorChartOptions" ref="visitorChart"/>
                         </div>
                     </div>
                 </div>
@@ -100,7 +100,7 @@
                                 <span class="text-danger">Total this year {{groups_total}}</span>
                             </div>
                             <div class="col-lg-9 col-md-9">
-                                <GChart type="ColumnChart" :data="groupChartData" :options="chartOptions" />
+                                <GChart type="ColumnChart":data="groupChartData" :options="groupChartOptions" ref="groupChart"/>
                             </div>
                         </div>
                     </div>
@@ -133,10 +133,10 @@
                             </div>
                             <div class="col-lg-9 col-md-9">
                                 <div class="card-body">
-                                    <GChart type="ColumnChart" :data="userChartData" :options="chartOptions" />
+                                    <GChart type="ColumnChart" :data="userChartData" :options="userChartOptions" ref="userChart"/>
                                 </div>
                                 <div class="card-body">
-                                    <GChart type="PieChart" :data="userPieChartData" :options="chartOptions" />
+                                    <GChart type="PieChart" :data="userPieChartData" :options="userPieChartOptions" ref="userPieChart"/>
                                 </div>
                             </div>
                         </div>
@@ -267,13 +267,41 @@
                 click_count_infor: [],
                 statistics: [],
 
-                chartOptions: {
+                userChartOptions: {
+                    chart: {
+                        title: 'Company Performance',
+                        subtitle: 'Sales, Expenses, and Profit: 2014-2017',
+                    }
+                },
+
+                userPieChartOptions: {
+                    chart: {
+                        title: 'Company Performance',
+                        subtitle: 'Sales, Expenses, and Profit: 2014-2017',
+                    }
+                },
+
+                visitorChartOptions: {
+                    chart: {
+                        title: 'Company Performance',
+                        subtitle: 'Sales, Expenses, and Profit: 2014-2017',
+                    }
+                },
+
+                groupChartOptions: {
                     chart: {
                         title: 'Company Performance',
                         subtitle: 'Sales, Expenses, and Profit: 2014-2017',
                     }
                 }
             }
+        },
+        ready: function () {
+            this.loadData();
+
+            setInterval(function () {
+                this.loadData();
+            }.bind(this), 100); 
         },
         components : { GChart, ClickConfirm },
         mounted() {
@@ -292,6 +320,7 @@
                     for (var index = 1; index <= this.groups_infor.length; index++){
                         this.groupChartData[index] = [this.monthNames[index - 1], this.groups_infor[index - 1]];
                     }
+                    this.$refs.groupChart.drawChart();
                 }).catch(error => {
                     if (error.response.data) {
                         if (error.response.data.message) {
@@ -318,15 +347,18 @@
                     for (var index = 1; index <= this.users_infor.length; index++){
                         this.userChartData[index] = [this.monthNames[index - 1], this.users_infor[index - 1]];
                     }
+                    this.$refs.userChart.drawChart();
 
                     this.visitorChartData[0] = ["Year", (this.year - 1) + "", this.year];
                     for (var index = 1; index <= this.groups_infor.length; index++){
                         this.visitorChartData[index] = [this.monthNames[index - 1], this.users_visitors_infor[0][index - 1], this.users_visitors_infor[1][index - 1]];
                     }
+                    this.$refs.visitorChart.drawChart();
 
                     this.userPieChartData = [["Name", "Value"]];
                     this.userPieChartData.push(["Active last 30 days", this.activated_users]);
                     this.userPieChartData.push(["Non active last 30 days", this.users_total - this.activated_users]);
+                    this.$refs.userPieChart.drawChart();
                     
                 }).catch(error => {
                     if (error.response.data) {
@@ -377,13 +409,6 @@
             momentWithTime(date) {
                 return helper.formatDateTime(date);
             }
-        },
-        ready: function () {
-            this.loadData();
-
-            setInterval(function () {
-                this.loadData();
-            }.bind(this), 3000); 
         }
     }
 </script>

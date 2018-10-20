@@ -209,12 +209,12 @@ class AdvertisementController extends Controller
         $advertisements = \App\Advertisement::whereNotNull('id');
         
         $now_date = date("Y-m-d");
-        $advertisements->whereRaw("(`start_date` IS NOT NULL AND `end_date` IS NOT NULL AND `start_date` <= '" . $now_date . "' AND `end_date` >= '" . $now_date . "') OR (`start_date` IS NULL AND `end_date` IS NULL) OR (`start_date` IS NULL AND `end_date` >= '" . $now_date . "') OR (`end_date` IS NULL AND `start_date` <= '" . $now_date . "')");
+        $advertisements->whereRaw("((`start_date` IS NOT NULL AND `end_date` IS NOT NULL AND `start_date` <= '" . $now_date . "' AND `end_date` >= '" . $now_date . "') OR (`start_date` IS NULL AND `end_date` IS NULL) OR (`start_date` IS NULL AND `end_date` >= '" . $now_date . "') OR (`end_date` IS NULL AND `start_date` <= '" . $now_date . "'))");
         $advertisements->whereStatus(1);
         if ($profile->country) {
             $advertisements->where('country', '=', $profile->country);
         }
-        
+
         $advertisements_result = $advertisements->get();
         if ($advertisements_result) {
             $advertisements_count = count($advertisements_result);

@@ -26,7 +26,7 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
         
         try {
-            if (! $token = JWTAuth::attempt($credentials)) {
+            if (!$token = JWTAuth::attempt($credentials)) {
                 return response()->json(['status' => 'fail', 'message' => 'Email or Password is incorrect! Please try again.'], 422);
             }
         } catch (JWTException $e) {
@@ -76,7 +76,7 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
         
         try {
-            if (! $token = JWTAuth::attempt($credentials)) {
+            if (!$token = JWTAuth::attempt($credentials)) {
                 return response()->json(['status' => 'fail', 'message' => 'Email or Password is incorrect! Please try again.', 'error_type' => 'incorrect'], 422);
             }
         } catch (JWTException $e) {
@@ -163,7 +163,7 @@ class AuthController extends Controller
             'org_number' => 'required',
             'contact_person' => 'required',
             'phone_number' => 'required',
-            'email' => 'required|email',
+            'email' => 'required|email|unique:users',
         ]);
 
         if($validation->fails())
@@ -192,7 +192,7 @@ class AuthController extends Controller
     {
         $validation = Validator::make($request->all(), [
             'group_id' => 'required',
-            'email' => 'required|email',
+            'email' => 'required|email|unique:users',
             'password' => 'required|min:6',
             'first_name' => 'required',
             'family_name' => 'required',
@@ -264,7 +264,7 @@ class AuthController extends Controller
     {
         $validation = Validator::make($request->all(), [
             'group_id' => 'required',
-            'email' => 'required|email',
+            'email' => 'required|email|unique:users',
             'password' => 'required|min:6',
             'first_name' => 'required',
             'family_name' => 'required',
@@ -326,7 +326,7 @@ class AuthController extends Controller
     public function signupBackend(Request $request){
         $validation = Validator::make($request->all(), [
             'full_name' => 'required',
-            'email' => 'required|email',
+            'email' => 'required|email|unique:users',
             'password' => 'required|min:6',
             'password_confirmation' => 'required|same:password'
         ]);

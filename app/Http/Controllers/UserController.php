@@ -104,7 +104,7 @@ class UserController extends Controller
 		return response()->json(['status' => 'success', 'message' => 'Get User Data Successfully!', 'data' => compact('profile', 'group_id', 'email')], 200);
     }
     
-	public function getUserProfile(Request $request){
+	public function getMyProfile(Request $request){
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {
@@ -124,7 +124,7 @@ class UserController extends Controller
             $group_id = $user_group[0];
         }
 		
-		return response()->json(['status' => 'success', 'message' => 'Get User Data Successfully!', 'data' => compact('profile', 'group_id', 'email')], 200);
+		return response()->json(['status' => 'success', 'message' => 'Get User Data Successfully!', 'data' => compact('profile', 'user', 'group_id', 'email')], 200);
     }
 
     public function profile() {
@@ -260,6 +260,7 @@ class UserController extends Controller
         $profile->postal_code = request('postal_code');
         $profile->country = request('country');
         $profile->group_id = request('group_id');
+        $profile->city = request('city');
         $profile->save();
         
         return response()->json(['message' => 'Your profile has been updated!','user' => $user]);

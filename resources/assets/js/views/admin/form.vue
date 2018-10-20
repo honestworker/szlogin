@@ -93,6 +93,7 @@
                     // 'group_name' : '',
                     // 'org_number' : '',
                     'email' : '',
+                    'full_name' : '',
                     'first_name' : '',
                     'family_name' : '',
                     'full_name' : '',
@@ -128,7 +129,7 @@
                     this.adminForm.email = this.admin_data.email ? this.admin_data.email : "";
                     this.adminForm.first_name = this.admin_data.profile.first_name ? this.admin_data.profile.first_name : "";
                     this.adminForm.family_name = this.admin_data.profile.family_name ? this.admin_data.profile.family_name : "";
-                    this.adminForm.full_name = this.admin_data.profile.full_name;
+                    this.adminForm.full_name = this.admin_data.profile.full_name ? this.admin_data.profile.full_name : "";
                     this.adminForm.phone_number = this.admin_data.profile.phone_number ? this.admin_data.profile.phone_number : "";
                     this.adminForm.street_address = this.admin_data.profile.street_address ? this.admin_data.profile.street_address : "";
                     // this.adminForm.street_number = this.admin_data.profile.street_number ? this.admin_data.profile.street_number : "";

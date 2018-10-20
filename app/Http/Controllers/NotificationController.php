@@ -178,9 +178,54 @@ class NotificationController extends Controller
             }
         }
         
+        $group_id = $group->id;
+        $users = \App\User::with('profile');
+        $users->whereHas('profile', function($q) use ($group_id) {
+            $q->where('group_id', $group_id);
+        });
+        $users->where('id', '!=', $user->id);
+        $group_users = $users->pluck('id')->toArray();
+        
+        $users = \App\User::with('groups');
+        $users->whereHas('groups', function($q) use ($group_id) {
+            $q->where('group_id', $group_id);
+        });
+        $users->where('id', '!=', $user->id);
+        $attached_users = $users->pluck('id')->toArray();
+
+        $diff_users = array_diff($attached_users, $group_users);
+        $alarm_users = array_merge($group_users, $diff_users);
+
+        $users = \App\User::whereIn('id', $alarm_users)->get();
+        foreach($users as $user) {
+            if ($user->alarms) {
+                $user->alarms = $user->alarms . ',' . $notification->id;
+            } else {
+                $user->alarms = $notification->id;
+            }
+            $user->save();
+        }
+
         return response()->json(['status' => 'success', 'message' => 'Notification has created succesfully!', 'notification_id' => $notification->id], 200);
     }
     
+    public function getAlarms() {
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['authenticated' => false], 422);
+        }
+
+        $user = JWTAuth::parseToken()->authenticate();
+        $user_alarms = $user->alarms;
+        $user->alarms = '';
+        $user->save();
+
+        $notifications = \App\Notification::whereIn('id', explode(',', $user_alarms))->pluck('id')->toArray();
+        
+        return response()->json(['status' => 'success', 'message' => 'Get Notification Alarms succesfully!', 'notifications' => $notifications], 200);
+    }
+
     public function getNotification(Request $request) {
         $user = JWTAuth::parseToken()->authenticate();
         $profile = $user->Profile;

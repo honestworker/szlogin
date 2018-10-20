@@ -27163,7 +27163,28 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             click_count_infor: [],
             statistics: [],
 
-            chartOptions: {
+            userChartOptions: {
+                chart: {
+                    title: 'Company Performance',
+                    subtitle: 'Sales, Expenses, and Profit: 2014-2017'
+                }
+            },
+
+            userPieChartOptions: {
+                chart: {
+                    title: 'Company Performance',
+                    subtitle: 'Sales, Expenses, and Profit: 2014-2017'
+                }
+            },
+
+            visitorChartOptions: {
+                chart: {
+                    title: 'Company Performance',
+                    subtitle: 'Sales, Expenses, and Profit: 2014-2017'
+                }
+            },
+
+            groupChartOptions: {
                 chart: {
                     title: 'Company Performance',
                     subtitle: 'Sales, Expenses, and Profit: 2014-2017'
@@ -27172,6 +27193,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         };
     },
 
+    ready: function ready() {
+        this.loadData();
+
+        setInterval(function () {
+            this.loadData();
+        }.bind(this), 100);
+    },
     components: { GChart: __WEBPACK_IMPORTED_MODULE_2_vue_google_charts__["GChart"], ClickConfirm: __WEBPACK_IMPORTED_MODULE_1_click_confirm___default.a },
     mounted: function mounted() {
         this.getGroupInfor();
@@ -27192,6 +27220,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 for (var index = 1; index <= _this.groups_infor.length; index++) {
                     _this.groupChartData[index] = [_this.monthNames[index - 1], _this.groups_infor[index - 1]];
                 }
+                _this.$refs.groupChart.drawChart();
             }).catch(function (error) {
                 if (error.response.data) {
                     if (error.response.data.message) {
@@ -27220,15 +27249,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 for (var index = 1; index <= _this2.users_infor.length; index++) {
                     _this2.userChartData[index] = [_this2.monthNames[index - 1], _this2.users_infor[index - 1]];
                 }
+                _this2.$refs.userChart.drawChart();
 
                 _this2.visitorChartData[0] = ["Year", _this2.year - 1 + "", _this2.year];
                 for (var index = 1; index <= _this2.groups_infor.length; index++) {
                     _this2.visitorChartData[index] = [_this2.monthNames[index - 1], _this2.users_visitors_infor[0][index - 1], _this2.users_visitors_infor[1][index - 1]];
                 }
+                _this2.$refs.visitorChart.drawChart();
 
                 _this2.userPieChartData = [["Name", "Value"]];
                 _this2.userPieChartData.push(["Active last 30 days", _this2.activated_users]);
                 _this2.userPieChartData.push(["Non active last 30 days", _this2.users_total - _this2.activated_users]);
+                _this2.$refs.userPieChart.drawChart();
             }).catch(function (error) {
                 if (error.response.data) {
                     if (error.response.data.message) {
@@ -27279,13 +27311,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         momentWithTime: function momentWithTime(date) {
             return __WEBPACK_IMPORTED_MODULE_0__services_helper__["a" /* default */].formatDateTime(date);
         }
-    },
-    ready: function ready() {
-        this.loadData();
-
-        setInterval(function () {
-            this.loadData();
-        }.bind(this), 3000);
     }
 });
 
@@ -27385,10 +27410,11 @@ var render = function() {
               { staticClass: "col-lg-9 col-md-9" },
               [
                 _c("GChart", {
+                  ref: "visitorChart",
                   attrs: {
                     type: "LineChart",
                     data: _vm.visitorChartData,
-                    options: _vm.chartOptions
+                    options: _vm.visitorChartOptions
                   }
                 })
               ],
@@ -27442,10 +27468,11 @@ var render = function() {
                 { staticClass: "col-lg-9 col-md-9" },
                 [
                   _c("GChart", {
+                    ref: "groupChart",
                     attrs: {
                       type: "ColumnChart",
                       data: _vm.groupChartData,
-                      options: _vm.chartOptions
+                      options: _vm.groupChartOptions
                     }
                   })
                 ],
@@ -27497,10 +27524,11 @@ var render = function() {
                   { staticClass: "card-body" },
                   [
                     _c("GChart", {
+                      ref: "userChart",
                       attrs: {
                         type: "ColumnChart",
                         data: _vm.userChartData,
-                        options: _vm.chartOptions
+                        options: _vm.userChartOptions
                       }
                     })
                   ],
@@ -27512,10 +27540,11 @@ var render = function() {
                   { staticClass: "card-body" },
                   [
                     _c("GChart", {
+                      ref: "userPieChart",
                       attrs: {
                         type: "PieChart",
                         data: _vm.userPieChartData,
-                        options: _vm.chartOptions
+                        options: _vm.userPieChartOptions
                       }
                     })
                   ],
@@ -29333,6 +29362,8 @@ module.exports = Component.exports
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__services_helper__ = __webpack_require__(1);
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -29452,23 +29483,25 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return {
             countries: {},
             groups: {},
-            adminForm: new Form({
-                // 'contact_person' : '',
-                'avatar': '',
-                // 'group_name' : '',
-                // 'org_number' : '',
-                'email': '',
-                'first_name': '',
-                'family_name': '',
-                'full_name': '',
-                'phone_number': '',
-                'street_address': '',
-                // 'street_number' : '',
-                'postal_code': '',
-                'country': '',
-                'city': '',
-                'created_at': ''
-            }),
+            adminForm: {},
+            // adminForm: new Form({
+            //     // 'contact_person' : '',
+            //     'avatar' : '',
+            //     // 'group_name' : '',
+            //     // 'org_number' : '',
+            //     'email' : '',
+            //     'full_name' : '',
+            //     'first_name' : '',
+            //     'family_name' : '',
+            //     'full_name' : '',
+            //     'phone_number' : '',
+            //     'street_address' : '',
+            //     // 'street_number' : '',
+            //     'postal_code' : '',
+            //     'country' : '',
+            //     'city' : '',
+            //     'created_at' : '',
+            // }),
             passwordForm: new Form({
                 'current_password': '',
                 'new_password': '',
@@ -29533,15 +29566,26 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this3 = this;
 
             axios.post('/api/user/profile').then(function (response) {
+                var _ref;
+
                 _this3.user_data = response.data.data;
                 // this.adminForm.contact_person =  this.user_data.profile.contact_person ? this.user_data.profile.contact_person : "";
-                _this3.adminForm.avatar = _this3.user_data.profile.avatar ? _this3.user_data.profile.avatar : "";
+                _this3.adminForm = new Form((_ref = {
+                    // 'contact_person' : '',
+                    'avatar': '',
+                    // 'group_name' : '',
+                    // 'org_number' : '',
+                    'email': '',
+                    'full_name': '',
+                    'first_name': '',
+                    'family_name': ''
+                }, _defineProperty(_ref, 'full_name', ''), _defineProperty(_ref, 'phone_number', ''), _defineProperty(_ref, 'street_address', ''), _defineProperty(_ref, 'postal_code', ''), _defineProperty(_ref, 'country', ''), _defineProperty(_ref, 'city', ''), _defineProperty(_ref, 'created_at', ''), _ref)), _this3.adminForm.avatar = _this3.user_data.profile.avatar ? _this3.user_data.profile.avatar : "";
                 // this.adminForm.group_name = this.user_data.profile.group_name ? this.user_data.profile.group_name : "";
                 // this.adminForm.org_number = this.user_data.profile.org_number ? this.user_data.profile.org_number : "";
                 _this3.adminForm.email = _this3.user_data.email ? _this3.user_data.email : "";
                 _this3.adminForm.first_name = _this3.user_data.profile.first_name ? _this3.user_data.profile.first_name : "";
                 _this3.adminForm.family_name = _this3.user_data.profile.family_name ? _this3.user_data.profile.family_name : "";
-                _this3.adminForm.full_name = _this3.adminForm.full_name;
+                _this3.adminForm.full_name = _this3.user_data.profile.full_name ? _this3.user_data.profile.full_name : "";
                 _this3.adminForm.phone_number = _this3.user_data.profile.phone_number ? _this3.user_data.profile.phone_number : "";
                 _this3.adminForm.street_address = _this3.user_data.profile.street_address ? _this3.user_data.profile.street_address : "";
                 // this.adminForm.street_number = this.user_data.profile.street_number ? this.user_data.profile.street_number : "";
@@ -29549,6 +29593,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this3.adminForm.country = _this3.user_data.profile.country ? _this3.user_data.profile.country : "";
                 _this3.adminForm.city = _this3.user_data.profile.city ? _this3.user_data.profile.city : "";
                 _this3.adminForm.created_at = _this3.user_data.profile.created_at ? _this3.user_data.profile.created_at : "";
+                console.log("OK");
             }).catch(function (error) {
                 if (error.response.data) {
                     if (error.response.data.message) {
@@ -29818,30 +29863,8 @@ var render = function() {
                   _c("div", { staticClass: "form-group" }, [
                     _vm._m(3),
                     _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.adminForm.full_name,
-                          expression: "adminForm.full_name"
-                        }
-                      ],
-                      staticClass: "form-control",
-                      attrs: { type: "text", value: "" },
-                      domProps: { value: _vm.adminForm.full_name },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(
-                            _vm.adminForm,
-                            "full_name",
-                            $event.target.value
-                          )
-                        }
-                      }
+                    _c("span", {
+                      domProps: { textContent: _vm._s(_vm.adminForm.full_name) }
                     })
                   ]),
                   _vm._v(" "),
@@ -70854,6 +70877,8 @@ module.exports = Component.exports
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__services_helper__ = __webpack_require__(1);
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -70941,25 +70966,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
+        var _ref;
+
         return {
             countries: {},
-            adminForm: new Form({
+            adminForm: new Form((_ref = {
                 // 'contact_person' : '',
                 'avatar': '',
                 // 'group_name' : '',
                 // 'org_number' : '',
                 'email': '',
-                'first_name': '',
-                'family_name': '',
                 'full_name': '',
-                'phone_number': '',
-                'street_address': '',
-                // 'street_number' : '',
-                'postal_code': '',
-                'country': '',
-                'city': '',
-                'created_at': ''
-            }),
+                'first_name': '',
+                'family_name': ''
+            }, _defineProperty(_ref, 'full_name', ''), _defineProperty(_ref, 'phone_number', ''), _defineProperty(_ref, 'street_address', ''), _defineProperty(_ref, 'postal_code', ''), _defineProperty(_ref, 'country', ''), _defineProperty(_ref, 'city', ''), _defineProperty(_ref, 'created_at', ''), _ref)),
             admin_data: {}
         };
     },
@@ -70985,7 +71005,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this.adminForm.email = _this.admin_data.email ? _this.admin_data.email : "";
                 _this.adminForm.first_name = _this.admin_data.profile.first_name ? _this.admin_data.profile.first_name : "";
                 _this.adminForm.family_name = _this.admin_data.profile.family_name ? _this.admin_data.profile.family_name : "";
-                _this.adminForm.full_name = _this.admin_data.profile.full_name;
+                _this.adminForm.full_name = _this.admin_data.profile.full_name ? _this.admin_data.profile.full_name : "";
                 _this.adminForm.phone_number = _this.admin_data.profile.phone_number ? _this.admin_data.profile.phone_number : "";
                 _this.adminForm.street_address = _this.admin_data.profile.street_address ? _this.admin_data.profile.street_address : "";
                 // this.adminForm.street_number = this.admin_data.profile.street_number ? this.admin_data.profile.street_number : "";
