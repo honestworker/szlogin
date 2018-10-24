@@ -28341,21 +28341,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 //import GroupForm from './form'
 
@@ -28373,11 +28358,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 sortBy: 'group_id',
                 order: 'desc',
                 group_id: '',
+                org_name: '',
                 org_number: '',
                 contact_person: '',
-                org_name: '',
-                email: '',
-                mobile_number: '',
                 country: '',
                 pageLength: 100
             },
@@ -28621,40 +28604,6 @@ var render = function() {
               _c("div", { staticClass: "col-md-3" }, [
                 _c("div", { staticClass: "form-group" }, [
                   _c("label", { attrs: { for: "" } }, [
-                    _vm._v("Contact Person")
-                  ]),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.filterGroupForm.contact_person,
-                        expression: "filterGroupForm.contact_person"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    domProps: { value: _vm.filterGroupForm.contact_person },
-                    on: {
-                      change: _vm.getGroups,
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(
-                          _vm.filterGroupForm,
-                          "contact_person",
-                          $event.target.value
-                        )
-                      }
-                    }
-                  })
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "col-md-3" }, [
-                _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: "" } }, [
                     _vm._v("Organization Name")
                   ]),
                   _vm._v(" "),
@@ -28688,40 +28637,8 @@ var render = function() {
               _vm._v(" "),
               _c("div", { staticClass: "col-md-3" }, [
                 _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: "" } }, [_vm._v("Email")]),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.filterGroupForm.email,
-                        expression: "filterGroupForm.email"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    domProps: { value: _vm.filterGroupForm.email },
-                    on: {
-                      change: _vm.getGroups,
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(
-                          _vm.filterGroupForm,
-                          "email",
-                          $event.target.value
-                        )
-                      }
-                    }
-                  })
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "col-md-3" }, [
-                _c("div", { staticClass: "form-group" }, [
                   _c("label", { attrs: { for: "" } }, [
-                    _vm._v("Mobile Number")
+                    _vm._v("Contact Person")
                   ]),
                   _vm._v(" "),
                   _c("input", {
@@ -28729,12 +28646,12 @@ var render = function() {
                       {
                         name: "model",
                         rawName: "v-model",
-                        value: _vm.filterGroupForm.mobile_number,
-                        expression: "filterGroupForm.mobile_number"
+                        value: _vm.filterGroupForm.contact_person,
+                        expression: "filterGroupForm.contact_person"
                       }
                     ],
                     staticClass: "form-control",
-                    domProps: { value: _vm.filterGroupForm.mobile_number },
+                    domProps: { value: _vm.filterGroupForm.contact_person },
                     on: {
                       change: _vm.getGroups,
                       input: function($event) {
@@ -28743,7 +28660,7 @@ var render = function() {
                         }
                         _vm.$set(
                           _vm.filterGroupForm,
-                          "mobile_number",
+                          "contact_person",
                           $event.target.value
                         )
                       }
@@ -28910,16 +28827,12 @@ var render = function() {
                         _vm._v("Organization Number")
                       ]),
                       _vm._v(" "),
+                      _c("option", { attrs: { value: "org_name" } }, [
+                        _vm._v("Organization Name")
+                      ]),
+                      _vm._v(" "),
                       _c("option", { attrs: { value: "contact_person" } }, [
                         _vm._v("Contact Person")
-                      ]),
-                      _vm._v(" "),
-                      _c("option", { attrs: { value: "email" } }, [
-                        _vm._v("Email")
-                      ]),
-                      _vm._v(" "),
-                      _c("option", { attrs: { value: "mobile_number" } }, [
-                        _vm._v("Mobile Number")
                       ]),
                       _vm._v(" "),
                       _c("option", { attrs: { value: "country" } }, [
@@ -29016,18 +28929,12 @@ var render = function() {
                           }),
                           _vm._v(" "),
                           _c("td", {
+                            domProps: { textContent: _vm._s(group.org_name) }
+                          }),
+                          _vm._v(" "),
+                          _c("td", {
                             domProps: {
                               textContent: _vm._s(group.contact_person)
-                            }
-                          }),
-                          _vm._v(" "),
-                          _c("td", {
-                            domProps: { textContent: _vm._s(group.email) }
-                          }),
-                          _vm._v(" "),
-                          _c("td", {
-                            domProps: {
-                              textContent: _vm._s(group.mobile_number)
                             }
                           }),
                           _vm._v(" "),
@@ -29270,11 +29177,9 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Organization Number")]),
         _vm._v(" "),
+        _c("th", [_vm._v("Organization Name")]),
+        _vm._v(" "),
         _c("th", [_vm._v("Contact Person")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Email")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Mobile Number")]),
         _vm._v(" "),
         _c("th", [_vm._v("Country")]),
         _vm._v(" "),
@@ -30635,34 +30540,6 @@ var render = function() {
         _vm._v(" "),
         _c("div", { staticClass: "col-md-3" }, [
           _c("div", { staticClass: "form-group" }, [
-            _c("label", { attrs: { for: "" } }, [_vm._v("Contact Person")]),
-            _vm._v(" "),
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.groupForm.contact_person,
-                  expression: "groupForm.contact_person"
-                }
-              ],
-              staticClass: "form-control",
-              attrs: { type: "text", value: "" },
-              domProps: { value: _vm.groupForm.contact_person },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.$set(_vm.groupForm, "contact_person", $event.target.value)
-                }
-              }
-            })
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-md-3" }, [
-          _c("div", { staticClass: "form-group" }, [
             _c("label", { attrs: { for: "" } }, [_vm._v("Organization Name")]),
             _vm._v(" "),
             _c("input", {
@@ -30683,6 +30560,34 @@ var render = function() {
                     return
                   }
                   _vm.$set(_vm.groupForm, "org_name", $event.target.value)
+                }
+              }
+            })
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-md-3" }, [
+          _c("div", { staticClass: "form-group" }, [
+            _c("label", { attrs: { for: "" } }, [_vm._v("Contact Person")]),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.groupForm.contact_person,
+                  expression: "groupForm.contact_person"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: { type: "text", value: "" },
+              domProps: { value: _vm.groupForm.contact_person },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.groupForm, "contact_person", $event.target.value)
                 }
               }
             })

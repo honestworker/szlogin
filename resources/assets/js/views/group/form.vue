@@ -15,14 +15,14 @@
             </div>
             <div class="col-md-3">
                 <div class="form-group">
-                    <label for="">Contact Person</label>
-                    <input class="form-control" type="text" value="" v-model="groupForm.contact_person">
+                    <label for="">Organization Name</label>
+                    <input class="form-control" type="text" value="" v-model="groupForm.org_name">
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="form-group">
-                    <label for="">Organization Name</label>
-                    <input class="form-control" type="text" value="" v-model="groupForm.org_name">
+                    <label for="">Contact Person</label>
+                    <input class="form-control" type="text" value="" v-model="groupForm.contact_person">
                 </div>
             </div>
             <div class="col-md-3">

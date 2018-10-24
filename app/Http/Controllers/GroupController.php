@@ -17,17 +17,17 @@ class GroupController extends Controller
             $groups->where('group_id','like','%'.request('group_id').'%');
         }
         
+		if(request()->has('org_name')) {
+            $groups->where('group_id','like','%'.request('org_name').'%');
+        }
+
 		if(request()->has('org_number')) {
             $groups->where('group_id','like','%'.request('org_number').'%');
         }
         
 		if(request()->has('contact_person')) {
             $groups->where('group_id','like','%'.request('contact_person').'%');
-        }
-        
-		if(request()->has('org_name')) {
-            $groups->where('group_id','like','%'.request('org_name').'%');
-        }
+        }        
         
 		if(request()->has('email')) {
             $groups->where('group_id','like','%'.request('email').'%');

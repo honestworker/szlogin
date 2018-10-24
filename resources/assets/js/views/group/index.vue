@@ -40,26 +40,14 @@
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="">Contact Person</label>
-                                    <input class="form-control" v-model="filterGroupForm.contact_person" @change="getGroups">
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
                                     <label for="">Organization Name</label>
                                     <input class="form-control" v-model="filterGroupForm.org_name" @change="getGroups">
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="">Email</label>
-                                    <input class="form-control" v-model="filterGroupForm.email" @change="getGroups">
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="">Mobile Number</label>
-                                    <input class="form-control" v-model="filterGroupForm.mobile_number" @change="getGroups">
+                                    <label for="">Contact Person</label>
+                                    <input class="form-control" v-model="filterGroupForm.contact_person" @change="getGroups">
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -87,9 +75,8 @@
                                     <select name="sortBy" class="form-control" v-model="filterGroupForm.sortBy" @change="getGroups">
                                         <option value="group_id">Group ID</option>
                                         <option value="org_number">Organization Number</option>
+                                        <option value="org_name">Organization Name</option>
                                         <option value="contact_person">Contact Person</option>
-                                        <option value="email">Email</option>
-                                        <option value="mobile_number">Mobile Number</option>
                                         <option value="country">Country</option>
                                         <option value="created_at">Created At</option>
                                     </select>
@@ -115,9 +102,8 @@
                                     <tr>
                                         <th>Group ID</th>
                                         <th>Organization Number</th>
+                                        <th>Organization Name</th>
                                         <th>Contact Person</th>
-                                        <th>Email</th>
-                                        <th>Mobile Number</th>
                                         <th>Country</th>
                                         <th>Created At</th>
                                         <th>Status</th>
@@ -128,9 +114,8 @@
                                     <tr v-for="group in groups.data">
                                         <td v-text="group.group_id"></td>
                                         <td v-text="group.org_number"></td>
+                                        <td v-text="group.org_name"></td>
                                         <td v-text="group.contact_person"></td>
-                                        <td v-text="group.email"></td>
-                                        <td v-text="group.mobile_number"></td>
                                         <td v-text="group.country"></td>
                                         <td v-text="group.created_at"></td>
                                         <td v-html="getGroupStatus(group)"></td>
@@ -209,11 +194,9 @@
                     sortBy : 'group_id',
                     order: 'desc',
                     group_id : '',
+                    org_name : '',
                     org_number : '',
                     contact_person : '',
-                    org_name : '',
-                    email : '',
-                    mobile_number : '',
                     country : '',
                     pageLength: 100
                 },
