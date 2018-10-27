@@ -36,6 +36,7 @@ class AuthController extends Controller
         $user = \App\User::whereEmail(request('email'))->where('backend', '=', 1)->first();
         if (!$user)
             return response()->json(['status' => 'fail', 'message' => 'You do not have any administrator account. Please sign up.'], 422);
+
         if($user->status == 'pending')
             return response()->json(['status' => 'fail', 'message' => 'Your account is disabled administrator permission.'], 422);
             
@@ -84,6 +85,9 @@ class AuthController extends Controller
         }
         
         $user = \App\User::whereEmail(request('email'))->where('backend', '=', 0)->first();
+        if (!$user)
+            return response()->json(['status' => 'fail', 'message' => 'You have not registed. Please sign up and try to login again.', 'error_type' => 'no_user'], 422);
+
         if($user->status == 'pending')
             return response()->json(['status' => 'fail', 'message' => 'Your account hasn\'t been activated. Please check your email & activate account.', 'error_type' => 'no_groupid'], 422);
             
@@ -208,8 +212,6 @@ class AuthController extends Controller
             return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
             
         $user = \App\User::whereEmail(request('email'))->first();
-        
-        //
         if (!$user) {
             return response()->json(['status' => 'fail', 'message' => 'Your email does not exist! Please first register your email!', 'error_type' => 'no_user'], 422);
         }
@@ -281,7 +283,6 @@ class AuthController extends Controller
             return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
             
         $user = \App\User::whereEmail(request('email'))->where('backend', '=', 0)->first();
-        //
         if ($user) {
             return response()->json(['status' => 'fail', 'message' => 'Your email already have registed! Please try with other email again.', 'error_type' => 'email_exist'], 422);
         }

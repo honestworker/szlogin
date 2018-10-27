@@ -110,6 +110,40 @@ class NotificationController extends Controller
         imagedestroy($image_y);
     }
 
+    private function sendPushNotificationHttpRequest($user_ids) {
+        $url = 'https://exp.host/--/api/v2/push/send';
+        $params = array();
+        foreach($user_ids as $user_id) {
+            $user = \App\User::find($user_id);
+            $params[] = array(
+                'to' => $user->push_token,
+                'title' => 'Safe Zone',
+                'sound' => 'default',
+                'body' => 'OK',
+                'data' => array('status' => 'ok', 'birthday' => 'birthday')
+            );
+        }
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params));
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 60);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+
+        // This should be the default Content-type for POST requests
+        //curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-type: application/x-www-form-urlencoded"));
+
+        $result = curl_exec($ch);
+        if(curl_errno($ch) !== 0) {
+            error_log('cURL error when connecting to ' . $url . ': ' . curl_error($ch));
+        }
+
+        curl_close($ch);
+        //print_r($result);
+    }
+
 	// Notification
     public function createNotification(Request $request){
         $user = JWTAuth::parseToken()->authenticate();
@@ -179,18 +213,45 @@ class NotificationController extends Controller
         }
         
         $group_id = $group->id;
+        // Signed Users
         $users = \App\User::with('profile');
         $users->whereHas('profile', function($q) use ($group_id) {
             $q->where('group_id', $group_id);
         });
-        $users->where('id', '!=', $user->id);
+        $users->whereIn('push_token', [null, ''])->where('status', '=', 'activated')->where(function($q) use ($variable) {
+            $q->whereIn('deativated_at', [null, ''])
+              ->orWhere('ativated_at', '>', 'deativated_at');
+        })->where('id', '!=', $user->id);
         $group_users = $users->pluck('id')->toArray();
         
         $users = \App\User::with('groups');
         $users->whereHas('groups', function($q) use ($group_id) {
             $q->where('group_id', $group_id);
         });
-        $users->where('id', '!=', $user->id);
+        $users->where('status', '=', 'activated')->where(function($q) use ($variable) {
+            $q->whereIn('deactivated_at', [null, ''])
+              ->orWhere('ativated_at', '>', 'deactivated_at');
+        })->where('id', '!=', $user->id);
+        $attached_users = $users->pluck('id')->toArray();
+
+        $diff_users = array_diff($attached_users, $group_users);
+        $push_users = array_merge($group_users, $diff_users);
+
+        $this->sendPushNotificationHttpRequest($push_users);
+        
+        // Signed Out Users
+        $users = \App\User::with('profile');
+        $users->whereHas('profile', function($q) use ($group_id) {
+            $q->where('group_id', $group_id);
+        });
+        $users->where('status', '=', 'activated')->where('activated_at', '<=', 'deactivated_at')->where('id', '!=', $user->id);
+        $group_users = $users->pluck('id')->toArray();
+        
+        $users = \App\User::with('groups');
+        $users->whereHas('groups', function($q) use ($group_id) {
+            $q->where('group_id', $group_id);
+        });
+        $users->where('status', '=', 'activated')->where('activated_at', '<=', 'deactivated_at')->where('id', '!=', $user->id);
         $attached_users = $users->pluck('id')->toArray();
 
         $diff_users = array_diff($attached_users, $group_users);

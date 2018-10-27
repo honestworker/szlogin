@@ -552,6 +552,26 @@ class UserController extends Controller
         return response()->json(['status' => 'success', 'message' => 'The user is made as not administrator successfully.', 'user' => $user]);
     }
 
+    public function savePushToken(Request $request){
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
+        
+        $validation = Validator::make($request->all(),[
+            'push_token' => 'required',
+        ]);
+        if ($validation->fails())
+            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
+        
+        $user = JWTAuth::parseToken()->authenticate();
+        $user->push_token = request('push_token');
+        $user->save();
+
+        return response()->json(['status' => 'success', 'message' => 'Your push token is saved successfully.', 'user' => $user]);
+    }
+
     public function overview() {
         try {
             JWTAuth::parseToken()->authenticate();
