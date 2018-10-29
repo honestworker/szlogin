@@ -110,38 +110,61 @@ class NotificationController extends Controller
         imagedestroy($image_y);
     }
 
-    private function sendPushNotificationHttpRequest($user_ids) {
+    private function sendPushNotificationHttpRequest($user_ids, $notification_id, $notification_name) {
+        if (!$user_ids) return null;
+        
         $url = 'https://exp.host/--/api/v2/push/send';
-        $params = array();
-        foreach($user_ids as $user_id) {
-            $user = \App\User::find($user_id);
-            $params[] = array(
-                'to' => $user->push_token,
-                'title' => 'Safe Zone',
-                'sound' => 'default',
-                'body' => 'OK',
-                'data' => array('status' => 'ok', 'birthday' => 'birthday')
-            );
+        $params = null;
+        if (count($user_ids) == 1) {
+            $user = \App\User::find($user_ids[0]);
+            if ($user->push_token) {
+                $params = array(
+                    'to' => $user->push_token,
+                    'title' => 'Safe Zone',
+                    'sound' => 'default',
+                    'body' => $notification_name,
+                    'data' => array('notification_id' => $notification_id)
+                );
+            }
+        } else {
+            foreach($user_ids as $user_id) {
+                $user = \App\User::find($user_id);
+                if ($user->push_token) {
+                    $user_params = array(
+                        'to' => $user->push_token,
+                        'title' => 'Safe Zone',
+                        'sound' => 'default',
+                        'body' => $notification_name,
+                        'data' => array('notification_id' => $notification_id)
+                    );
+                    if ($params) {
+                        array_push($params, $user_params);
+                    } else {
+                        $params = array($user_params);
+                    }
+                }
+            }
         }
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params));
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 60);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 60);
-
-        // This should be the default Content-type for POST requests
-        //curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-type: application/x-www-form-urlencoded"));
-
-        $result = curl_exec($ch);
-        if(curl_errno($ch) !== 0) {
-            error_log('cURL error when connecting to ' . $url . ': ' . curl_error($ch));
+        
+        if (count($user_ids)) {
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array("Accept: application/json", "Accept-Encoding: gzip, deflate", "Content-type: application/json"));
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($params));
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 120);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 120);
+            
+            $result = curl_exec($ch);
+            if(curl_errno($ch) !== 0) {
+                error_log('cURL error when connecting to ' . $url . ': ' . curl_error($ch));
+            }
+            
+            curl_close($ch);
+            //print_r($result);
         }
-
-        curl_close($ch);
-        //print_r($result);
+        //print_r($params);
     }
 
 	// Notification
@@ -171,6 +194,12 @@ class NotificationController extends Controller
                 }
             }
         }
+        
+        $notification_name = \App\NotificationType::where('id', '=', request('type'))->pluck('name');
+        if (!$notification_name) {
+            return response()->json(['status' => 'fail', 'message' => 'Your images must be jpeg, png, jpg!', 'error_type' => 'type_error'], 422);
+        }
+        
         $notification = new \App\Notification;
         $notification->type = request('type');
         $notification->contents = request('contents');
@@ -179,6 +208,7 @@ class NotificationController extends Controller
         $notification->status = 1;
         $notification->created_at = request('datetime');
         $notification->save();
+        
         
         if($request->hasfile('images')) {
             if (is_array($request->file('images'))) {
@@ -218,9 +248,9 @@ class NotificationController extends Controller
         $users->whereHas('profile', function($q) use ($group_id) {
             $q->where('group_id', $group_id);
         });
-        $users->whereIn('push_token', [null, ''])->where('status', '=', 'activated')->where(function($q) use ($variable) {
-            $q->whereIn('deativated_at', [null, ''])
-              ->orWhere('ativated_at', '>', 'deativated_at');
+        $users->whereNotNull('push_token')->where('push_token', '<>', '')->where('status', '=', 'activated')->where(function($q) {
+            $q->whereIn('deactivated_at', [null, ''])
+              ->orWhere('activated_at', '>', 'deactivated_at');
         })->where('id', '!=', $user->id);
         $group_users = $users->pluck('id')->toArray();
         
@@ -228,16 +258,16 @@ class NotificationController extends Controller
         $users->whereHas('groups', function($q) use ($group_id) {
             $q->where('group_id', $group_id);
         });
-        $users->where('status', '=', 'activated')->where(function($q) use ($variable) {
+        $users->where('status', '=', 'activated')->where(function($q) {
             $q->whereIn('deactivated_at', [null, ''])
-              ->orWhere('ativated_at', '>', 'deactivated_at');
+              ->orWhere('activated_at', '>', 'deactivated_at');
         })->where('id', '!=', $user->id);
         $attached_users = $users->pluck('id')->toArray();
-
+        
         $diff_users = array_diff($attached_users, $group_users);
         $push_users = array_merge($group_users, $diff_users);
-
-        $this->sendPushNotificationHttpRequest($push_users);
+        
+        $this->sendPushNotificationHttpRequest($push_users, $notification->id, $notification_name[0]);
         
         // Signed Out Users
         $users = \App\User::with('profile');
@@ -253,10 +283,10 @@ class NotificationController extends Controller
         });
         $users->where('status', '=', 'activated')->where('activated_at', '<=', 'deactivated_at')->where('id', '!=', $user->id);
         $attached_users = $users->pluck('id')->toArray();
-
+        
         $diff_users = array_diff($attached_users, $group_users);
         $alarm_users = array_merge($group_users, $diff_users);
-
+        
         $users = \App\User::whereIn('id', $alarm_users)->get();
         foreach($users as $user) {
             if ($user->alarms) {
@@ -266,8 +296,8 @@ class NotificationController extends Controller
             }
             $user->save();
         }
-
-        return response()->json(['status' => 'success', 'message' => 'Notification has created succesfully!', 'notification_id' => $notification->id], 200);
+        
+        return response()->json(['status' => 'success', 'message' => 'Notification has created succesfully!', 'notification_id' => $notification->id], 200); // , 'notification_name' => $notification_name
     }
     
     public function getAlarms() {
@@ -478,7 +508,7 @@ class NotificationController extends Controller
                 $mt = explode(' ', microtime());
                 $name = ((int)$mt[1]) * 1000000 + ((int)round($mt[0] * 1000000));
                 $file_name = $name . '.' . $extension;
-
+                
                 if($this->stamp_image_path && \File::exists($this->stamp_image_path)) {
                     $file_tmp_name = $name . 'tmp.' . $extension;
                     $file = $image->move($this->images_path, $file_tmp_name);

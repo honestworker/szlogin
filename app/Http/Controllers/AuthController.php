@@ -148,6 +148,7 @@ class AuthController extends Controller
                 $user = JWTAuth::parseToken()->authenticate();
                 if ($user) {
                     $user->deactivated_at = date('Y-m-d H:i:s');
+                    $user->push_token = "";
                     $user->save();
                 }
                 JWTAuth::invalidate($token);
