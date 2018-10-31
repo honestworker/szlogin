@@ -7,6 +7,7 @@ use Validator;
 use JWTAuth;
 
 use App\Notifications\GroupManager;
+use App\Notifications\Administrator;
 
 date_default_timezone_set("Europe/Stockholm");
 
@@ -59,13 +60,13 @@ class UserController extends Controller
         } else {
             $users->whereBackend(0);
         }
-
+        
 		if(request()->has('is_admin'))
             if(request('is_admin') >= 0)
                 $users->whereHas('profile',function($q) {
                     $q->where('is_admin','=', request('is_admin'));
                 });
-
+                
         if(request()->has('status'))
             $users->whereStatus(request('status'));
                 
@@ -201,7 +202,7 @@ class UserController extends Controller
         } catch (JWTException $e) {
             return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
         }
-
+        
         $user = JWTAuth::parseToken()->authenticate();
         $is_manager = $user->Profile->is_admin;
         
@@ -224,7 +225,7 @@ class UserController extends Controller
         $users->whereHas('profile', function($q) use ($group_id) {
             $q->where('group_id', $group_id);
         });
-
+        
         $users->where('id', '!=', $user->id);
         
         return response()->json(['status' => 'success', 'message' => 'Get Group User Data successfully!', 'users' => $users->select('id', 'email')->get()], 200);
@@ -303,7 +304,7 @@ class UserController extends Controller
         } catch (JWTException $e) {
             return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
         }
-
+        
         $user = JWTAuth::parseToken()->authenticate();
         if(!$user)
             return response()->json(['status' => 'fail', 'message' => 'Couldnot find user!', 'error_type' => 'no_user'], 422);
@@ -490,24 +491,25 @@ class UserController extends Controller
         } catch (JWTException $e) {
             return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
         }
+        
         $user = \App\User::find($id);
         if(!$user)
             return response()->json(['status' => 'fail', 'message' => 'Couldnot find user!'], 422);
-        
+            
         $profile = $user->Profile;
         
         $group = \App\Group::find($profile->group_id);
         if(!$group)
             return response()->json(['status' => 'fail', 'message' => 'This user is not any group member.'], 422);
-
+            
         if ($profile->is_admin)
             return response()->json(['status' => 'fail', 'message' => 'This user already is group manager!'], 422);
-        
+            
         $profile->is_admin = 1;
         $profile->save();
         
-        $user->notify(new GroupManager(true, $profile->country));
-
+        $user->notify(new GroupManager(true, $profile->country, $profile->first_name));
+        
         return response()->json(['status' => 'success', 'message' => 'The user is made as a group manager successfully.', 'user' => $user]);
     }
 
@@ -517,7 +519,7 @@ class UserController extends Controller
         } catch (JWTException $e) {
             return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
         }
-
+        
         $user = \App\User::find($id);
         if(!$user)
             return response()->json(['status' => 'fail', 'message' => 'Couldnot find user!'], 422);
@@ -530,8 +532,8 @@ class UserController extends Controller
         $profile->is_admin = 0;
         $profile->save();
         
-        $user->notify(new GroupManager(false, $profile->country));
-
+        $user->notify(new GroupManager(false, $profile->country, $profile->first_name));
+        
         return response()->json(['status' => 'success', 'message' => 'The user is made as not group manager successfully.', 'user' => $user]);
     }
 
@@ -542,6 +544,7 @@ class UserController extends Controller
             return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
         }
         $user = \App\User::find($id);
+        $profile = $user->Profile;
         if(!$user)
             return response()->json(['status' => 'fail', 'message' => 'Couldnot find user!'], 422);
         
@@ -550,6 +553,8 @@ class UserController extends Controller
             
         $user->status = 'activated';
         $user->save();
+        
+        //$user->notify(new Administrator(true, $profile->country, $profile->first_name));
         
         return response()->json(['status' => 'success', 'message' => 'The user is made as a administrator successfully.', 'user' => $user]);
     }
@@ -561,6 +566,7 @@ class UserController extends Controller
             return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
         }
         $user = \App\User::find($id);
+        $profile = $user->Profile;
         if(!$user)
             return response()->json(['status' => 'fail', 'message' => 'Couldnot find user!'], 422);
         
@@ -569,6 +575,8 @@ class UserController extends Controller
             
         $user->status = 'pending';
         $user->save();
+        
+        //$user->notify(new Administrator(false, $profile->country, $profile->first_name));
         
         return response()->json(['status' => 'success', 'message' => 'The user is made as not administrator successfully.', 'user' => $user]);
     }
@@ -589,7 +597,7 @@ class UserController extends Controller
         $user = JWTAuth::parseToken()->authenticate();
         $user->push_token = request('push_token');
         $user->save();
-
+        
         return response()->json(['status' => 'success', 'message' => 'Your push token is saved successfully.', 'user' => $user]);
     }
 

@@ -57,7 +57,7 @@ return [
 
     'from' => [
         'address' => env('MAIL_FROM_ADDRESS', 'administrator@szlogin.com'),
-        'name' => env('MAIL_FROM_NAME', 'Szlogin'),
+        'name' => env('MAIL_FROM_NAME', 'Safety Zone'),
     ],
 
     /*

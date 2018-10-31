@@ -438,7 +438,7 @@ class AuthController extends Controller
             ]);
         }
         
-        $user->notify(new PasswordReset($user, $code, $user->Profile->country));
+        $user->notify(new PasswordReset($user, $code, $user->Profile->country, $user->Profile->first_name));
         
         return response()->json(['status' => 'success', 'message' => 'We have sent the verification code to your email. Please check your inbox!']);
     }
@@ -491,8 +491,8 @@ class AuthController extends Controller
         $user->password = bcrypt(request('password'));
         $user->save();
         
-        $user->notify(new PasswordResetted($user, $user->Profile->country));
-
+        $user->notify(new PasswordResetted($user, $user->Profile->country, $user->Profile->first_name));
+        
         return response()->json(['status' => 'success', 'message' => 'Your password has been changed successfully!. Please login again!']);
     }
 }

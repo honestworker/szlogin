@@ -50,7 +50,10 @@ class Activated extends Notification
                     ->line('Your account has been activated.')
                     ->line('Click on the below link to go to our application!')
                     ->action('Proceed', $url)
-                    ->line('Thank you for using our application!');
+                    ->line('Thank you for using our application!')
+                    ->line('')
+                    ->line('Best regards,')
+                    ->line('Safety Zone');
     }
 
     /**

@@ -18,10 +18,14 @@ class Administrator extends Notification
      */
 
     protected $enable;
+    protected $country;
+    protected $name;
 
-    public function __construct()
+    public function __construct($enable, $country, $name)
     {
-        //$this->enable = $enable;
+        $this->enable = $enable;
+        $this->country = $country;
+        $this->name = $name;
     }
 
     /**
@@ -43,16 +47,55 @@ class Administrator extends Notification
      */
     public function toMail($notifiable)
     {
-        // if ($this->enable) {
-        //     return (new MailMessage)
-        //                 ->greeting('Hello!')
-        //                 ->line('Your account has an administrator permission.')
-        //                 ->line('You can log in in the site and manage!');
-        // } else {
-            return (new MailMessage)
-                        ->greeting('Hello!')
-                        ->line('The adminstrator disable your administrator permission.');
-        // }
+        if ($this->enable) {
+            if ($this->country == 'Sweden') {
+                return (new MailMessage)
+                    ->from(config('mail.username'), config('app.name'))
+                    ->subject('Conguratulations!')
+                    ->markdown('vendor.mail.message', [
+                        'country' => $this->country,
+                        'name' => $this->name,
+                        'contents' => [
+                            'You have gotten the administrator permission of our site!',
+                        ]
+                    ]);
+            } else {
+                return (new MailMessage)
+                    ->from(config('mail.username'), config('app.name'))
+                    ->subject('Conguratulations!')
+                    ->markdown('vendor.mail.message', [
+                        'country' => $this->country,
+                        'name' => $this->name,
+                        'contents' => [
+                            'You have gotten the administrator permission of our site!',
+                        ]
+                    ]);
+            }
+        } else {
+            if ($this->country == 'Sweden') {
+                return (new MailMessage)
+                    ->from(config('mail.username'), config('app.name'))
+                    ->subject('Sorry!')
+                    ->markdown('vendor.mail.message', [
+                        'country' => $this->country,
+                        'name' => $this->name,
+                        'contents' => [
+                            'You have lost the administrator permission of our site!',
+                        ]
+                    ]);
+            } else {
+                return (new MailMessage)
+                    ->from(config('mail.username'), config('app.name'))
+                    ->subject('Sorry!')
+                    ->markdown('vendor.mail.message', [
+                        'country' => $this->country,
+                        'name' => $this->name,
+                        'contents' => [
+                            'You have lost the administrator permission of our site!',
+                        ]
+                    ]);
+            }
+        }
     }
 
     /**

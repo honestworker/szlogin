@@ -50,7 +50,10 @@ class Activation extends Notification
                     ->line('Thank you for registering an account with us.')
                     ->line('Click on the below link to verify your email!')
                     ->action('Verify now!', $url)
-                    ->line('Thank you for using our application!');
+                    ->line('Thank you for using our application!')
+                    ->line('')
+                    ->line('Best regards,')
+                    ->line('Safety Zone');
     }
 
     /**

@@ -20,12 +20,14 @@ class PasswordReset extends Notification
     protected $user;
     protected $code;
     protected $country;
+    protected $name;
 
-    public function __construct($user, $code, $country)
+    public function __construct($user, $code, $country, $name)
     {
         $this->user = $user;
         $this->code = $code;
         $this->country = $country;
+        $this->name = $name;
     }
 
     /**
@@ -48,22 +50,36 @@ class PasswordReset extends Notification
     public function toMail($notifiable)
     {
         $url = url('/password/reset/'.$this->code);
-
-        if ($this->country == 'Sweden') {
+        
+        if (strtolower($this->country) == 'sweden') {
             return (new MailMessage)
-                        ->greeting('Hej!')
-                        ->line('Vi har mottagit begäran om återställning av lösenord från dig!')
-                        ->line('Verifierings kod: ' . $this->code . '.')
-                        ->line('Tack!');
-        } else {            
+                ->from(config('mail.username'), config('app.name'))
+                ->subject('Vi har mottagit begäran om återställning av lösenord från dig!')
+                ->markdown('vendor.mail.message', [
+                    'country' => $this->country,
+                    'name' => $this->name,
+                    'contents' => [
+                        'Vi har mottagit begäran om återställning av lösenord från dig!',
+                        'Verifierings kod: ' . $this->code . '.',
+                        'Tack!',
+                    ]
+                ]);
+        } else {
             return (new MailMessage)
-                        ->greeting('Hello!')
-                        ->line('We have recevied password reset request from you!')
-                        ->line('Verification Code: ' . $this->code . '.')
-                        ->line('Thank you!');
+                ->from(config('mail.username'), config('app.name'))
+                ->subject('We have recevied password reset request from you!')
+                ->markdown('vendor.mail.message', [
+                    'country' => $this->country,
+                    'name' => $this->name,
+                    'contents' => [
+                        'We have recevied password reset request from you!',
+                        'Verification Code: ' . $this->code . '.',
+                        'Thank you!',
+                    ]
+                ]);
         }
     }
-    
+
     /**
      * Get the array representation of the notification.
      *

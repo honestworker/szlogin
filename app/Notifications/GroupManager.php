@@ -19,11 +19,13 @@ class GroupManager extends Notification
 
     protected $enable;
     protected $country;
+    protected $name;
 
-    public function __construct($enable, $country)
+    public function __construct($enable, $country, $name)
     {
         $this->enable = $enable;
         $this->country = $country;
+        $this->name = $name;
     }
 
     /**
@@ -46,30 +48,56 @@ class GroupManager extends Notification
     public function toMail($notifiable)
     {
         if ($this->enable) {
-            if ($this->country == 'Sweden') {
+            if (strtolower($this->country) == 'sweden') {
                 return (new MailMessage)
-                    ->greeting('Hey!')
-                    ->line('Du har nu administratörstatus på ditt konto.');
+                    ->from(config('mail.username'), config('app.name'))
+                    ->subject('Du har nu administratörstatus på ditt konto.')
+                    ->markdown('vendor.mail.message', [
+                        'country' => $this->country,
+                        'name' => $this->name,
+                        'contents' => [
+                            'Du har nu administratörstatus på ditt konto.',
+                            'Tack!',
+                        ]
+                    ]);
             } else {
                 return (new MailMessage)
-                    ->greeting('Hello!')
-                    ->line('A group manager has been added to your group.')
-                    ->line('')
-                    ->line('Best regards,')
-                    ->line('Safety Zone');
+                    ->from(config('mail.username'), config('app.name'))
+                    ->subject('A group manager has been added to your group.')
+                    ->markdown('vendor.mail.message', [
+                        'country' => $this->country,
+                        'name' => $this->name,
+                        'contents' => [
+                            'A group manager has been added to your group.',
+                            'Thank you!',
+                        ]
+                    ]);
             }
         } else {
-            if ($this->country == 'Sweden') {
+            if (strtolower($this->country) == 'sweden') {
                 return (new MailMessage)
-                        ->greeting('Hey!')
-                        ->line('Du är inte längre administratör för gruppen.');
+                    ->from(config('mail.username'), config('app.name'))
+                    ->subject('Du är inte längre administratör för gruppen.')
+                    ->markdown('vendor.mail.message', [
+                        'country' => $this->country,
+                        'name' => $this->name,
+                        'contents' => [
+                            'Du är inte längre administratör för gruppen.',
+                            'Tack!',
+                        ]
+                    ]);
             } else {
                 return (new MailMessage)
-                        ->greeting('Hello!')
-                        ->line('A group manager has been deleted to your group.')
-                        ->line('')
-                        ->line('Best regards,')
-                        ->line('Safety Zone');
+                    ->from(config('mail.username'), config('app.name'))
+                    ->subject('A group manager has been deleted to your group.')
+                    ->markdown('vendor.mail.message', [
+                        'country' => $this->country,
+                        'name' => $this->name,
+                        'contents' => [
+                            'A group manager has been deleted to your group.',
+                            'Thank you!',
+                        ]
+                    ]);
             }
         }
     }

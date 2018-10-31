@@ -19,11 +19,13 @@ class PasswordResetted extends Notification
 
     protected $user;
     protected $country;
+    protected $name;
 
-    public function __construct($user, $country)
+    public function __construct($user, $country, $name)
     {
         $this->user = $user;
         $this->country = $country;
+        $this->name = $name;
     }
 
     /**
@@ -44,24 +46,36 @@ class PasswordResetted extends Notification
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
     public function toMail($notifiable)
-    {
+    {        
         $url = url('/');
-
-        if ($this->country == 'Sweden') {
+        
+        if (strtolower($this->country) == 'sweden') {
             return (new MailMessage)
-                        ->greeting('Hello!')
-                        ->line('Your password has been reset successfully!')
-                        ->line('Click on the below link to continue login.')
-                        ->action('Login', $url);
+                ->from(config('mail.username'), config('app.name'))
+                ->subject('Ditt lösenord har återställts!')
+                ->markdown('vendor.mail.message', [
+                    'country' => $this->country,
+                    'name' => $this->name,
+                    'contents' => [
+                        'Ditt lösenord har återställts!',
+                        'Tack!',
+                    ]
+                ]);
         } else {
             return (new MailMessage)
-                        ->greeting('Hello!')
-                        ->line('Ditt lösenord har återställts!')
-                        ->line('Klicka på länken nedan för att fortsätta logga in.')
-                        ->action('Logga in', $url);
-        }        
+                ->from(config('mail.username'), config('app.name'))
+                ->subject('our password has been reset successfully!')
+                ->markdown('vendor.mail.message', [
+                    'country' => $this->country,
+                    'name' => $this->name,
+                    'contents' => [
+                        'our password has been reset successfully!',
+                        'Thank you!',
+                    ]
+                ]);
+        }
     }
-        
+
     /**
      * Get the array representation of the notification.
      *
@@ -75,3 +89,4 @@ class PasswordResetted extends Notification
         ];
     }
 }
+
