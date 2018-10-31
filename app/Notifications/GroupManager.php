@@ -48,22 +48,28 @@ class GroupManager extends Notification
         if ($this->enable) {
             if ($this->country == 'Sweden') {
                 return (new MailMessage)
-                            ->greeting('Hey!')
-                            ->line('Du har nu administratörstatus på ditt konto.');
+                    ->greeting('Hey!')
+                    ->line('Du har nu administratörstatus på ditt konto.');
             } else {
                 return (new MailMessage)
-                ->greeting('Hello!')
-                ->line('Your account has an group manager permission.');
+                    ->greeting('Hello!')
+                    ->line('A group manager has been added to your group.')
+                    ->line('')
+                    ->line('Best regards,')
+                    ->line('Safety Zone');
             }
         } else {
             if ($this->country == 'Sweden') {
                 return (new MailMessage)
-                            ->greeting('Hey!')
-                            ->line('Du är inte längre administratör för gruppen.');
+                        ->greeting('Hey!')
+                        ->line('Du är inte längre administratör för gruppen.');
             } else {
                 return (new MailMessage)
-                            ->greeting('Hello!')
-                            ->line('The adminstrator disable your group manager permission.');
+                        ->greeting('Hello!')
+                        ->line('A group manager has been deleted to your group.')
+                        ->line('')
+                        ->line('Best regards,')
+                        ->line('Safety Zone');
             }
         }
     }

@@ -485,6 +485,11 @@ class UserController extends Controller
     }
 
     public function makeGroupManager(Request $request, $id){
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
         $user = \App\User::find($id);
         if(!$user)
             return response()->json(['status' => 'fail', 'message' => 'Couldnot find user!'], 422);
@@ -507,6 +512,12 @@ class UserController extends Controller
     }
 
     public function disableGroupManager(Request $request, $id){
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
+
         $user = \App\User::find($id);
         if(!$user)
             return response()->json(['status' => 'fail', 'message' => 'Couldnot find user!'], 422);
@@ -525,6 +536,11 @@ class UserController extends Controller
     }
 
     public function makeAdministrator(Request $request, $id){
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
         $user = \App\User::find($id);
         if(!$user)
             return response()->json(['status' => 'fail', 'message' => 'Couldnot find user!'], 422);
@@ -539,6 +555,11 @@ class UserController extends Controller
     }
 
     public function disableAdministrator(Request $request, $id){
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
         $user = \App\User::find($id);
         if(!$user)
             return response()->json(['status' => 'fail', 'message' => 'Couldnot find user!'], 422);

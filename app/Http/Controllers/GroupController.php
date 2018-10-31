@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Validator;
+use JWTAuth;
+use Tymon\JWTAuth\Exceptions\JWTException;
 
 date_default_timezone_set("Europe/Stockholm");
 
@@ -11,6 +13,11 @@ class GroupController extends Controller
 {
 
 	public function index(){
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
 		$groups = \App\Group::whereNotNull('id');
 		
 		if(request()->has('group_id')) {
@@ -27,7 +34,7 @@ class GroupController extends Controller
         
 		if(request()->has('contact_person')) {
             $groups->where('group_id','like','%'.request('contact_person').'%');
-        }        
+        }
         
 		if(request()->has('email')) {
             $groups->where('group_id','like','%'.request('email').'%');
@@ -51,6 +58,11 @@ class GroupController extends Controller
 	}
 
 	public function all(){
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
 		$groups = \App\Group::whereNotNull('id');
 		
         $groups->whereStatus(1);
@@ -60,6 +72,11 @@ class GroupController extends Controller
 	}
 	
     public function store(Request $request){
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
         $validation = Validator::make($request->all(), [
             'group_id' => 'required|unique:groups',
             'org_number' => 'required',
@@ -83,6 +100,11 @@ class GroupController extends Controller
     }
 
     public function toggleStatus(Request $request){
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
         $group = \App\Group::find($request->input('id'));
         if(!$group)
             return response()->json(['status' => 'fail', 'message' => 'Couldnot find group!'], 422);
@@ -103,6 +125,11 @@ class GroupController extends Controller
     }
 
     public function update(Request $request, $id) {        
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
         $group = \App\Group::whereId($id)->first();
         if(!$group)
             return response()->json(['status' => 'fail', 'message' => 'Couldnot find group!']);
@@ -133,6 +160,11 @@ class GroupController extends Controller
     }
     
     public function destroy(Request $request, $id){
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
         $group = \App\Group::find($id);
         if(!$group)
             return response()->json(['message' => 'Couldnot find group!'], 422);
@@ -143,6 +175,11 @@ class GroupController extends Controller
     }
     
     public function attachGroup(Request $request){
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
         $validation = Validator::make($request->all(), [
             'group_id' => 'required',
         ]);
@@ -168,6 +205,11 @@ class GroupController extends Controller
     }
 
     public function deleteAttachGroup(Request $request) {
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
         $validation = Validator::make($request->all(), [
             'group_id' => 'required',
         ]);
@@ -190,6 +232,11 @@ class GroupController extends Controller
     }
 
     public function getAttachedGroups(Request $request){
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
         $user = \JWTAuth::parseToken()->authenticate();
         $profile = $user->Profile;
         
@@ -204,6 +251,11 @@ class GroupController extends Controller
     }
     
     public function overview(Request $request) {
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
         $total = \App\Group::count();
         
         $infor = array();

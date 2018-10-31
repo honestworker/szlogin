@@ -17,6 +17,12 @@ class NotificationController extends Controller
     protected $image_extensions = array('jpeg', 'png', 'jpg');
     
 	public function index() {
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
+        
 		$notifications = \App\Notification::with('user', 'group');
 		
 		if(request()->has('type'))
@@ -78,7 +84,7 @@ class NotificationController extends Controller
         $image = imagecreatetruecolor($width_x, $height_x);
         imagealphablending($image, true);
         imagesavealpha($image, true);
-
+        
         $min_x = ($width_x > $height_x) ? $width_x : $height_x;
         $ratio = $min_x / 1024 * (120 / $width_y);
         $offset_x = 120 * $ratio;
@@ -169,6 +175,12 @@ class NotificationController extends Controller
 
 	// Notification
     public function createNotification(Request $request){
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
+        
         $user = JWTAuth::parseToken()->authenticate();
         $profile = $user->Profile;
         
@@ -318,6 +330,12 @@ class NotificationController extends Controller
     }
 
     public function getNotification(Request $request) {
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
+
         $user = JWTAuth::parseToken()->authenticate();
         $profile = $user->Profile;
             
@@ -336,6 +354,12 @@ class NotificationController extends Controller
     }
 
     public function getNotificationDetail(Request $request) {
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
+
         $user = JWTAuth::parseToken()->authenticate();
         $profile = $user->Profile;
         
@@ -356,6 +380,12 @@ class NotificationController extends Controller
     }
 
     public function updateNotification(Request $request) {
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
+
         $user = JWTAuth::parseToken()->authenticate();
         $profile = $user->Profile;
         
@@ -459,6 +489,12 @@ class NotificationController extends Controller
 
 	// Comments
     public function createComment(Request $request){
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
+
         $user = JWTAuth::parseToken()->authenticate();
         $profile = $user->Profile;
         
@@ -535,6 +571,12 @@ class NotificationController extends Controller
     }
 
     public function toggleCommentStatus(Request $request){
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
+        
         $comment = \App\Comment::find(request('id'));
         
         if(!$comment)
@@ -606,6 +648,12 @@ class NotificationController extends Controller
 
     // Notification Type
 	public function indexType(){
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
+        
 		$notification_type = \App\NotificationType::whereNotNull('id');
 		
 		if(request()->has('name'))
@@ -623,6 +671,12 @@ class NotificationController extends Controller
 	}
 
 	public function allType(){
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
+        
 		$notification_type = \App\NotificationType::whereNotNull('id');
 		
         $notification_type->whereStatus(1);
@@ -633,6 +687,11 @@ class NotificationController extends Controller
 	}
 
     public function storeType(Request $request){
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
         
         $validation = Validator::make($request->all(), [
             'name' => 'required|unique:notification_type',
@@ -651,6 +710,12 @@ class NotificationController extends Controller
     }
 
     public function destroyType(Request $request, $id){
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
+        
         $notification_type = \App\NotificationType::find($id);
         
         if(!$notification_type)
@@ -662,6 +727,12 @@ class NotificationController extends Controller
     }
 
     public function showType($idx){
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
+        
         $notification_type = \App\NotificationType::whereIdx($idx)->first();
         
         if(!$notification_type)
@@ -671,6 +742,11 @@ class NotificationController extends Controller
     }
 
     public function updateType(Request $request, $id){
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
         
         $notification_type = \App\NotificationType::whereId($id)->first();
         
@@ -690,6 +766,12 @@ class NotificationController extends Controller
     }
 
     public function toggleTypeStatus(Request $request){
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
+        
         $notification_type = \App\NotificationType::find(request('id'));
         
         if(!$notification_type)

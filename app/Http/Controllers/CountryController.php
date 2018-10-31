@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Validator;
+use JWTAuth;
+use Tymon\JWTAuth\Exceptions\JWTException;
 
 date_default_timezone_set("Europe/Stockholm");
 
@@ -11,6 +13,12 @@ class CountryController extends Controller
 {
 
 	public function index(){
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
+
 		$country = \App\Country::whereNotNull('id');
 		
 		if(request()->has('idx'))
@@ -29,12 +37,29 @@ class CountryController extends Controller
 		
         $country->whereStatus(1);
         $country->orderBy('name', 'ASC');
-        $countries = $country->pluck('name');
+        $countries = $country->pluck('name')->toArray();
+
+        $result = array();
+        if (in_array('Sweden', $countries) || in_array('sweden', $countries)) {
+            $result[] = 'Sweden';
+            foreach ($countries as $country) {
+                if (strtolower($country) != 'sweden') {
+                    $result[] = $country; 
+                }
+            }
+        } else {
+            $result = $countries;
+        }
         
-		return response()->json(['status' => 'success', 'message' => 'Get Country Data Successfully!', 'countries' => $countries], 200);
+		return response()->json(['status' => 'success', 'message' => 'Get Country Data Successfully!', 'countries' => $result], 200);
 	}
 
     public function store(Request $request){
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
         
         $validation = Validator::make($request->all(), [
             'idx' => 'required|unique:country',
@@ -66,6 +91,11 @@ class CountryController extends Controller
     }
 
     public function show($idx){
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
         $country = \App\Country::whereIdx($idx)->first();
         
         if(!$country)
@@ -75,6 +105,11 @@ class CountryController extends Controller
     }
 
     public function update(Request $request, $id){
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
         
         $country = \App\Country::whereId($id)->first();
         
@@ -96,6 +131,11 @@ class CountryController extends Controller
     }
 
     public function toggleStatus(Request $request){
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
         $country = \App\Country::find($request->input('id'));
         
         if(!$country)
