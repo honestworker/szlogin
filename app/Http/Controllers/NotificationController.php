@@ -207,9 +207,14 @@ class NotificationController extends Controller
             }
         }
         
+        $notification = \App\NotificationType::find(request('type'));
+        if (!$notification) {
+            return response()->json(['status' => 'fail', 'message' => 'You must specify the right notification type!', 'error_type' => 'type_error'], 422);
+        }
+
         $notification_name = \App\NotificationType::where('id', '=', request('type'))->pluck('name');
         if (!$notification_name) {
-            return response()->json(['status' => 'fail', 'message' => 'Your images must be jpeg, png, jpg!', 'error_type' => 'type_error'], 422);
+            return response()->json(['status' => 'fail', 'message' => 'You must specify the right notification type!', 'error_type' => 'type_error'], 422);
         }
         
         $notification = new \App\Notification;
@@ -517,7 +522,6 @@ class NotificationController extends Controller
         $notification = \App\Notification::find(request('notification_id'));
         if(!$notification)
             return response()->json(['status' => 'fail', 'message' => 'You specify the empty notification!', 'error_type' => 'find_notification'], 422);
-            
         
         if($request->hasfile('images')) {
             foreach($request->file('images') as $image)
