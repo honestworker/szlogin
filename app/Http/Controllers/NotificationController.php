@@ -211,7 +211,7 @@ class NotificationController extends Controller
         if (!$notification) {
             return response()->json(['status' => 'fail', 'message' => 'You must specify the right notification type!', 'error_type' => 'type_error'], 422);
         }
-
+        
         $notification_name = \App\NotificationType::where('id', '=', request('type'))->pluck('name');
         if (!$notification_name) {
             return response()->json(['status' => 'fail', 'message' => 'You must specify the right notification type!', 'error_type' => 'type_error'], 422);
@@ -323,12 +323,12 @@ class NotificationController extends Controller
         } catch (JWTException $e) {
             return response()->json(['authenticated' => false], 422);
         }
-
+        
         $user = JWTAuth::parseToken()->authenticate();
         $user_alarms = $user->alarms;
         $user->alarms = '';
         $user->save();
-
+        
         $notifications = \App\Notification::whereIn('id', explode(',', $user_alarms))->pluck('id')->toArray();
         
         return response()->json(['status' => 'success', 'message' => 'Get Notification Alarms succesfully!', 'notifications' => $notifications], 200);
@@ -340,7 +340,7 @@ class NotificationController extends Controller
         } catch (JWTException $e) {
             return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
         }
-
+        
         $user = JWTAuth::parseToken()->authenticate();
         $profile = $user->Profile;
             
@@ -348,14 +348,19 @@ class NotificationController extends Controller
         if(!$group)
             return response()->json(['status' => 'fail', 'message' => 'You must be any group memeber!', 'error_type' => 'no_member'], 422);
         
-        $user_groups = array_merge(array($profile->group_id), \App\UserGroups::where('user_id', '=', $user->id)->select('group_id')->get()->toArray());
-
-        $notification = \App\Notification::with('user.profile');
-        $notification->whereStatus(1);
-        $notification->whereIn('group_id', $user_groups);
-        $notification->orderBy('created_at', 'DESC');
+        $notification_ids = \App\Notification::whereStatus(1)->where('group_id', '=', $profile->group_id)->where('created_at', '>=', $user->created_at)->pluck('id')->toArray();
         
-        return response()->json(['status' => 'success', 'message' => 'Get Notification Data Successfully!', 'notifications' => $notification->get()], 200);
+        $user_groups = \App\UserGroups::where('user_id', '=', $user->id)->get();
+        foreach ($user_groups as $user_group) {
+            $attched_notification_ids = \App\Notification::whereStatus(1)->where('group_id', '=', $user_group->group_id)->where('created_at', '>=', $user_group->created_at)->pluck('id')->toArray();
+            $notification_ids = array_merge($notification_ids, $attched_notification_ids);
+        }
+        
+        $notifications = \App\Notification::with('user.profile');
+        $notifications->whereIn('id', $notification_ids);
+        $notifications->orderBy('created_at', 'DESC');
+        
+        return response()->json(['status' => 'success', 'message' => 'Get Notification Data Successfully!', 'notifications' => $notifications->get()], 200);
     }
 
     public function getNotificationDetail(Request $request) {
@@ -364,7 +369,7 @@ class NotificationController extends Controller
         } catch (JWTException $e) {
             return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
         }
-
+        
         $user = JWTAuth::parseToken()->authenticate();
         $profile = $user->Profile;
         
@@ -390,7 +395,7 @@ class NotificationController extends Controller
         } catch (JWTException $e) {
             return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
         }
-
+        
         $user = JWTAuth::parseToken()->authenticate();
         $profile = $user->Profile;
         
@@ -434,7 +439,7 @@ class NotificationController extends Controller
         ]);
         if ($validation->fails())
             return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
-
+            
         $notification = \App\Notification::find(request('notification_id'));
         if(!$notification)
             return response()->json(['status' => 'fail', 'message' => 'Couldnot find notificaioin!'], 422);
@@ -475,7 +480,7 @@ class NotificationController extends Controller
         ]);
         if ($validation->fails())
             return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
-
+            
         $notification = \App\Notification::find(request('notification_id'));
         if(!$notification)
             return response()->json(['status' => 'fail', 'message' => 'Couldnot find notificaioin!'], 422);
@@ -633,7 +638,7 @@ class NotificationController extends Controller
         ]);
         if ($validation->fails())
             return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
-
+            
         $comment = \App\Comment::find(request('comment_id'));
         if(!$comment)
             return response()->json(['status' => 'fail', 'message' => 'Couldnot find comment!'], 422);
@@ -785,6 +790,5 @@ class NotificationController extends Controller
         $notification_type->save();
         
         return response()->json(['status' => 'success', 'message' => 'Notification Type updated!'], 200);
-    }
-    
+    }    
 }
