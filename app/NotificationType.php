@@ -5,7 +5,7 @@ use Eloquent;
 class NotificationType extends Eloquent {
     
 	protected $fillable = [
-							'name',
+							'name', 'trans_name', 'status',
 						];
 	protected $primaryKey = 'id';
 	protected $table = 'notification_type';

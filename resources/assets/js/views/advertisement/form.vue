@@ -6,7 +6,7 @@
                 <br><br>
                 <div class="col-md-12">
                     <input type="file" multiple="multiple" id="uploadImages" @change="uploadFieldChange">
-                    <p>You must upload the jpg, jpeg, png file.</p>
+                    <p>You must upload the jpg, jpeg, png, gif file.</p>
                     <hr>
                     <div class="col-md-12">
                         <div class="attachment-holder animated fadeIn" v-cloak v-for="(image, index) in uploadImages"> 
@@ -253,7 +253,7 @@
                         break;
                     }
                 }
-                if (this.id) {
+                if (this.id != 0) {
                     this.uploadDataForm.append('id', this.id);
                 }
                 this.uploadDataForm.append('name', this.advertisementForm.name);

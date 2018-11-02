@@ -14,7 +14,7 @@ class NotificationController extends Controller
     protected $images_path = 'images/notifications/';
     protected $stamp_image_path = 'images/common/stamp.png';
     
-    protected $image_extensions = array('jpeg', 'png', 'jpg');
+    protected $image_extensions = array('jpeg', 'png', 'jpg', 'gif', 'bmp');
     
 	public function index() {
         try {
@@ -126,7 +126,7 @@ class NotificationController extends Controller
             if ($user->push_token) {
                 $params = array(
                     'to' => $user->push_token,
-                    'title' => 'Safe Zone',
+                    'title' => 'Safety Zone',
                     'sound' => 'default',
                     'body' => $notification_name,
                     'data' => array('notification_id' => $notification_id)
@@ -138,7 +138,7 @@ class NotificationController extends Controller
                 if ($user->push_token) {
                     $user_params = array(
                         'to' => $user->push_token,
-                        'title' => 'Safe Zone',
+                        'title' => 'Safety Zone',
                         'sound' => 'default',
                         'body' => $notification_name,
                         'data' => array('notification_id' => $notification_id)
@@ -202,7 +202,7 @@ class NotificationController extends Controller
             {
                 $extension = $image->getClientOriginalExtension();
                 if (!in_array($extension, $this->image_extensions)) {
-                    return response()->json(['status' => 'fail', 'message' => 'Your images must be jpeg, png, jpg!', 'error_type' => 'image_type_error'], 422);
+                    return response()->json(['status' => 'fail', 'message' => 'Your images must be jpeg, png, jpg, gif, bmp!', 'error_type' => 'image_type_error'], 422);
                 }
             }
         }
@@ -212,7 +212,10 @@ class NotificationController extends Controller
             return response()->json(['status' => 'fail', 'message' => 'You must specify the right notification type!', 'error_type' => 'type_error'], 422);
         }
         
-        $notification_name = \App\NotificationType::where('id', '=', request('type'))->pluck('name');
+        if (strtolower($user->language) == 'swedish')
+            $notification_name = \App\NotificationType::where('id', '=', request('type'))->pluck('trans_name');
+        else
+            $notification_name = \App\NotificationType::where('id', '=', request('type'))->pluck('name');
         if (!$notification_name) {
             return response()->json(['status' => 'fail', 'message' => 'You must specify the right notification type!', 'error_type' => 'type_error'], 422);
         }
@@ -383,6 +386,10 @@ class NotificationController extends Controller
         if(!$group)
             return response()->json(['status' => 'fail', 'message' => 'You must be any group memeber!', 'error_type' => 'no_member'], 422);
         
+        $notification = \App\Notification::find(request('notification_id'));
+        if(!$notification)
+            return response()->json(['status' => 'fail', 'message' => 'You must be any group memeber!', 'error_type' => 'no_notification'], 422);
+
         $notification = \App\Notification::with('user.profile', 'images', 'comments.images', 'comments.user.profile');
         $notification->where('id', '=', request('notification_id'));
         
@@ -409,6 +416,7 @@ class NotificationController extends Controller
         $notification = \App\Notification::find(request('notification_id'));
         if(!$notification)
             return response()->json(['status' => 'fail', 'message' => 'Could not find the notification.', 'error_type' => 'no_notification'], 422);
+        
         $notification->contents = request('contents');
         $notification->save();
         
@@ -666,7 +674,10 @@ class NotificationController extends Controller
 		$notification_type = \App\NotificationType::whereNotNull('id');
 		
 		if(request()->has('name'))
-			$notification_type->where('name', 'like', '%'.request('name').'%');
+            $notification_type->where('name', 'like', '%'.request('name').'%');
+            
+        if(request()->has('trans_name'))
+                $notification_type->where('trans_name', 'like', '%'.request('trans_name').'%');
 		
         if(request()->has('status'))
             $notification_type->whereStatus(request('status'));
@@ -712,6 +723,10 @@ class NotificationController extends Controller
         $notification_type = new \App\NotificationType;
         $notification_type->fill(request()->all());
         $notification_type->name = request('name');
+        if(request()->has('trans_name'))
+            $notification_type->trans_name = request('trans_name');
+        else
+            $notification_type->trans_name = "";            
         $notification_type->status = 1;
         $notification_type->save();
         
@@ -770,6 +785,8 @@ class NotificationController extends Controller
             return response()->json(['status' => 'fail', 'message' => $validation->messages()->first()], 422);
             
         $notification_type->name = request('name');
+        if(request()->has('trans_name'))
+            $notification_type->trans_name = request('trans_name');
         $notification_type->save();
         return response()->json(['status' => 'success', 'message' => 'Notification Type updated!', 'data' => $notification_type], 200);
     }

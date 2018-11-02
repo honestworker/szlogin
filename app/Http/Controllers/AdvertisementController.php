@@ -13,7 +13,7 @@ class AdvertisementController extends Controller
 {
     protected $images_path = 'images/advertisements/';
     protected $images_base_path = 'images/advertisements/base.png';
-    protected $image_extensions = array('jpeg', 'png', 'jpg');
+    protected $image_extensions = array('jpeg', 'png', 'jpg', 'gif');
 
 	public function index(){
 		$advertisements = \App\Advertisement::whereNotNull('id');
@@ -47,6 +47,14 @@ class AdvertisementController extends Controller
 		return $advertisements->paginate(request('pageLength'));
 	}
 
+    private function initUserAdsCount() {
+        $user_ads_count = \App\UserAdsCount::whereViewDate($now_date)->get();
+        foreach ($user_ads_count as $user_ad_count) {
+            $user_ad_count->count = 0;
+            $user_ad_count->save();
+        }
+    }
+
     public function store(Request $request) {
         $user = JWTAuth::parseToken()->authenticate();
         $profile = $user->Profile;
@@ -65,7 +73,7 @@ class AdvertisementController extends Controller
             {
                 $extension = $image->getClientOriginalExtension();
                 if (!in_array($extension, $this->image_extensions)) {
-                    return response()->json(['status' => 'fail', 'message' => 'Your images must be jpeg, png, jpg!'], 422);
+                    return response()->json(['status' => 'fail', 'message' => 'Your images must be jpeg, png, jpg, gif!'], 422);
                 }
             }
         }
@@ -113,6 +121,8 @@ class AdvertisementController extends Controller
         $advertisement->status = 1;
         $advertisement->save();
         
+        $this->initUserAdsCount();
+
         return response()->json(['status' => 'success', 'message' => 'Aadvertisement has created succesfully!'], 200);
     }
 
@@ -124,6 +134,8 @@ class AdvertisementController extends Controller
             
         $advertisement->delete();
         
+        $this->initUserAdsCount();
+
         return response()->json(['message' => 'Advertisement deleted!']);
     }
 
@@ -216,6 +228,7 @@ class AdvertisementController extends Controller
         }
 
         $advertisements_result = $advertisements->get();
+        $advertisements_count = 0;
         if ($advertisements_result) {
             $advertisements_count = count($advertisements_result);
         }
@@ -223,31 +236,30 @@ class AdvertisementController extends Controller
             return response()->json(['status' => 'success', 'message' => 'Advertisement!', 'id' => 0, 'image' => basename($this->images_base_path), 'link' => url('/')], 200);
         }
         
-        $min_count = \App\AdvertisementCount::whereUserId($user->id)->whereViewDate($now_date)->whereType('show')->orderBy('count', 'asc')->first();
+        $min_count = \App\UserAdsCount::whereUserId($user->id)->whereViewDate($now_date)->orderBy('count', 'asc')->first();
         if (!$min_count) {
             $advertisement_index = rand(1, $advertisements_count);
             $advertisement = $advertisements_result[$advertisement_index - 1];
             
-            $advertisement_count = \App\AdvertisementCount::create([
+            $user_ads_count = \App\UserAdsCount::create([
                 'ad_id' => $advertisement->id,
-                'type' => 'show',
                 'user_id' => $user->id,
                 'view_date' => $now_date,
                 'count ' => 1,
-            ]);
+            ]);            
         } else {
             $new_advertisements = array();
             $new_advertisements_exist = array();
             $all_show = 1;
             foreach ($advertisements_result as $advertisement) {
-                $count = \App\AdvertisementCount::whereUserId($user->id)->whereViewDate($now_date)->whereType('show')->whereAdId($advertisement->id)->first();
+                $count = \App\UserAdsCount::whereUserId($user->id)->whereViewDate($now_date)->whereAdId($advertisement->id)->first();
                 if (!$count) {
                     $all_show = 0;
                 }
             }
             
             foreach ($advertisements_result as $advertisement) {
-                $count = \App\AdvertisementCount::whereUserId($user->id)->whereViewDate($now_date)->whereType('show')->whereAdId($advertisement->id)->first();
+                $count = \App\UserAdsCount::whereUserId($user->id)->whereViewDate($now_date)->whereAdId($advertisement->id)->first();
                 if (!$count) {
                     $new_advertisements[] = $advertisement;
                     $new_advertisements_exist[] = 0;
@@ -267,13 +279,12 @@ class AdvertisementController extends Controller
             $advertisement_exist = $new_advertisements_exist[$advertisement_index - 1];
             
             if ($advertisement_exist) {
-                $advertisement_count = \App\AdvertisementCount::whereUserId($user->id)->whereViewDate($now_date)->whereType('show')->whereAdId($advertisement->id)->first();
-                $advertisement_count->count = $advertisement_count->count + 1;
-                $advertisement_count->save();
+                $user_ads_count = \App\UserAdsCount::whereUserId($user->id)->whereViewDate($now_date)->whereAdId($advertisement->id)->first();
+                $user_ads_count->count = $user_ads_count->count + 1;
+                $user_ads_count->save();
             } else {
-                $advertisement_count = \App\AdvertisementCount::create([
+                \App\UserAdsCount::create([
                     'ad_id' => $advertisement->id,
-                    'type' => 'show',
                     'user_id' => $user->id,
                     'view_date' => $now_date,
                     'count ' => 1,
@@ -281,6 +292,20 @@ class AdvertisementController extends Controller
             }
         }
         
+        $advertisement_count = \App\AdvertisementCount::whereUserId($user->id)->whereAdId($advertisement->id)->whereViewDate($now_date)->whereType('show')->first();
+        if (!$advertisement_count) {
+            \App\AdvertisementCount::create([
+                'ad_id' => $advertisement->id,
+                'type' => 'show',
+                'user_id' => $user->id,
+                'view_date' => $now_date,
+                'count ' => 1,
+            ]);
+        } else {
+            $advertisement_count->count = $advertisement_count->count + 1;
+            $advertisement_count->save();
+        }
+
         return response()->json(['status' => 'success', 'message' => 'Advertisement!', 'id' => $advertisement->id, 'image' => $advertisement->image, 'link' => $advertisement->link], 200);
     }
 

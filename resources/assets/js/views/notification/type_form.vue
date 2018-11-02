@@ -6,6 +6,10 @@
                     <label for="">Name</label>
                     <input class="form-control" type="text" value="" v-model="notificationTypeFrom.name">
                 </div>
+                <div class="form-group">
+                    <label for="">Trans Name</label>
+                    <input class="form-control" type="text" value="" v-model="notificationTypeFrom.trans_name">
+                </div>
             </div>
         </div>
         <button class="btn btn-info waves-effect waves-light m-t-10">
@@ -24,6 +28,7 @@
             return {
                 notificationTypeFrom: new Form({
                     'name' : '',
+                    'trans_name' : '',
                     'created_at' : '',
                 }),
             };
@@ -34,6 +39,7 @@
         watch: {
             id : function(val) {
                 this.notificationTypeFrom.name = this.name;
+                this.notificationTypeFrom.trans_name = this.trans_name;
                 this.notificationTypeFrom.created_at = this.created_at;
             }
         },

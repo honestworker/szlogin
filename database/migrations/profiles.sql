@@ -3,8 +3,8 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Oct 17, 2018 at 10:45 PM
--- Server version: 10.1.35-MariaDB-cll-lve
+-- Generation Time: Nov 02, 2018 at 03:14 PM
+-- Server version: 10.1.36-MariaDB-cll-lve
 -- PHP Version: 5.6.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -28,8 +28,9 @@ SET time_zone = "+00:00";
 -- Table structure for table `profiles`
 --
 
-CREATE TABLE `profiles` (
-  `id` int(10) NOT NULL,
+DROP TABLE IF EXISTS `profiles`;
+CREATE TABLE IF NOT EXISTS `profiles` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
   `user_id` int(10) DEFAULT '0',
   `group_id` int(11) DEFAULT '0',
   `phone_number` varchar(512) DEFAULT '',
@@ -43,24 +44,9 @@ CREATE TABLE `profiles` (
   `city` varchar(512) DEFAULT '',
   `is_admin` int(11) DEFAULT '0',
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Indexes for table `profiles`
---
-ALTER TABLE `profiles`
-  ADD PRIMARY KEY (`id`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `profiles`
---
-ALTER TABLE `profiles`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

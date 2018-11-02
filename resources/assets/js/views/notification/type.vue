@@ -33,6 +33,12 @@
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
+                                    <label for="">Trans Name</label>
+                                    <input class="form-control" v-model="filterNotificationTypeForm.trans_name" @change="getNotificationTypes">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
                                     <label for="">Status</label>
                                     <select name="status" class="form-control" v-model="filterNotificationTypeForm.status" @change="getNotificationTypes">
                                         <option value="">All</option>
@@ -69,6 +75,7 @@
                                 <thead>
                                     <tr>
                                         <th>Name</th>
+                                        <th>Trans Name</th>
                                         <th>Created At</th>
                                         <th>Status</th>
                                         <th style="width:180px;">Action</th>
@@ -77,6 +84,7 @@
                                 <tbody>
                                     <tr v-for="notification_type in notificationtypes.data">
                                         <td v-text="notification_type.name"></td>
+                                        <td v-text="notification_type.trans_name"></td>
                                         <td v-text="notification_type.created_at"></td>
                                         <td v-html="getNotificationTypeStatus(notification_type)"></td>
                                         <td>
@@ -158,6 +166,7 @@
                 },
                 id: 0,
                 name: '',
+                trans_name: '',
                 created_at: '',
                 deletingNotificationType : 1,
                 type_id : 0
@@ -203,11 +212,13 @@
             editNotificationType(notification_type){
                 this.id = notification_type.id;
                 this.name = notification_type.name;
+                this.trans_name = notification_type.trans_name;
                 this.created_at = notification_type.created_at;
             },
             cancelNotificationType(notification_type){
                 this.id = 0;
                 this.name = '';
+                this.trans_name = '';
                 this.created_at = '';
             },
             getNotificationTypeStatus(notification_type){

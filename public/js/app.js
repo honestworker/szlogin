@@ -35098,6 +35098,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -35119,6 +35127,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             },
             id: 0,
             name: '',
+            trans_name: '',
             created_at: '',
             deletingNotificationType: 1,
             type_id: 0
@@ -35167,11 +35176,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         editNotificationType: function editNotificationType(notification_type) {
             this.id = notification_type.id;
             this.name = notification_type.name;
+            this.trans_name = notification_type.trans_name;
             this.created_at = notification_type.created_at;
         },
         cancelNotificationType: function cancelNotificationType(notification_type) {
             this.id = 0;
             this.name = '';
+            this.trans_name = '';
             this.created_at = '';
         },
         getNotificationTypeStatus: function getNotificationTypeStatus(notification_type) {
@@ -35259,6 +35270,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
 
 
 
@@ -35267,6 +35282,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return {
             notificationTypeFrom: new Form({
                 'name': '',
+                'trans_name': '',
                 'created_at': ''
             })
         };
@@ -35278,6 +35294,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     watch: {
         id: function id(val) {
             this.notificationTypeFrom.name = this.name;
+            this.notificationTypeFrom.trans_name = this.trans_name;
             this.notificationTypeFrom.created_at = this.created_at;
         }
     },
@@ -35380,6 +35397,36 @@ var render = function() {
                   _vm.$set(
                     _vm.notificationTypeFrom,
                     "name",
+                    $event.target.value
+                  )
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "form-group" }, [
+            _c("label", { attrs: { for: "" } }, [_vm._v("Trans Name")]),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.notificationTypeFrom.trans_name,
+                  expression: "notificationTypeFrom.trans_name"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: { type: "text", value: "" },
+              domProps: { value: _vm.notificationTypeFrom.trans_name },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(
+                    _vm.notificationTypeFrom,
+                    "trans_name",
                     $event.target.value
                   )
                 }
@@ -35521,6 +35568,40 @@ var render = function() {
                         _vm.$set(
                           _vm.filterNotificationTypeForm,
                           "name",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-3" }, [
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "" } }, [_vm._v("Trans Name")]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.filterNotificationTypeForm.trans_name,
+                        expression: "filterNotificationTypeForm.trans_name"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    domProps: {
+                      value: _vm.filterNotificationTypeForm.trans_name
+                    },
+                    on: {
+                      change: _vm.getNotificationTypes,
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.filterNotificationTypeForm,
+                          "trans_name",
                           $event.target.value
                         )
                       }
@@ -35721,6 +35802,12 @@ var render = function() {
                           _c("td", {
                             domProps: {
                               textContent: _vm._s(notification_type.name)
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("td", {
+                            domProps: {
+                              textContent: _vm._s(notification_type.trans_name)
                             }
                           }),
                           _vm._v(" "),
@@ -35972,6 +36059,8 @@ var staticRenderFns = [
     return _c("thead", [
       _c("tr", [
         _c("th", [_vm._v("Name")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Trans Name")]),
         _vm._v(" "),
         _c("th", [_vm._v("Created At")]),
         _vm._v(" "),
@@ -69077,7 +69166,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     break;
                 }
             }
-            if (this.id) {
+            if (this.id != 0) {
                 this.uploadDataForm.append('id', this.id);
             }
             this.uploadDataForm.append('name', this.advertisementForm.name);
@@ -69149,7 +69238,9 @@ var render = function() {
                 on: { change: _vm.uploadFieldChange }
               }),
               _vm._v(" "),
-              _c("p", [_vm._v("You must upload the jpg, jpeg, png file.")]),
+              _c("p", [
+                _vm._v("You must upload the jpg, jpeg, png, gif file.")
+              ]),
               _vm._v(" "),
               _c("hr"),
               _vm._v(" "),

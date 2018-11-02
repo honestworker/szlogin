@@ -87,6 +87,8 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::delete('/delete-account','UserController@destroy');
     Route::delete('/user','UserController@deleteAccount');
 
+    Route::post('/language','UserController@setLanguage');
+
     // User Push Notification only
     Route::post('/push_token','UserController@savePushToken');
     
