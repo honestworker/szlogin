@@ -16,6 +16,12 @@ class AdvertisementController extends Controller
     protected $image_extensions = array('jpeg', 'png', 'jpg', 'gif');
 
 	public function index(){
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
+
 		$advertisements = \App\Advertisement::whereNotNull('id');
 		
 		if(request()->has('country'))
@@ -48,6 +54,7 @@ class AdvertisementController extends Controller
 	}
 
     private function initUserAdsCount() {
+        $now_date = date("Y-m-d");
         $user_ads_count = \App\UserAdsCount::whereViewDate($now_date)->get();
         foreach ($user_ads_count as $user_ad_count) {
             $user_ad_count->count = 0;
@@ -56,6 +63,12 @@ class AdvertisementController extends Controller
     }
 
     public function store(Request $request) {
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
+        
         $user = JWTAuth::parseToken()->authenticate();
         $profile = $user->Profile;
         
@@ -127,6 +140,11 @@ class AdvertisementController extends Controller
     }
 
     public function destroy(Request $request, $id){
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
         $advertisement = \App\Advertisement::find($id);
         
         if(!$advertisement)
@@ -140,6 +158,12 @@ class AdvertisementController extends Controller
     }
 
     public function show($id){
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
+
         $advertisement = \App\Advertisement::whereId($id)->first();
         
         if(!$advertisement)
@@ -149,6 +173,12 @@ class AdvertisementController extends Controller
     }
 
     public function update(Request $request, $id) {
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
+
         $advertisement = \App\Advertisement::whereId($id)->first();
         
         if(!$advertisement)
@@ -197,6 +227,12 @@ class AdvertisementController extends Controller
     }
 
     public function toggleStatus(Request $request){
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
+        
         $advertisement = \App\Advertisement::find(request('id'));
         
         if(!$advertisement)
@@ -246,7 +282,7 @@ class AdvertisementController extends Controller
                 'user_id' => $user->id,
                 'view_date' => $now_date,
                 'count ' => 1,
-            ]);            
+            ]);
         } else {
             $new_advertisements = array();
             $new_advertisements_exist = array();

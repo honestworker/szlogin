@@ -124,7 +124,7 @@ class GroupController extends Controller
         return $group;
     }
 
-    public function update(Request $request, $id) {        
+    public function update(Request $request, $id) {
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {

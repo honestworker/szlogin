@@ -80,6 +80,12 @@ class CountryController extends Controller
     }
 
     public function destroy(Request $request, $id){
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
+        
         $country = \App\Country::find($id);
         
         if(!$country)

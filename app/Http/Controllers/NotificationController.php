@@ -207,18 +207,16 @@ class NotificationController extends Controller
             }
         }
         
-        $notification = \App\NotificationType::find(request('type'));
-        if (!$notification) {
+        $notification_type = \App\NotificationType::find(request('type'));
+        if (!$notification_type) {
             return response()->json(['status' => 'fail', 'message' => 'You must specify the right notification type!', 'error_type' => 'type_error'], 422);
         }
         
+        $notification_name = "";
         if (strtolower($user->language) == 'swedish')
             $notification_name = \App\NotificationType::where('id', '=', request('type'))->pluck('trans_name');
         else
             $notification_name = \App\NotificationType::where('id', '=', request('type'))->pluck('name');
-        if (!$notification_name) {
-            return response()->json(['status' => 'fail', 'message' => 'You must specify the right notification type!', 'error_type' => 'type_error'], 422);
-        }
         
         $notification = new \App\Notification;
         $notification->type = request('type');
@@ -228,7 +226,6 @@ class NotificationController extends Controller
         $notification->status = 1;
         $notification->created_at = request('datetime');
         $notification->save();
-        
         
         if($request->hasfile('images')) {
             if (is_array($request->file('images'))) {
@@ -424,6 +421,12 @@ class NotificationController extends Controller
     }
 
     public function toggleStatus(Request $request){
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
+        
         $notification = \App\Notification::find(request('id'));
         
         if(!$notification)
