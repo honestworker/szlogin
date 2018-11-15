@@ -120,11 +120,12 @@ class NotificationController extends Controller
         if (!$user_ids) return null;
         
         $url = 'https://onesignal.com/api/v1/notifications';
+        $requests = $responses = [];
         if ( is_array( $user_ids ) ) {
             foreach( $user_ids as $user_id ) {
                 $user = \App\User::find($user_id);
                 $profile = $user->Profile;
-                if ( $user->push_token ) {
+                if ( $user->push_token != '' ) {
                     $params = array(
                         'app_id' => "e445d531-0167-42ab-8671-3892fbafb1b0",
                         'include_player_ids' => [ $user->push_token ],
@@ -137,14 +138,15 @@ class NotificationController extends Controller
                         $sound = $profile->sound;
                     }
                     if ( $profile->os_type == 'android' ) {
-                        array_push($params, array( 'android_sound' => $sound ));
+                        $params['android_sound'] = $sound;
                     } else if ( $profile->os_type == 'ios' ) {
                         if ( $sound == "nil" ) {
-                            array_push($params, array( 'ios_sound' => $sound ));
+                            $params['ios_sound'] = $sound;
                         } else {
-                            array_push($params, array( 'ios_sound' => $sound . ".wav" ));
+                            $params['ios_sound'] = $sound . ".wav";
                         }
                     }
+                    $requests[] = $params;
                     $ch = curl_init();
                     curl_setopt($ch, CURLOPT_URL, $url);
                     curl_setopt($ch, CURLOPT_POST, 1);
@@ -154,7 +156,7 @@ class NotificationController extends Controller
                     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 120);
                     curl_setopt($ch, CURLOPT_TIMEOUT, 120);
                     
-                    $result = curl_exec($ch);
+                    $responses[] = curl_exec($ch);
                     if(curl_errno($ch) !== 0) {
                         error_log('cURL error when connecting to ' . $url . ': ' . curl_error($ch));
                     }
@@ -163,6 +165,7 @@ class NotificationController extends Controller
                 }
             }
         }
+        return array('request' => $requests, 'response' => $responses);
     }
 
 	// Notification
@@ -276,7 +279,7 @@ class NotificationController extends Controller
         $diff_users = array_diff($attached_users, $group_users);
         $push_users = array_merge($group_users, $diff_users);
         
-        $this->sendPushNotificationHttpRequest($push_users, $notification->id, $notification_name[0]);
+        $push_result = $this->sendPushNotificationHttpRequest($push_users, $notification->id, $notification_name[0]);
         
         // Signed Out Users
         $users = \App\User::with('profile');
@@ -306,7 +309,7 @@ class NotificationController extends Controller
             $user->save();
         }
         
-        return response()->json(['status' => 'success', 'message' => 'Notification has created succesfully!', 'notification_id' => $notification->id], 200); // , 'notification_name' => $notification_name
+        return response()->json(['status' => 'success', 'message' => 'Notification has created succesfully!', 'notification_id' => $notification->id, 'push_result' => $push_result], 200); // , 'notification_name' => $notification_name
     }
     
     public function getAlarms() {
