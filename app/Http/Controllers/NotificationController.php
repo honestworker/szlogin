@@ -119,58 +119,50 @@ class NotificationController extends Controller
     private function sendPushNotificationHttpRequest($user_ids, $notification_id, $notification_name) {
         if (!$user_ids) return null;
         
-        $url = 'https://exp.host/--/api/v2/push/send';
-        $params = null;
-        if (count($user_ids) == 1) {
-            $user = \App\User::find($user_ids[0]);
-            if ($user->push_token) {
-                $params = array(
-                    'to' => $user->push_token,
-                    'title' => 'Safety Zone',
-                    'sound' => 'default',
-                    'body' => $notification_name,
-                    'data' => array('notification_id' => $notification_id)
-                );
-            }
-        } else {
-            foreach($user_ids as $user_id) {
+        $url = 'https://onesignal.com/api/v1/notifications';
+        if ( is_array( $user_ids ) ) {
+            foreach( $user_ids as $user_id ) {
                 $user = \App\User::find($user_id);
-                if ($user->push_token) {
-                    $user_params = array(
-                        'to' => $user->push_token,
-                        'title' => 'Safety Zone',
-                        'sound' => 'default',
-                        'body' => $notification_name,
+                $profile = $user->Profile;
+                if ( $user->push_token ) {
+                    $params = array(
+                        'app_id' => "e445d531-0167-42ab-8671-3892fbafb1b0",
+                        'include_player_ids' => [ $user->push_token ],
+                        'headings' => array('en' => 'Safety Zone'),
+                        'contents' => array('en' => $notification_name),
                         'data' => array('notification_id' => $notification_id)
                     );
-                    if ($params) {
-                        array_push($params, $user_params);
-                    } else {
-                        $params = array($user_params);
+                    $sound = "nil";
+                    if ( $profile->vibration == 1 ) {
+                        $sound = $profile->sound;
                     }
+                    if ( $profile->os_type == 'android' ) {
+                        array_push($params, array( 'android_sound' => $sound ));
+                    } else if ( $profile->os_type == 'ios' ) {
+                        if ( $sound == "nil" ) {
+                            array_push($params, array( 'ios_sound' => $sound ));
+                        } else {
+                            array_push($params, array( 'ios_sound' => $sound . ".wav" ));
+                        }
+                    }
+                    $ch = curl_init();
+                    curl_setopt($ch, CURLOPT_URL, $url);
+                    curl_setopt($ch, CURLOPT_POST, 1);
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                    curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-type: application/json", "Authorization: Basic MjhkYzRjYzEtNGJmMC00YzVkLTg4OWYtNjNiZWFkNTAzMjVi"));
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($params));
+                    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 120);
+                    curl_setopt($ch, CURLOPT_TIMEOUT, 120);
+                    
+                    $result = curl_exec($ch);
+                    if(curl_errno($ch) !== 0) {
+                        error_log('cURL error when connecting to ' . $url . ': ' . curl_error($ch));
+                    }
+                    
+                    curl_close($ch);
                 }
             }
         }
-        
-        if (count($user_ids)) {
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array("Accept: application/json", "Accept-Encoding: gzip, deflate", "Content-type: application/json"));
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($params));
-            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 120);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 120);
-            
-            $result = curl_exec($ch);
-            if(curl_errno($ch) !== 0) {
-                error_log('cURL error when connecting to ' . $url . ': ' . curl_error($ch));
-            }
-            
-            curl_close($ch);
-            //print_r($result);
-        }
-        //print_r($params);
     }
 
 	// Notification
@@ -213,7 +205,7 @@ class NotificationController extends Controller
         }
         
         $notification_name = "";
-        if (strtolower($user->language) == 'swedish')
+        if (strtolower($profile->language) == 'swedish')
             $notification_name = \App\NotificationType::where('id', '=', request('type'))->pluck('trans_name');
         else
             $notification_name = \App\NotificationType::where('id', '=', request('type'))->pluck('name');

@@ -25,6 +25,12 @@ class Profile extends Eloquent {
                             'country',
                             'city',
                             'is_admin',
+                            
+                            'os_type',
+                            'sound',
+                            'vibration',
+                            
+                            'language'
                         ];
     protected $primaryKey = 'id';
     protected $table = 'profiles';

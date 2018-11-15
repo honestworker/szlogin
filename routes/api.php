@@ -89,10 +89,14 @@ Route::group(['middleware' => ['jwt.auth']], function () {
 
     Route::post('/language','UserController@setLanguage');
 
-    // User Push Notification only
-    Route::post('/push_token','UserController@savePushToken');
-    
     Route::post('/logout','AuthController@logout');
+
+    // User Push Notification app only
+    Route::post('/push_token','UserController@savePushToken');
+
+    // User Push Notification Effect app only
+    Route::post('/push_effect','UserController@setPushEffect');
+    
 
     ///// Notification
     Route::get('/notification','NotificationController@index');

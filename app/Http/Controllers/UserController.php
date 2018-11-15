@@ -590,6 +590,7 @@ class UserController extends Controller
         
         $validation = Validator::make($request->all(),[
             'push_token' => 'required',
+            'os_type' => 'required',
         ]);
         if ($validation->fails())
             return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
@@ -597,8 +598,35 @@ class UserController extends Controller
         $user = JWTAuth::parseToken()->authenticate();
         $user->push_token = request('push_token');
         $user->save();
+
+        $profile = $user->Profile;
+        $profile->os_type = request('os_type');
+        $profile->save();
         
         return response()->json(['status' => 'success', 'message' => 'Your push token is saved successfully.', 'user' => $user]);
+    }
+
+    public function setPushEffect(Request $request){
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
+        
+        $validation = Validator::make($request->all(),[
+            'sound' => 'required',
+            'vibration' => 'required',
+        ]);
+        if ($validation->fails())
+            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
+        
+        $user = JWTAuth::parseToken()->authenticate();
+        $profile = $user->Profile;
+        $profile->sound = request('sound');
+        $profile->vibration = request('vibration');
+        $profile->save();
+        
+        return response()->json(['status' => 'success', 'message' => 'Your push notification effect is saved successfully.', 'user' => $user]);
     }
 
     public function setLanguage(Request $request){
@@ -615,8 +643,9 @@ class UserController extends Controller
             return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
         
         $user = JWTAuth::parseToken()->authenticate();
-        $user->language = request('language');
-        $user->save();
+        $profile = $user->Profile;
+        $profile->language = request('language');
+        $profile->save();
         
         return response()->json(['status' => 'success', 'message' => 'Your language is updated successfully.']);
     }
