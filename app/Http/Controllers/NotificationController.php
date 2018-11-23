@@ -127,15 +127,15 @@ class NotificationController extends Controller
                 $profile = $user->Profile;
                 if ( $user->push_token != '' ) {
                     $params = array(
-                        'app_id' => "e445d531-0167-42ab-8671-3892fbafb1b0",
+                        'app_id' => "Your App ID",
                         'include_player_ids' => [ $user->push_token ],
                         'headings' => array('en' => 'Safety Zone'),
                         'contents' => array('en' => $notification_name),
                         'data' => array('notification_id' => $notification_id)
                     );
-                    $sound = "nil";
-                    if ( $profile->vibration == 1 ) {
-                        $sound = $profile->sound;
+                    $sound = $profile->sound;
+                    if ( $profile->vibration == 0 && $profile->sound == 'no_sound' ) {
+                        $sound = "nil";                        
                     }
                     if ( $profile->os_type == 'android' ) {
                         $params['android_sound'] = $sound;
@@ -151,7 +151,7 @@ class NotificationController extends Controller
                     curl_setopt($ch, CURLOPT_URL, $url);
                     curl_setopt($ch, CURLOPT_POST, 1);
                     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                    curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-type: application/json", "Authorization: Basic MjhkYzRjYzEtNGJmMC00YzVkLTg4OWYtNjNiZWFkNTAzMjVi"));
+                    curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-type: application/json", "Authorization: Basic Your Token"));
                     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($params));
                     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 120);
                     curl_setopt($ch, CURLOPT_TIMEOUT, 120);
@@ -279,7 +279,7 @@ class NotificationController extends Controller
         $diff_users = array_diff($attached_users, $group_users);
         $push_users = array_merge($group_users, $diff_users);
         
-        $push_result = $this->sendPushNotificationHttpRequest($push_users, $notification->id, $notification_name[0]);
+        $this->sendPushNotificationHttpRequest($push_users, $notification->id, $notification_name[0]); // $push_result = 
         
         // Signed Out Users
         $users = \App\User::with('profile');
@@ -309,7 +309,7 @@ class NotificationController extends Controller
             $user->save();
         }
         
-        return response()->json(['status' => 'success', 'message' => 'Notification has created succesfully!', 'notification_id' => $notification->id, 'push_result' => $push_result], 200); // , 'notification_name' => $notification_name
+        return response()->json(['status' => 'success', 'message' => 'Notification has created succesfully!', 'notification_id' => $notification->id], 200); // , 'notification_name' => $notification_name, 'push_result' => $push_result
     }
     
     public function getAlarms() {
