@@ -16,18 +16,18 @@ class NotificationController extends Controller
     
     protected $image_extensions = array('jpeg', 'png', 'jpg', 'gif', 'bmp');
     
-	public function index() {
+    public function index() {
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {
             return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
         }
         
-		$notifications = \App\Notification::with('user', 'group');
-		
-		if(request()->has('type'))
-			$notifications->where('type', '=', request('type'));
-			
+        $notifications = \App\Notification::with('user', 'group');
+        
+        if(request()->has('type'))
+            $notifications->where('type', '=', request('type'));
+            
         if(request()->has('contents'))
             $notifications->where('contents', 'like', '%'.request('contents').'%');
             
@@ -55,12 +55,19 @@ class NotificationController extends Controller
                 }]);
         }
         
-		return $notifications->paginate(request('pageLength'));
-	}
+        return $notifications->paginate(request('pageLength'));
+    }
     
     private function stampImage($filename_x, $filename_result, $mergeType = 0) {
+        if ( !file_exists( $filename_x ) || !file_exists( $this->stamp_image_path ) ) {
+            return false;
+        }
         /// Get dimensions for specified images
-        list($width_x, $height_x, $image_x_type) = getimagesize($filename_x);
+        try {
+            list($width_x, $height_x, $image_x_type) = getimagesize($filename_x);
+        } catch (Exception $e) {
+            return false;
+        }
         list($width_y, $height_y, $image_y_type) = getimagesize($this->stamp_image_path);
         
         //$image_x_type = image_type_to_extension($filename_x);
@@ -114,6 +121,8 @@ class NotificationController extends Controller
         imagedestroy($image_tmp);
         imagedestroy($image_x);
         imagedestroy($image_y);
+        
+        return true;
     }
 
     private function sendPushNotificationHttpRequest($user_ids, $notification_id, $notification_name) {
@@ -135,7 +144,7 @@ class NotificationController extends Controller
                     );
                     $sound = $profile->sound;
                     if ( $profile->vibration == 0 && $profile->sound == 'no_sound' ) {
-                        $sound = "nil";                        
+                        $sound = "nil";
                     }
                     if ( $profile->os_type == 'android' ) {
                         $params['android_sound'] = $sound;
@@ -151,7 +160,7 @@ class NotificationController extends Controller
                     curl_setopt($ch, CURLOPT_URL, $url);
                     curl_setopt($ch, CURLOPT_POST, 1);
                     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                    curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-type: application/json", "Authorization: Basic Your Token"));
+                    curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-type: application/json", "Authorization: Basic Your App Token"));
                     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($params));
                     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 120);
                     curl_setopt($ch, CURLOPT_TIMEOUT, 120);
@@ -168,7 +177,7 @@ class NotificationController extends Controller
         return array('request' => $requests, 'response' => $responses);
     }
 
-	// Notification
+    // Notification
     public function createNotification(Request $request){
         try {
             JWTAuth::parseToken()->authenticate();
@@ -231,24 +240,27 @@ class NotificationController extends Controller
                         $mt = explode(' ', microtime());
                         $name = ((int)$mt[1]) * 1000000 + ((int)round($mt[0] * 1000000));
                         $file_name = $name . '.' . $extension;
-                        
-                        if($this->stamp_image_path && \File::exists($this->stamp_image_path)) {
+                        $image_flag = true;
+                        if( $this->stamp_image_path && \File::exists($this->stamp_image_path) ) {
                             $file_tmp_name = $name . 'tmp.' . $extension;
                             $file = $image->move($this->images_path, $file_tmp_name);
-                            $this->stampImage($this->images_path . $file_tmp_name, $this->images_path . $file_name);
-                            \File::delete($this->images_path . $file_tmp_name);
+                            if ( ( $image_flag = $this->stampImage($this->images_path . $file_tmp_name, $this->images_path . $file_name) ) ) {
+                                \File::delete($this->images_path . $file_tmp_name);
+                            }
                         } else {
                             $file = $image->move($this->images_path, $file_name);
                         }
                         
-                        list($width, $height) = getimagesize($this->images_path . $file_name);
-                        $notificaion_image = new \App\Image;
-                        $notificaion_image->type = 'notification';
-                        $notificaion_image->width = $width;
-                        $notificaion_image->height = $height;
-                        $notificaion_image->parent_id = $notification->id;
-                        $notificaion_image->url = $file_name;
-                        $notificaion_image->save();
+                        if ( $image_flag ) {
+                            list($width, $height) = getimagesize($this->images_path . $file_name);
+                            $notificaion_image = new \App\Image;
+                            $notificaion_image->type = 'notification';
+                            $notificaion_image->width = $width;
+                            $notificaion_image->height = $height;
+                            $notificaion_image->parent_id = $notification->id;
+                            $notificaion_image->url = $file_name;
+                            $notificaion_image->save();
+                        }
                     }
                 }
             }
@@ -279,7 +291,7 @@ class NotificationController extends Controller
         $diff_users = array_diff($attached_users, $group_users);
         $push_users = array_merge($group_users, $diff_users);
         
-        $this->sendPushNotificationHttpRequest($push_users, $notification->id, $notification_name[0]); // $push_result = 
+        $this->sendPushNotificationHttpRequest($push_users, $notification->id, $notification_name[0]); //$push_result = 
         
         // Signed Out Users
         $users = \App\User::with('profile');
@@ -503,7 +515,7 @@ class NotificationController extends Controller
         return response()->json(['status' => 'success', 'message' => 'Notification Image deleted!'], 200);
     }
 
-	// Comments
+    // Comments
     public function createComment(Request $request){
         try {
             JWTAuth::parseToken()->authenticate();
@@ -559,24 +571,28 @@ class NotificationController extends Controller
                 $mt = explode(' ', microtime());
                 $name = ((int)$mt[1]) * 1000000 + ((int)round($mt[0] * 1000000));
                 $file_name = $name . '.' . $extension;
+                $image_flag = true;
                 
                 if($this->stamp_image_path && \File::exists($this->stamp_image_path)) {
                     $file_tmp_name = $name . 'tmp.' . $extension;
                     $file = $image->move($this->images_path, $file_tmp_name);
-                    $this->stampImage($this->images_path . $file_tmp_name, $this->images_path . $file_name);
-                    \File::delete($this->images_path . $file_tmp_name);
+                    if ( ( $image_flag = $this->stampImage($this->images_path . $file_tmp_name, $this->images_path . $file_name) ) ) {
+                        \File::delete($this->images_path . $file_tmp_name);
+                    }
                 } else {
                     $file = $image->move($this->images_path, $file_name);
                 }
                 
-                list($width, $height) = getimagesize($this->images_path . $file_name);
-                $comment_image = new \App\Image;
-                $comment_image->type = 'comment';
-                $comment_image->width = $width;
-                $comment_image->height = $height;
-                $comment_image->parent_id = $comment->id;
-                $comment_image->url = $file_name;
-                $comment_image->save();
+                if ( $image_flag ) {
+                    list($width, $height) = getimagesize($this->images_path . $file_name);
+                    $comment_image = new \App\Image;
+                    $comment_image->type = 'comment';
+                    $comment_image->width = $width;
+                    $comment_image->height = $height;
+                    $comment_image->parent_id = $comment->id;
+                    $comment_image->url = $file_name;
+                    $comment_image->save();
+                }
             }
         }
         
@@ -662,21 +678,21 @@ class NotificationController extends Controller
     }
 
     // Notification Type
-	public function indexType(){
+    public function indexType(){
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {
             return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
         }
         
-		$notification_type = \App\NotificationType::whereNotNull('id');
-		
-		if(request()->has('name'))
+        $notification_type = \App\NotificationType::whereNotNull('id');
+        
+        if(request()->has('name'))
             $notification_type->where('name', 'like', '%'.request('name').'%');
             
         if(request()->has('trans_name'))
                 $notification_type->where('trans_name', 'like', '%'.request('trans_name').'%');
-		
+        
         if(request()->has('status'))
             $notification_type->whereStatus(request('status'));
         
@@ -685,24 +701,24 @@ class NotificationController extends Controller
                 $notification_type->orderBy(request('sortBy'), request('order'));
         }
         
-		return $notification_type->paginate(request('pageLength'));
-	}
+        return $notification_type->paginate(request('pageLength'));
+    }
 
-	public function allType(){
+    public function allType(){
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {
             return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
         }
         
-		$notification_type = \App\NotificationType::whereNotNull('id');
-		
+        $notification_type = \App\NotificationType::whereNotNull('id');
+        
         $notification_type->whereStatus(1);
         $notification_type->orderBy('name', 'ASC');
         $countries = $notification_type->pluck('name');
         
-		return response()->json(['status' => 'success', 'message' => 'Get Notification Type Data Successfully!', 'types' => $countries], 200);
-	}
+        return response()->json(['status' => 'success', 'message' => 'Get Notification Type Data Successfully!', 'types' => $countries], 200);
+    }
 
     public function storeType(Request $request){
         try {
@@ -716,7 +732,7 @@ class NotificationController extends Controller
         ]);
         
         if($validation->fails())
-        	return response()->json(['status' => 'fail', 'message' => $validation->messages()->first()], 422);
+            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first()], 422);
         
         $notification_type = new \App\NotificationType;
         $notification_type->fill(request()->all());

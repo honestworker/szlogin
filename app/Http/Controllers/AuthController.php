@@ -36,7 +36,7 @@ class AuthController extends Controller
         $user = \App\User::whereEmail(request('email'))->where('backend', '=', 1)->first();
         if (!$user)
             return response()->json(['status' => 'fail', 'message' => 'You do not have any administrator account. Please sign up.'], 422);
-
+            
         if($user->status == 'pending')
             return response()->json(['status' => 'fail', 'message' => 'Your account is disabled administrator permission.'], 422);
             
@@ -45,7 +45,7 @@ class AuthController extends Controller
             
         if($user->status != 'activated')
             return response()->json(['status' => 'fail', 'message' => 'There is something wrong with your account. Please contact system administrator.'], 422);
-
+            
         return response()->json(['status' => 'success', 'message' => 'You are successfully logged in!', 'token' => $token], 200);
     }
 
@@ -170,7 +170,7 @@ class AuthController extends Controller
             'phone_number' => 'required',
             'email' => 'required|email|unique:users',
         ]);
-
+        
         if($validation->fails())
             return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'incorrect'], 422);
             
@@ -249,7 +249,7 @@ class AuthController extends Controller
         $profile->phone_number = request('phone_number');
         $profile->country = request('country');
         
-		if(request()->file('avatar')) {
+        if(request()->file('avatar')) {
             $extension = $request->file('avatar')->getClientOriginalExtension();
             $filename = time('Ymdhis');
             $file = $request->file('avatar')->move($this->avatar_path, $filename.".".$extension);
@@ -312,7 +312,7 @@ class AuthController extends Controller
         $profile->country = request('country');
         $profile->city = request('city');
         
-		if(request()->file('avatar')) {
+        if(request()->file('avatar')) {
             $extension = $request->file('avatar')->getClientOriginalExtension();
             $filename = time('Ymdhis');
             $file = $request->file('avatar')->move($this->avatar_path, $filename.".".$extension);
@@ -360,10 +360,10 @@ class AuthController extends Controller
         if(env('IS_DEMO'))
             return response()->json(['status' => 'fail', 'message' => 'You are not allowed to perform this action in this mode.'], 422);
         
-		if(!request()->has('id'))
+        if(!request()->has('id'))
             return response()->json(['status' => 'fail', 'message' => 'You must specify user ID!'], 422);
         
-		if(!request()->has('group_id'))
+        if(!request()->has('group_id'))
             return response()->json(['status' => 'fail', 'message' => 'You must specify Group ID!'], 422);
         
         if (!request('group_id'))

@@ -15,27 +15,27 @@ class AdvertisementController extends Controller
     protected $images_base_path = 'images/advertisements/base.png';
     protected $image_extensions = array('jpeg', 'png', 'jpg', 'gif');
 
-	public function index(){
+    public function index(){
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {
             return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
         }
-
-		$advertisements = \App\Advertisement::whereNotNull('id');
-		
-		if(request()->has('country'))
-		    $advertisements->where('country', request('country'));
-			
+        
+        $advertisements = \App\Advertisement::whereNotNull('id');
+        
+        if(request()->has('country'))
+            $advertisements->where('country', request('country'));
+            
         if(request()->has('status'))
             $advertisements->whereStatus(request('status'));
-
+            
         if(request()->has('show_count_oper') && request()->has('show_count'))
             $advertisements->where('show_count', request('show_count_oper'), request('show_count'));
-
+            
         if(request()->has('link_count_oper') && request()->has('link_count'))
             $advertisements->where('link_count', request('link_count_oper'), request('link_count'));
-
+            
         if(request()->has('start_date_oper') && request()->has('start_date')) {
             $advertisements->where('start_date', '!=', '')
                 ->where('start_date', request('start_date_oper'), request('start_date'));
@@ -47,11 +47,11 @@ class AdvertisementController extends Controller
         }
         
         $advertisements->select('id', 'country', 'image', 'link', 'name', 'start_date', 'end_date', 'status', \DB::raw('(select count(*) from ads_count where ads_count.ad_id = ads.id and ads_count.type = \'show\') as show_count'), \DB::raw('(select sum(count) from ads_count where ads_count.ad_id = ads.id and ads_count.type = \'show\') as show_sum'), \DB::raw('(select count(*) from ads_count where ads_count.ad_id = ads.id and ads_count.type = \'click\') as click_count'), \DB::raw('(select sum(count) from ads_count where ads_count.ad_id = ads.id and ads_count.type = \'click\') as click_sum'));
-
+        
         //$advertisements->orderBy(request('sortBy'), request('order'));
         
-		return $advertisements->paginate(request('pageLength'));
-	}
+        return $advertisements->paginate(request('pageLength'));
+    }
 
     private function initUserAdsCount() {
         $now_date = date("Y-m-d");
@@ -163,7 +163,7 @@ class AdvertisementController extends Controller
         } catch (JWTException $e) {
             return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
         }
-
+        
         $advertisement = \App\Advertisement::whereId($id)->first();
         
         if(!$advertisement)
@@ -178,7 +178,7 @@ class AdvertisementController extends Controller
         } catch (JWTException $e) {
             return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
         }
-
+        
         $advertisement = \App\Advertisement::whereId($id)->first();
         
         if(!$advertisement)
@@ -396,7 +396,7 @@ class AdvertisementController extends Controller
         $month3_before = date("Y-m-d H:i:s", strtotime("$now_date  -3 months"));
         
         $ad_infor = array();
-		if(request()->has('selectedAds')) {
+        if(request()->has('selectedAds')) {
             $advertisements = \App\Advertisement::whereIn('id', explode(',', request('selectedAds')))->get();
             foreach($advertisements as $advertisement) {
                 $advertisement_counts = \App\AdvertisementCount::whereNotNull('id');

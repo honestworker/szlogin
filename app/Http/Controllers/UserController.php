@@ -16,52 +16,52 @@ class UserController extends Controller
 
     protected $avatar_path = 'images/users/';
 
-	public function index(){
+    public function index(){
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {
             return response()->json(['authenticated' => false], 422);
         }
-
+        
         $user = JWTAuth::parseToken()->authenticate();
         
-		$users = \App\User::with('profile', 'profile.group')->whereNotNull('id');
-		
-		// if(request()->has('first_name'))
+        $users = \App\User::with('profile', 'profile.group')->whereNotNull('id');
+        
+        // if(request()->has('first_name'))
         //     $users->whereHas('profile',function($q) use ($request){
         //         $q->where('first_name','like','%'.request('first_name').'%');
         //     });
             
-		// if(request()->has('family_name'))
+        // if(request()->has('family_name'))
         //     $users->whereHas('profile',function($q) use ($request){
         //         $q->where('family_name','like','%'.request('family_name').'%');
         //     });
             
-		if(request()->has('full_name'))
+        if(request()->has('full_name'))
             $users->whereHas('profile',function($q) {
                 $q->where('full_name','like', '%'.request('full_name').'%');
             });
         
-		if(request()->has('phone_number'))
+        if(request()->has('phone_number'))
             $users->whereHas('profile',function($q) {
                 $q->where('phone_number','like','%'.request('phone_number').'%');
             });
             
-		if(request()->has('email'))
-			$users->where('email','like','%'.request('email').'%');
-		
-		if(request()->has('group_id'))
+        if(request()->has('email'))
+            $users->where('email','like','%'.request('email').'%');
+        
+        if(request()->has('group_id'))
             $users->whereHas('profile.group',function($q) {
                 $q->where('group_id','like','%'.request('group_id').'%');
             });
             
-		if(request()->has('backend')) {
+        if(request()->has('backend')) {
             $users->whereBackend(request('backend'));
         } else {
             $users->whereBackend(0);
         }
         
-		if(request()->has('is_admin'))
+        if(request()->has('is_admin'))
             if(request('is_admin') >= 0)
                 $users->whereHas('profile',function($q) {
                     $q->where('is_admin','=', request('is_admin'));
@@ -79,10 +79,10 @@ class UserController extends Controller
                 $users->select('id', 'email', 'status', \DB::raw('(select ' . request('sortBy') . ' from groups where profiles.user_id = groups.group_id) as '. request('sortBy')))->orderBy(request('sortBy'), request('order'));
         }
         
-		return $users->paginate(request('pageLength'));
-	}
+        return $users->paginate(request('pageLength'));
+    }
 
-	public function getUser(Request $request, $id){
+    public function getUser(Request $request, $id){
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {
@@ -96,16 +96,16 @@ class UserController extends Controller
         $profile = $user->Profile;
         $email = $user->email;
         $group_id = $role = "";
-        		
+                
         $user_group = \App\Group::where('id', '=', $profile->group_id)->pluck('group_id');
         if (count($user_group)) {
             $group_id = $user_group[0];
         }
-		
-		return response()->json(['status' => 'success', 'message' => 'Get User Data Successfully!', 'data' => compact('profile', 'group_id', 'email')], 200);
+        
+        return response()->json(['status' => 'success', 'message' => 'Get User Data Successfully!', 'data' => compact('profile', 'group_id', 'email')], 200);
     }
     
-	public function getMyProfile(Request $request){
+    public function getMyProfile(Request $request){
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {
@@ -119,13 +119,13 @@ class UserController extends Controller
         $profile = $user->Profile;
         $email = $user->email;
         $group_id = $role = "";
-        		
+                
         $user_group = \App\Group::where('id', '=', $profile->group_id)->pluck('group_id');
         if (count($user_group)) {
             $group_id = $user_group[0];
         }
-		
-		return response()->json(['status' => 'success', 'message' => 'Get User Data Successfully!', 'data' => compact('profile', 'user', 'group_id', 'email')], 200);
+        
+        return response()->json(['status' => 'success', 'message' => 'Get User Data Successfully!', 'data' => compact('profile', 'user', 'group_id', 'email')], 200);
     }
 
     public function profile() {
@@ -215,7 +215,7 @@ class UserController extends Controller
         if (!$group_id) {
             return response()->json(['status' => 'fail', 'message' => 'You must became a group member.', 'error_type' => 'no_memeber'], 422);
         }
-		
+        
         $group = \App\Group::find($group_id);
         if (!$group) {
             return response()->json(['status' => 'fail', 'message' => 'Could not find the your group.', 'error_type' => 'no_group'], 422);
@@ -340,7 +340,7 @@ class UserController extends Controller
                 $comment->delete();
             }
         }
-    
+        
         $user->delete();
         
         return response()->json(['status' => 'success', 'message' => 'The account has deleted successfully!'], 200);
@@ -598,7 +598,7 @@ class UserController extends Controller
         $user = JWTAuth::parseToken()->authenticate();
         $user->push_token = request('push_token');
         $user->save();
-
+        
         $profile = $user->Profile;
         $profile->os_type = request('os_type');
         $profile->save();
@@ -711,7 +711,7 @@ class UserController extends Controller
         $users = \App\User::whereNotNull('id');
         //$activated_users = count($users->whereStatus('activated')->where('activated_at', '>=',  $month_before)->get());
         $activated_users = count($users->where('backend', '=', '0')->where('activated_at', '>=',  $month_before)->get());
-
+        
         return response()->json(['status' => 'success', 'message' => 'User and Visitor Overview!', 'data' => compact('total', 'infor', 'activated_users', 'visitor_infor', 'visitors_infor')]);
     }
 }

@@ -12,39 +12,39 @@ date_default_timezone_set("Europe/Stockholm");
 class GroupController extends Controller
 {
 
-	public function index(){
+    public function index(){
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {
             return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
         }
-		$groups = \App\Group::whereNotNull('id');
-		
-		if(request()->has('group_id')) {
+        $groups = \App\Group::whereNotNull('id');
+        
+        if(request()->has('group_id')) {
             $groups->where('group_id','like','%'.request('group_id').'%');
         }
         
-		if(request()->has('org_name')) {
+        if(request()->has('org_name')) {
             $groups->where('group_id','like','%'.request('org_name').'%');
         }
-
-		if(request()->has('org_number')) {
+        
+        if(request()->has('org_number')) {
             $groups->where('group_id','like','%'.request('org_number').'%');
         }
         
-		if(request()->has('contact_person')) {
+        if(request()->has('contact_person')) {
             $groups->where('group_id','like','%'.request('contact_person').'%');
         }
         
-		if(request()->has('email')) {
+        if(request()->has('email')) {
             $groups->where('group_id','like','%'.request('email').'%');
         }
         
-		if(request()->has('mobile_number')) {
+        if(request()->has('mobile_number')) {
             $groups->where('group_id','like','%'.request('mobile_number').'%');
         }
         
-		if(request()->has('country')) {
+        if(request()->has('country')) {
             $groups->where('group_id','like','%'.request('country').'%');
         }
         
@@ -54,23 +54,23 @@ class GroupController extends Controller
         if (request()->has('sortBy') && request()->has('order') )
             $groups->orderBy(request('sortBy'), request('order'));
             
-		return $groups->paginate(request('pageLength'));
-	}
+        return $groups->paginate(request('pageLength'));
+    }
 
-	public function all(){
+    public function all(){
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {
             return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
         }
-		$groups = \App\Group::whereNotNull('id');
-		
+        $groups = \App\Group::whereNotNull('id');
+        
         $groups->whereStatus(1);
         $groups->orderBy('group_id', 'ASC');
         
-		return response()->json(['status' => 'success', 'message' => 'Get Group Data Successfully!', 'data' => $groups->get()], 200);
-	}
-	
+        return response()->json(['status' => 'success', 'message' => 'Get Group Data Successfully!', 'data' => $groups->get()], 200);
+    }
+    
     public function store(Request $request){
         try {
             JWTAuth::parseToken()->authenticate();
@@ -88,14 +88,14 @@ class GroupController extends Controller
         ]);
         
         if($validation->fails())
-        	return response()->json(['status' => 'success', 'message' => $validation->messages()->first()], 422);
-
+            return response()->json(['status' => 'success', 'message' => $validation->messages()->first()], 422);
+            
         $user = \JWTAuth::parseToken()->authenticate();
         $group = new \App\Group;
         $group->fill(request()->all());
         $group->status = 1;
         $group->save();
-
+        
         return response()->json(['status' => 'success', 'message' => 'Group added!', 'data' => $group]);
     }
 

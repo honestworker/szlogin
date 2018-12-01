@@ -44,3 +44,7 @@ There are many Laravel+Vue.js starter kit available but none of them are complet
   <img width="700px" src="https://github.com/honestworker/szlogin/raw/master/public/images/github/5.png">
 </p>
 
+## Change Log
+
+1.1 2018/12/01
+	Fix Image handle function from mobile app(NotifiactionController)
