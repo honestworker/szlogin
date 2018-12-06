@@ -25339,17 +25339,17 @@ var routes = [{
         path: '/user/:id/view',
         component: __webpack_require__(96)
     }, {
-        path: '/user/new',
+        path: '/country',
         component: __webpack_require__(102)
     }, {
-        path: '/country',
-        component: __webpack_require__(105)
-    }, {
         path: '/notification',
+        component: __webpack_require__(108)
+    }, {
+        path: '/notification/:id',
         component: __webpack_require__(111)
     }, {
         path: '/noti_type',
-        component: __webpack_require__(112)
+        component: __webpack_require__(117)
     }, {
         path: '/advertisement',
         component: __webpack_require__(118)
@@ -25952,9 +25952,6 @@ module.exports = Component.exports
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__services_helper__ = __webpack_require__(1);
-//
-//
-//
 //
 //
 //
@@ -27223,15 +27220,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this.$refs.groupChart.drawChart();
             }).catch(function (error) {
                 if (error.response.data) {
-                    if (error.response.data.message) {
-                        toastr['error'](error.response.data.message);
-                    } else {
+                    if (error.response.data.error_type == 'token_error') {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this.$router.push('/login');
+                    } else {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('An unexpected error occurred!');
+                        }
                     }
                 } else {
-                    toastr['error']('The token is expired! Please refresh and try again!');
-                    _this.$router.push('/login');
+                    toastr['error']('An unexpected error occurred!');
                 }
             });
         },
@@ -27263,15 +27263,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this2.$refs.userPieChart.drawChart();
             }).catch(function (error) {
                 if (error.response.data) {
-                    if (error.response.data.message) {
-                        toastr['error'](error.response.data.message);
-                    } else {
+                    if (error.response.data.error_type == 'token_error') {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this2.$router.push('/login');
+                    } else {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('An unexpected error occurred!');
+                        }
                     }
                 } else {
-                    toastr['error']('The token is expired! Please refresh and try again!');
-                    _this2.$router.push('/login');
+                    toastr['error']('An unexpected error occurred!');
                 }
             });
         },
@@ -27284,15 +27287,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this3.statistics = response.data.data.statistics;
             }).catch(function (error) {
                 if (error.response.data) {
-                    if (error.response.data.message) {
-                        toastr['error'](error.response.data.message);
-                    } else {
+                    if (error.response.data.error_type == 'token_error') {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this3.$router.push('/login');
+                    } else {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('An unexpected error occurred!');
+                        }
                     }
                 } else {
-                    toastr['error']('The token is expired! Please refresh and try again!');
-                    _this3.$router.push('/login');
+                    toastr['error']('An unexpected error occurred!');
                 }
             });
         },
@@ -28386,15 +28392,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this.groups = response.data;
             }).catch(function (error) {
                 if (error.response.data) {
-                    if (error.response.data.message) {
-                        toastr['error'](error.response.data.message);
-                    } else {
+                    if (error.response.data.error_type == 'token_error') {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this.$router.push('/login');
+                    } else {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('An unexpected error occurred!');
+                        }
                     }
                 } else {
-                    toastr['error']('The token is expired! Please refresh and try again!');
-                    _this.$router.push('/login');
+                    toastr['error']('An unexpected error occurred!');
                 }
             });
         },
@@ -28405,15 +28414,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this2.countries = response.data;
             }).catch(function (error) {
                 if (error.response.data) {
-                    if (error.response.data.message) {
-                        toastr['error'](error.response.data.message);
-                    } else {
+                    if (error.response.data.error_type == 'token_error') {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this2.$router.push('/login');
+                    } else {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('An unexpected error occurred!');
+                        }
                     }
                 } else {
-                    toastr['error']('The token is expired! Please refresh and try again!');
-                    _this2.$router.push('/login');
+                    toastr['error']('An unexpected error occurred!');
                 }
             });
         },
@@ -28430,18 +28442,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this3.getGroups();
             }).catch(function (error) {
                 if (error.response.data) {
-                    if (error.response.data.message) {
-                        $('#modal-delete-group').modal('hide');
-                        toastr['error'](error.response.data.message);
-                        _this3.getGroups();
-                    } else {
+                    if (error.response.data.error_type == 'token_error') {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this3.$router.push('/login');
+                    } else {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('An unexpected error occurred!');
+                        }
                     }
                 } else {
-                    toastr['error']('The token is expired! Please refresh and try again!');
-                    _this3.$router.push('/login');
+                    toastr['error']('An unexpected error occurred!');
                 }
+                $('#modal-delete-group').modal('hide');
             });
         },
         editGroup: function editGroup(group) {
@@ -28457,15 +28471,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this4.getGroups();
             }).catch(function (error) {
                 if (error.response.data) {
-                    if (error.response.data.message) {
-                        toastr['error'](error.response.data.message);
-                    } else {
+                    if (error.response.data.error_type == 'token_error') {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this4.$router.push('/login');
+                    } else {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('An unexpected error occurred!');
+                        }
                     }
                 } else {
-                    toastr['error']('The token is expired! Please refresh and try again!');
-                    _this4.$router.push('/login');
+                    toastr['error']('An unexpected error occurred!');
                 }
             });
         }
@@ -29429,15 +29446,18 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 _this.countries = response.data;
             }).catch(function (error) {
                 if (error.response.data) {
-                    if (error.response.data.message) {
-                        toastr['error'](error.response.data.message);
-                    } else {
+                    if (error.response.data.error_type == 'token_error') {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this.$router.push('/login');
+                    } else {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('An unexpected error occurred!');
+                        }
                     }
                 } else {
-                    toastr['error']('The token is expired! Please refresh and try again!');
-                    _this.$router.push('/login');
+                    toastr['error']('An unexpected error occurred!');
                 }
             });
         },
@@ -29455,15 +29475,18 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 toastr['success'](response.message);
             }).catch(function (error) {
                 if (error.response.data) {
-                    if (error.response.data.message) {
-                        toastr['error'](error.response.data.message);
-                    } else {
+                    if (error.response.data.error_type == 'token_error') {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this2.$router.push('/login');
+                    } else {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('An unexpected error occurred!');
+                        }
                     }
                 } else {
-                    toastr['error']('The token is expired! Please refresh and try again!');
-                    _this2.$router.push('/login');
+                    toastr['error']('An unexpected error occurred!');
                 }
             });
         },
@@ -29498,18 +29521,20 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 _this3.adminForm.country = _this3.user_data.profile.country ? _this3.user_data.profile.country : "";
                 _this3.adminForm.city = _this3.user_data.profile.city ? _this3.user_data.profile.city : "";
                 _this3.adminForm.created_at = _this3.user_data.profile.created_at ? _this3.user_data.profile.created_at : "";
-                console.log("OK");
             }).catch(function (error) {
                 if (error.response.data) {
-                    if (error.response.data.message) {
-                        toastr['error'](error.response.data.message);
-                    } else {
+                    if (error.response.data.error_type == 'token_error') {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this3.$router.push('/login');
+                    } else {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('An unexpected error occurred!');
+                        }
                     }
                 } else {
-                    toastr['error']('The token is expired! Please refresh and try again!');
-                    _this3.$router.push('/login');
+                    toastr['error']('An unexpected error occurred!');
                 }
             });
         },
@@ -29526,15 +29551,18 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 toastr['success'](response.data.message);
             }).catch(function (error) {
                 if (error.response.data) {
-                    if (error.response.data.message) {
-                        toastr['error'](error.response.data.message);
-                    } else {
+                    if (error.response.data.error_type == 'token_error') {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this4.$router.push('/login');
+                    } else {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('An unexpected error occurred!');
+                        }
                     }
                 } else {
-                    toastr['error']('The token is expired! Please refresh and try again!');
-                    _this4.$router.push('/login');
+                    toastr['error']('An unexpected error occurred!');
                 }
             });
         },
@@ -29545,15 +29573,18 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 toastr['success'](response.message);
             }).catch(function (error) {
                 if (error.response.data) {
-                    if (error.response.data.message) {
-                        toastr['error'](error.response.data.message);
-                    } else {
+                    if (error.response.data.error_type == 'token_error') {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this5.$router.push('/login');
+                    } else {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('An unexpected error occurred!');
+                        }
                     }
                 } else {
-                    toastr['error']('The token is expired! Please refresh and try again!');
-                    _this5.$router.push('/login');
+                    toastr['error']('An unexpected error occurred!');
                 }
             });
             this.getUser();
@@ -30361,15 +30392,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this.countries = response.data;
             }).catch(function (error) {
                 if (error.response.data) {
-                    if (error.response.data.message) {
-                        toastr['error'](error.response.data.message);
-                    } else {
+                    if (error.response.data.error_type == 'token_error') {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this.$router.push('/login');
+                    } else {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('An unexpected error occurred!');
+                        }
                     }
                 } else {
-                    toastr['error']('The token is expired! Please refresh and try again!');
-                    _this.$router.push('/login');
+                    toastr['error']('An unexpected error occurred!');
                 }
             });
         },
@@ -30394,15 +30428,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this2.$router.push('/group');
             }).catch(function (error) {
                 if (error.response.data) {
-                    if (error.response.data.message) {
-                        toastr['error'](error.response.data.message);
-                    } else {
+                    if (error.response.data.error_type == 'token_error') {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this2.$router.push('/login');
+                    } else {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('An unexpected error occurred!');
+                        }
                     }
                 } else {
-                    toastr['error']('The token is expired! Please refresh and try again!');
-                    _this2.$router.push('/login');
+                    toastr['error']('An unexpected error occurred!');
                 }
             });
         },
@@ -30419,15 +30456,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this3.groupForm.country = response.data.country;
             }).catch(function (error) {
                 if (error.response.data) {
-                    if (error.response.data.message) {
-                        toastr['error'](error.response.data.message);
-                    } else {
+                    if (error.response.data.error_type == 'token_error') {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this3.$router.push('/login');
+                    } else {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('An unexpected error occurred!');
+                        }
                     }
                 } else {
-                    toastr['error']('The token is expired! Please refresh and try again!');
-                    _this3.$router.push('/login');
+                    toastr['error']('An unexpected error occurred!');
                 }
             });
         },
@@ -30445,15 +30485,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this4.$router.push('/group');
             }).catch(function (error) {
                 if (error.response.data) {
-                    if (error.response.data.message) {
-                        toastr['error'](error.response.data.message);
-                    } else {
+                    if (error.response.data.error_type == 'token_error') {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this4.$router.push('/login');
+                    } else {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('An unexpected error occurred!');
+                        }
                     }
                 } else {
-                    toastr['error']('The token is expired! Please refresh and try again!');
-                    _this4.$router.push('/login');
+                    toastr['error']('An unexpected error occurred!');
                 }
             });
         }
@@ -31151,15 +31194,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this.users = response.data;
             }).catch(function (error) {
                 if (error.response.data) {
-                    if (error.response.data.message) {
-                        toastr['error'](error.response.data.message);
-                    } else {
+                    if (error.response.data.error_type == 'token_error') {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this.$router.push('/login');
+                    } else {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('An unexpected error occurred!');
+                        }
                     }
                 } else {
-                    toastr['error']('The token is expired! Please refresh and try again!');
-                    _this.$router.push('/login');
+                    toastr['error']('An unexpected error occurred!');
                 }
             });
         },
@@ -31176,6 +31222,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var user_role = '';
             if (user.profile.is_admin == 1) user_role = user_role + '<span class="label label-primary">Group</span>';else user_role = user_role + '<span class="label label-success">User</span>';
             return user_role;
+        },
+        getAdminFullName: function getAdminFullName(user) {
+            if (user.profile) return user.profile.full_name;
+
+            return '';
+        },
+        getAdminPhoneNumber: function getAdminPhoneNumber(user) {
+            if (user.profile) return user.profile.phone_number;
+
+            return '';
+        },
+        getAdminEmail: function getAdminEmail(user) {
+            if (user.profile) return user.profile.email;
+
+            return '';
         },
         getUserStatus: function getUserStatus(user) {
             if (user.status == 'pending') return '<span class="label label-warning">Pending</span>';else if (user.status == 'activated') return '<span class="label label-success">Activated</span>';
@@ -31199,18 +31260,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this2.getUsers();
             }).catch(function (error) {
                 if (error.response.data) {
-                    if (error.response.data.message) {
-                        $('#modal-delete-user').modal('hide');
-                        toastr['error'](error.response.data.message);
-                        _this2.getUsers();
-                    } else {
+                    if (error.response.data.error_type == 'token_error') {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this2.$router.push('/login');
+                    } else {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('An unexpected error occurred!');
+                        }
                     }
                 } else {
-                    toastr['error']('The token is expired! Please refresh and try again!');
-                    _this2.$router.push('/login');
+                    toastr['error']('An unexpected error occurred!');
                 }
+                $('#modal-delete-user').modal('hide');
             });
         },
         isGroupManager: function isGroupManager(user) {
@@ -31232,18 +31295,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this3.getUsers();
             }).catch(function (error) {
                 if (error.response.data) {
-                    if (error.response.data.message) {
-                        toastr['error'](error.response.data.message);
-                        $('#modal-group-manager').modal('hide');
-                        _this3.getUsers();
-                    } else {
+                    if (error.response.data.error_type == 'token_error') {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this3.$router.push('/login');
+                    } else {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('An unexpected error occurred!');
+                        }
                     }
                 } else {
-                    toastr['error']('The token is expired! Please refresh and try again!');
-                    _this3.$router.push('/login');
+                    toastr['error']('An unexpected error occurred!');
                 }
+                $('#modal-group-manager').modal('hide');
             });
         },
         modalDisableGroupManager: function modalDisableGroupManager(user) {
@@ -31259,18 +31324,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this4.getUsers();
             }).catch(function (error) {
                 if (error.response.data) {
-                    if (error.response.data.message) {
-                        $('#modal-disable-group-manager').modal('hide');
-                        toastr['error'](error.response.data.message);
-                        _this4.getUsers();
-                    } else {
+                    if (error.response.data.error_type == 'token_error') {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this4.$router.push('/login');
+                    } else {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('An unexpected error occurred!');
+                        }
                     }
                 } else {
-                    toastr['error']('The token is expired! Please refresh and try again!');
-                    _this4.$router.push('/login');
+                    toastr['error']('An unexpected error occurred!');
                 }
+                $('#modal-disable-group-manager').modal('hide');
             });
         }
     },
@@ -31633,7 +31700,7 @@ var render = function() {
                         return _c("tr", [
                           _c("td", {
                             domProps: {
-                              textContent: _vm._s(user.profile.full_name)
+                              textContent: _vm._s(_vm.getAdminFullName(user))
                             }
                           }),
                           _vm._v(" "),
@@ -31645,12 +31712,14 @@ var render = function() {
                           _vm._v(" "),
                           _c("td", {
                             domProps: {
-                              textContent: _vm._s(user.profile.phone_number)
+                              textContent: _vm._s(_vm.getAdminPhoneNumber(user))
                             }
                           }),
                           _vm._v(" "),
                           _c("td", {
-                            domProps: { textContent: _vm._s(user.email) }
+                            domProps: {
+                              textContent: _vm._s(_vm.getAdminEmail(user))
+                            }
                           }),
                           _vm._v(" "),
                           _c("td", {
@@ -32391,15 +32460,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this.userForm.group_id = _this.user_data.group_id ? _this.user_data.group_id : "";
             }).catch(function (error) {
                 if (error.response.data) {
-                    if (error.response.data.message) {
-                        toastr['error'](error.response.data.message);
-                    } else {
+                    if (error.response.data.error_type == 'token_error') {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this.$router.push('/login');
+                    } else {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('An unexpected error occurred!');
+                        }
                     }
                 } else {
-                    toastr['error']('The token is expired! Please refresh and try again!');
-                    _this.$router.push('/login');
+                    toastr['error']('An unexpected error occurred!');
                 }
             });
         }
@@ -32749,969 +32821,7 @@ var normalizeComponent = __webpack_require__(0)
 /* script */
 var __vue_script__ = __webpack_require__(103)
 /* template */
-var __vue_template__ = __webpack_require__(104)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/views/user/new.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-68f6240f", Component.options)
-  } else {
-    hotAPI.reload("data-v-68f6240f", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 103 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_laravel_vue_pagination__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_laravel_vue_pagination___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_laravel_vue_pagination__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_helper__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_click_confirm__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_click_confirm___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_click_confirm__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    components: { pagination: __WEBPACK_IMPORTED_MODULE_0_laravel_vue_pagination___default.a, ClickConfirm: __WEBPACK_IMPORTED_MODULE_2_click_confirm___default.a },
-    data: function data() {
-        return {
-            users: {},
-            groups: {},
-            filterUserForm: {
-                sortBy: 'group_name',
-                order: 'desc',
-                group_name: '',
-                org_number: '',
-                contact_person: '',
-                phone_num: '',
-                email: '',
-                status: 'pending',
-                pageLength: 5
-            },
-            group_id: 0,
-            deletingUser: 1,
-            user_id: 0
-        };
-    },
-    mounted: function mounted() {
-        this.getUsers();
-        this.getGroups();
-    },
-
-    methods: {
-        getUsers: function getUsers(page) {
-            var _this = this;
-
-            if (typeof page === 'undefined') {
-                page = 1;
-            }
-            var url = __WEBPACK_IMPORTED_MODULE_1__services_helper__["a" /* default */].getFilterURL(this.filterUserForm);
-            axios.get('/api/user?&page=' + page + url).then(function (response) {
-                _this.users = response.data;
-            }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.message) {
-                        toastr['error'](error.response.data.message);
-                    } else {
-                        toastr['error']('The token is expired! Please refresh and try again!');
-                        _this.$router.push('/login');
-                    }
-                } else {
-                    toastr['error']('The token is expired! Please refresh and try again!');
-                    _this.$router.push('/login');
-                }
-            });
-        },
-        getGroups: function getGroups() {
-            var _this2 = this;
-
-            axios.post('/api/group/all').then(function (response) {
-                _this2.groups = response.data;
-                if (_this2.groups.data.length > 0) _this2.group_id = _this2.groups.data[0].id;
-            }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.message) {
-                        toastr['error'](error.response.data.message);
-                    } else {
-                        toastr['error']('The token is expired! Please refresh and try again!');
-                        _this2.$router.push('/login');
-                    }
-                } else {
-                    toastr['error']('The token is expired! Please refresh and try again!');
-                    _this2.$router.push('/login');
-                }
-            });
-        },
-        changeGroup: function changeGroup(e) {
-            if (e.target.options.selectedIndex > -1) {
-                this.group_id = e.target.options[e.target.options.selectedIndex].value;
-            }
-        },
-        assignGroupID: function assignGroupID(user) {
-            var _this3 = this;
-
-            axios.post('/api/user/assign?id=' + user.id + '&group_id=' + this.group_id).then(function (response) {
-                toastr['success'](response.data.message);
-                _this3.getUsers();
-            }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.message) {
-                        toastr['error'](error.response.data.message);
-                    } else {
-                        toastr['error']('The token is expired! Please refresh and try again!');
-                        _this3.$router.push('/login');
-                    }
-                } else {
-                    toastr['error']('The token is expired! Please refresh and try again!');
-                    _this3.$router.push('/login');
-                }
-            });
-        },
-        modalDeleteUser: function modalDeleteUser(user) {
-            this.user_id = user.id;
-            $('#modal-delete-user').modal('show');
-        },
-        deleteUser: function deleteUser() {
-            var _this4 = this;
-
-            axios.delete('/api/user/' + this.user_id).then(function (response) {
-                toastr['success'](response.data.message);
-                $('#modal-delete-user').modal('hide');
-                _this4.getUsers();
-            }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.message) {
-                        toastr['error'](error.response.data.message);
-                    } else {
-                        toastr['error']('The token is expired! Please refresh and try again!');
-                        _this4.$router.push('/login');
-                    }
-                } else {
-                    toastr['error']('The token is expired! Please refresh and try again!');
-                    _this4.$router.push('/login');
-                }
-            });
-        }
-    },
-    filters: {}
-});
-
-/***/ }),
-/* 104 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", [
-    _c("div", { staticClass: "row page-titles" }, [
-      _c("div", { staticClass: "col-md-6 col-8 align-self-center" }, [
-        _c("h3", { staticClass: "text-themecolor m-b-0 m-t-0" }, [
-          _vm._v("User")
-        ]),
-        _vm._v(" "),
-        _c("ol", { staticClass: "breadcrumb" }, [
-          _c(
-            "li",
-            { staticClass: "breadcrumb-item" },
-            [
-              _c("router-link", { attrs: { to: "/dashboard" } }, [
-                _vm._v("Dashboard")
-              ])
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c("li", { staticClass: "breadcrumb-item active" }, [
-            _vm._v("New User")
-          ])
-        ])
-      ])
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "col-lg-12" }, [
-        _c("div", { staticClass: "card" }, [
-          _c("div", { staticClass: "card-body" }, [
-            _c("h4", { staticClass: "card-title" }, [_vm._v("Filter User")]),
-            _vm._v(" "),
-            _c("div", { staticClass: "row m-t-20" }, [
-              _c("div", { staticClass: "col-md-3" }, [
-                _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: "" } }, [_vm._v("Group Name")]),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.filterUserForm.group_name,
-                        expression: "filterUserForm.group_name"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    domProps: { value: _vm.filterUserForm.group_name },
-                    on: {
-                      change: _vm.getUsers,
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(
-                          _vm.filterUserForm,
-                          "group_name",
-                          $event.target.value
-                        )
-                      }
-                    }
-                  })
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "col-md-3" }, [
-                _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: "" } }, [
-                    _vm._v("Organization Number")
-                  ]),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.filterUserForm.org_number,
-                        expression: "filterUserForm.org_number"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    domProps: { value: _vm.filterUserForm.org_number },
-                    on: {
-                      change: _vm.getUsers,
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(
-                          _vm.filterUserForm,
-                          "org_number",
-                          $event.target.value
-                        )
-                      }
-                    }
-                  })
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "col-md-3" }, [
-                _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: "" } }, [
-                    _vm._v("Contact Person")
-                  ]),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.filterUserForm.contact_person,
-                        expression: "filterUserForm.contact_person"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    domProps: { value: _vm.filterUserForm.contact_person },
-                    on: {
-                      change: _vm.getUsers,
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(
-                          _vm.filterUserForm,
-                          "contact_person",
-                          $event.target.value
-                        )
-                      }
-                    }
-                  })
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "col-md-3" }, [
-                _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: "" } }, [_vm._v("Phone Number")]),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.filterUserForm.phone_number,
-                        expression: "filterUserForm.phone_number"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    domProps: { value: _vm.filterUserForm.phone_number },
-                    on: {
-                      change: _vm.getUsers,
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(
-                          _vm.filterUserForm,
-                          "phone_number",
-                          $event.target.value
-                        )
-                      }
-                    }
-                  })
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "col-md-3" }, [
-                _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: "" } }, [_vm._v("Email")]),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.filterUserForm.email,
-                        expression: "filterUserForm.email"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    domProps: { value: _vm.filterUserForm.email },
-                    on: {
-                      change: _vm.getUsers,
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(
-                          _vm.filterUserForm,
-                          "email",
-                          $event.target.value
-                        )
-                      }
-                    }
-                  })
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "col-md-3" }, [
-                _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: "" } }, [_vm._v("Sort By")]),
-                  _vm._v(" "),
-                  _c(
-                    "select",
-                    {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.filterUserForm.sortBy,
-                          expression: "filterUserForm.sortBy"
-                        }
-                      ],
-                      staticClass: "form-control",
-                      attrs: { name: "sortBy" },
-                      on: {
-                        change: [
-                          function($event) {
-                            var $$selectedVal = Array.prototype.filter
-                              .call($event.target.options, function(o) {
-                                return o.selected
-                              })
-                              .map(function(o) {
-                                var val = "_value" in o ? o._value : o.value
-                                return val
-                              })
-                            _vm.$set(
-                              _vm.filterUserForm,
-                              "sortBy",
-                              $event.target.multiple
-                                ? $$selectedVal
-                                : $$selectedVal[0]
-                            )
-                          },
-                          _vm.getUsers
-                        ]
-                      }
-                    },
-                    [
-                      _c("option", { attrs: { value: "group_name" } }, [
-                        _vm._v("Group Name")
-                      ]),
-                      _vm._v(" "),
-                      _c("option", { attrs: { value: "org_number" } }, [
-                        _vm._v("Organization Number")
-                      ]),
-                      _vm._v(" "),
-                      _c("option", { attrs: { value: "contact_person" } }, [
-                        _vm._v("Contact Person")
-                      ]),
-                      _vm._v(" "),
-                      _c("option", { attrs: { value: "phone_number" } }, [
-                        _vm._v("Phone Number")
-                      ]),
-                      _vm._v(" "),
-                      _c("option", { attrs: { value: "email" } }, [
-                        _vm._v("Email")
-                      ])
-                    ]
-                  )
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "col-md-3" }, [
-                _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: "" } }, [_vm._v("Order")]),
-                  _vm._v(" "),
-                  _c(
-                    "select",
-                    {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.filterUserForm.order,
-                          expression: "filterUserForm.order"
-                        }
-                      ],
-                      staticClass: "form-control",
-                      attrs: { name: "order" },
-                      on: {
-                        change: [
-                          function($event) {
-                            var $$selectedVal = Array.prototype.filter
-                              .call($event.target.options, function(o) {
-                                return o.selected
-                              })
-                              .map(function(o) {
-                                var val = "_value" in o ? o._value : o.value
-                                return val
-                              })
-                            _vm.$set(
-                              _vm.filterUserForm,
-                              "order",
-                              $event.target.multiple
-                                ? $$selectedVal
-                                : $$selectedVal[0]
-                            )
-                          },
-                          _vm.getUsers
-                        ]
-                      }
-                    },
-                    [
-                      _c("option", { attrs: { value: "asc" } }, [
-                        _vm._v("Asc")
-                      ]),
-                      _vm._v(" "),
-                      _c("option", { attrs: { value: "desc" } }, [
-                        _vm._v("Desc")
-                      ])
-                    ]
-                  )
-                ])
-              ])
-            ]),
-            _vm._v(" "),
-            _c("h4", { staticClass: "card-title" }, [_vm._v("User List")]),
-            _vm._v(" "),
-            _vm.users.total
-              ? _c("h6", { staticClass: "card-subtitle" }, [
-                  _vm._v("Total " + _vm._s(_vm.users.total) + " result found!")
-                ])
-              : _c("h6", { staticClass: "card-subtitle" }, [
-                  _vm._v("No result found!")
-                ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "card-body" }, [
-              _c("div", { staticClass: "col-md-3" }, [
-                _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: "" } }, [_vm._v("Group ID")]),
-                  _vm._v(" "),
-                  _c(
-                    "select",
-                    {
-                      staticClass: "form-control",
-                      attrs: { name: "groups" },
-                      on: { change: _vm.changeGroup }
-                    },
-                    _vm._l(_vm.groups.data, function(group) {
-                      return _c("option", { domProps: { value: group.id } }, [
-                        _vm._v(_vm._s(group.group_id))
-                      ])
-                    })
-                  )
-                ])
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "table-responsive" }, [
-              _vm.users.total
-                ? _c("table", { staticClass: "table" }, [
-                    _vm._m(0),
-                    _vm._v(" "),
-                    _c(
-                      "tbody",
-                      _vm._l(_vm.users.data, function(user) {
-                        return _c("tr", [
-                          _c("td", {
-                            domProps: {
-                              textContent: _vm._s(user.profile.group_name)
-                            }
-                          }),
-                          _vm._v(" "),
-                          _c("td", {
-                            domProps: {
-                              textContent: _vm._s(user.profile.org_number)
-                            }
-                          }),
-                          _vm._v(" "),
-                          _c("td", {
-                            domProps: {
-                              textContent: _vm._s(user.profile.contact_person)
-                            }
-                          }),
-                          _vm._v(" "),
-                          _c("td", {
-                            domProps: {
-                              textContent: _vm._s(user.profile.phone_number)
-                            }
-                          }),
-                          _vm._v(" "),
-                          _c("td", {
-                            domProps: { textContent: _vm._s(user.email) }
-                          }),
-                          _vm._v(" "),
-                          _c("td", [
-                            _c(
-                              "button",
-                              {
-                                staticClass: "btn btn-success btn-sm",
-                                attrs: {
-                                  "data-toggle": "tooltip",
-                                  title: "Assign Group ID"
-                                },
-                                on: {
-                                  click: function($event) {
-                                    $event.preventDefault()
-                                    _vm.assignGroupID(user)
-                                  }
-                                }
-                              },
-                              [_c("i", { staticClass: "fa fa-check" })]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "button",
-                              {
-                                staticClass: "btn btn-danger btn-sm",
-                                attrs: {
-                                  "data-toggle": "tooltip",
-                                  title: "Delete User"
-                                },
-                                on: {
-                                  click: function($event) {
-                                    $event.preventDefault()
-                                    _vm.modalDeleteUser(user)
-                                  }
-                                }
-                              },
-                              [_c("i", { staticClass: "fa fa-trash" })]
-                            )
-                          ])
-                        ])
-                      })
-                    )
-                  ])
-                : _vm._e(),
-              _vm._v(" "),
-              _c("div", { staticClass: "row" }, [
-                _c(
-                  "div",
-                  { staticClass: "col-md-8" },
-                  [
-                    _c("pagination", {
-                      attrs: { data: _vm.users, limit: 3 },
-                      on: { "pagination-change-page": _vm.getUsers }
-                    })
-                  ],
-                  1
-                ),
-                _vm._v(" "),
-                _c("div", { staticClass: "col-md-4" }, [
-                  _c("div", { staticClass: "float-right" }, [
-                    _vm.users.total
-                      ? _c(
-                          "select",
-                          {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.filterUserForm.pageLength,
-                                expression: "filterUserForm.pageLength"
-                              }
-                            ],
-                            staticClass: "form-control",
-                            attrs: { name: "pageLength" },
-                            on: {
-                              change: [
-                                function($event) {
-                                  var $$selectedVal = Array.prototype.filter
-                                    .call($event.target.options, function(o) {
-                                      return o.selected
-                                    })
-                                    .map(function(o) {
-                                      var val =
-                                        "_value" in o ? o._value : o.value
-                                      return val
-                                    })
-                                  _vm.$set(
-                                    _vm.filterUserForm,
-                                    "pageLength",
-                                    $event.target.multiple
-                                      ? $$selectedVal
-                                      : $$selectedVal[0]
-                                  )
-                                },
-                                _vm.getUsers
-                              ]
-                            }
-                          },
-                          [
-                            _c("option", { attrs: { value: "5" } }, [
-                              _vm._v("5 per page")
-                            ]),
-                            _vm._v(" "),
-                            _c("option", { attrs: { value: "10" } }, [
-                              _vm._v("10 per page")
-                            ]),
-                            _vm._v(" "),
-                            _c("option", { attrs: { value: "25" } }, [
-                              _vm._v("25 per page")
-                            ]),
-                            _vm._v(" "),
-                            _c("option", { attrs: { value: "100" } }, [
-                              _vm._v("100 per page")
-                            ])
-                          ]
-                        )
-                      : _vm._e()
-                  ])
-                ])
-              ])
-            ])
-          ])
-        ])
-      ])
-    ]),
-    _vm._v(" "),
-    _c(
-      "div",
-      {
-        staticClass: "modal",
-        attrs: { id: "modal-delete-user", tabindex: "-1", role: "dialog" }
-      },
-      [
-        _vm.deletingUser
-          ? _c("div", { staticClass: "modal-dialog" }, [
-              _c("div", { staticClass: "modal-content" }, [
-                _vm._m(1),
-                _vm._v(" "),
-                _c("div", { staticClass: "modal-body" }, [
-                  _vm._v(
-                    "\n                        Are you sure you want to delete this User?\n                    "
-                  )
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "modal-footer" }, [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-default",
-                      attrs: { type: "button", "data-dismiss": "modal" }
-                    },
-                    [_vm._v("No, Go Back")]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-danger",
-                      attrs: { type: "button" },
-                      on: {
-                        click: function($event) {
-                          $event.preventDefault()
-                          _vm.deleteUser()
-                        }
-                      }
-                    },
-                    [
-                      _vm._v(
-                        "\n                            Yes, Delete\n                        "
-                      )
-                    ]
-                  )
-                ])
-              ])
-            ])
-          : _vm._e()
-      ]
-    )
-  ])
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("thead", [
-      _c("tr", [
-        _c("th", [_vm._v("Group Name")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Organization Number")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Contact Person")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Phone Number")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Email")]),
-        _vm._v(" "),
-        _c("th", { staticStyle: { width: "150px" } }, [_vm._v("Action")])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "modal-header" }, [
-      _c("h5", { staticClass: "modal-title" }, [
-        _vm._v(
-          "\n                            Delete User\n                        "
-        )
-      ])
-    ])
-  }
-]
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-68f6240f", module.exports)
-  }
-}
-
-/***/ }),
-/* 105 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(0)
-/* script */
-var __vue_script__ = __webpack_require__(106)
-/* template */
-var __vue_template__ = __webpack_require__(110)
+var __vue_template__ = __webpack_require__(107)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -33750,12 +32860,12 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 106 */
+/* 103 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__form__ = __webpack_require__(107);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__form__ = __webpack_require__(104);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__form___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__form__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_laravel_vue_pagination__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_laravel_vue_pagination___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_laravel_vue_pagination__);
@@ -33950,15 +33060,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this.countries = response.data;
             }).catch(function (error) {
                 if (error.response.data) {
-                    if (error.response.data.message) {
-                        toastr['error'](error.response.data.message);
-                    } else {
+                    if (error.response.data.error_type == 'token_error') {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this.$router.push('/login');
+                    } else {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('An unexpected error occurred!');
+                        }
                     }
                 } else {
-                    toastr['error']('The token is expired! Please refresh and try again!');
-                    _this.$router.push('/login');
+                    toastr['error']('An unexpected error occurred!');
                 }
             });
         },
@@ -33975,18 +33088,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this2.getCountries();
             }).catch(function (error) {
                 if (error.response.data) {
-                    if (error.response.data.message) {
-                        $('#modal-delete-country').modal('hide');
-                        toastr['error'](error.response.data.message);
-                        _this2.getCountries();
-                    } else {
+                    if (error.response.data.error_type == 'token_error') {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this2.$router.push('/login');
+                    } else {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('An unexpected error occurred!');
+                        }
                     }
                 } else {
-                    toastr['error']('The token is expired! Please refresh and try again!');
-                    _this2.$router.push('/login');
+                    toastr['error']('An unexpected error occurred!');
                 }
+                $('#modal-delete-country').modal('hide');
             });
         },
         editCountry: function editCountry(country) {
@@ -34009,15 +33124,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this3.getCountries();
             }).catch(function (error) {
                 if (error.response.data) {
-                    if (error.response.data.message) {
-                        toastr['error'](error.response.data.message);
-                    } else {
+                    if (error.response.data.error_type == 'token_error') {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this3.$router.push('/login');
+                    } else {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('An unexpected error occurred!');
+                        }
                     }
                 } else {
-                    toastr['error']('The token is expired! Please refresh and try again!');
-                    _this3.$router.push('/login');
+                    toastr['error']('An unexpected error occurred!');
                 }
             });
         }
@@ -34025,15 +33143,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 107 */
+/* 104 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(108)
+var __vue_script__ = __webpack_require__(105)
 /* template */
-var __vue_template__ = __webpack_require__(109)
+var __vue_template__ = __webpack_require__(106)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -34072,7 +33190,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 108 */
+/* 105 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -34141,15 +33259,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this.$emit('completed', response.country);
             }).catch(function (error) {
                 if (error.response.data) {
-                    if (error.response.data.message) {
-                        toastr['error'](error.response.data.message);
-                    } else {
+                    if (error.response.data.error_type == 'token_error') {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this.$router.push('/login');
+                    } else {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('An unexpected error occurred!');
+                        }
                     }
                 } else {
-                    toastr['error']('The token is expired! Please refresh and try again!');
-                    _this.$router.push('/login');
+                    toastr['error']('An unexpected error occurred!');
                 }
             });
         },
@@ -34162,15 +33283,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this2.cancelCountry();
             }).catch(function (error) {
                 if (error.response.data) {
-                    if (error.response.data.message) {
-                        toastr['error'](error.response.data.message);
-                    } else {
+                    if (error.response.data.error_type == 'token_error') {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this2.$router.push('/login');
+                    } else {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('An unexpected error occurred!');
+                        }
                     }
                 } else {
-                    toastr['error']('The token is expired! Please refresh and try again!');
-                    _this2.$router.push('/login');
+                    toastr['error']('An unexpected error occurred!');
                 }
             });
         }
@@ -34178,7 +33302,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 109 */
+/* 106 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -34291,7 +33415,7 @@ if (false) {
 }
 
 /***/ }),
-/* 110 */
+/* 107 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -34870,14 +33994,15 @@ if (false) {
 }
 
 /***/ }),
-/* 111 */
+/* 108 */
 /***/ (function(module, exports, __webpack_require__) {
 
+var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = null
+var __vue_script__ = __webpack_require__(109)
 /* template */
-var __vue_template__ = null
+var __vue_template__ = __webpack_require__(110)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -34896,37 +34021,6 @@ var Component = normalizeComponent(
 )
 Component.options.__file = "resources/assets/js/views/notification/index.vue"
 
-module.exports = Component.exports
-
-
-/***/ }),
-/* 112 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(0)
-/* script */
-var __vue_script__ = __webpack_require__(113)
-/* template */
-var __vue_template__ = __webpack_require__(117)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/views/notification/type.vue"
-
 /* hot reload */
 if (false) {(function () {
   var hotAPI = require("vue-hot-reload-api")
@@ -34934,9 +34028,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-2b8aec8a", Component.options)
+    hotAPI.createRecord("data-v-10a04aa1", Component.options)
   } else {
-    hotAPI.reload("data-v-2b8aec8a", Component.options)
+    hotAPI.reload("data-v-10a04aa1", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -34947,18 +34041,16 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 113 */
+/* 109 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__type_form__ = __webpack_require__(114);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__type_form___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__type_form__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_laravel_vue_pagination__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_laravel_vue_pagination___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_laravel_vue_pagination__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_helper__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_click_confirm__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_click_confirm___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_click_confirm__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_laravel_vue_pagination__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_laravel_vue_pagination___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_laravel_vue_pagination__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_helper__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_click_confirm__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_click_confirm___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_click_confirm__);
 //
 //
 //
@@ -35106,376 +34198,210 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    components: { NotificationTypeForm: __WEBPACK_IMPORTED_MODULE_0__type_form___default.a, pagination: __WEBPACK_IMPORTED_MODULE_1_laravel_vue_pagination___default.a, ClickConfirm: __WEBPACK_IMPORTED_MODULE_3_click_confirm___default.a },
+    components: { pagination: __WEBPACK_IMPORTED_MODULE_0_laravel_vue_pagination___default.a, ClickConfirm: __WEBPACK_IMPORTED_MODULE_2_click_confirm___default.a },
     data: function data() {
         return {
-            notificationtypes: {},
-            filterNotificationTypeForm: {
-                status: '',
-                sortBy: 'name',
+            ntfs: {},
+            ntf_types: {},
+            group_ids: {},
+            filterNtfForm: {
+                sortBy: 'created_at',
                 order: 'desc',
-                name: '',
+                group_id: '',
+                email: '',
+                type: '',
+                contents: '',
                 created_at: '',
-                pageLength: 5
+                status: '',
+                pageLength: 25
             },
-            id: 0,
-            name: '',
-            trans_name: '',
-            created_at: '',
-            deletingNotificationType: 1,
-            type_id: 0
+            ntf_id: 0,
+            has_group: 0,
+            deletingNtf: 1
         };
     },
     created: function created() {
-        this.getNotificationTypes();
+        this.checkHasGroup();
+        this.getNtfs();
     },
 
 
     methods: {
-        getNotificationTypes: function getNotificationTypes(page) {
+        checkHasGroup: function checkHasGroup() {
             var _this = this;
+
+            axios.post('/api/user/group').then(function (response) {
+                if (response.data.data) {
+                    _this.has_group = 1;
+                }
+            }).catch(function (error) {
+                if (error.response.data) {
+                    if (error.response.data.error_type == 'token_error') {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                        _this.$router.push('/login');
+                    } else {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('An unexpected error occurred!');
+                        }
+                    }
+                } else {
+                    toastr['error']('An unexpected error occurred!');
+                }
+            });
+        },
+        getNtfs: function getNtfs(page) {
+            var _this2 = this;
 
             if (typeof page === 'undefined') {
                 page = 1;
             }
-            var url = __WEBPACK_IMPORTED_MODULE_2__services_helper__["a" /* default */].getFilterURL(this.filterNotificationTypeForm);
-            axios.get('/api/noti_type?page=' + page + url).then(function (response) {
-                return _this.notificationtypes = response.data;
-            });
-        },
-        modalDeleteNotificationType: function modalDeleteNotificationType(notification_type) {
-            this.type_id = notification_type.id;
-            $('#modal-delete-notification-type').modal('show');
-        },
-        deleteNotificationType: function deleteNotificationType() {
-            var _this2 = this;
-
-            axios.delete('/api/noti_type/' + this.type_id).then(function (response) {
-                toastr['success'](response.data.message);
-                $('#modal-delete-notification-type').modal('hide');
-                _this2.getUsers();
+            var url = __WEBPACK_IMPORTED_MODULE_1__services_helper__["a" /* default */].getFilterURL(this.filterNtfForm);
+            axios.get('/api/notification?page=' + page + url).then(function (response) {
+                _this2.ntfs = response.data;
             }).catch(function (error) {
                 if (error.response.data) {
-                    if (error.response.data.message) {
-                        toastr['error'](error.response.data.message);
-                    } else {
+                    if (error.response.data.error_type == 'token_error') {
                         toastr['error']('The token is expired! Please refresh and try again!');
+                        _this2.$router.push('/login');
+                    } else {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('An unexpected error occurred!');
+                        }
                     }
                 } else {
-                    toastr['error']('The token is expired! Please refresh and try again!');
+                    toastr['error']('An unexpected error occurred!');
                 }
             });
         },
-        editNotificationType: function editNotificationType(notification_type) {
-            this.id = notification_type.id;
-            this.name = notification_type.name;
-            this.trans_name = notification_type.trans_name;
-            this.created_at = notification_type.created_at;
+        getNtfGroupId: function getNtfGroupId(ntf) {
+            if (typeof ntf.group != 'undefined') {
+                return ntf.group.group_id;
+            }
+            return "";
         },
-        cancelNotificationType: function cancelNotificationType(notification_type) {
-            this.id = 0;
-            this.name = '';
-            this.trans_name = '';
-            this.created_at = '';
+        getNtfType: function getNtfType(ntf) {
+            if (typeof ntf.type != 'undefined') {
+                return ntf.type.name;
+            }
+            return "";
         },
-        getNotificationTypeStatus: function getNotificationTypeStatus(notification_type) {
-            return notification_type.status == 1 ? '<span class="label label-success">Active</span>' : '<span class="label label-danger">Deactive</span>';
+        getNtfEmail: function getNtfEmail(ntf) {
+            if (typeof ntf.user != 'undefined') {
+                return ntf.user.email;
+            }
+            return "";
         },
-        toggleNotificationTypeStatus: function toggleNotificationTypeStatus(notification_type) {
+        getNtfImages: function getNtfImages(ntf) {
+            var image_html = "";
+            if (typeof ntf.images != 'undefined') {
+                if (ntf.images.length > 0) {
+                    for (var index = 0; index < ntf.images.length; index++) {
+                        image_html += '<img src="http://szlogin.com/images/notifications/' + ntf.images[index]['url'] + '" class="img-responsive-height img-max-height-100">';
+                    }
+                }
+            }
+            return image_html;
+        },
+        getNtfStatus: function getNtfStatus(ntf) {
+            return ntf.status == 1 ? '<span class="label label-success">Active</span>' : '<span class="label label-danger">Deactive</span>';
+        },
+        modalDeleteNtf: function modalDeleteNtf(ntf) {
+            this.ntf_id = ntf.id;
+            $('#modal-delete-ntf').modal('show');
+        },
+        deleteNtf: function deleteNtf() {
             var _this3 = this;
 
-            axios.post('/api/noti_type/status', { id: notification_type.id }).then(function (response) {
-                _this3.getNotificationTypes();
+            axios.delete('/api/notification/' + this.ntf_id).then(function (response) {
+                $('#modal-delete-ntf').modal('hide');
+                toastr['success'](response.data.message);
+                _this3.getNtfs();
+            }).catch(function (error) {
+                if (error.response.data) {
+                    if (error.response.data.error_type == 'token_error') {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                        _this3.$router.push('/login');
+                    } else {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('An unexpected error occurred!');
+                        }
+                    }
+                } else {
+                    toastr['error']('An unexpected error occurred!');
+                }
+                $('#modal-delete-ntf').modal('hide');
+            });
+        },
+        viewNtf: function viewNtf(ntf) {
+            this.$router.push('/notification/' + ntf.id);
+        },
+        toggleAdStatus: function toggleAdStatus(ntf) {
+            var _this4 = this;
+
+            axios.post('/api/notificationi/status', { id: ntf.id }).then(function (response) {
+                _this4.getNtfs();
+            }).catch(function (error) {
+                if (error.response.data) {
+                    if (error.response.data.error_type == 'token_error') {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                        _this4.$router.push('/login');
+                    } else {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('An unexpected error occurred!');
+                        }
+                    }
+                } else {
+                    toastr['error']('An unexpected error occurred!');
+                }
             });
         }
     }
 });
 
 /***/ }),
-/* 114 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(0)
-/* script */
-var __vue_script__ = __webpack_require__(115)
-/* template */
-var __vue_template__ = __webpack_require__(116)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/views/notification/type_form.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-32f41578", Component.options)
-  } else {
-    hotAPI.reload("data-v-32f41578", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 115 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__services_helper__ = __webpack_require__(1);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    data: function data() {
-        return {
-            notificationTypeFrom: new Form({
-                'name': '',
-                'trans_name': '',
-                'created_at': ''
-            })
-        };
-    },
-
-    props: ['id', 'name', 'created_at'],
-    mounted: function mounted() {},
-
-    watch: {
-        id: function id(val) {
-            this.notificationTypeFrom.name = this.name;
-            this.notificationTypeFrom.trans_name = this.trans_name;
-            this.notificationTypeFrom.created_at = this.created_at;
-        }
-    },
-    methods: {
-        proceed: function proceed() {},
-        cancelNotification: function cancelNotification() {
-            if (this.id) {
-                this.$emit('interface');
-            }
-        },
-        storeNotification: function storeNotification() {
-            var _this = this;
-
-            this.notificationTypeFrom.post('/api/noti_type').then(function (response) {
-                toastr['success'](response.message);
-                _this.$emit('completed', response.noti_type);
-            }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.message) {
-                        toastr['error'](error.response.data.message);
-                    } else {
-                        toastr['error']('The token is expired! Please refresh and try again!');
-                    }
-                } else {
-                    toastr['error']('The token is expired! Please refresh and try again!');
-                }
-            });
-        },
-        updateNotification: function updateNotification() {
-            var _this2 = this;
-
-            this.notificationTypeFrom.patch('/api/noti_type/' + this.id).then(function (response) {
-                if (response.type == 'error') {
-                    if (response.message) {
-                        toastr['error'](response.message);
-                    } else {
-                        toastr['error']('The token is expired! Please refresh and try again!');
-                    }
-                } else {
-                    toastr['success'](response.message);
-                    _this2.$emit('completed', response.noti_type);
-                }
-            }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.message) {
-                        toastr['error'](error.response.data.message);
-                    } else {
-                        toastr['error']('The token is expired! Please refresh and try again!');
-                    }
-                } else {
-                    toastr['error']('The token is expired! Please refresh and try again!');
-                }
-            });
-            this.cancelNotification();
-        }
-    }
-});
-
-/***/ }),
-/* 116 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "form",
-    {
-      on: {
-        submit: function($event) {
-          $event.preventDefault()
-          return _vm.proceed($event)
-        }
-      }
-    },
-    [
-      _c("div", { staticClass: "row" }, [
-        _c("div", { staticClass: "col-md-12" }, [
-          _c("div", { staticClass: "form-group" }, [
-            _c("label", { attrs: { for: "" } }, [_vm._v("Name")]),
-            _vm._v(" "),
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.notificationTypeFrom.name,
-                  expression: "notificationTypeFrom.name"
-                }
-              ],
-              staticClass: "form-control",
-              attrs: { type: "text", value: "" },
-              domProps: { value: _vm.notificationTypeFrom.name },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.$set(
-                    _vm.notificationTypeFrom,
-                    "name",
-                    $event.target.value
-                  )
-                }
-              }
-            })
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "form-group" }, [
-            _c("label", { attrs: { for: "" } }, [_vm._v("Trans Name")]),
-            _vm._v(" "),
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.notificationTypeFrom.trans_name,
-                  expression: "notificationTypeFrom.trans_name"
-                }
-              ],
-              staticClass: "form-control",
-              attrs: { type: "text", value: "" },
-              domProps: { value: _vm.notificationTypeFrom.trans_name },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.$set(
-                    _vm.notificationTypeFrom,
-                    "trans_name",
-                    $event.target.value
-                  )
-                }
-              }
-            })
-          ])
-        ])
-      ]),
-      _vm._v(" "),
-      _c(
-        "button",
-        { staticClass: "btn btn-info waves-effect waves-light m-t-10" },
-        [
-          _vm.id
-            ? _c("span", { on: { click: _vm.updateNotification } }, [
-                _vm._v("Update")
-              ])
-            : _c("span", { on: { click: _vm.storeNotification } }, [
-                _vm._v("Create")
-              ])
-        ]
-      ),
-      _vm._v(" "),
-      _c(
-        "button",
-        {
-          directives: [
-            { name: "show", rawName: "v-show", value: _vm.id, expression: "id" }
-          ],
-          staticClass: "btn btn-danger waves-effect waves-light m-t-10",
-          on: { click: _vm.cancelNotification }
-        },
-        [_vm._v("Cancel")]
-      )
-    ]
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-32f41578", module.exports)
-  }
-}
-
-/***/ }),
-/* 117 */
+/* 110 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -35486,7 +34412,7 @@ var render = function() {
     _c("div", { staticClass: "row page-titles" }, [
       _c("div", { staticClass: "col-md-12 col-12 align-self-center" }, [
         _c("h3", { staticClass: "text-themecolor m-b-0 m-t-0" }, [
-          _vm._v("Notification Type")
+          _vm._v("Notification")
         ]),
         _vm._v(" "),
         _c("ol", { staticClass: "breadcrumb" }, [
@@ -35502,106 +34428,182 @@ var render = function() {
           ),
           _vm._v(" "),
           _c("li", { staticClass: "breadcrumb-item active" }, [
-            _vm._v("Notification Type")
+            _vm._v("Notification")
           ])
         ])
       ])
     ]),
     _vm._v(" "),
-    _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "col-lg-4" }, [
-        _c("div", { staticClass: "card" }, [
-          _c(
-            "div",
-            { staticClass: "card-body" },
-            [
-              _c("h4", { staticClass: "card-title" }, [
-                _vm._v("Add new Notification Type")
-              ]),
-              _vm._v(" "),
-              _c("notification-type-form", {
-                attrs: {
-                  id: _vm.id,
-                  name: _vm.name,
-                  created_at: _vm.created_at
-                },
-                on: {
-                  completed: _vm.getNotificationTypes,
-                  interface: _vm.cancelNotificationType
-                }
-              })
-            ],
-            1
-          )
+    _vm.has_group != 0
+      ? _c("div", { staticClass: "row" }, [
+          _c("div", { staticClass: "col-lg-12 col-12" }, [
+            _c("div", { staticClass: "card" }, [
+              _c(
+                "div",
+                { staticClass: "card-body" },
+                [
+                  _c(
+                    "router-link",
+                    {
+                      staticClass:
+                        "btn btn-success waves-effect waves-light m-t-10",
+                      attrs: { to: "/notification/0" }
+                    },
+                    [_vm._v("Create Notification")]
+                  )
+                ],
+                1
+              )
+            ])
+          ])
         ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-lg-8" }, [
+      : _vm._e(),
+    _vm._v(" "),
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-lg-12 col-12" }, [
         _c("div", { staticClass: "card" }, [
           _c("div", { staticClass: "card-body" }, [
             _c("h4", { staticClass: "card-title" }, [
-              _vm._v("Filter Notification Type")
+              _vm._v("Filter Notification")
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: "row m-t-40" }, [
+            _c("div", { staticClass: "row m-t-20" }, [
               _c("div", { staticClass: "col-md-3" }, [
                 _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: "" } }, [_vm._v("Name")]),
+                  _c("label", { attrs: { for: "" } }, [_vm._v("Group ID")]),
                   _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.filterNotificationTypeForm.name,
-                        expression: "filterNotificationTypeForm.name"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    domProps: { value: _vm.filterNotificationTypeForm.name },
-                    on: {
-                      change: _vm.getNotificationTypes,
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.filterNtfForm.group_id,
+                          expression: "filterNtfForm.group_id"
                         }
-                        _vm.$set(
-                          _vm.filterNotificationTypeForm,
-                          "name",
-                          $event.target.value
-                        )
+                      ],
+                      staticClass: "form-control",
+                      attrs: { name: "status" },
+                      on: {
+                        change: [
+                          function($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function(o) {
+                                return o.selected
+                              })
+                              .map(function(o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.$set(
+                              _vm.filterNtfForm,
+                              "group_id",
+                              $event.target.multiple
+                                ? $$selectedVal
+                                : $$selectedVal[0]
+                            )
+                          },
+                          _vm.getNtfs
+                        ]
                       }
-                    }
-                  })
+                    },
+                    [
+                      _c("option", { attrs: { value: "" } }, [_vm._v("All")]),
+                      _vm._v(" "),
+                      _vm._l(_vm.group_ids.data, function(group_id) {
+                        return _c(
+                          "option",
+                          { domProps: { value: group_id.group_id } },
+                          [_vm._v(_vm._s(group_id.group_id))]
+                        )
+                      })
+                    ],
+                    2
+                  )
                 ])
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "col-md-3" }, [
                 _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: "" } }, [_vm._v("Trans Name")]),
+                  _c("label", { attrs: { for: "" } }, [_vm._v("Type")]),
+                  _vm._v(" "),
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.filterNtfForm.type,
+                          expression: "filterNtfForm.type"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: { name: "status" },
+                      on: {
+                        change: [
+                          function($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function(o) {
+                                return o.selected
+                              })
+                              .map(function(o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.$set(
+                              _vm.filterNtfForm,
+                              "type",
+                              $event.target.multiple
+                                ? $$selectedVal
+                                : $$selectedVal[0]
+                            )
+                          },
+                          _vm.getNtfs
+                        ]
+                      }
+                    },
+                    [
+                      _c("option", { attrs: { value: "" } }, [_vm._v("All")]),
+                      _vm._v(" "),
+                      _vm._l(_vm.ntf_types.data, function(type) {
+                        return _c(
+                          "option",
+                          { domProps: { value: type.name } },
+                          [_vm._v(_vm._s(type.name))]
+                        )
+                      })
+                    ],
+                    2
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-3" }, [
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "" } }, [_vm._v("Email")]),
                   _vm._v(" "),
                   _c("input", {
                     directives: [
                       {
                         name: "model",
                         rawName: "v-model",
-                        value: _vm.filterNotificationTypeForm.trans_name,
-                        expression: "filterNotificationTypeForm.trans_name"
+                        value: _vm.filterNtfForm.email,
+                        expression: "filterNtfForm.email"
                       }
                     ],
                     staticClass: "form-control",
-                    domProps: {
-                      value: _vm.filterNotificationTypeForm.trans_name
-                    },
+                    domProps: { value: _vm.filterNtfForm.email },
                     on: {
-                      change: _vm.getNotificationTypes,
+                      change: _vm.getNtfs,
                       input: function($event) {
                         if ($event.target.composing) {
                           return
                         }
                         _vm.$set(
-                          _vm.filterNotificationTypeForm,
-                          "trans_name",
+                          _vm.filterNtfForm,
+                          "email",
                           $event.target.value
                         )
                       }
@@ -35621,8 +34623,8 @@ var render = function() {
                         {
                           name: "model",
                           rawName: "v-model",
-                          value: _vm.filterNotificationTypeForm.status,
-                          expression: "filterNotificationTypeForm.status"
+                          value: _vm.filterNtfForm.status,
+                          expression: "filterNtfForm.status"
                         }
                       ],
                       staticClass: "form-control",
@@ -35639,14 +34641,14 @@ var render = function() {
                                 return val
                               })
                             _vm.$set(
-                              _vm.filterNotificationTypeForm,
+                              _vm.filterNtfForm,
                               "status",
                               $event.target.multiple
                                 ? $$selectedVal
                                 : $$selectedVal[0]
                             )
                           },
-                          _vm.getNotificationTypes
+                          _vm.getNtfs
                         ]
                       }
                     },
@@ -35665,6 +34667,38 @@ var render = function() {
                 ])
               ]),
               _vm._v(" "),
+              _c("div", { staticClass: "col-md-6" }, [
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "" } }, [_vm._v("Contents")]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.filterNtfForm.contents,
+                        expression: "filterNtfForm.contents"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    domProps: { value: _vm.filterNtfForm.contents },
+                    on: {
+                      change: _vm.getNtfs,
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.filterNtfForm,
+                          "contents",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
+                ])
+              ]),
+              _vm._v(" "),
               _c("div", { staticClass: "col-md-3" }, [
                 _c("div", { staticClass: "form-group" }, [
                   _c("label", { attrs: { for: "" } }, [_vm._v("Sort By")]),
@@ -35676,8 +34710,8 @@ var render = function() {
                         {
                           name: "model",
                           rawName: "v-model",
-                          value: _vm.filterNotificationTypeForm.sortBy,
-                          expression: "filterNotificationTypeForm.sortBy"
+                          value: _vm.filterNtfForm.sortBy,
+                          expression: "filterNtfForm.sortBy"
                         }
                       ],
                       staticClass: "form-control",
@@ -35694,25 +34728,39 @@ var render = function() {
                                 return val
                               })
                             _vm.$set(
-                              _vm.filterNotificationTypeForm,
+                              _vm.filterNtfForm,
                               "sortBy",
                               $event.target.multiple
                                 ? $$selectedVal
                                 : $$selectedVal[0]
                             )
                           },
-                          _vm.getNotificationTypes
+                          _vm.getNtfs
                         ]
                       }
                     },
                     [
-                      _c("option", { attrs: { value: "name" } }, [
-                        _vm._v("Name")
+                      _c("option", { attrs: { value: "group_id" } }, [
+                        _vm._v("Group ID")
                       ]),
                       _vm._v(" "),
-                      _c("option", { attrs: { value: "created_at" } }, [
-                        _vm._v("Created At")
-                      ])
+                      _c("option", { attrs: { value: "type" } }, [
+                        _vm._v("Type")
+                      ]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "email" } }, [
+                        _vm._v("Email")
+                      ]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "contents" } }, [
+                        _vm._v("Contents")
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "option",
+                        { attrs: { value: "created_at", selected: "" } },
+                        [_vm._v("Created At")]
+                      )
                     ]
                   )
                 ])
@@ -35729,8 +34777,8 @@ var render = function() {
                         {
                           name: "model",
                           rawName: "v-model",
-                          value: _vm.filterNotificationTypeForm.order,
-                          expression: "filterNotificationTypeForm.order"
+                          value: _vm.filterNtfForm.order,
+                          expression: "filterNtfForm.order"
                         }
                       ],
                       staticClass: "form-control",
@@ -35747,14 +34795,14 @@ var render = function() {
                                 return val
                               })
                             _vm.$set(
-                              _vm.filterNotificationTypeForm,
+                              _vm.filterNtfForm,
                               "order",
                               $event.target.multiple
                                 ? $$selectedVal
                                 : $$selectedVal[0]
                             )
                           },
-                          _vm.getNotificationTypes
+                          _vm.getNtfs
                         ]
                       }
                     },
@@ -35763,7 +34811,7 @@ var render = function() {
                         _vm._v("Asc")
                       ]),
                       _vm._v(" "),
-                      _c("option", { attrs: { value: "desc" } }, [
+                      _c("option", { attrs: { value: "desc", selected: "" } }, [
                         _vm._v("Desc")
                       ])
                     ]
@@ -35773,55 +34821,59 @@ var render = function() {
             ]),
             _vm._v(" "),
             _c("h4", { staticClass: "card-title" }, [
-              _vm._v("Notification Type List")
+              _vm._v("Notification List")
             ]),
             _vm._v(" "),
-            _vm.notificationtypes.total
+            _vm.ntfs.total
               ? _c("h6", { staticClass: "card-subtitle" }, [
-                  _vm._v(
-                    "Total " +
-                      _vm._s(_vm.notificationtypes.total) +
-                      " result found!"
-                  )
+                  _vm._v("Total " + _vm._s(_vm.ntfs.total) + " result found!")
                 ])
               : _c("h6", { staticClass: "card-subtitle" }, [
                   _vm._v("No result found!")
                 ]),
             _vm._v(" "),
             _c("div", { staticClass: "table-responsive" }, [
-              _vm.notificationtypes.total
+              _vm.ntfs.total
                 ? _c("table", { staticClass: "table" }, [
                     _vm._m(0),
                     _vm._v(" "),
                     _c(
                       "tbody",
-                      _vm._l(_vm.notificationtypes.data, function(
-                        notification_type
-                      ) {
+                      _vm._l(_vm.ntfs.data, function(ntf) {
                         return _c("tr", [
                           _c("td", {
                             domProps: {
-                              textContent: _vm._s(notification_type.name)
+                              innerHTML: _vm._s(_vm.getNtfGroupId(ntf))
                             }
                           }),
                           _vm._v(" "),
                           _c("td", {
-                            domProps: {
-                              textContent: _vm._s(notification_type.trans_name)
-                            }
+                            domProps: { innerHTML: _vm._s(_vm.getNtfType(ntf)) }
                           }),
                           _vm._v(" "),
                           _c("td", {
                             domProps: {
-                              textContent: _vm._s(notification_type.created_at)
+                              innerHTML: _vm._s(_vm.getNtfEmail(ntf))
                             }
                           }),
                           _vm._v(" "),
                           _c("td", {
+                            domProps: { textContent: _vm._s(ntf.contents) }
+                          }),
+                          _vm._v(" "),
+                          _c("td", {
                             domProps: {
-                              innerHTML: _vm._s(
-                                _vm.getNotificationTypeStatus(notification_type)
-                              )
+                              innerHTML: _vm._s(_vm.getNtfImages(ntf))
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("td", {
+                            domProps: { textContent: _vm._s(ntf.created_at) }
+                          }),
+                          _vm._v(" "),
+                          _c("td", {
+                            domProps: {
+                              innerHTML: _vm._s(_vm.getNtfStatus(ntf))
                             }
                           }),
                           _vm._v(" "),
@@ -35832,19 +34884,19 @@ var render = function() {
                                 staticClass: "btn btn-info btn-sm",
                                 attrs: {
                                   "data-toggle": "tooltip",
-                                  title: "Edit Notification Type"
+                                  title: "Edit Notification"
                                 },
                                 on: {
                                   click: function($event) {
                                     $event.preventDefault()
-                                    _vm.editNotificationType(notification_type)
+                                    _vm.viewNtf(ntf)
                                   }
                                 }
                               },
                               [_c("i", { staticClass: "fa fa-pencil" })]
                             ),
                             _vm._v(" "),
-                            notification_type.status == 1
+                            ntf.status == 1
                               ? _c(
                                   "button",
                                   {
@@ -35856,9 +34908,7 @@ var render = function() {
                                     on: {
                                       click: function($event) {
                                         $event.preventDefault()
-                                        _vm.toggleNotificationTypeStatus(
-                                          notification_type
-                                        )
+                                        _vm.toggleNtfStatus(ntf)
                                       }
                                     }
                                   },
@@ -35875,9 +34925,7 @@ var render = function() {
                                     on: {
                                       click: function($event) {
                                         $event.preventDefault()
-                                        _vm.toggleNotificationTypeStatus(
-                                          notification_type
-                                        )
+                                        _vm.toggleNtfStatus(ntf)
                                       }
                                     }
                                   },
@@ -35890,14 +34938,12 @@ var render = function() {
                                 staticClass: "btn btn-danger btn-sm",
                                 attrs: {
                                   "data-toggle": "tooltip",
-                                  title: "Delete Notification Type"
+                                  title: "Delete Notification"
                                 },
                                 on: {
                                   click: function($event) {
                                     $event.preventDefault()
-                                    _vm.modalDeleteNotificationType(
-                                      notification_type
-                                    )
+                                    _vm.modalDeleteNtf(ntf)
                                   }
                                 }
                               },
@@ -35916,8 +34962,8 @@ var render = function() {
                   { staticClass: "col-md-8" },
                   [
                     _c("pagination", {
-                      attrs: { data: _vm.notificationtypes, limit: 3 },
-                      on: { "pagination-change-page": _vm.getNotificationTypes }
+                      attrs: { data: _vm.ntfs, limit: 3 },
+                      on: { "pagination-change-page": _vm.getNtfs }
                     })
                   ],
                   1
@@ -35925,7 +34971,7 @@ var render = function() {
                 _vm._v(" "),
                 _c("div", { staticClass: "col-md-4" }, [
                   _c("div", { staticClass: "float-right" }, [
-                    _vm.notificationtypes.total
+                    _vm.ntfs.total
                       ? _c(
                           "select",
                           {
@@ -35933,10 +34979,8 @@ var render = function() {
                               {
                                 name: "model",
                                 rawName: "v-model",
-                                value:
-                                  _vm.filterNotificationTypeForm.pageLength,
-                                expression:
-                                  "filterNotificationTypeForm.pageLength"
+                                value: _vm.filterNtfForm.pageLength,
+                                expression: "filterNtfForm.pageLength"
                               }
                             ],
                             staticClass: "form-control",
@@ -35954,14 +34998,14 @@ var render = function() {
                                       return val
                                     })
                                   _vm.$set(
-                                    _vm.filterNotificationTypeForm,
+                                    _vm.filterNtfForm,
                                     "pageLength",
                                     $event.target.multiple
                                       ? $$selectedVal
                                       : $$selectedVal[0]
                                   )
                                 },
-                                _vm.getNotificationTypes
+                                _vm.getNtfs
                               ]
                             }
                           },
@@ -35997,21 +35041,17 @@ var render = function() {
       "div",
       {
         staticClass: "modal",
-        attrs: {
-          id: "modal-delete-notification-type",
-          tabindex: "-1",
-          role: "dialog"
-        }
+        attrs: { id: "modal-delete-ntf", tabindex: "-1", role: "dialog" }
       },
       [
-        _vm.deletingNotificationType
+        _vm.deletingNtf
           ? _c("div", { staticClass: "modal-dialog" }, [
               _c("div", { staticClass: "modal-content" }, [
                 _vm._m(1),
                 _vm._v(" "),
                 _c("div", { staticClass: "modal-body" }, [
                   _vm._v(
-                    "\n                        Are you sure you want to delete this Notification Type?\n                    "
+                    "\n                        Are you sure you want to delete this Notification?\n                    "
                   )
                 ]),
                 _vm._v(" "),
@@ -36033,7 +35073,7 @@ var render = function() {
                       on: {
                         click: function($event) {
                           $event.preventDefault()
-                          _vm.deleteNotificationType()
+                          _vm.deleteNtf()
                         }
                       }
                     },
@@ -36058,9 +35098,15 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("thead", [
       _c("tr", [
-        _c("th", [_vm._v("Name")]),
+        _c("th", [_vm._v("Group ID")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Trans Name")]),
+        _c("th", [_vm._v("Type")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Email")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Contents")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Images")]),
         _vm._v(" "),
         _c("th", [_vm._v("Created At")]),
         _vm._v(" "),
@@ -36077,7 +35123,7 @@ var staticRenderFns = [
     return _c("div", { staticClass: "modal-header" }, [
       _c("h5", { staticClass: "modal-title" }, [
         _vm._v(
-          "\n                            Delete Notification Type\n                        "
+          "\n                            Delete Notification\n                        "
         )
       ])
     ])
@@ -36088,9 +35134,1152 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-2b8aec8a", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-10a04aa1", module.exports)
   }
 }
+
+/***/ }),
+/* 111 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(0)
+/* script */
+var __vue_script__ = __webpack_require__(112)
+/* template */
+var __vue_template__ = __webpack_require__(116)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/views/notification/edit.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-7207808b", Component.options)
+  } else {
+    hotAPI.reload("data-v-7207808b", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 112 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__form__ = __webpack_require__(113);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__form___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__form__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_helper__ = __webpack_require__(1);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    components: { NotificationForm: __WEBPACK_IMPORTED_MODULE_0__form___default.a },
+    data: function data() {
+        return {
+            id: this.$route.params.id
+        };
+    }
+});
+
+/***/ }),
+/* 113 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(0)
+/* script */
+var __vue_script__ = __webpack_require__(114)
+/* template */
+var __vue_template__ = __webpack_require__(115)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/views/notification/form.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-2ec63245", Component.options)
+  } else {
+    hotAPI.reload("data-v-2ec63245", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 114 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_click_confirm__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_click_confirm___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_click_confirm__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_helper__ = __webpack_require__(1);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    components: { ClickConfirm: __WEBPACK_IMPORTED_MODULE_0_click_confirm___default.a },
+    data: function data() {
+        return {
+            uploadImages: [],
+            uploadDataForm: [],
+            percentCompleted: 0,
+
+            ntf_types: {},
+            comments: {},
+            profile: {},
+            notificationForm: new Form({
+                'group_id': '',
+                'type': '',
+                'full_name': '',
+                'email': '',
+                'contents': '',
+                'created_at': '',
+                'images': {},
+                'comments': {}
+            }),
+
+            deleteImageEl: '',
+            deletingImage: 1
+        };
+    },
+    created: function created() {
+        this.getNtfTypes();
+        this.getProfile();
+    },
+
+    props: ['id'],
+    mounted: function mounted() {
+        if (this.id != 0) {
+            this.getNotification();
+        }
+    },
+
+
+    methods: {
+        getNowDateTime: function getNowDateTime() {
+            var now = new Date();
+            var year = now.getFullYear();
+            var month = now.getMonth() + 1;
+            var day = now.getDate();
+            var hour = now.getHours();
+            var minute = now.getMinutes();
+            var second = now.getSeconds();
+            if (month.toString().length == 1) {
+                month = '0' + month;
+            }
+            if (day.toString().length == 1) {
+                day = '0' + day;
+            }
+            if (hour.toString().length == 1) {
+                hour = '0' + hour;
+            }
+            if (minute.toString().length == 1) {
+                minute = '0' + minute;
+            }
+            if (second.toString().length == 1) {
+                second = '0' + second;
+            }
+            var dateTime = year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second;
+            return dateTime;
+        },
+        proceed: function proceed() {
+            this.uploadDataForm = new FormData();
+            if (this.id != 0) {
+                this.storeNotification();
+            } else {
+                this.updateNotification();
+            }
+        },
+        getNtfTypes: function getNtfTypes() {
+            var _this = this;
+
+            axios.get('/api/noti_type').then(function (response) {
+                _this.ntf_types = response.data;
+            }).catch(function (error) {
+                if (error.response.data) {
+                    if (error.response.data.error_type == 'token_error') {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                        _this.$router.push('/login');
+                    } else {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('An unexpected error occurred!');
+                        }
+                    }
+                } else {
+                    toastr['error']('An unexpected error occurred!');
+                }
+            });
+        },
+        getProfile: function getProfile() {
+            var _this2 = this;
+
+            axios.post('/api/user/profile').then(function (response) {
+                if (response.data.data) {
+                    _this2.notificationForm.group_id = response.data.data.group_id;
+                    _this2.notificationForm.email = response.data.data.email;
+                    if (response.data.data.profile) {
+                        _this2.notificationForm.full_name = response.data.data.profile.full_name;
+                    }
+                }
+            }).catch(function (error) {
+                if (error.response.data) {
+                    if (error.response.data.error_type == 'token_error') {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                        _this2.$router.push('/login');
+                    } else {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('An unexpected error occurred!');
+                        }
+                    }
+                } else {
+                    toastr['error']('An unexpected error occurred!');
+                }
+            });
+        },
+        getSeletedType: function getSeletedType(type, index) {
+            if (this.id != 0) {
+                if (type == this.notificationForm.type) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                if (index == 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        },
+        getNotification: function getNotification() {
+            var _this3 = this;
+
+            axios.post('/api/notification/' + this.id).then(function (response) {
+                _this3.notificationForm.group_id = response.data.notification.group.group_id;
+                _this3.notificationForm.type = response.data.notification.type;
+                _this3.notificationForm.full_name = response.data.notification.user.profile.full_name;
+                _this3.notificationForm.email = response.data.notification.user.email;
+                _this3.notificationForm.contents = response.data.notification.contents;
+                _this3.notificationForm.created_at = response.data.notification.created_at;
+                _this3.notificationForm.images = response.data.notification.images;
+                _this3.comments = response.data.notification.comments;
+            }).catch(function (error) {
+                if (error.response.data) {
+                    if (error.response.data.error_type == 'token_error') {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                        _this3.$router.push('/login');
+                    } else {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('An unexpected error occurred!');
+                        }
+                    }
+                } else {
+                    toastr['error']('An unexpected error occurred!');
+                }
+            });
+        },
+        storeNotification: function storeNotification() {
+            var _this4 = this;
+
+            this.prepareFields();
+            var config = {
+                headers: { 'Content-Type': 'multipart/form-data' },
+                onUploadProgress: function (progressEvent) {
+                    this.percentCompleted = Math.round(progressEvent.loaded * 100 / progressEvent.total);
+                    this.$forceUpdate();
+                }.bind(this)
+            };
+
+            axios.post('/api/create-notification', this.uploadDataForm, config).then(function (response) {
+                toastr['success'](response.data.message);
+                _this4.$router.push('/notification');
+            }).catch(function (error) {
+                if (error.response.data) {
+                    if (error.response.data.error_type == 'token_error') {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                        _this4.$router.push('/login');
+                    } else {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('An unexpected error occurred!');
+                        }
+                    }
+                } else {
+                    toastr['error']('An unexpected error occurred!');
+                }
+            });
+        },
+        prepareFields: function prepareFields() {
+            if (this.uploadImages.length > 0) {
+                for (var i = 0; i < this.uploadImages.length; i++) {
+                    var image = this.uploadImages[i];
+                    this.uploadDataForm.append('images[]', image);
+                }
+            }
+            if (this.id != 0) {
+                this.uploadDataForm.append('notification_id', this.id);
+            }
+            this.uploadDataForm.append('type', this.notificationForm.type);
+            this.uploadDataForm.append('contents', this.notificationForm.contents);
+            if (this.id != 0) {
+                this.uploadDataForm.append('datetime', this.notificationForm.created_at);
+            } else {
+                this.uploadDataForm.append('datetime', this.getNowDateTime());
+            }
+        },
+        getUploadImageSize: function getUploadImageSize() {
+            var _this5 = this;
+
+            this.upload_size = 0;
+            this.uploadImages.map(function (item) {
+                _this5.upload_size += parseInt(item.size);
+            });
+
+            this.upload_size = Number(this.upload_size.toFixed(1));
+            this.$forceUpdate();
+        },
+        removeUploadImage: function removeUploadImage(image) {
+            this.uploadImages.splice(this.uploadImages.indexOf(image), 1);
+            this.getUploadImageSize();
+            $('#uploadImages').val('');
+        },
+        modalDeleteImage: function modalDeleteImage(e) {
+            this.deleteImageEl = e.target.parentElement;
+            $('#modal-delete-image').modal('show');
+        },
+        deleteImage: function deleteImage() {
+            for (var index = 0; index < this.notificationForm.images.length; index++) {
+                if (this.notificationForm.images[index]['id'] == this.deleteImageEl.id) {
+                    this.notificationForm.images.splice(index, 1);
+                }
+            }
+            $('#modal-delete-image').modal('hide');
+        },
+        getNtfImage: function getNtfImage(image) {
+            if (image.url) {
+                return 'http://szlogin.com/images/notifications/' + image.url;
+            } else {
+                return 'http://szlogin.com/images/common/no-image.png';
+            }
+        },
+        uploadFieldChange: function uploadFieldChange(e) {
+            if ($('#uploadImages').val()) {
+                var files = e.target.files || e.dataTransfer.files;
+                if (!files.length) return;
+                for (var i = files.length - 1; i >= 0; i--) {
+                    this.uploadImages.push(files[i]);
+                }
+                $('#uploadImages').val('');
+            }
+        },
+        start: function start() {
+            console.log('Starting File Management Component');
+        }
+    },
+    computed: {}
+});
+
+/***/ }),
+/* 115 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "form",
+    {
+      on: {
+        submit: function($event) {
+          $event.preventDefault()
+          return _vm.proceed($event)
+        }
+      }
+    },
+    [
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "form-group col-md-6 col-lg-6 col-sm-12" }, [
+          _c("div", { staticClass: "card" }, [
+            _c("div", { staticClass: "card-body" }, [
+              _c("div", { staticClass: "row" }, [
+                _vm._m(0),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-md-9 col-lg-9 col-sm-12" }, [
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.notificationForm.type,
+                          expression: "notificationForm.type"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: { name: "type" },
+                      on: {
+                        change: function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.$set(
+                            _vm.notificationForm,
+                            "type",
+                            $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          )
+                        }
+                      }
+                    },
+                    _vm._l(_vm.ntf_types.data, function(type, index) {
+                      return _c(
+                        "option",
+                        {
+                          domProps: {
+                            value: type.id,
+                            selected: _vm.getSeletedType(type.id, index)
+                          }
+                        },
+                        [_vm._v(_vm._s(type.name))]
+                      )
+                    })
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "row" }, [
+                _vm._m(1),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-md-9 col-lg-9 col-sm-12" }, [
+                  _c("span", {
+                    domProps: {
+                      textContent: _vm._s(_vm.notificationForm.group_id)
+                    }
+                  })
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "row" }, [
+                _vm._m(2),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-md-9 col-lg-9 col-sm-12" }, [
+                  _c("span", {
+                    domProps: {
+                      textContent: _vm._s(_vm.notificationForm.full_name)
+                    }
+                  })
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "row" }, [
+                _vm._m(3),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-md-9 col-lg-9 col-sm-12" }, [
+                  _c("span", {
+                    domProps: {
+                      textContent: _vm._s(_vm.notificationForm.email)
+                    }
+                  })
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "row" }, [
+                _vm._m(4),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-md-9 col-lg-9 col-sm-12" }, [
+                  _c("textarea", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.notificationForm.contents,
+                        expression: "notificationForm.contents"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: { rows: "5" },
+                    domProps: { value: _vm.notificationForm.contents },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.notificationForm,
+                          "contents",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
+                ])
+              ]),
+              _vm._v(" "),
+              _vm.id != 0
+                ? _c("div", { staticClass: "row" }, [
+                    _vm._m(5),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-md-9 col-lg-9 col-sm-12" }, [
+                      _c("span", {
+                        domProps: {
+                          textContent: _vm._s(_vm.notificationForm.created_at)
+                        }
+                      })
+                    ])
+                  ])
+                : _c("div", { staticClass: "row hide" }, [
+                    _vm._m(6),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-md-9 col-lg-9 col-sm-12" }, [
+                      _c("span", {
+                        domProps: {
+                          textContent: _vm._s(_vm.notificationForm.created_at)
+                        }
+                      })
+                    ])
+                  ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "row" }, [
+                _c(
+                  "label",
+                  { staticClass: "control-label", attrs: { for: "logo" } },
+                  [_vm._v("Images")]
+                ),
+                _vm._v(" "),
+                _c("br"),
+                _c("br"),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-md-12" }, [
+                  _c("input", {
+                    attrs: {
+                      type: "file",
+                      multiple: "multiple",
+                      id: "uploadImages"
+                    },
+                    on: { change: _vm.uploadFieldChange }
+                  }),
+                  _vm._v(" "),
+                  _c("p", [
+                    _vm._v("You must upload the jpg, jpeg, png, gif file.")
+                  ]),
+                  _vm._v(" "),
+                  _c("hr")
+                ]),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "col-md-12" },
+                  _vm._l(_vm.uploadImages, function(image, index) {
+                    return _c(
+                      "div",
+                      { staticClass: "attachment-holder animated fadeIn" },
+                      [
+                        _c("span", { staticClass: "label label-primary" }, [
+                          _vm._v(
+                            _vm._s(
+                              image.name +
+                                " (" +
+                                Number((image.size / 1024).toFixed(1)) +
+                                "KB)"
+                            )
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "span",
+                          {
+                            staticStyle: {
+                              background: "red",
+                              cursor: "pointer"
+                            },
+                            on: {
+                              click: function($event) {
+                                $event.preventDefault()
+                                _vm.removeUploadImage(image)
+                              }
+                            }
+                          },
+                          [
+                            _c(
+                              "button",
+                              { staticClass: "btn btn-xs btn-danger" },
+                              [_vm._v("Remove")]
+                            )
+                          ]
+                        )
+                      ]
+                    )
+                  })
+                ),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-md-12" }, [
+                  _c(
+                    "div",
+                    { staticClass: "row" },
+                    _vm._l(_vm.notificationForm.images, function(image) {
+                      return _c(
+                        "div",
+                        { staticClass: "col-md-4", attrs: { id: image.id } },
+                        [
+                          _c("img", {
+                            staticClass: "img-responsive",
+                            attrs: { src: _vm.getNtfImage(image) }
+                          }),
+                          _vm._v(" "),
+                          _c(
+                            "span",
+                            {
+                              staticClass: "text-center",
+                              staticStyle: {
+                                background: "red",
+                                cursor: "pointer",
+                                display: "block",
+                                width: "100%"
+                              },
+                              on: { click: _vm.modalDeleteImage }
+                            },
+                            [
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "btn btn-xs btn-danger",
+                                  attrs: { type: "button" }
+                                },
+                                [_vm._v("Delete")]
+                              )
+                            ]
+                          )
+                        ]
+                      )
+                    })
+                  )
+                ]),
+                _vm._v(" "),
+                _c("br"),
+                _c("br"),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "col-md-12" },
+                  [
+                    _c(
+                      "button",
+                      {
+                        staticClass:
+                          "btn btn-info waves-effect waves-light m-t-10",
+                        attrs: { type: "submit" }
+                      },
+                      [
+                        _vm.id != 0
+                          ? _c("span", [_vm._v("Update")])
+                          : _c("span", [_vm._v("Create")])
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "router-link",
+                      {
+                        staticClass:
+                          "btn btn-danger waves-effect waves-light m-t-10",
+                        attrs: { to: "/notification" }
+                      },
+                      [_vm._v("Cancel")]
+                    )
+                  ],
+                  1
+                )
+              ])
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _vm.id != 0
+          ? _c(
+              "div",
+              { staticClass: "form-group col-md-6 col-lg-6 col-sm-12" },
+              [
+                _c(
+                  "label",
+                  { staticClass: "control-label", attrs: { for: "logo" } },
+                  [_vm._v("Comments")]
+                )
+              ]
+            )
+          : _vm._e()
+      ]),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          staticClass: "modal",
+          attrs: { id: "modal-delete-image", tabindex: "-1", role: "dialog" }
+        },
+        [
+          _vm.deletingImage
+            ? _c("div", { staticClass: "modal-dialog" }, [
+                _c("div", { staticClass: "modal-content" }, [
+                  _vm._m(7),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "modal-body" }, [
+                    _vm._v(
+                      "\n                    Are you sure you want to delete this Image?\n                "
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "modal-footer" }, [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-default",
+                        attrs: { type: "button", "data-dismiss": "modal" }
+                      },
+                      [_vm._v("No, Go Back")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-danger",
+                        attrs: { type: "button" },
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            _vm.deleteImage()
+                          }
+                        }
+                      },
+                      [
+                        _vm._v(
+                          "\n                        Yes, Delete\n                    "
+                        )
+                      ]
+                    )
+                  ])
+                ])
+              ])
+            : _vm._e()
+        ]
+      )
+    ]
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-md-3 col-lg-3 col-sm-12" }, [
+      _c("label", { attrs: { for: "" } }, [_vm._v("Type")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-md-3 col-lg-3 col-sm-12" }, [
+      _c("label", { attrs: { for: "" } }, [_vm._v("Group ID")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-md-3 col-lg-3 col-sm-12" }, [
+      _c("label", { attrs: { for: "" } }, [_vm._v("User Full Name")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-md-3 col-lg-3 col-sm-12" }, [
+      _c("label", { attrs: { for: "" } }, [_vm._v("Email")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-md-3 col-lg-3 col-sm-12" }, [
+      _c("label", { attrs: { for: "" } }, [_vm._v("Contents")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-md-3 col-lg-3 col-sm-12" }, [
+      _c("label", { attrs: { for: "" } }, [_vm._v("Created At")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-md-3 col-lg-3 col-sm-12" }, [
+      _c("label", { attrs: { for: "" } }, [_vm._v("Created At")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c("h5", { staticClass: "modal-title" }, [
+        _vm._v("\n                        Delete Image\n                    ")
+      ])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-2ec63245", module.exports)
+  }
+}
+
+/***/ }),
+/* 116 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("div", { staticClass: "row page-titles" }, [
+      _c("div", { staticClass: "col-md-6 col-8 align-self-center" }, [
+        _vm.id != 0
+          ? _c("h3", { staticClass: "text-themecolor m-b-0 m-t-0" }, [
+              _vm._v("Edit Notification")
+            ])
+          : _c("h3", { staticClass: "text-themecolor m-b-0 m-t-0" }, [
+              _vm._v("Create Notification")
+            ]),
+        _vm._v(" "),
+        _c("ol", { staticClass: "breadcrumb" }, [
+          _c(
+            "li",
+            { staticClass: "breadcrumb-item" },
+            [
+              _c("router-link", { attrs: { to: "/dashboard" } }, [
+                _vm._v("Dashboard")
+              ])
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "li",
+            { staticClass: "breadcrumb-item" },
+            [
+              _c("router-link", { attrs: { to: "/Notification" } }, [
+                _vm._v("Notification")
+              ])
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _vm.id != 0
+            ? _c("li", { staticClass: "breadcrumb-item active" }, [
+                _vm._v("Edit Notification")
+              ])
+            : _c("li", { staticClass: "breadcrumb-item active" }, [
+                _vm._v("Create Notification")
+              ])
+        ])
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-sm-12" }, [
+        _c("div", { staticClass: "card" }, [
+          _c(
+            "div",
+            { staticClass: "card-body" },
+            [
+              _vm.id != 0
+                ? _c("h4", { staticClass: "card-title" }, [
+                    _vm._v("Edit Notification")
+                  ])
+                : _c("h4", { staticClass: "card-title" }, [
+                    _vm._v("Create Notification")
+                  ]),
+              _vm._v(" "),
+              _c("notification-form", { attrs: { id: _vm.id } })
+            ],
+            1
+          )
+        ])
+      ])
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-7207808b", module.exports)
+  }
+}
+
+/***/ }),
+/* 117 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var normalizeComponent = __webpack_require__(0)
+/* script */
+var __vue_script__ = null
+/* template */
+var __vue_template__ = null
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/views/notification/type.vue"
+
+module.exports = Component.exports
+
 
 /***/ }),
 /* 118 */
@@ -36508,15 +36697,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this.ads = response.data;
             }).catch(function (error) {
                 if (error.response.data) {
-                    if (error.response.data.message) {
-                        toastr['error'](error.response.data.message);
-                    } else {
+                    if (error.response.data.error_type == 'token_error') {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this.$router.push('/login');
+                    } else {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('An unexpected error occurred!');
+                        }
                     }
                 } else {
-                    toastr['error']('The token is expired! Please refresh and try again!');
-                    _this.$router.push('/login');
+                    toastr['error']('An unexpected error occurred!');
                 }
             });
         },
@@ -36552,18 +36744,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this3.getAds();
             }).catch(function (error) {
                 if (error.response.data) {
-                    if (error.response.data.message) {
-                        $('#modal-delete-ad').modal('hide');
-                        toastr['error'](error.response.data.message);
-                        _this3.getAds();
-                    } else {
+                    if (error.response.data.error_type == 'token_error') {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this3.$router.push('/login');
+                    } else {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('An unexpected error occurred!');
+                        }
                     }
                 } else {
-                    toastr['error']('The token is expired! Please refresh and try again!');
-                    _this3.$router.push('/login');
+                    toastr['error']('An unexpected error occurred!');
                 }
+                $('#modal-delete-ad').modal('hide');
             });
         },
         viewAd: function viewAd(ad) {
@@ -36579,15 +36773,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this4.getAds();
             }).catch(function (error) {
                 if (error.response.data) {
-                    if (error.response.data.message) {
-                        toastr['error'](error.response.data.message);
-                    } else {
+                    if (error.response.data.error_type == 'token_error') {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this4.$router.push('/login');
+                    } else {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('An unexpected error occurred!');
+                        }
                     }
                 } else {
-                    toastr['error']('The token is expired! Please refresh and try again!');
-                    _this4.$router.push('/login');
+                    toastr['error']('An unexpected error occurred!');
                 }
             });
         },
@@ -36685,17 +36882,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 toastr['success'](response.data.message);
             }).catch(function (error) {
                 if (error.response.data) {
-                    if (error.response.data.message) {
-                        $('#modal-export-ad').modal('hide');
-                        toastr['error'](error.response.data.message);
-                    } else {
+                    if (error.response.data.error_type == 'token_error') {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this5.$router.push('/login');
+                    } else {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('An unexpected error occurred!');
+                        }
                     }
                 } else {
-                    toastr['error']('The token is expired! Please refresh and try again!');
-                    _this5.$router.push('/login');
+                    toastr['error']('An unexpected error occurred!');
                 }
+                $('#modal-export-ad').modal('hide');
             });
         },
         selectAll: function selectAll() {
@@ -67753,8 +67953,7 @@ var render = function() {
                           _vm._v(" "),
                           _c("td", [
                             _c("img", {
-                              staticClass: "img-responsive",
-                              staticStyle: { "max-width": "200px" },
+                              staticClass: "img-responsive img-max-width-200",
                               attrs: { src: _vm.getImageUrl(ad.image) }
                             })
                           ]),
@@ -69036,15 +69235,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this.countries = response.data;
             }).catch(function (error) {
                 if (error.response.data) {
-                    if (error.response.data.message) {
-                        toastr['error'](error.response.data.message);
-                    } else {
+                    if (error.response.data.error_type == 'token_error') {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this.$router.push('/login');
+                    } else {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('An unexpected error occurred!');
+                        }
                     }
                 } else {
-                    toastr['error']('The token is expired! Please refresh and try again!');
-                    _this.$router.push('/login');
+                    toastr['error']('An unexpected error occurred!');
                 }
             });
         },
@@ -69076,15 +69278,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this2.advertisementForm.country = response.data.country;
             }).catch(function (error) {
                 if (error.response.data) {
-                    if (error.response.data.message) {
-                        toastr['error'](error.response.data.message);
-                    } else {
+                    if (error.response.data.error_type == 'token_error') {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this2.$router.push('/login');
+                    } else {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('An unexpected error occurred!');
+                        }
                     }
                 } else {
-                    toastr['error']('The token is expired! Please refresh and try again!');
-                    _this2.$router.push('/login');
+                    toastr['error']('An unexpected error occurred!');
                 }
             });
         },
@@ -69105,15 +69310,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this3.$router.push('/advertisement');
             }).catch(function (error) {
                 if (error.response.data) {
-                    if (error.response.data.message) {
-                        toastr['error'](error.response.data.message);
-                    } else {
+                    if (error.response.data.error_type == 'token_error') {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this3.$router.push('/login');
+                    } else {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('An unexpected error occurred!');
+                        }
                     }
                 } else {
-                    toastr['error']('The token is expired! Please refresh and try again!');
-                    _this3.$router.push('/login');
+                    toastr['error']('An unexpected error occurred!');
                 }
             });
         },
@@ -69134,15 +69342,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this4.$router.push('/advertisement');
             }).catch(function (error) {
                 if (error.response.data) {
-                    if (error.response.data.message) {
-                        toastr['error'](error.response.data.message);
-                    } else {
+                    if (error.response.data.error_type == 'token_error') {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this4.$router.push('/login');
+                    } else {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('An unexpected error occurred!');
+                        }
                     }
                 } else {
-                    toastr['error']('The token is expired! Please refresh and try again!');
-                    _this4.$router.push('/login');
+                    toastr['error']('An unexpected error occurred!');
                 }
             });
         },
@@ -69297,8 +69508,7 @@ var render = function() {
                     },
                     [
                       _c("img", {
-                        staticClass: "img-responsive",
-                        staticStyle: { "max-width": "200px" },
+                        staticClass: "img-responsive img-max-width-200",
                         attrs: { src: _vm.previewImage }
                       })
                     ]
@@ -69905,17 +70115,35 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this.admins = response.data;
             }).catch(function (error) {
                 if (error.response.data) {
-                    if (error.response.data.message) {
-                        toastr['error'](error.response.data.message);
-                    } else {
+                    if (error.response.data.error_type == 'token_error') {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this.$router.push('/login');
+                    } else {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('An unexpected error occurred!');
+                        }
                     }
                 } else {
-                    toastr['error']('The token is expired! Please refresh and try again!');
-                    _this.$router.push('/login');
+                    toastr['error']('An unexpected error occurred!');
                 }
             });
+        },
+        getAdminFullName: function getAdminFullName(admin) {
+            if (admin.profile) return admin.profile.full_name;
+
+            return '';
+        },
+        getAdminPhoneNumber: function getAdminPhoneNumber(admin) {
+            if (admin.profile) return admin.profile.phone_number;
+
+            return '';
+        },
+        getAdminEmail: function getAdminEmail(admin) {
+            if (admin.profile) return admin.profile.email;
+
+            return '';
         },
         getAdminStatus: function getAdminStatus(admin) {
             if (admin.status == 'pending') return '<span class="label label-warning">Pending</span>';else if (admin.status == 'activated') return '<span class="label label-success">Activated</span>';
@@ -69936,18 +70164,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this2.getAdmins();
             }).catch(function (error) {
                 if (error.response.data) {
-                    if (error.response.data.message) {
-                        $('#modal-delete-admin').modal('hide');
-                        toastr['error'](error.response.data.message);
-                        _this2.getAdmins();
-                    } else {
+                    if (error.response.data.error_type == 'token_error') {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this2.$router.push('/login');
+                    } else {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('An unexpected error occurred!');
+                        }
                     }
                 } else {
-                    toastr['error']('The token is expired! Please refresh and try again!');
-                    _this2.$router.push('/login');
+                    toastr['error']('An unexpected error occurred!');
                 }
+                $('#modal-delete-admin').modal('hide');
             });
         },
         isAdministrator: function isAdministrator(admin) {
@@ -69966,18 +70196,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this3.getAdmins();
             }).catch(function (error) {
                 if (error.response.data) {
-                    if (error.response.data.message) {
-                        $('#modal-administrator').modal('hide');
-                        toastr['error'](error.response.data.message);
-                        _this3.getAdmins();
-                    } else {
+                    if (error.response.data.error_type == 'token_error') {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this3.$router.push('/login');
+                    } else {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('An unexpected error occurred!');
+                        }
                     }
                 } else {
-                    toastr['error']('The token is expired! Please refresh and try again!');
-                    _this3.$router.push('/login');
+                    toastr['error']('An unexpected error occurred!');
                 }
+                $('#modal-administrator').modal('hide');
             });
         },
         modalDisableAdministrator: function modalDisableAdministrator(admin) {
@@ -69993,22 +70225,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this4.getAdmins();
             }).catch(function (error) {
                 if (error.response.data) {
-                    if (error.response.data.message) {
-                        $('#modal-administrator').modal('hide');
-                        toastr['error'](error.response.data.message);
-                        _this4.getAdmins();
-                    } else {
+                    if (error.response.data.error_type == 'token_error') {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this4.$router.push('/login');
+                    } else {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('An unexpected error occurred!');
+                        }
                     }
                 } else {
-                    toastr['error']('The token is expired! Please refresh and try again!');
-                    _this4.$router.push('/login');
+                    toastr['error']('An unexpected error occurred!');
                 }
+                $('#modal-disable-administrator').modal('hide');
             });
         }
-    },
-    filters: {}
+    }
 });
 
 /***/ }),
@@ -70261,7 +70494,9 @@ var render = function() {
               ])
             ]),
             _vm._v(" "),
-            _c("h4", { staticClass: "card-title" }, [_vm._v("User List")]),
+            _c("h4", { staticClass: "card-title" }, [
+              _vm._v("Administrator List")
+            ]),
             _vm._v(" "),
             _vm.admins.total
               ? _c("h6", { staticClass: "card-subtitle" }, [
@@ -70282,18 +70517,22 @@ var render = function() {
                         return _c("tr", [
                           _c("td", {
                             domProps: {
-                              textContent: _vm._s(admin.profile.full_name)
+                              textContent: _vm._s(_vm.getAdminFullName(admin))
                             }
                           }),
                           _vm._v(" "),
                           _c("td", {
                             domProps: {
-                              textContent: _vm._s(admin.profile.phone_number)
+                              textContent: _vm._s(
+                                _vm.getAdminPhoneNumber(admin)
+                              )
                             }
                           }),
                           _vm._v(" "),
                           _c("td", {
-                            domProps: { textContent: _vm._s(admin.email) }
+                            domProps: {
+                              textContent: _vm._s(_vm.getAdminEmail(admin))
+                            }
                           }),
                           _vm._v(" "),
                           _c("td", {
@@ -71011,15 +71250,18 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 _this.adminForm.created_at = _this.admin_data.profile.created_at ? _this.admin_data.profile.created_at : "";
             }).catch(function (error) {
                 if (error.response.data) {
-                    if (error.response.data.message) {
-                        toastr['error'](error.response.data.message);
-                    } else {
+                    if (error.response.data.error_type == 'token_error') {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this.$router.push('/login');
+                    } else {
+                        if (error.response.data.message) {
+                            toastr['error'](error.response.data.message);
+                        } else {
+                            toastr['error']('An unexpected error occurred!');
+                        }
                     }
                 } else {
-                    toastr['error']('The token is expired! Please refresh and try again!');
-                    _this.$router.push('/login');
+                    toastr['error']('An unexpected error occurred!');
                 }
             });
         }

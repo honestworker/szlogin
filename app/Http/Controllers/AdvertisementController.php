@@ -71,15 +71,31 @@ class AdvertisementController extends Controller
         
         $user = JWTAuth::parseToken()->authenticate();
         $profile = $user->Profile;
-        
+        if (!$profile)
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
+            
         $validation = Validator::make($request->all(), [
             'name' => 'required|min:1',
             'link' => 'required|min:1',
             'country' => 'required',
         ]);
-        
         if($validation->fails())
-            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first()], 422);
+            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
+            
+        if ($request->has('start_date')) {
+            $validation = Validator::make($request->all(), [
+                'start_date' => 'date_format:"Y-m-d"',
+            ]);
+            if($validation->fails())
+                return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_start_date_format'], 422);
+        }
+        if ($request->has('end_date')) {
+            $validation = Validator::make($request->all(), [
+                'end_date' => 'date_format:"Y-m-d"',
+            ]);
+            if($validation->fails())
+                return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_end_date_format'], 422);
+        }
         
         if($request->hasfile('images')) {
             foreach($request->file('images') as $image)
@@ -153,7 +169,7 @@ class AdvertisementController extends Controller
         $advertisement->delete();
         
         $this->initUserAdsCount();
-
+        
         return response()->json(['message' => 'Advertisement deleted!']);
     }
 
@@ -190,8 +206,23 @@ class AdvertisementController extends Controller
             'country' => 'required',
         ]);
         if($validation->fails())
-            return response()->json(['message' => $validation->messages()->first()], 422);
+            return response()->json(['message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
             
+        if ($request->has('start_date')) {
+            $validation = Validator::make($request->all(), [
+                'start_date' => 'date_format:"Y-m-d"',
+            ]);
+            if($validation->fails())
+                return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_start_date_format'], 422);
+        }
+        if ($request->has('end_date')) {
+            $validation = Validator::make($request->all(), [
+                'end_date' => 'date_format:"Y-m-d"',
+            ]);
+            if($validation->fails())
+                return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_end_date_format'], 422);
+        }
+        
         $advertisement->name = request('name');
         $advertisement->link = request('link');
         $advertisement->country = request('country');
@@ -253,6 +284,8 @@ class AdvertisementController extends Controller
         
         $user = JWTAuth::parseToken()->authenticate();
         $profile = $user->Profile;
+        if (!$profile)
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
         
         $advertisements = \App\Advertisement::whereNotNull('id');
         
@@ -458,7 +491,7 @@ class AdvertisementController extends Controller
                     $ad_infor['Total number of clicks on banner this year'] = $click_year;
                 if(request()->has('click_unique'))
                     $ad_infor['Total number of clicks on banner by unique visitors during publishing time'] = $click_unique;
-
+                    
                 //$ad_infors[] = array('Name' => $advertisement->name, 'Link' => $advertisement->link, 'Total number of app visitors last 30 days' => $show_month, 'Total number of app visitors last 60 days' => $show_month2, 'Total number of app visitors last 90 days' => $show_month3, 'Total number of app visitors during publishing time' => $show_lifetime, 'Total number of app visitors this year' => $show_year, 'Total number of app visitors in total (since start of the app)' => $show_all, 'Total number of clicks on banner last 30 days' => $click_month, 'Total number of clicks on banner last 60 days' => $click_month2, 'Total number of clicks on banner last 90 days' => $click_month3, 'Total number of clicks on banner during publishing time' => $click_lifetime, 'Total number of clicks on banner this year' => $click_year, 'Total number of clicks on banner by unique visitors during publishing time' => $click_unique);
                 $ad_infors[] = $ad_infor;
             }

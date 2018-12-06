@@ -154,7 +154,7 @@
                                     <tr v-for="ad in ads.data">
                                         <td><input type="checkbox" :value="ad.id" id="ad_check" v-model="exportAdForm.selectedAds"></td>
                                         <td v-text="ad.name"></td>
-                                        <td><img :src="getImageUrl(ad.image)" class="img-responsive" style="max-width: 200px;"></td>
+                                        <td><img :src="getImageUrl(ad.image)" class="img-responsive img-max-width-200"></td>
                                         <td v-text="ad.country"></td>
                                         <td v-text="ad.link"></td>
                                         <td v-text="ad.start_date"></td>
@@ -350,15 +350,18 @@
                     this.ads = response.data;
                 }).catch(error => {
                     if (error.response.data) {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
+                        if (error.response.data.error_type == 'token_error') {
                             toastr['error']('The token is expired! Please refresh and try again!');
                             this.$router.push('/login');
-                        }
+                        } else {
+                            if (error.response.data.message) {
+                                toastr['error'](error.response.data.message);
+                            } else {
+                                toastr['error']('An unexpected error occurred!');
+                            }
+                        } 
                     } else {
-                        toastr['error']('The token is expired! Please refresh and try again!');
-                        this.$router.push('/login');
+                        toastr['error']('An unexpected error occurred!');
                     }
                 });
             },
@@ -390,18 +393,20 @@
                     this.getAds();
                 }).catch(error => {
                     if (error.response.data) {
-                        if (error.response.data.message) {
-                            $('#modal-delete-ad').modal('hide');
-                            toastr['error'](error.response.data.message);
-                            this.getAds();
-                        } else {
+                        if (error.response.data.error_type == 'token_error') {
                             toastr['error']('The token is expired! Please refresh and try again!');
                             this.$router.push('/login');
-                        }
+                        } else {
+                            if (error.response.data.message) {
+                                toastr['error'](error.response.data.message);
+                            } else {
+                                toastr['error']('An unexpected error occurred!');
+                            }
+                        } 
                     } else {
-                        toastr['error']('The token is expired! Please refresh and try again!');
-                        this.$router.push('/login');
+                        toastr['error']('An unexpected error occurred!');
                     }
+                    $('#modal-delete-ad').modal('hide');
                 });
             },
             viewAd(ad){
@@ -415,15 +420,18 @@
                     this.getAds();
                 }).catch(error => {
                     if (error.response.data) {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
+                        if (error.response.data.error_type == 'token_error') {
                             toastr['error']('The token is expired! Please refresh and try again!');
                             this.$router.push('/login');
-                        }
+                        } else {
+                            if (error.response.data.message) {
+                                toastr['error'](error.response.data.message);
+                            } else {
+                                toastr['error']('An unexpected error occurred!');
+                            }
+                        } 
                     } else {
-                        toastr['error']('The token is expired! Please refresh and try again!');
-                        this.$router.push('/login');
+                        toastr['error']('An unexpected error occurred!');
                     }
                 });
             },
@@ -519,17 +527,20 @@
                     toastr['success'](response.data.message);
                 }).catch(error => {
                     if (error.response.data) {
-                        if (error.response.data.message) {
-                            $('#modal-export-ad').modal('hide');
-                            toastr['error'](error.response.data.message);
-                        } else {
+                        if (error.response.data.error_type == 'token_error') {
                             toastr['error']('The token is expired! Please refresh and try again!');
                             this.$router.push('/login');
-                        }
+                        } else {
+                            if (error.response.data.message) {
+                                toastr['error'](error.response.data.message);
+                            } else {
+                                toastr['error']('An unexpected error occurred!');
+                            }
+                        } 
                     } else {
-                        toastr['error']('The token is expired! Please refresh and try again!');
-                        this.$router.push('/login');
+                        toastr['error']('An unexpected error occurred!');
                     }
+                    $('#modal-export-ad').modal('hide');
                 });
             },
             selectAll() {

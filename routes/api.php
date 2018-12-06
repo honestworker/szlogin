@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::group(['prefix' => 'auth'], function () {    
+Route::group(['prefix' => 'auth'], function () {
     Route::post('/login','AuthController@authenticate');
     Route::post('/login_backend','AuthController@login');
     Route::post('/logout','AuthController@logout');
@@ -64,6 +64,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     ///// User
     Route::get('/user','UserController@index');
     Route::post('/user/profile','UserController@getMyProfile');
+    Route::post('/user/group','UserController@ownGroup');
     Route::post('/user/update-avatar','UserController@updateAvatar');
     Route::post('/user/change-password','UserController@changePasswordBackend');
     Route::post('/user/update-profile','UserController@updateProfile');
@@ -100,9 +101,11 @@ Route::group(['middleware' => ['jwt.auth']], function () {
 
     ///// Notification
     Route::get('/notification','NotificationController@index');
+    Route::post('/notification/{id}','NotificationController@getNotification');
+    Route::delete('/notification/{id}','NotificationController@deleteNotificationBackend');
     
     // Notification app only
-    Route::post('/get-notification','NotificationController@getNotification');
+    Route::post('/get-notification','NotificationController@getNotifications');
     Route::post('/create-notification','NotificationController@createNotification');
     Route::post('/get-notification-detail','NotificationController@getNotificationDetail');
     Route::patch('/update-notification','NotificationController@updateNotification');

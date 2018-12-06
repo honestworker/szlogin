@@ -9391,6 +9391,30 @@ a.link:focus {
   display: inline-block;
 }
 
+.img-max-width-100 {
+  max-width: 100px;
+}
+
+.img-max-width-200 {
+  max-width: 200px;
+}
+
+.img-responsive-height {
+  width: auto;
+  height: 100%;
+  padding-left: 3px;
+  padding-right: 3px;
+  display: inline-block;
+}
+
+.img-max-height-100 {
+  max-height: 100px;
+}
+
+.img-max-height-200 {
+  max-height: 200px;
+}
+
 .carousel-item-next,
 .carousel-item-prev,
 .carousel-item.active {

@@ -14,7 +14,7 @@
                             <span class="" style="background: red; cursor: pointer;" @click="removeAttachment(image)"><button class="btn btn-xs btn-danger">Remove</button></span>
                         </div>
                         <div class="form-group text-center" id="previewImage">
-                            <img :src="previewImage" class="img-responsive" style="max-width: 200px;">
+                            <img :src="previewImage" class="img-responsive img-max-width-200">
                         </div>
                     </div>
                 </div>
@@ -130,15 +130,18 @@
                     this.countries = response.data;
                 }).catch(error => {
                     if (error.response.data) {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
+                        if (error.response.data.error_type == 'token_error') {
                             toastr['error']('The token is expired! Please refresh and try again!');
                             this.$router.push('/login');
-                        }
+                        } else {
+                            if (error.response.data.message) {
+                                toastr['error'](error.response.data.message);
+                            } else {
+                                toastr['error']('An unexpected error occurred!');
+                            }
+                        } 
                     } else {
-                        toastr['error']('The token is expired! Please refresh and try again!');
-                        this.$router.push('/login');
+                        toastr['error']('An unexpected error occurred!');
                     }
                 });
             },
@@ -169,15 +172,18 @@
                     this.advertisementForm.country = response.data.country;
                 }).catch(error => {
                     if (error.response.data) {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
+                        if (error.response.data.error_type == 'token_error') {
                             toastr['error']('The token is expired! Please refresh and try again!');
                             this.$router.push('/login');
-                        }
+                        } else {
+                            if (error.response.data.message) {
+                                toastr['error'](error.response.data.message);
+                            } else {
+                                toastr['error']('An unexpected error occurred!');
+                            }
+                        } 
                     } else {
-                        toastr['error']('The token is expired! Please refresh and try again!');
-                        this.$router.push('/login');
+                        toastr['error']('An unexpected error occurred!');
                     }
                 });
             },
@@ -197,15 +203,18 @@
                     this.$router.push('/advertisement');
                 }).catch(error => {
                     if (error.response.data) {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
+                        if (error.response.data.error_type == 'token_error') {
                             toastr['error']('The token is expired! Please refresh and try again!');
                             this.$router.push('/login');
-                        }
+                        } else {
+                            if (error.response.data.message) {
+                                toastr['error'](error.response.data.message);
+                            } else {
+                                toastr['error']('An unexpected error occurred!');
+                            }
+                        } 
                     } else {
-                        toastr['error']('The token is expired! Please refresh and try again!');
-                        this.$router.push('/login');
+                        toastr['error']('An unexpected error occurred!');
                     }
                 });
             },
@@ -225,15 +234,18 @@
                     this.$router.push('/advertisement');
                 }).catch(error => {
                     if (error.response.data) {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
+                        if (error.response.data.error_type == 'token_error') {
                             toastr['error']('The token is expired! Please refresh and try again!');
                             this.$router.push('/login');
-                        }
+                        } else {
+                            if (error.response.data.message) {
+                                toastr['error'](error.response.data.message);
+                            } else {
+                                toastr['error']('An unexpected error occurred!');
+                            }
+                        } 
                     } else {
-                        toastr['error']('The token is expired! Please refresh and try again!');
-                        this.$router.push('/login');
+                        toastr['error']('An unexpected error occurred!');
                     }
                 });
             },

@@ -29,7 +29,7 @@ class User extends Authenticatable
 
     public function profile()
     {
-        return $this->hasOne('App\Profile', 'user_id', 'id');
+        return $this->hasOne('App\Profile', 'user_id', 'id')->select('id', 'user_id', 'group_id', 'phone_number', 'first_name', 'family_name', 'full_name', 'avatar', 'street_address', 'postal_code', 'country', 'city', 'language',  'is_admin', 'created_at');
     }
     
     public function profile_short()

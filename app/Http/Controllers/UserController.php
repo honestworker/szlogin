@@ -41,7 +41,7 @@ class UserController extends Controller
             $users->whereHas('profile',function($q) {
                 $q->where('full_name','like', '%'.request('full_name').'%');
             });
-        
+            
         if(request()->has('phone_number'))
             $users->whereHas('profile',function($q) {
                 $q->where('phone_number','like','%'.request('phone_number').'%');
@@ -49,7 +49,7 @@ class UserController extends Controller
             
         if(request()->has('email'))
             $users->where('email','like','%'.request('email').'%');
-        
+            
         if(request()->has('group_id'))
             $users->whereHas('profile.group',function($q) {
                 $q->where('group_id','like','%'.request('group_id').'%');
@@ -63,8 +63,8 @@ class UserController extends Controller
         
         if(request()->has('is_admin'))
             if(request('is_admin') >= 0)
-                $users->whereHas('profile',function($q) {
-                    $q->where('is_admin','=', request('is_admin'));
+                $users->whereHas('profile', function($q) {
+                    $q->where('is_admin', '=', request('is_admin'));
                 });
                 
         if(request()->has('status'))
@@ -94,6 +94,9 @@ class UserController extends Controller
             return response()->json(['status' => 'fail', 'message' => 'Couldnot find user!', 'data' => null, 'error_type' => 'no_user'], 422);
             
         $profile = $user->Profile;
+        if (!$profile)
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
+
         $email = $user->email;
         $group_id = $role = "";
                 
@@ -117,6 +120,9 @@ class UserController extends Controller
             return response()->json(['status' => 'fail', 'message' => 'Couldnot find user!', 'data' => null, 'error_type' => 'no_user'], 422);
             
         $profile = $user->Profile;
+        if (!$profile)
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
+            
         $email = $user->email;
         $group_id = $role = "";
                 
@@ -127,6 +133,32 @@ class UserController extends Controller
         
         return response()->json(['status' => 'success', 'message' => 'Get User Data Successfully!', 'data' => compact('profile', 'user', 'group_id', 'email')], 200);
     }
+
+    public function ownGroup(Request $request){
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
+        
+        $user = JWTAuth::parseToken()->authenticate();
+        if(!$user)
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user!', 'data' => null, 'error_type' => 'no_user'], 422);
+            
+        $profile = $user->Profile;
+        if (!$profile)
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
+                
+        $result = \App\Group::where('id', '=', $profile->group_id)->get();
+        if (count($result)) {
+            $user_group = $result[0];
+        } else {
+            $user_group = null;
+        }
+        
+        return response()->json(['status' => 'success', 'message' => 'Get User Data Successfully!', 'data' => $user_group], 200);
+    }
+
 
     public function profile() {
         try {
@@ -140,6 +172,9 @@ class UserController extends Controller
             return response()->json(['status' => 'fail', 'message' => 'Your token is invaild!', 'error_type' => 'token_error']);
         }
         $profile = $user->Profile;
+        if (!$profile)
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
+
         $user_avatar = "";
         if ($profile->avatar) {
             $user_avatar = url('/') . '/images/users/' . $profile->avatar;
@@ -211,6 +246,9 @@ class UserController extends Controller
         }
         
         $profile = $user->Profile;
+        if (!$profile)
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
+            
         $group_id = $profile->group_id;
         if (!$group_id) {
             return response()->json(['status' => 'fail', 'message' => 'You must became a group member.', 'error_type' => 'no_memeber'], 422);
@@ -249,6 +287,8 @@ class UserController extends Controller
             
         $user = JWTAuth::parseToken()->authenticate();
         $profile = $user->Profile;
+        if (!$profile)
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
         
         // $profile->contact_person = request('contact_person');
         // $profile->group_name = request('group_name');
@@ -283,7 +323,9 @@ class UserController extends Controller
             
         $user = JWTAuth::parseToken()->authenticate();
         $profile = $user->Profile;
-        
+        if (!$profile)
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
+            
         if($profile->avatar && \File::exists($this->avatar_path . $profile->avatar))
             \File::delete($this->avatar_path.$profile->avatar);
             
@@ -313,7 +355,8 @@ class UserController extends Controller
             \File::delete($this->avatar_path.$user->avatar);
         
         $profile = $user->Profile;
-        $profile->delete();
+        if ($profile)
+            $profile->delete();
         
         $notifications = $user->Notification;
         if ($notifications) {
@@ -356,6 +399,9 @@ class UserController extends Controller
         $user = JWTAuth::parseToken()->authenticate();
         
         $profile = $user->Profile;
+        if (!$profile)
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
+
         if(!$profile->avatar)
             return response()->json(['status' => 'fail', 'message' => 'No avatar uploaded!', 'error_type' => 'no_fill'], 422);
             
@@ -390,7 +436,8 @@ class UserController extends Controller
             \File::delete($this->avatar_path.$user->avatar);
             
         $profile = $user->Profile;
-        $profile->delete();
+        if ($profile)
+            $profile->delete();
         
         $notifications = $user->Notification;
         if ($notifications) {
@@ -435,8 +482,11 @@ class UserController extends Controller
         ]);
         if ($validation->fails())
             return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
-        
+            
         $user = JWTAuth::parseToken()->authenticate();
+        if(!$user->Profile)
+            return response()->json(['status' => 'fail', 'message' => 'Could not find user!', 'error_type' => 'no_profile'], 422);
+            
         $is_manager = $user->Profile->is_admin;
         
         if (!$is_manager) {
@@ -451,8 +501,9 @@ class UserController extends Controller
         if($user->avatar && \File::exists($this->avatar_path.$user->avatar))
             \File::delete($this->avatar_path.$user->avatar);
             
-        $profile = $user->Profile;        
-        $profile->delete();
+        $profile = $user->Profile;
+        if ($profile)
+            $profile->delete();
         
         $notifications = $user->Notification;
         if ($notifications) {
@@ -497,7 +548,9 @@ class UserController extends Controller
             return response()->json(['status' => 'fail', 'message' => 'Couldnot find user!'], 422);
             
         $profile = $user->Profile;
-        
+        if (!$profile)
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
+            
         $group = \App\Group::find($profile->group_id);
         if(!$group)
             return response()->json(['status' => 'fail', 'message' => 'This user is not any group member.'], 422);
@@ -525,10 +578,12 @@ class UserController extends Controller
             return response()->json(['status' => 'fail', 'message' => 'Couldnot find user!'], 422);
         
         $profile = $user->Profile;
-        
+        if (!$profile)
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
+            
         if (!$profile->is_admin)
             return response()->json(['status' => 'fail', 'message' => 'This user already is not group manager!'], 422);
-        
+            
         $profile->is_admin = 0;
         $profile->save();
         
@@ -544,10 +599,13 @@ class UserController extends Controller
             return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
         }
         $user = \App\User::find($id);
-        $profile = $user->Profile;
         if(!$user)
             return response()->json(['status' => 'fail', 'message' => 'Couldnot find user!'], 422);
-        
+
+        $profile = $user->Profile;
+        if (!$profile)
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
+            
         if ($user->status == 'activated')
             return response()->json(['status' => 'fail', 'message' => 'This user already is administrator!'], 422);
             
@@ -566,10 +624,13 @@ class UserController extends Controller
             return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
         }
         $user = \App\User::find($id);
-        $profile = $user->Profile;
         if(!$user)
             return response()->json(['status' => 'fail', 'message' => 'Couldnot find user!'], 422);
-        
+            
+        $profile = $user->Profile;
+        if (!$profile)
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
+            
         if ($user->status == 'pending')
             return response()->json(['status' => 'fail', 'message' => 'This user already is not administrator!'], 422);
             
@@ -600,6 +661,9 @@ class UserController extends Controller
         $user->save();
         
         $profile = $user->Profile;
+        if (!$profile)
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
+            
         $profile->os_type = request('os_type');
         $profile->save();
         
@@ -622,6 +686,9 @@ class UserController extends Controller
         
         $user = JWTAuth::parseToken()->authenticate();
         $profile = $user->Profile;
+        if (!$profile)
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
+            
         $profile->sound = request('sound');
         $profile->vibration = request('vibration');
         $profile->save();
@@ -644,6 +711,9 @@ class UserController extends Controller
         
         $user = JWTAuth::parseToken()->authenticate();
         $profile = $user->Profile;
+        if (!$profile)
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
+            
         $profile->language = request('language');
         $profile->save();
         

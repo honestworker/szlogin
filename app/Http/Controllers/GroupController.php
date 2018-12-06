@@ -193,6 +193,9 @@ class GroupController extends Controller
             
         $user = \JWTAuth::parseToken()->authenticate();
         $profile = $user->Profile;
+        if (!$profile)
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
+            
         if($profile->group_id == request('group_id'))
             return response()->json(['status' => 'fail', 'message' => 'You are already this group member!', 'error_type' => 'is_member'], 422);
             
@@ -239,6 +242,8 @@ class GroupController extends Controller
         }
         $user = \JWTAuth::parseToken()->authenticate();
         $profile = $user->Profile;
+        if (!$profile)
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
         
         $main_group = \App\Group::find($profile->group_id);
         if(!$main_group)

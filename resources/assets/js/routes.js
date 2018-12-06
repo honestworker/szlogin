@@ -40,16 +40,16 @@ let routes = [
                 component: require('./views/user/view')
             },
             {
-                path: '/user/new',
-                component: require('./views/user/new')
-            },
-            {
                 path: '/country',
                 component: require('./views/country/index')
             },
             {
                 path: '/notification',
                 component: require('./views/notification/index')
+            },
+            {
+                path: '/notification/:id',
+                component: require('./views/notification/edit')
             },
             {
                 path: '/noti_type',

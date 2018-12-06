@@ -97,10 +97,10 @@
                                 </thead>
                                 <tbody>
                                     <tr v-for="user in users.data">
-                                        <td v-text="user.profile.full_name"></td>
+                                        <td v-text="getAdminFullName(user)"></td>
                                         <td v-html="getUserGroupID(user)"></td>
-                                        <td v-text="user.profile.phone_number"></td>
-                                        <td v-text="user.email"></td>
+                                        <td v-text="getAdminPhoneNumber(user)"></td>
+                                        <td v-text="getAdminEmail(user)"></td>
                                         <td v-html="getUserRole(user)"></td>
                                         <td v-html="getUserStatus(user)"></td>
                                         <td>
@@ -260,15 +260,18 @@
                     this.users = response.data;
                 }).catch(error => {
                     if (error.response.data) {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
+                        if (error.response.data.error_type == 'token_error') {
                             toastr['error']('The token is expired! Please refresh and try again!');
                             this.$router.push('/login');
-                        }
+                        } else {
+                            if (error.response.data.message) {
+                                toastr['error'](error.response.data.message);
+                            } else {
+                                toastr['error']('An unexpected error occurred!');
+                            }
+                        } 
                     } else {
-                        toastr['error']('The token is expired! Please refresh and try again!');
-                        this.$router.push('/login');
+                        toastr['error']('An unexpected error occurred!');
                     }
                 });
             },
@@ -288,6 +291,24 @@
                 else
                     user_role = user_role + '<span class="label label-success">User</span>';
                 return user_role;
+            },
+            getAdminFullName(user){
+                if(user.profile)
+                    return user.profile.full_name;
+                    
+                return '';
+            },
+            getAdminPhoneNumber(user){
+                if(user.profile)
+                    return user.profile.phone_number;
+                    
+                return '';
+            },
+            getAdminEmail(user){
+                if(user.profile)
+                    return user.profile.email;
+                    
+                return '';
             },
             getUserStatus(user){
                 if(user.status == 'pending')
@@ -316,18 +337,20 @@
                     this.getUsers();
                 }).catch(error => {
                     if (error.response.data) {
-                        if (error.response.data.message) {
-                            $('#modal-delete-user').modal('hide');
-                            toastr['error'](error.response.data.message);
-                            this.getUsers();
-                        } else {
+                        if (error.response.data.error_type == 'token_error') {
                             toastr['error']('The token is expired! Please refresh and try again!');
                             this.$router.push('/login');
-                        }
+                        } else {
+                            if (error.response.data.message) {
+                                toastr['error'](error.response.data.message);
+                            } else {
+                                toastr['error']('An unexpected error occurred!');
+                            }
+                        } 
                     } else {
-                        toastr['error']('The token is expired! Please refresh and try again!');
-                        this.$router.push('/login');
+                        toastr['error']('An unexpected error occurred!');
                     }
+                    $('#modal-delete-user').modal('hide');
                 });
             },
 
@@ -349,18 +372,20 @@
                     this.getUsers();
                 }).catch(error => {
                     if (error.response.data) {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                            $('#modal-group-manager').modal('hide');
-                            this.getUsers();
-                        } else {
+                        if (error.response.data.error_type == 'token_error') {
                             toastr['error']('The token is expired! Please refresh and try again!');
                             this.$router.push('/login');
-                        }
+                        } else {
+                            if (error.response.data.message) {
+                                toastr['error'](error.response.data.message);
+                            } else {
+                                toastr['error']('An unexpected error occurred!');
+                            }
+                        } 
                     } else {
-                        toastr['error']('The token is expired! Please refresh and try again!');
-                        this.$router.push('/login');
+                        toastr['error']('An unexpected error occurred!');
                     }
+                    $('#modal-group-manager').modal('hide');
                 });
             },
 
@@ -375,18 +400,20 @@
                     this.getUsers();
                 }).catch(error => {
                     if (error.response.data) {
-                        if (error.response.data.message) {
-                            $('#modal-disable-group-manager').modal('hide');
-                            toastr['error'](error.response.data.message);
-                            this.getUsers();
-                        } else {
+                        if (error.response.data.error_type == 'token_error') {
                             toastr['error']('The token is expired! Please refresh and try again!');
                             this.$router.push('/login');
-                        }
+                        } else {
+                            if (error.response.data.message) {
+                                toastr['error'](error.response.data.message);
+                            } else {
+                                toastr['error']('An unexpected error occurred!');
+                            }
+                        } 
                     } else {
-                        toastr['error']('The token is expired! Please refresh and try again!');
-                        this.$router.push('/login');
+                        toastr['error']('An unexpected error occurred!');
                     }
+                    $('#modal-disable-group-manager').modal('hide');
                 });
             },
         },

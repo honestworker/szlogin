@@ -118,6 +118,9 @@ class AuthController extends Controller
         
         $user = JWTAuth::parseToken()->authenticate();
         $profile = $user->Profile;
+        if (!$profile)
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
+
         $social_auth = ($user->password) ? 0 : 1;
         
         return response()->json(compact('user','profile','social_auth'));
@@ -226,6 +229,9 @@ class AuthController extends Controller
         }
         
         $profile = $user->profile;
+        if (!$profile)
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
+
         $group_id = \App\Group::where('id', '=', $profile->group_id)->pluck('group_id');
         $group_match = 0;
         if (count($group_id)) {
@@ -375,6 +381,9 @@ class AuthController extends Controller
             return response()->json(['status' => 'fail', 'message' => 'Couldnot find user!'], 422);
         
         $profile = $user->Profile;
+        if (!$profile)
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
+            
         $profile->group_id = request('group_id');
         $profile->save();
         

@@ -62,7 +62,7 @@
                             </div>
                         </div>
                         
-                        <h4 class="card-title">User List</h4>
+                        <h4 class="card-title">Administrator List</h4>
                         <h6 class="card-subtitle" v-if="admins.total">Total {{admins.total}} result found!</h6>
                         <h6 class="card-subtitle" v-else>No result found!</h6>
                         <div class="table-responsive">
@@ -78,9 +78,9 @@
                                 </thead>
                                 <tbody>
                                     <tr v-for="admin in admins.data">
-                                        <td v-text="admin.profile.full_name"></td>
-                                        <td v-text="admin.profile.phone_number"></td>
-                                        <td v-text="admin.email"></td>
+                                        <td v-text="getAdminFullName(admin)"></td>
+                                        <td v-text="getAdminPhoneNumber(admin)"></td>
+                                        <td v-text="getAdminEmail(admin)"></td>
                                         <td v-html="getAdminStatus(admin)"></td>
                                         <td>
                                             <button class="btn btn-info btn-sm" @click.prevent="viewAdminProfile(admin)" data-toggle="tooltip" title="View User Profile"><i class="fa fa-eye"></i></button>
@@ -236,17 +236,38 @@
                     this.admins = response.data;
                 }).catch(error => {
                     if (error.response.data) {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
+                        if (error.response.data.error_type == 'token_error') {
                             toastr['error']('The token is expired! Please refresh and try again!');
                             this.$router.push('/login');
-                        }
+                        } else {
+                            if (error.response.data.message) {
+                                toastr['error'](error.response.data.message);
+                            } else {
+                                toastr['error']('An unexpected error occurred!');
+                            }
+                        } 
                     } else {
-                        toastr['error']('The token is expired! Please refresh and try again!');
-                        this.$router.push('/login');
+                        toastr['error']('An unexpected error occurred!');
                     }
                 });
+            },
+            getAdminFullName(admin){
+                if(admin.profile)
+                    return admin.profile.full_name;
+                    
+                return '';
+            },
+            getAdminPhoneNumber(admin){
+                if(admin.profile)
+                    return admin.profile.phone_number;
+                    
+                return '';
+            },
+            getAdminEmail(admin){
+                if(admin.profile)
+                    return admin.profile.email;
+                    
+                return '';
             },
             getAdminStatus(admin){
                 if(admin.status == 'pending')
@@ -269,18 +290,20 @@
                     this.getAdmins();
                 }).catch(error => {
                     if (error.response.data) {
-                        if (error.response.data.message) {
-                            $('#modal-delete-admin').modal('hide');
-                            toastr['error'](error.response.data.message);
-                            this.getAdmins();
-                        } else {
+                        if (error.response.data.error_type == 'token_error') {
                             toastr['error']('The token is expired! Please refresh and try again!');
                             this.$router.push('/login');
-                        }
+                        } else {
+                            if (error.response.data.message) {
+                                toastr['error'](error.response.data.message);
+                            } else {
+                                toastr['error']('An unexpected error occurred!');
+                            }
+                        } 
                     } else {
-                        toastr['error']('The token is expired! Please refresh and try again!');
-                        this.$router.push('/login');
+                        toastr['error']('An unexpected error occurred!');
                     }
+                    $('#modal-delete-admin').modal('hide');
                 });
             },
 
@@ -302,18 +325,20 @@
                     this.getAdmins();
                 }).catch(error => {
                     if (error.response.data) {
-                        if (error.response.data.message) {
-                            $('#modal-administrator').modal('hide');
-                            toastr['error'](error.response.data.message);
-                            this.getAdmins();
-                        } else {
+                        if (error.response.data.error_type == 'token_error') {
                             toastr['error']('The token is expired! Please refresh and try again!');
                             this.$router.push('/login');
-                        }
+                        } else {
+                            if (error.response.data.message) {
+                                toastr['error'](error.response.data.message);
+                            } else {
+                                toastr['error']('An unexpected error occurred!');
+                            }
+                        } 
                     } else {
-                        toastr['error']('The token is expired! Please refresh and try again!');
-                        this.$router.push('/login');
+                        toastr['error']('An unexpected error occurred!');
                     }
+                    $('#modal-administrator').modal('hide');
                 });
             },
 
@@ -328,22 +353,22 @@
                     this.getAdmins();
                 }).catch(error => {
                     if (error.response.data) {
-                        if (error.response.data.message) {
-                            $('#modal-administrator').modal('hide');
-                            toastr['error'](error.response.data.message);
-                            this.getAdmins();
-                        } else {
+                        if (error.response.data.error_type == 'token_error') {
                             toastr['error']('The token is expired! Please refresh and try again!');
                             this.$router.push('/login');
-                        }
+                        } else {
+                            if (error.response.data.message) {
+                                toastr['error'](error.response.data.message);
+                            } else {
+                                toastr['error']('An unexpected error occurred!');
+                            }
+                        } 
                     } else {
-                        toastr['error']('The token is expired! Please refresh and try again!');
-                        this.$router.push('/login');
+                        toastr['error']('An unexpected error occurred!');
                     }
+                    $('#modal-disable-administrator').modal('hide');
                 });
             },
         },
-        filters: {
-        }
     }
 </script>

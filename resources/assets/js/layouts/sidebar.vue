@@ -25,9 +25,6 @@
                     <li>
                         <router-link to="/group" exact><i class="fa fa-group"></i> <span class="hide-menu">Groups</span></router-link>
                     </li>
-                    <!-- <li>
-                        <router-link to="/user/new" exact><i class="fa fa-user-plus"></i> <span class="hide-menu">New Users</span></router-link>
-                    </li> -->
                     <li>
                         <router-link to="/user" exact><i class="fa fa-user"></i> <span class="hide-menu">All Users</span></router-link>
                     </li>

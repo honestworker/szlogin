@@ -21,7 +21,7 @@ class Notification extends Eloquent {
     
     public function profile()
     {
-        return $this->belongsTo('App\Profile', 'user_id', 'user_id')->select('id');
+        return $this->belongsTo('App\Profile', 'user_id', 'user_id')->select('id', 'full_name');
     }
     
     public function images()
@@ -36,6 +36,11 @@ class Notification extends Eloquent {
     
     public function group()
     {
-        return $this->belongsTo('App\Group', 'id', 'group_id');
+        return $this->belongsTo('App\Group', 'group_id', 'id')->select('id', 'group_id');
+    }
+
+    public function type()
+    {
+        return $this->belongsTo('App\NotificationType', 'type', 'id')->select('id', 'name');
     }
 }

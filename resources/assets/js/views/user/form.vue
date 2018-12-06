@@ -150,15 +150,18 @@
                     this.userForm.group_id = this.user_data.group_id ? this.user_data.group_id : "";
                 }).catch(error => {
                     if (error.response.data) {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
+                        if (error.response.data.error_type == 'token_error') {
                             toastr['error']('The token is expired! Please refresh and try again!');
                             this.$router.push('/login');
-                        }
+                        } else {
+                            if (error.response.data.message) {
+                                toastr['error'](error.response.data.message);
+                            } else {
+                                toastr['error']('An unexpected error occurred!');
+                            }
+                        } 
                     } else {
-                        toastr['error']('The token is expired! Please refresh and try again!');
-                        this.$router.push('/login');
+                        toastr['error']('An unexpected error occurred!');
                     }
                 });
             },
