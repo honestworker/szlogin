@@ -31,6 +31,6 @@ class Comment extends Eloquent {
     
     public function images()
     {
-        return $this->hasMany('App\Image', 'parent_id', 'id')->where('type', '=', 'comment');
+        return $this->hasMany('App\Image', 'parent_id', 'id')->where('type', '=', 'comment')->select('id', 'url', 'width', 'height', 'type', 'parent_id', 'created_at');
     }
 }

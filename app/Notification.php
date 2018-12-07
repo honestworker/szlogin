@@ -26,12 +26,12 @@ class Notification extends Eloquent {
     
     public function images()
     {
-        return $this->hasMany('App\Image', 'parent_id', 'id')->where('type', '=', 'notification');
+        return $this->hasMany('App\Image', 'parent_id', 'id')->where('type', '=', 'notification')->select('id', 'url', 'width', 'height', 'type', 'parent_id');
     }
     
     public function comments()
     {
-        return $this->hasMany('App\Comment', 'notification_id', 'id');
+        return $this->hasMany('App\Comment', 'notification_id', 'id')->select('id', 'user_id', 'notification_id', 'contents', 'status', 'created_at');
     }
     
     public function group()

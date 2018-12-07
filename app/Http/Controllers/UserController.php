@@ -263,10 +263,24 @@ class UserController extends Controller
         $users->whereHas('profile', function($q) use ($group_id) {
             $q->where('group_id', $group_id);
         });
+        $users_tmp = $users->where('id', '!=', $user->id)->select('id', 'email');
+        $total_counts = count($users_tmp->get());
         
-        $users->where('id', '!=', $user->id);
+        $page_end = false;
+        $result = [];
+        if($request->has('page')) {
+            $page_id = request('page');
+            if (($page_id + 1) * $this->app_page_rows >= $total_counts) {
+                $page_end = true;
+            }
+            if ($page_id * $this->app_page_rows <= $total_counts) {
+                $result = $users->offset($page_id * $this->app_page_rows)->limit($this->app_page_rows)->get();
+            }
+        } else {
+            $result = $users->get();
+        }
         
-        return response()->json(['status' => 'success', 'message' => 'Get Group User Data successfully!', 'users' => $users->select('id', 'email')->get()], 200);
+        return response()->json(['status' => 'success', 'message' => 'Get Group User Data successfully!', 'users' => $result, 'end' => $page_end], 200);
     }
 
     public function updateProfile(Request $request){
@@ -655,6 +669,14 @@ class UserController extends Controller
         ]);
         if ($validation->fails())
             return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
+        
+        $users = \App\User::where('push_token', '=', request('push_token'))->get();
+        if (count($users)) {
+            foreach ($users as $user) {
+                $user->push_token = '';
+                $user->save();
+            }
+        }
         
         $user = JWTAuth::parseToken()->authenticate();
         $user->push_token = request('push_token');

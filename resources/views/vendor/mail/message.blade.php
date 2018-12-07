@@ -8,7 +8,7 @@
 
     {{-- Body --}}
     @if (strtolower($country) === 'sweden')
-        <b>Hey, {{ $name }}!</b>
+        <b>Hej, {{ $name }}!</b>
     @else
         <b>Hello, {{ $name }}!</b>
     @endif

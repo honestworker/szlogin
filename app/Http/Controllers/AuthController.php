@@ -87,7 +87,7 @@ class AuthController extends Controller
         $user = \App\User::whereEmail(request('email'))->where('backend', '=', 0)->first();
         if (!$user)
             return response()->json(['status' => 'fail', 'message' => 'You have not registed. Please sign up and try to login again.', 'error_type' => 'no_user'], 422);
-
+            
         if($user->status == 'pending')
             return response()->json(['status' => 'fail', 'message' => 'Your account hasn\'t been activated. Please check your email & activate account.', 'error_type' => 'no_groupid'], 422);
             
@@ -96,16 +96,16 @@ class AuthController extends Controller
             
         if($user->status != 'activated' && $user->status != 'pending_activated')
             return response()->json(['status' => 'fail', 'message' => 'There is something wrong with your account. Please contact system administrator.', 'error_type' => 'no_signup'], 422);
-        
+            
         $this->calculateVisitor($user);
                 
         if ($user->Profile->is_admin == 1)
             $manager = true;
         else
             $manager = false;
-        
+            
         $user = \App\User::with('profile')->whereEmail(request('email'))->where('backend', '=', 0)->select('id', 'email')->get();
-
+        
         return response()->json(['status' => 'success', 'message' => 'You are successfully logged in!', 'token' => $token, 'user' => $user], 200);
     }
 
@@ -120,7 +120,7 @@ class AuthController extends Controller
         $profile = $user->Profile;
         if (!$profile)
             return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
-
+            
         $social_auth = ($user->password) ? 0 : 1;
         
         return response()->json(compact('user','profile','social_auth'));

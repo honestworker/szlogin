@@ -26,7 +26,17 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
-
+    
+    public function simple_profile()
+    {
+        return $this->hasOne('App\Profile', 'user_id', 'id')->select('id', 'user_id', 'first_name', 'family_name', 'avatar', 'street_address');
+    }
+    
+    public function sound_profile()
+    {
+        return $this->hasOne('App\Profile', 'user_id', 'id')->select('id', 'user_id', 'os_type', 'sound');
+    }
+    
     public function profile()
     {
         return $this->hasOne('App\Profile', 'user_id', 'id')->select('id', 'user_id', 'group_id', 'phone_number', 'first_name', 'family_name', 'full_name', 'avatar', 'street_address', 'postal_code', 'country', 'city', 'language',  'is_admin', 'created_at');
