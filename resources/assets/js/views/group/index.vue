@@ -53,7 +53,7 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Country</label>
-                                    <select name="status" class="form-control" v-model="filterGroupForm.country" @change="getGroups">
+                                    <select name="country" class="form-control" v-model="filterGroupForm.country" @change="getGroups">
                                         <option value="">All</option>
                                         <option v-for="country in countries.countries" v-bind:value="country">{{country}}</option>
                                     </select>
@@ -219,19 +219,18 @@
                 axios.get('/api/group?page=' + page + url).then(response => {
                     this.groups = response.data;                    
                 }).catch(error => {
-                    if (error.response.data) {
-                        if (error.response.data.error_type == 'token_error') {
+                    if (error.response.data.status == 'fail') {
+                        if (error.response.data.type == "token_error") {
                             toastr['error']('The token is expired! Please refresh and try again!');
                             this.$router.push('/login');
                         } else {
-                            if (error.response.data.message) {
-                                toastr['error'](error.response.data.message);
-                            } else {
-                                toastr['error']('An unexpected error occurred!');
-                            }
-                        } 
+                            toastr['error'](error.response.data.message);
+                        }
                     } else {
-                        toastr['error']('An unexpected error occurred!');
+                        if (error.message) {
+                            toastr['error']('An unexpected error occurred!');
+                            console.log(error.message);
+                        }
                     }
                 });
             },
@@ -239,19 +238,18 @@
                 axios.post('/api/country/all').then(response => {
                     this.countries = response.data;
                 }).catch(error => {
-                    if (error.response.data) {
-                        if (error.response.data.error_type == 'token_error') {
+                    if (error.response.data.status == 'fail') {
+                        if (error.response.data.type == "token_error") {
                             toastr['error']('The token is expired! Please refresh and try again!');
                             this.$router.push('/login');
                         } else {
-                            if (error.response.data.message) {
-                                toastr['error'](error.response.data.message);
-                            } else {
-                                toastr['error']('An unexpected error occurred!');
-                            }
-                        } 
+                            toastr['error'](error.response.data.message);
+                        }
                     } else {
-                        toastr['error']('An unexpected error occurred!');
+                        if (error.message) {
+                            toastr['error']('An unexpected error occurred!');
+                            console.log(error.message);
+                        }
                     }
                 });
             },
@@ -265,19 +263,18 @@
                     toastr['success'](response.data.message);
                     this.getGroups();
                 }).catch(error => {
-                    if (error.response.data) {
-                        if (error.response.data.error_type == 'token_error') {
+                    if (error.response.data.status == 'fail') {
+                        if (error.response.data.type == "token_error") {
                             toastr['error']('The token is expired! Please refresh and try again!');
                             this.$router.push('/login');
                         } else {
-                            if (error.response.data.message) {
-                                toastr['error'](error.response.data.message);
-                            } else {
-                                toastr['error']('An unexpected error occurred!');
-                            }
-                        } 
+                            toastr['error'](error.response.data.message);
+                        }
                     } else {
-                        toastr['error']('An unexpected error occurred!');
+                        if (error.message) {
+                            toastr['error']('An unexpected error occurred!');
+                            console.log(error.message);
+                        }
                     }
                     $('#modal-delete-group').modal('hide');
                 });
@@ -292,19 +289,18 @@
                 axios.post('/api/group/status', {id: group.id}).then((response) => {
                     this.getGroups();
                 }).catch(error => {
-                    if (error.response.data) {
-                        if (error.response.data.error_type == 'token_error') {
+                    if (error.response.data.status == 'fail') {
+                        if (error.response.data.type == "token_error") {
                             toastr['error']('The token is expired! Please refresh and try again!');
                             this.$router.push('/login');
                         } else {
-                            if (error.response.data.message) {
-                                toastr['error'](error.response.data.message);
-                            } else {
-                                toastr['error']('An unexpected error occurred!');
-                            }
-                        } 
+                            toastr['error'](error.response.data.message);
+                        }
                     } else {
-                        toastr['error']('An unexpected error occurred!');
+                        if (error.message) {
+                            toastr['error']('An unexpected error occurred!');
+                            console.log(error.message);
+                        }
                     }
                 });
             }

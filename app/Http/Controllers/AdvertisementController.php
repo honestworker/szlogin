@@ -46,6 +46,12 @@ class AdvertisementController extends Controller
                 ->where('end_date', request('end_date_oper'), request('end_date'));
         }
         
+        if(request()->has('min_postal'))
+            $advertisements->where('min_postal', '>=', request('min_postal'));
+        
+        if(request()->has('max_postal'))
+            $advertisements->where('max_postal', '<=', request('max_postal'));
+        
         $advertisements->select('id', 'country', 'image', 'link', 'name', 'start_date', 'end_date', 'status', \DB::raw('(select count(*) from ads_count where ads_count.ad_id = ads.id and ads_count.type = \'show\') as show_count'), \DB::raw('(select sum(count) from ads_count where ads_count.ad_id = ads.id and ads_count.type = \'show\') as show_sum'), \DB::raw('(select count(*) from ads_count where ads_count.ad_id = ads.id and ads_count.type = \'click\') as click_count'), \DB::raw('(select sum(count) from ads_count where ads_count.ad_id = ads.id and ads_count.type = \'click\') as click_sum'));
         
         //$advertisements->orderBy(request('sortBy'), request('order'));
@@ -130,6 +136,20 @@ class AdvertisementController extends Controller
         if ($request->has('end_date')) {
             if (request('end_date')) {
                 $advertisement->end_date = request('end_date');
+            }
+        }
+        if ($request->has('min_postal')) {
+            if (!is_null(request('min_postal'))) {
+                $advertisement->min_postal = request('min_postal');
+            } else {
+                $advertisement->min_postal = 0;
+            }
+        }
+        if ($request->has('max_postal')) {
+            if (!is_null(request('max_postal'))) {
+                $advertisement->max_postal = request('max_postal');
+            } else {
+                $advertisement->max_postal = 0;
             }
         }
         
@@ -236,6 +256,20 @@ class AdvertisementController extends Controller
                 $advertisement->end_date = request('end_date');
             }
         }
+        if ($request->has('min_postal')) {
+            if (!is_null(request('min_postal'))) {
+                $advertisement->min_postal = request('min_postal');
+            } else {
+                $advertisement->min_postal = 0;
+            }
+        }
+        if ($request->has('max_postal')) {
+            if (!is_null(request('max_postal'))) {
+                $advertisement->max_postal = request('max_postal');
+            } else {
+                $advertisement->max_postal = 0;
+            }
+        }
         
         if($request->hasfile('images')) {
             foreach($request->file('images') as $image)
@@ -291,6 +325,7 @@ class AdvertisementController extends Controller
         
         $now_date = date("Y-m-d");
         $advertisements->whereRaw("((`start_date` IS NOT NULL AND `end_date` IS NOT NULL AND `start_date` <= '" . $now_date . "' AND `end_date` >= '" . $now_date . "') OR (`start_date` IS NULL AND `end_date` IS NULL) OR (`start_date` IS NULL AND `end_date` >= '" . $now_date . "') OR (`end_date` IS NULL AND `start_date` <= '" . $now_date . "'))");
+        $advertisements->whereRaw("((`min_postal` = '0' AND `max_postal` = '0') OR (`min_postal` = '0' AND `max_postal` >= " . $profile->postal_code . ") OR (`max_postal` = '0' AND `min_postal` <= " . $profile->postal_code . ") OR (`min_postal` <= " . $profile->postal_code . " AND `max_postal` >= " . $profile->postal_code . "))");
         $advertisements->whereStatus(1);
         if ($profile->country) {
             $advertisements->where('country', '=', $profile->country);
@@ -428,7 +463,7 @@ class AdvertisementController extends Controller
         $month2_before = date("Y-m-d H:i:s", strtotime("$now_date  -2 months"));
         $month3_before = date("Y-m-d H:i:s", strtotime("$now_date  -3 months"));
         
-        $ad_infor = array();
+        $ad_infors = array();
         if(request()->has('selectedAds')) {
             $advertisements = \App\Advertisement::whereIn('id', explode(',', request('selectedAds')))->get();
             foreach($advertisements as $advertisement) {

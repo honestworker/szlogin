@@ -61,6 +61,18 @@
                             </select>
                         </div>
                     </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="">Postal Code Min</label>
+                            <input class="form-control" type="text" value="" v-model="advertisementForm.min_postal">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="">Postal Code Max</label>
+                            <input class="form-control" type="text" value="" v-model="advertisementForm.max_postal">
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -88,6 +100,8 @@
                     'start_date' : '',
                     'end_date' : '',
                     'country' : '',
+                    'min_postal' : '',
+                    'max_postal' : '',
                 }),
 
                 previewImage: ''
@@ -129,19 +143,18 @@
                 axios.post('/api/country/all').then(response => {
                     this.countries = response.data;
                 }).catch(error => {
-                    if (error.response.data) {
-                        if (error.response.data.error_type == 'token_error') {
+                    if (error.response.data.status == 'fail') {
+                        if (error.response.data.type == "token_error") {
                             toastr['error']('The token is expired! Please refresh and try again!');
                             this.$router.push('/login');
                         } else {
-                            if (error.response.data.message) {
-                                toastr['error'](error.response.data.message);
-                            } else {
-                                toastr['error']('An unexpected error occurred!');
-                            }
-                        } 
+                            toastr['error'](error.response.data.message);
+                        }
                     } else {
-                        toastr['error']('An unexpected error occurred!');
+                        if (error.message) {
+                            toastr['error']('An unexpected error occurred!');
+                            console.log(error.message);
+                        }
                     }
                 });
             },
@@ -170,20 +183,21 @@
                     this.advertisementForm.start_date = (response.data.start_date != "") ? response.data.start_date : 0;
                     this.advertisementForm.end_date = (response.data.end_date != "") ? response.data.end_date : 0;
                     this.advertisementForm.country = response.data.country;
+                    this.advertisementForm.min_postal = (response.data.min_postal != 0) ? response.data.min_postal : '';
+                    this.advertisementForm.max_postal = (response.data.max_postal != 0) ? response.data.max_postal : '';
                 }).catch(error => {
-                    if (error.response.data) {
-                        if (error.response.data.error_type == 'token_error') {
+                    if (error.response.data.status == 'fail') {
+                        if (error.response.data.type == "token_error") {
                             toastr['error']('The token is expired! Please refresh and try again!');
                             this.$router.push('/login');
                         } else {
-                            if (error.response.data.message) {
-                                toastr['error'](error.response.data.message);
-                            } else {
-                                toastr['error']('An unexpected error occurred!');
-                            }
-                        } 
+                            toastr['error'](error.response.data.message);
+                        }
                     } else {
-                        toastr['error']('An unexpected error occurred!');
+                        if (error.message) {
+                            toastr['error']('An unexpected error occurred!');
+                            console.log(error.message);
+                        }
                     }
                 });
             },
@@ -202,19 +216,20 @@
                     toastr['success'](response.data.message);
                     this.$router.push('/advertisement');
                 }).catch(error => {
-                    if (error.response.data) {
-                        if (error.response.data.error_type == 'token_error') {
+                    if (error.status == 'fail') {
+                        if (error.type == "token_error") {
                             toastr['error']('The token is expired! Please refresh and try again!');
                             this.$router.push('/login');
                         } else {
-                            if (error.response.data.message) {
-                                toastr['error'](error.response.data.message);
-                            } else {
-                                toastr['error']('An unexpected error occurred!');
-                            }
-                        } 
+                            toastr['error'](error.message);
+                        }
+                    } else if (error.response.data.status == 'fail') {
+                        toastr['error'](error.response.data.message);
                     } else {
-                        toastr['error']('An unexpected error occurred!');
+                        if (error.message) {
+                            toastr['error']('An unexpected error occurred!');
+                            console.log(error.message);
+                        }
                     }
                 });
             },
@@ -233,19 +248,20 @@
                     toastr['success'](response.data.message);
                     this.$router.push('/advertisement');
                 }).catch(error => {
-                    if (error.response.data) {
-                        if (error.response.data.error_type == 'token_error') {
+                    if (error.status == 'fail') {
+                        if (error.type == "token_error") {
                             toastr['error']('The token is expired! Please refresh and try again!');
                             this.$router.push('/login');
                         } else {
-                            if (error.response.data.message) {
-                                toastr['error'](error.response.data.message);
-                            } else {
-                                toastr['error']('An unexpected error occurred!');
-                            }
-                        } 
+                            toastr['error'](error.message);
+                        }
+                    } else if (error.response.data.status == 'fail') {
+                        toastr['error'](error.response.data.message);
                     } else {
-                        toastr['error']('An unexpected error occurred!');
+                        if (error.message) {
+                            toastr['error']('An unexpected error occurred!');
+                            console.log(error.message);
+                        }
                     }
                 });
             },
@@ -270,9 +286,15 @@
                 }
                 this.uploadDataForm.append('name', this.advertisementForm.name);
                 this.uploadDataForm.append('link', this.advertisementForm.link);
-                this.uploadDataForm.append('start_date', this.advertisementForm.start_date);
-                this.uploadDataForm.append('end_date', this.advertisementForm.end_date);
+                if (this.advertisementForm.start_date)
+                    this.uploadDataForm.append('start_date', this.advertisementForm.start_date);
+                if (this.advertisementForm.end_date)
+                    this.uploadDataForm.append('end_date', this.advertisementForm.end_date);
                 this.uploadDataForm.append('country', this.advertisementForm.country);
+                if (this.advertisementForm.min_postal)
+                    this.uploadDataForm.append('min_postal', this.advertisementForm.min_postal);
+                if (this.advertisementForm.max_postal)
+                    this.uploadDataForm.append('max_postal', this.advertisementForm.max_postal);
             },
             removeAttachment(image) {                
                 this.uploadImages.splice(this.uploadImages.indexOf(image), 1);                

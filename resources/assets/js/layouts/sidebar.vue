@@ -35,6 +35,9 @@
                         <router-link to="/noti_type" exact><i class="fa fa-gavel"></i> <span class="hide-menu">Notification Type</span></router-link>
                     </li> -->
                     <li>
+                        <router-link to="/sys_noti" exact><i class="fa fa-bell"></i> <span class="hide-menu">System Notification</span></router-link>
+                    </li>
+                    <li>
                         <router-link to="/advertisement" exact><i class="fa fa-paw"></i> <span class="hide-menu">Advertisements</span></router-link>
                     </li>
                     <li>

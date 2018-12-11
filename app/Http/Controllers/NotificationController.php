@@ -18,28 +18,28 @@ class NotificationController extends Controller
     
     protected $app_page_rows = 10;
     
-    public function index() {
+	public function index() {
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {
             return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
         }
         
-        $notifications = \App\Notification::with('user', 'type', 'group', 'images');
-        
-        if(request()->has('group_id'))
+		$notifications = \App\Notification::with('user', 'type', 'group', 'images');
+		
+		if(request()->has('group_id'))
             if (request('group_id'))
                 $notifications->whereHas('group', function($q) {
                     $q->where('group_id', '=', request('group_id'));
                 });
-                
-        if(request()->has('type'))
+			    
+		if(request()->has('type'))
             if (request('type'))
                 $notifications->whereHas('type', function($q) {
                     $q->where('name', '=', request('type'));
                 });
             
-        if(request()->has('email'))
+		if(request()->has('email'))
             $notifications->whereHas('user', function($q) {
                 $q->where('email', 'like', '%' . request('email') . '%');
             });
@@ -52,17 +52,48 @@ class NotificationController extends Controller
             
         if(request()->has('sortBy') && request()->has('order')) {
             if(request('sortBy') == 'contents' || request('sortBy') == 'created_at')
-                $notifications->select('id', 'contents', 'type', 'group_id', 'user_id', 'status', 'created_at')->orderBy(request('sortBy'), request('order'));
+                $notifications->select('id', 'contents', 'type', 'group_id', 'user_id', 'status','created_at')->orderBy(request('sortBy'), request('order'));
             else if(request('sortBy') == 'group_id')
-                $notifications->select('id', 'contents', 'type', 'group_id', 'user_id', 'status', 'created_at', \DB::raw('(select ' . request('sortBy') . ' from groups where notifications.group_id = groups.id) as '. request('sortBy') . '_order'))->orderBy(request('sortBy') . '_order', request('order'));
+                $notifications->select('id', 'contents', 'type', 'group_id', 'user_id', 'status','created_at', \DB::raw('(select ' . request('sortBy') . ' from groups where notifications.group_id = groups.id) as '. request('sortBy') . '_order'))->orderBy(request('sortBy') . '_order', request('order'));
             else if(request('sortBy') == 'type')
-                $notifications->select('id', 'contents', 'type', 'group_id', 'user_id', 'status', 'created_at', \DB::raw('(select ' . request('sortBy') . ' from notification_type where notifications.type = notification_type.id) as '. request('sortBy')))->orderBy(request('sortBy'), request('order'));
+                $notifications->select('id', 'contents', 'type', 'group_id', 'user_id', 'status','created_at', \DB::raw('(select ' . request('sortBy') . ' from notification_type where notifications.type = notification_type.id) as '. request('sortBy')))->orderBy(request('sortBy'), request('order'));
             else if(request('sortBy') == 'email')
                 $notifications->select('id', 'contents', 'type', 'group_id', 'user_id', 'status', 'created_at', \DB::raw('(select ' . request('sortBy') . ' from users where notifications.user_id = users.id) as '. request('sortBy')))->orderBy(request('sortBy'), request('order'));
         }
         
-        return $notifications->paginate(request('pageLength'));
-    }
+		return $notifications->paginate(request('pageLength'));
+	}
+	
+	public function indexSys() {
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
+        
+		$notifications = \App\Notification::with('user', 'type', 'images')->where('type', '=', 5);
+		
+		if(request()->has('email'))
+            $notifications->whereHas('user', function($q) {
+                $q->where('email', 'like', '%' . request('email') . '%');
+            });
+                
+        if(request()->has('contents'))
+            $notifications->where('contents', 'like', '%'. request('contents').'%');
+            
+        if(request()->has('status'))
+            $notifications->whereStatus(request('status'));
+            
+        if(request()->has('sortBy') && request()->has('order')) {
+            if(request('sortBy') == 'contents' || request('sortBy') == 'created_at' || request('sortBy') == 'country')
+                $notifications->select('id', 'contents', 'type', 'group_id', 'user_id', 'status', 'country', 'created_at')->orderBy(request('sortBy'), request('order'));
+            else if(request('sortBy') == 'email')
+                $notifications->select('id', 'contents', 'type', 'group_id', 'user_id', 'status', 'country', 'created_at', \DB::raw('(select ' . request('sortBy') . ' from users where notifications.user_id = users.id) as '. request('sortBy')))->orderBy(request('sortBy'), request('order'));
+        }
+        
+		return $notifications->paginate(request('pageLength'));
+	}
+	
     
     private function stampImage($filename_x, $filename_result, $mergeType = 0) {
         if ( !file_exists( $filename_x ) || !file_exists( $this->stamp_image_path ) ) {
@@ -131,8 +162,12 @@ class NotificationController extends Controller
         return true;
     }
 
-    private function sendPushNotificationHttpRequest($user_ids, $notification_id, $notification_name) {
+    private function sendPushNotificationHttpRequest($user_ids, $notification_id, $notification_type) {
         if (!$user_ids) return null;
+        
+        $notification_names = array();
+        $notification_names['swedish'] = \App\NotificationType::where('id', '=', $notification_type)->pluck('trans_name')[0];
+        $notification_names['else'] = \App\NotificationType::where('id', '=', $notification_type)->pluck('name')[0];
         
         $url = 'https://onesignal.com/api/v1/notifications';
         $requests = $responses = [];
@@ -142,6 +177,12 @@ class NotificationController extends Controller
                 $profile = $user->Sound_Profile;
                 if ($profile) {
                     if ( $user->push_token != '' ) {
+                        $notification_name = '';
+                        if (strtolower($profile->language) == 'swedish') {
+                            $notification_name = $notification_names['swedish'];
+                        } else {
+                            $notification_name = $notification_names['else'];
+                        }
                         $params = array(
                             'app_id' => "Your App ID",
                             'include_player_ids' => [ $user->push_token ],
@@ -185,7 +226,7 @@ class NotificationController extends Controller
         return array('request' => $requests, 'response' => $responses);
     }
 
-    // Notification
+	// Notification
     public function createNotification(Request $request){
         try {
             JWTAuth::parseToken()->authenticate();
@@ -225,12 +266,6 @@ class NotificationController extends Controller
         if (!$notification_type) {
             return response()->json(['status' => 'fail', 'message' => 'You must specify the right notification type!', 'error_type' => 'type_error'], 422);
         }
-        
-        $notification_name = "";
-        if (strtolower($profile->language) == 'swedish')
-            $notification_name = \App\NotificationType::where('id', '=', request('type'))->pluck('trans_name');
-        else
-            $notification_name = \App\NotificationType::where('id', '=', request('type'))->pluck('name');
         
         $notification = new \App\Notification;
         $notification->type = request('type');
@@ -301,7 +336,7 @@ class NotificationController extends Controller
         $diff_users = array_diff($attached_users, $group_users);
         $push_users = array_merge($group_users, $diff_users);
         
-        $this->sendPushNotificationHttpRequest($push_users, $notification->id, $notification_name[0]); //$push_result = 
+        $push_result = $this->sendPushNotificationHttpRequest($push_users, $notification->id, request('type'));
         
         // Signed Out Users
         $users = \App\User::with('profile');
@@ -332,6 +367,123 @@ class NotificationController extends Controller
         }
         
         return response()->json(['status' => 'success', 'message' => 'Notification has created succesfully!', 'notification_id' => $notification->id], 200); // , 'notification_name' => $notification_name, 'push_result' => $push_result
+    }
+    
+    public function createSysNotification(Request $request){
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
+
+        $user = JWTAuth::parseToken()->authenticate();
+        if (!$user->backend) {
+            return response()->json(['status' => 'fail', 'message' => 'You must be an administrator!', 'error_type' => 'no_permission'], 422);
+        }
+        
+        $validation = Validator::make($request->all(), [
+            'country' => 'required',
+            'contents' => 'required|min:1',
+            'datetime' => 'date_format:"Y-m-d H:i:s"|required',
+        ]);
+        
+        if($validation->fails())
+            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
+            
+        if($request->hasfile('images')) {
+            foreach($request->file('images') as $image)
+            {
+                $extension = $image->getClientOriginalExtension();
+                if (!in_array($extension, $this->image_extensions)) {
+                    return response()->json(['status' => 'fail', 'message' => 'Your images must be jpeg, png, jpg, gif, bmp!', 'error_type' => 'image_type_error'], 422);
+                }
+            }
+        }
+        
+        $country = "";
+        if (request('country') != '') {
+            $country = request('country');
+        }
+        $notification = new \App\Notification;
+        $notification->type = 5;
+        $notification->contents = request('contents');
+        $notification->user_id = $user->id;
+        $notification->country = $country;
+        $notification->status = 1;
+        $notification->created_at = request('datetime');
+        $notification->save();
+        
+        if($request->hasfile('images')) {
+            if (is_array($request->file('images'))) {
+                if (count($request->file('images'))) {
+                    foreach($request->file('images') as $image)
+                    {
+                        $extension = $image->getClientOriginalExtension();
+                        $mt = explode(' ', microtime());
+                        $name = ((int)$mt[1]) * 1000000 + ((int)round($mt[0] * 1000000));
+                        $file_name = $name . '.' . $extension;
+                        $image_flag = true;
+                        if( $this->stamp_image_path && \File::exists($this->stamp_image_path) ) {
+                            $file_tmp_name = $name . 'tmp.' . $extension;
+                            $file = $image->move($this->images_path, $file_tmp_name);
+                            if ( ( $image_flag = $this->stampImage($this->images_path . $file_tmp_name, $this->images_path . $file_name) ) ) {
+                                \File::delete($this->images_path . $file_tmp_name);
+                            }
+                        } else {
+                            $file = $image->move($this->images_path, $file_name);
+                        }
+                        
+                        if ( $image_flag ) {
+                            list($width, $height) = getimagesize($this->images_path . $file_name);
+                            $notificaion_image = new \App\Image;
+                            $notificaion_image->type = 'notification';
+                            $notificaion_image->width = $width;
+                            $notificaion_image->height = $height;
+                            $notificaion_image->parent_id = $notification->id;
+                            $notificaion_image->url = $file_name;
+                            $notificaion_image->save();
+                        }
+                    }
+                }
+            }
+        }
+        
+        // Signed Users
+        $users = \App\User::with('profile');
+        if ($country) {
+            $users->whereHas('profile', function($q) use ($country) {
+                $q->where('country', $country);
+            });
+        }
+        $users->whereNotNull('push_token')->where('push_token', '<>', '')->where('status', '=', 'activated')->where(function($q) {
+            $q->whereIn('deactivated_at', [null, ''])
+              ->orWhere('activated_at', '>', 'deactivated_at');
+        })->where('id', '!=', $user->id);
+        $push_users = $users->pluck('id')->toArray();
+        
+        $push_result = $this->sendPushNotificationHttpRequest($push_users, $notification->id, 5);
+        
+        // Signed Out Users
+        $users = \App\User::with('profile');
+        if ($country) {
+            $users->whereHas('profile', function($q) use ($country) {
+                $q->where('country', $country);
+            });
+        }
+        $users->where('status', '=', 'activated')->where('activated_at', '<=', 'deactivated_at')->where('id', '!=', $user->id);
+        $alarm_users = $users->pluck('id')->toArray();        
+        
+        $users = \App\User::whereIn('id', $alarm_users)->get();
+        foreach($users as $user) {
+            if ($user->alarms) {
+                $user->alarms = $user->alarms . ',' . $notification->id;
+            } else {
+                $user->alarms = $notification->id;
+            }
+            $user->save();
+        }
+        
+        return response()->json(['status' => 'success', 'message' => 'System Notification has created succesfully!', 'notification_id' => $notification->id, 'push_result' => $push_result], 200); // , 'notification_name' => $notification_name, 'push_result' => $push_result
     }
     
     public function getAlarms() {
@@ -375,6 +527,10 @@ class NotificationController extends Controller
             $notification_ids = array_merge($notification_ids, $attched_notification_ids);
         }
         
+        $country = $profile->country;
+        $attched_notification_ids = \App\Notification::whereStatus(1)->where('type', '=', 5)->where(function ($q) use($country) { $q->where('country', '')->orWhere('country', $country); } )->pluck('id')->toArray();
+        $notification_ids = array_merge($notification_ids, $attched_notification_ids);
+        
         $notifications = \App\Notification::with('user.simple_profile');
         $notifications_tmp = $notifications->whereIn('id', $notification_ids);
         $total_counts = count($notifications_tmp->get());
@@ -409,7 +565,7 @@ class NotificationController extends Controller
             
         $notification = \App\Notification::find($id);
         if(!$notification)
-            return response()->json(['status' => 'fail', 'message' => 'You must be any group memeber!', 'error_type' => 'no_notification'], 422);
+            return response()->json(['status' => 'fail', 'message' => 'Could not find the notification!', 'error_type' => 'no_notification'], 422);
             
         $notification = \App\Notification::with('user.profile', 'images',  'group', 'comments.images', 'comments.user.profile');
         $notification->where('id', '=', $id);
@@ -449,12 +605,12 @@ class NotificationController extends Controller
         $notification = \App\Notification::find(request('notification_id'));
         if(!$notification)
             return response()->json(['status' => 'fail', 'message' => 'You must be any group memeber!', 'error_type' => 'no_notification'], 422);
-            
-        $comments = \App\Comment::where('notification_id', '=', request('notification_id'));
-        $total_counts = count($comments->get());
         
         $notification = \App\Notification::with('user.simple_profile', 'images');
-        $notification->where('id', '=', request('notification_id'));
+        $notification_tmp = $notification->where('id', '=', request('notification_id'));
+        
+        $comments = \App\Comment::where('notification_id', '=', request('notification_id'));
+        $total_counts = count($comments->get());
         
         $page_end = false;
         $result = [];
@@ -483,24 +639,79 @@ class NotificationController extends Controller
         }
         
         $user = JWTAuth::parseToken()->authenticate();
-        $profile = $user->Profile;
-        if (!$profile)
-            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
-        
         $validation = Validator::make($request->all(), [
             'notification_id' => 'required',
             'contents' => 'required',
         ]);
         if($validation->fails())
             return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
-                
+            
+        if($request->hasfile('images')) {
+            foreach($request->file('images') as $image)
+            {
+                $extension = $image->getClientOriginalExtension();
+                if (!in_array($extension, $this->image_extensions)) {
+                    return response()->json(['status' => 'fail', 'message' => 'Your images must be jpeg, png, jpg, gif, bmp!', 'error_type' => 'image_type_error'], 422);
+                }
+            }
+        }
+        
         $notification = \App\Notification::find(request('notification_id'));
         if(!$notification)
             return response()->json(['status' => 'fail', 'message' => 'Could not find the notification.', 'error_type' => 'no_notification'], 422);
+            
+        if(!request()->has('country')) {
+            return response()->json(['status' => 'fail', 'message' => 'Could not find the notification.', 'error_type' => 'no_notification'], 422);
+        }
         
+        $images = $notification->Images;
+        if ($images) {
+            foreach ($images as $image) {
+                $image->delete();
+            }
+        }
+        if (request('country')) {
+            $notification->country = request('country');
+        } else {
+            $notification->country = '';
+        }
         $notification->contents = request('contents');
         $notification->save();
         
+        if($request->hasfile('images')) {
+            if (is_array($request->file('images'))) {
+                if (count($request->file('images'))) {
+                    foreach($request->file('images') as $image)
+                    {
+                        $extension = $image->getClientOriginalExtension();
+                        $mt = explode(' ', microtime());
+                        $name = ((int)$mt[1]) * 1000000 + ((int)round($mt[0] * 1000000));
+                        $file_name = $name . '.' . $extension;
+                        $image_flag = true;
+                        if( $this->stamp_image_path && \File::exists($this->stamp_image_path) ) {
+                            $file_tmp_name = $name . 'tmp.' . $extension;
+                            $file = $image->move($this->images_path, $file_tmp_name);
+                            if ( ( $image_flag = $this->stampImage($this->images_path . $file_tmp_name, $this->images_path . $file_name) ) ) {
+                                \File::delete($this->images_path . $file_tmp_name);
+                            }
+                        } else {
+                            $file = $image->move($this->images_path, $file_name);
+                        }
+                        
+                        if ( $image_flag ) {
+                            list($width, $height) = getimagesize($this->images_path . $file_name);
+                            $notificaion_image = new \App\Image;
+                            $notificaion_image->type = 'notification';
+                            $notificaion_image->width = $width;
+                            $notificaion_image->height = $height;
+                            $notificaion_image->parent_id = $notification->id;
+                            $notificaion_image->url = $file_name;
+                            $notificaion_image->save();
+                        }
+                    }
+                }
+            }
+        }
         return response()->json(['status' => 'success', 'message' => 'Update Notification Data Successfully!'], 200);
     }
 
@@ -655,7 +866,7 @@ class NotificationController extends Controller
         return response()->json(['status' => 'success', 'message' => 'Notification Image deleted!'], 200);
     }
 
-    // Comments
+	// Comments
     public function createComment(Request $request) {
         try {
             JWTAuth::parseToken()->authenticate();
@@ -820,21 +1031,21 @@ class NotificationController extends Controller
     }
 
     // Notification Type
-    public function indexType(){
+	public function indexType(){
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {
             return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
         }
         
-        $notification_type = \App\NotificationType::whereNotNull('id');
-        
-        if(request()->has('name'))
+		$notification_type = \App\NotificationType::whereNotNull('id');
+		
+		if(request()->has('name'))
             $notification_type->where('name', 'like', '%'.request('name').'%');
             
         if(request()->has('trans_name'))
                 $notification_type->where('trans_name', 'like', '%'.request('trans_name').'%');
-        
+		
         if(request()->has('status'))
             $notification_type->whereStatus(request('status'));
         
@@ -843,24 +1054,24 @@ class NotificationController extends Controller
                 $notification_type->orderBy(request('sortBy'), request('order'));
         }
         
-        return $notification_type->paginate(request('pageLength'));
-    }
+		return $notification_type->paginate(request('pageLength'));
+	}
 
-    public function allType(){
+	public function allType(){
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {
             return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
         }
         
-        $notification_type = \App\NotificationType::whereNotNull('id');
-        
+		$notification_type = \App\NotificationType::whereNotNull('id');
+		
         $notification_type->whereStatus(1);
         $notification_type->orderBy('name', 'ASC');
         $countries = $notification_type->pluck('name');
         
-        return response()->json(['status' => 'success', 'message' => 'Get Notification Type Data Successfully!', 'types' => $countries], 200);
-    }
+		return response()->json(['status' => 'success', 'message' => 'Get Notification Type Data Successfully!', 'types' => $countries], 200);
+	}
 
     public function storeType(Request $request){
         try {
@@ -874,7 +1085,7 @@ class NotificationController extends Controller
         ]);
         
         if($validation->fails())
-            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first()], 422);
+        	return response()->json(['status' => 'fail', 'message' => $validation->messages()->first()], 422);
         
         $notification_type = new \App\NotificationType;
         $notification_type->fill(request()->all());

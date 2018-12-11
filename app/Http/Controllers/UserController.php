@@ -16,6 +16,8 @@ class UserController extends Controller
 
     protected $avatar_path = 'images/users/';
 
+    protected $app_page_rows = 10;
+    
     public function index(){
         try {
             JWTAuth::parseToken()->authenticate();
@@ -191,7 +193,7 @@ class UserController extends Controller
         
         $user = JWTAuth::parseToken()->authenticate();
         if (!$user) {
-            return response()->json(['status' => 'fail', 'message' => 'Your token is invaild!', 'status' => 'no_user']);
+            return response()->json(['status' => 'fail', 'message' => 'Your token is invaild!', 'error_type' => 'no_user']);
         }
         
         $validation = Validator::make($request->all(),[
@@ -199,7 +201,7 @@ class UserController extends Controller
         ]);
         
         if($validation->fails())
-            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'status' => 'no_fill'], 422);
+            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
             
         $user->password = bcrypt(request('password'));
         $user->save();

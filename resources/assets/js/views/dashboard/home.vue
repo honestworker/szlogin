@@ -322,19 +322,18 @@
                     }
                     this.$refs.groupChart.drawChart();
                 }).catch(error => {
-                    if (error.response.data) {
-                        if (error.response.data.error_type == 'token_error') {
+                    if (error.response.data.status == 'fail') {
+                        if (error.response.data.type == "token_error") {
                             toastr['error']('The token is expired! Please refresh and try again!');
                             this.$router.push('/login');
                         } else {
-                            if (error.response.data.message) {
-                                toastr['error'](error.response.data.message);
-                            } else {
-                                toastr['error']('An unexpected error occurred!');
-                            }
-                        } 
+                            toastr['error'](error.response.data.message);
+                        }
                     } else {
-                        toastr['error']('An unexpected error occurred!');
+                        if (error.message) {
+                            toastr['error']('An unexpected error occurred!');
+                            console.log(error.message);
+                        }
                     }
                 });
             },
@@ -364,19 +363,18 @@
                     this.$refs.userPieChart.drawChart();
                     
                 }).catch(error => {
-                    if (error.response.data) {
-                        if (error.response.data.error_type == 'token_error') {
+                    if (error.response.data.status == 'fail') {
+                        if (error.response.data.type == "token_error") {
                             toastr['error']('The token is expired! Please refresh and try again!');
                             this.$router.push('/login');
                         } else {
-                            if (error.response.data.message) {
-                                toastr['error'](error.response.data.message);
-                            } else {
-                                toastr['error']('An unexpected error occurred!');
-                            }
-                        } 
+                            toastr['error'](error.response.data.message);
+                        }
                     } else {
-                        toastr['error']('An unexpected error occurred!');
+                        if (error.message) {
+                            toastr['error']('An unexpected error occurred!');
+                            console.log(error.message);
+                        }
                     }
                 });
             },
@@ -386,19 +384,18 @@
                     this.click_count_infor = response.data.data.click_count_infor;
                     this.statistics = response.data.data.statistics;
                 }).catch(error => {
-                    if (error.response.data) {
-                        if (error.response.data.error_type == 'token_error') {
+                    if (error.response.data.status == 'fail') {
+                        if (error.response.data.type == "token_error") {
                             toastr['error']('The token is expired! Please refresh and try again!');
                             this.$router.push('/login');
                         } else {
-                            if (error.response.data.message) {
-                                toastr['error'](error.response.data.message);
-                            } else {
-                                toastr['error']('An unexpected error occurred!');
-                            }
-                        } 
+                            toastr['error'](error.response.data.message);
+                        }
                     } else {
-                        toastr['error']('An unexpected error occurred!');
+                        if (error.message) {
+                            toastr['error']('An unexpected error occurred!');
+                            console.log(error.message);
+                        }
                     }
                 });
             },

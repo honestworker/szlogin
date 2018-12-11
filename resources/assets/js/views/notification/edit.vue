@@ -6,7 +6,7 @@
                 <h3 class="text-themecolor m-b-0 m-t-0" v-else>Create Notification</h3>
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><router-link to="/dashboard">Dashboard</router-link></li>
-                    <li class="breadcrumb-item"><router-link to="/Notification">Notification</router-link></li>
+                    <li class="breadcrumb-item"><router-link to="/notification">Notification</router-link></li>
                     <li class="breadcrumb-item active" v-if="id != 0">Edit Notification</li>
                     <li class="breadcrumb-item active" v-else>Create Notification</li>
                 </ol>

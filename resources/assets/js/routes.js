@@ -56,6 +56,14 @@ let routes = [
                 component: require('./views/notification/type')
             },
             {
+                path: '/sys_noti',
+                component: require('./views/sys_noti/index')
+            },
+            {
+                path: '/sys_noti/:id',
+                component: require('./views/sys_noti/edit')
+            },
+            {
                 path: '/advertisement',
                 component: require('./views/advertisement/index')
             },

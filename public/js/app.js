@@ -576,53 +576,6 @@ module.exports = {
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var disposed = false
-var normalizeComponent = __webpack_require__(0)
-/* script */
-var __vue_script__ = __webpack_require__(149)
-/* template */
-var __vue_template__ = __webpack_require__(150)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/layouts/guest-footer.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-54bdd928", Component.options)
-  } else {
-    hotAPI.reload("data-v-54bdd928", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(true)
 		module.exports = factory();
@@ -4746,6 +4699,53 @@ return /******/ (function(modules) { // webpackBootstrap
 ;
 
 /***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(0)
+/* script */
+var __vue_script__ = __webpack_require__(158)
+/* template */
+var __vue_template__ = __webpack_require__(159)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/layouts/guest-footer.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-54bdd928", Component.options)
+  } else {
+    hotAPI.reload("data-v-54bdd928", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
 /* 5 */
 /***/ (function(module, exports) {
 
@@ -5177,9 +5177,9 @@ module.exports = defaults;
 
 
 
-var base64 = __webpack_require__(121)
-var ieee754 = __webpack_require__(122)
-var isArray = __webpack_require__(123)
+var base64 = __webpack_require__(130)
+var ieee754 = __webpack_require__(131)
+var isArray = __webpack_require__(132)
 
 exports.Buffer = Buffer
 exports.SlowBuffer = SlowBuffer
@@ -22424,7 +22424,7 @@ if (typeof module !== 'undefined' && module.exports && typeof DO_NOT_EXPORT_CODE
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(24);
-module.exports = __webpack_require__(185);
+module.exports = __webpack_require__(194);
 
 
 /***/ }),
@@ -25351,59 +25351,65 @@ var routes = [{
         path: '/noti_type',
         component: __webpack_require__(117)
     }, {
-        path: '/advertisement',
+        path: '/sys_noti',
         component: __webpack_require__(118)
     }, {
+        path: '/sys_noti/:id',
+        component: __webpack_require__(121)
+    }, {
+        path: '/advertisement',
+        component: __webpack_require__(127)
+    }, {
         path: '/advertisement/:id',
-        component: __webpack_require__(129)
+        component: __webpack_require__(138)
     }, {
         path: '/admin',
-        component: __webpack_require__(135)
+        component: __webpack_require__(144)
     }, {
         path: '/admin/:id/view',
-        component: __webpack_require__(138)
+        component: __webpack_require__(147)
     }]
 }, {
     path: '/',
-    component: __webpack_require__(144),
+    component: __webpack_require__(153),
     meta: { requiresGuest: true },
     children: [{
         path: '/login',
-        component: __webpack_require__(147)
+        component: __webpack_require__(156)
     }, {
         path: '/password',
-        component: __webpack_require__(152)
-    }, {
-        path: '/register',
-        component: __webpack_require__(155)
-    }, {
-        path: '/success_register',
-        component: __webpack_require__(158)
-    }, {
-        path: '/signup',
         component: __webpack_require__(161)
     }, {
-        path: '/msignup',
+        path: '/register',
         component: __webpack_require__(164)
     }, {
-        path: '/success_signup',
+        path: '/success_register',
         component: __webpack_require__(167)
     }, {
-        path: '/auth/:token/activate',
+        path: '/signup',
         component: __webpack_require__(170)
     }, {
-        path: '/password/reset/:token',
+        path: '/msignup',
         component: __webpack_require__(173)
     }, {
-        path: '/auth/social',
+        path: '/success_signup',
         component: __webpack_require__(176)
+    }, {
+        path: '/auth/:token/activate',
+        component: __webpack_require__(179)
+    }, {
+        path: '/password/reset/:token',
+        component: __webpack_require__(182)
+    }, {
+        path: '/auth/social',
+        component: __webpack_require__(185)
     }]
 }, {
     path: '*',
-    component: __webpack_require__(179),
+    component: __webpack_require__(188),
     children: [{
         path: '*',
-        component: __webpack_require__(182)
+        component: __webpack_require__(191)
     }]
 }];
 
@@ -26008,6 +26014,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 
 
@@ -26155,6 +26164,20 @@ var render = function() {
                 _c("i", { staticClass: "fa fa-user" }),
                 _vm._v(" "),
                 _c("span", { staticClass: "hide-menu" }, [_vm._v("All Users")])
+              ])
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "li",
+            [
+              _c("router-link", { attrs: { to: "/sys_noti", exact: "" } }, [
+                _c("i", { staticClass: "fa fa-bell" }),
+                _vm._v(" "),
+                _c("span", { staticClass: "hide-menu" }, [
+                  _vm._v("System Notification")
+                ])
               ])
             ],
             1
@@ -26890,7 +26913,7 @@ module.exports = function listToStyles (parentId, list) {
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__services_helper__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_click_confirm__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_click_confirm__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_click_confirm___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_click_confirm__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue_google_charts__ = __webpack_require__(18);
 //
@@ -27219,19 +27242,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 }
                 _this.$refs.groupChart.drawChart();
             }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.error_type == 'token_error') {
+                if (error.response.data.status == 'fail') {
+                    if (error.response.data.type == "token_error") {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this.$router.push('/login');
                     } else {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
-                            toastr['error']('An unexpected error occurred!');
-                        }
+                        toastr['error'](error.response.data.message);
                     }
                 } else {
-                    toastr['error']('An unexpected error occurred!');
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
                 }
             });
         },
@@ -27262,19 +27284,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this2.userPieChartData.push(["Non active last 30 days", _this2.users_total - _this2.activated_users]);
                 _this2.$refs.userPieChart.drawChart();
             }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.error_type == 'token_error') {
+                if (error.response.data.status == 'fail') {
+                    if (error.response.data.type == "token_error") {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this2.$router.push('/login');
                     } else {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
-                            toastr['error']('An unexpected error occurred!');
-                        }
+                        toastr['error'](error.response.data.message);
                     }
                 } else {
-                    toastr['error']('An unexpected error occurred!');
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
                 }
             });
         },
@@ -27286,19 +27307,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this3.click_count_infor = response.data.data.click_count_infor;
                 _this3.statistics = response.data.data.statistics;
             }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.error_type == 'token_error') {
+                if (error.response.data.status == 'fail') {
+                    if (error.response.data.type == "token_error") {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this3.$router.push('/login');
                     } else {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
-                            toastr['error']('An unexpected error occurred!');
-                        }
+                        toastr['error'](error.response.data.message);
                     }
                 } else {
-                    toastr['error']('An unexpected error occurred!');
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
                 }
             });
         },
@@ -28166,7 +28186,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_laravel_vue_pagination__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_laravel_vue_pagination___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_laravel_vue_pagination__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_helper__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_click_confirm__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_click_confirm__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_click_confirm___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_click_confirm__);
 //
 //
@@ -28391,19 +28411,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             axios.get('/api/group?page=' + page + url).then(function (response) {
                 _this.groups = response.data;
             }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.error_type == 'token_error') {
+                if (error.response.data.status == 'fail') {
+                    if (error.response.data.type == "token_error") {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this.$router.push('/login');
                     } else {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
-                            toastr['error']('An unexpected error occurred!');
-                        }
+                        toastr['error'](error.response.data.message);
                     }
                 } else {
-                    toastr['error']('An unexpected error occurred!');
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
                 }
             });
         },
@@ -28413,19 +28432,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             axios.post('/api/country/all').then(function (response) {
                 _this2.countries = response.data;
             }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.error_type == 'token_error') {
+                if (error.response.data.status == 'fail') {
+                    if (error.response.data.type == "token_error") {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this2.$router.push('/login');
                     } else {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
-                            toastr['error']('An unexpected error occurred!');
-                        }
+                        toastr['error'](error.response.data.message);
                     }
                 } else {
-                    toastr['error']('An unexpected error occurred!');
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
                 }
             });
         },
@@ -28441,19 +28459,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 toastr['success'](response.data.message);
                 _this3.getGroups();
             }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.error_type == 'token_error') {
+                if (error.response.data.status == 'fail') {
+                    if (error.response.data.type == "token_error") {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this3.$router.push('/login');
                     } else {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
-                            toastr['error']('An unexpected error occurred!');
-                        }
+                        toastr['error'](error.response.data.message);
                     }
                 } else {
-                    toastr['error']('An unexpected error occurred!');
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
                 }
                 $('#modal-delete-group').modal('hide');
             });
@@ -28470,19 +28487,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             axios.post('/api/group/status', { id: group.id }).then(function (response) {
                 _this4.getGroups();
             }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.error_type == 'token_error') {
+                if (error.response.data.status == 'fail') {
+                    if (error.response.data.type == "token_error") {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this4.$router.push('/login');
                     } else {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
-                            toastr['error']('An unexpected error occurred!');
-                        }
+                        toastr['error'](error.response.data.message);
                     }
                 } else {
-                    toastr['error']('An unexpected error occurred!');
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
                 }
             });
         }
@@ -28702,7 +28718,7 @@ var render = function() {
                         }
                       ],
                       staticClass: "form-control",
-                      attrs: { name: "status" },
+                      attrs: { name: "country" },
                       on: {
                         change: [
                           function($event) {
@@ -29445,19 +29461,18 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             axios.post('/api/country/all').then(function (response) {
                 _this.countries = response.data;
             }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.error_type == 'token_error') {
+                if (error.response.data.status == 'fail') {
+                    if (error.response.data.type == "token_error") {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this.$router.push('/login');
                     } else {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
-                            toastr['error']('An unexpected error occurred!');
-                        }
+                        toastr['error'](error.response.data.message);
                     }
                 } else {
-                    toastr['error']('An unexpected error occurred!');
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
                 }
             });
         },
@@ -29474,19 +29489,18 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             this.passwordForm.post('/api/user/change-password').then(function (response) {
                 toastr['success'](response.message);
             }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.error_type == 'token_error') {
+                if (error.status == 'fail') {
+                    if (error.type == "token_error") {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this2.$router.push('/login');
                     } else {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
-                            toastr['error']('An unexpected error occurred!');
-                        }
+                        toastr['error'](error.message);
                     }
                 } else {
-                    toastr['error']('An unexpected error occurred!');
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
                 }
             });
         },
@@ -29522,19 +29536,18 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 _this3.adminForm.city = _this3.user_data.profile.city ? _this3.user_data.profile.city : "";
                 _this3.adminForm.created_at = _this3.user_data.profile.created_at ? _this3.user_data.profile.created_at : "";
             }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.error_type == 'token_error') {
+                if (error.response.data.status == 'fail') {
+                    if (error.response.data.type == "token_error") {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this3.$router.push('/login');
                     } else {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
-                            toastr['error']('An unexpected error occurred!');
-                        }
+                        toastr['error'](error.response.data.message);
                     }
                 } else {
-                    toastr['error']('An unexpected error occurred!');
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
                 }
             });
         },
@@ -29550,19 +29563,18 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 _this4.adminForm.avatar = response.data.profile.avatar;
                 toastr['success'](response.data.message);
             }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.error_type == 'token_error') {
+                if (error.response.data.status == 'fail') {
+                    if (error.response.data.type == "token_error") {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this4.$router.push('/login');
                     } else {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
-                            toastr['error']('An unexpected error occurred!');
-                        }
+                        toastr['error'](error.response.data.message);
                     }
                 } else {
-                    toastr['error']('An unexpected error occurred!');
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
                 }
             });
         },
@@ -29572,19 +29584,18 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             this.adminForm.post('/api/user/update-profile').then(function (response) {
                 toastr['success'](response.message);
             }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.error_type == 'token_error') {
+                if (error.status == 'fail') {
+                    if (error.type == "token_error") {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this5.$router.push('/login');
                     } else {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
-                            toastr['error']('An unexpected error occurred!');
-                        }
+                        toastr['error'](error.message);
                     }
                 } else {
-                    toastr['error']('An unexpected error occurred!');
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
                 }
             });
             this.getUser();
@@ -30391,19 +30402,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             axios.post('/api/country/all').then(function (response) {
                 _this.countries = response.data;
             }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.error_type == 'token_error') {
+                if (error.response.data.status == 'fail') {
+                    if (error.response.data.type == "token_error") {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this.$router.push('/login');
                     } else {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
-                            toastr['error']('An unexpected error occurred!');
-                        }
+                        toastr['error'](error.response.data.message);
                     }
                 } else {
-                    toastr['error']('An unexpected error occurred!');
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
                 }
             });
         },
@@ -30427,19 +30437,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this2.$emit('completed', response.group);
                 _this2.$router.push('/group');
             }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.error_type == 'token_error') {
+                if (error.status == 'fail') {
+                    if (error.type == "token_error") {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this2.$router.push('/login');
                     } else {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
-                            toastr['error']('An unexpected error occurred!');
-                        }
+                        toastr['error'](error.response.data.message);
                     }
                 } else {
-                    toastr['error']('An unexpected error occurred!');
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
                 }
             });
         },
@@ -30455,19 +30464,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this3.groupForm.mobile_number = response.data.mobile_number;
                 _this3.groupForm.country = response.data.country;
             }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.error_type == 'token_error') {
+                if (error.response.data.status == 'fail') {
+                    if (error.response.data.type == "token_error") {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this3.$router.push('/login');
                     } else {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
-                            toastr['error']('An unexpected error occurred!');
-                        }
+                        toastr['error'](error.response.data.message);
                     }
                 } else {
-                    toastr['error']('An unexpected error occurred!');
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
                 }
             });
         },
@@ -30475,28 +30483,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this4 = this;
 
             this.groupForm.patch('/api/group/' + this.id).then(function (response) {
-                if (response.type == 'error') {
-                    if (response.message) {
-                        toastr['error'](response.message);
-                    } else {
-                        toastr['error']('The token is expired! Please refresh and try again!');
-                    }
+                if (response.message) {
+                    toastr['success'](response.message);
+                    console.log(response.data);
                 }
                 _this4.$router.push('/group');
             }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.error_type == 'token_error') {
+                if (error.status == 'fail') {
+                    if (error.type == "token_error") {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this4.$router.push('/login');
                     } else {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
-                            toastr['error']('An unexpected error occurred!');
-                        }
+                        toastr['error'](error.message);
                     }
                 } else {
-                    toastr['error']('An unexpected error occurred!');
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
                 }
             });
         }
@@ -30927,7 +30931,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_laravel_vue_pagination__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_laravel_vue_pagination___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_laravel_vue_pagination__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_helper__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_click_confirm__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_click_confirm__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_click_confirm___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_click_confirm__);
 //
 //
@@ -31193,19 +31197,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             axios.get('/api/user?&page=' + page + url).then(function (response) {
                 _this.users = response.data;
             }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.error_type == 'token_error') {
+                if (error.response.data.status == 'fail') {
+                    if (error.response.data.type == "token_error") {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this.$router.push('/login');
                     } else {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
-                            toastr['error']('An unexpected error occurred!');
-                        }
+                        toastr['error'](error.response.data.message);
                     }
                 } else {
-                    toastr['error']('An unexpected error occurred!');
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
                 }
             });
         },
@@ -31259,19 +31262,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 toastr['success'](response.data.message);
                 _this2.getUsers();
             }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.error_type == 'token_error') {
+                if (error.response.data.status == 'fail') {
+                    if (error.response.data.type == "token_error") {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this2.$router.push('/login');
                     } else {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
-                            toastr['error']('An unexpected error occurred!');
-                        }
+                        toastr['error'](error.response.data.message);
                     }
                 } else {
-                    toastr['error']('An unexpected error occurred!');
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
                 }
                 $('#modal-delete-user').modal('hide');
             });
@@ -31294,19 +31296,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 toastr['success'](response.data.message);
                 _this3.getUsers();
             }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.error_type == 'token_error') {
+                if (error.response.data.status == 'fail') {
+                    if (error.response.data.type == "token_error") {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this3.$router.push('/login');
                     } else {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
-                            toastr['error']('An unexpected error occurred!');
-                        }
+                        toastr['error'](error.response.data.message);
                     }
                 } else {
-                    toastr['error']('An unexpected error occurred!');
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
                 }
                 $('#modal-group-manager').modal('hide');
             });
@@ -31323,19 +31324,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 toastr['success'](response.data.message);
                 _this4.getUsers();
             }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.error_type == 'token_error') {
+                if (error.response.data.status == 'fail') {
+                    if (error.response.data.type == "token_error") {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this4.$router.push('/login');
                     } else {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
-                            toastr['error']('An unexpected error occurred!');
-                        }
+                        toastr['error'](error.response.data.message);
                     }
                 } else {
-                    toastr['error']('An unexpected error occurred!');
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
                 }
                 $('#modal-disable-group-manager').modal('hide');
             });
@@ -32459,19 +32459,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this.userForm.role = _this.user_data.profile.is_admin == 1 ? "Manager" : "User";
                 _this.userForm.group_id = _this.user_data.group_id ? _this.user_data.group_id : "";
             }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.error_type == 'token_error') {
+                if (error.response.data.status == 'fail') {
+                    if (error.response.data.type == "token_error") {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this.$router.push('/login');
                     } else {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
-                            toastr['error']('An unexpected error occurred!');
-                        }
+                        toastr['error'](error.response.data.message);
                     }
                 } else {
-                    toastr['error']('An unexpected error occurred!');
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
                 }
             });
         }
@@ -32870,7 +32869,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_laravel_vue_pagination__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_laravel_vue_pagination___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_laravel_vue_pagination__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_helper__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_click_confirm__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_click_confirm__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_click_confirm___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_click_confirm__);
 //
 //
@@ -33059,19 +33058,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             axios.get('/api/country?page=' + page + url).then(function (response) {
                 _this.countries = response.data;
             }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.error_type == 'token_error') {
+                if (error.response.data.status == 'fail') {
+                    if (error.response.data.type == "token_error") {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this.$router.push('/login');
                     } else {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
-                            toastr['error']('An unexpected error occurred!');
-                        }
+                        toastr['error'](error.response.data.message);
                     }
                 } else {
-                    toastr['error']('An unexpected error occurred!');
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
                 }
             });
         },
@@ -33087,19 +33085,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 toastr['success'](response.data.message);
                 _this2.getCountries();
             }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.error_type == 'token_error') {
+                if (error.response.data.status == 'fail') {
+                    if (error.response.data.type == "token_error") {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this2.$router.push('/login');
                     } else {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
-                            toastr['error']('An unexpected error occurred!');
-                        }
+                        toastr['error'](error.response.data.message);
                     }
                 } else {
-                    toastr['error']('An unexpected error occurred!');
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
                 }
                 $('#modal-delete-country').modal('hide');
             });
@@ -33123,19 +33120,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             axios.post('/api/country/status', { id: country.id }).then(function (response) {
                 _this3.getCountries();
             }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.error_type == 'token_error') {
+                if (error.response.data.status == 'fail') {
+                    if (error.response.data.type == "token_error") {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this3.$router.push('/login');
                     } else {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
-                            toastr['error']('An unexpected error occurred!');
-                        }
+                        toastr['error'](error.response.data.message);
                     }
                 } else {
-                    toastr['error']('An unexpected error occurred!');
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
                 }
             });
         }
@@ -33258,19 +33254,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 toastr['success'](response.message);
                 _this.$emit('completed', response.country);
             }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.error_type == 'token_error') {
+                if (error.status == 'fail') {
+                    if (error.type == "token_error") {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this.$router.push('/login');
                     } else {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
-                            toastr['error']('An unexpected error occurred!');
-                        }
+                        toastr['error'](error.message);
                     }
                 } else {
-                    toastr['error']('An unexpected error occurred!');
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
                 }
             });
         },
@@ -33282,19 +33277,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this2.$emit('completed', response.country);
                 _this2.cancelCountry();
             }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.error_type == 'token_error') {
+                if (error.status == 'fail') {
+                    if (error.type == "token_error") {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this2.$router.push('/login');
                     } else {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
-                            toastr['error']('An unexpected error occurred!');
-                        }
+                        toastr['error'](error.message);
                     }
                 } else {
-                    toastr['error']('An unexpected error occurred!');
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
                 }
             });
         }
@@ -34049,7 +34043,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_laravel_vue_pagination__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_laravel_vue_pagination___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_laravel_vue_pagination__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_helper__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_click_confirm__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_click_confirm__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_click_confirm___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_click_confirm__);
 //
 //
@@ -34269,19 +34263,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     _this.has_group = 1;
                 }
             }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.error_type == 'token_error') {
+                if (error.response.data.status == 'fail') {
+                    if (error.response.data.type == "token_error") {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this.$router.push('/login');
                     } else {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
-                            toastr['error']('An unexpected error occurred!');
-                        }
+                        toastr['error'](error.response.data.message);
                     }
                 } else {
-                    toastr['error']('An unexpected error occurred!');
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
                 }
             });
         },
@@ -34295,19 +34288,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             axios.get('/api/notification?page=' + page + url).then(function (response) {
                 _this2.ntfs = response.data;
             }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.error_type == 'token_error') {
+                if (error.response.data.status == 'fail') {
+                    if (error.response.data.type == "token_error") {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this2.$router.push('/login');
                     } else {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
-                            toastr['error']('An unexpected error occurred!');
-                        }
+                        toastr['error'](error.response.data.message);
                     }
                 } else {
-                    toastr['error']('An unexpected error occurred!');
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
                 }
             });
         },
@@ -34355,19 +34347,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 toastr['success'](response.data.message);
                 _this3.getNtfs();
             }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.error_type == 'token_error') {
+                if (error.response.data.status == 'fail') {
+                    if (error.response.data.type == "token_error") {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this3.$router.push('/login');
                     } else {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
-                            toastr['error']('An unexpected error occurred!');
-                        }
+                        toastr['error'](error.response.data.message);
                     }
                 } else {
-                    toastr['error']('An unexpected error occurred!');
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
                 }
                 $('#modal-delete-ntf').modal('hide');
             });
@@ -34375,25 +34366,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         viewNtf: function viewNtf(ntf) {
             this.$router.push('/notification/' + ntf.id);
         },
-        toggleAdStatus: function toggleAdStatus(ntf) {
+        toggleNtfStatus: function toggleNtfStatus(ntf) {
             var _this4 = this;
 
             axios.post('/api/notificationi/status', { id: ntf.id }).then(function (response) {
                 _this4.getNtfs();
             }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.error_type == 'token_error') {
+                if (error.response.data.status == 'fail') {
+                    if (error.response.data.type == "token_error") {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this4.$router.push('/login');
                     } else {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
-                            toastr['error']('An unexpected error occurred!');
-                        }
+                        toastr['error'](error.response.data.message);
                     }
                 } else {
-                    toastr['error']('An unexpected error occurred!');
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
                 }
             });
         }
@@ -35289,7 +35279,7 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_click_confirm__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_click_confirm__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_click_confirm___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_click_confirm__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_helper__ = __webpack_require__(1);
 //
@@ -35459,7 +35449,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     props: ['id'],
     mounted: function mounted() {
         if (this.id != 0) {
-            this.getNotification();
+            this.updateNotification();
+        } else {
+            this.storeNotification();
         }
     },
 
@@ -35505,19 +35497,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             axios.get('/api/noti_type').then(function (response) {
                 _this.ntf_types = response.data;
             }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.error_type == 'token_error') {
+                if (error.response.data.status == 'fail') {
+                    if (error.response.data.type == "token_error") {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this.$router.push('/login');
                     } else {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
-                            toastr['error']('An unexpected error occurred!');
-                        }
+                        toastr['error'](error.response.data.message);
                     }
                 } else {
-                    toastr['error']('An unexpected error occurred!');
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
                 }
             });
         },
@@ -35533,19 +35524,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     }
                 }
             }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.error_type == 'token_error') {
+                if (error.response.data.status == 'fail') {
+                    if (error.response.data.type == "token_error") {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this2.$router.push('/login');
                     } else {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
-                            toastr['error']('An unexpected error occurred!');
-                        }
+                        toastr['error'](error.response.data.message);
                     }
                 } else {
-                    toastr['error']('An unexpected error occurred!');
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
                 }
             });
         },
@@ -35577,19 +35567,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this3.notificationForm.images = response.data.notification.images;
                 _this3.comments = response.data.notification.comments;
             }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.error_type == 'token_error') {
+                if (error.response.data.status == 'fail') {
+                    if (error.response.data.type == "token_error") {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this3.$router.push('/login');
                     } else {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
-                            toastr['error']('An unexpected error occurred!');
-                        }
+                        toastr['error'](error.response.data.message);
                     }
                 } else {
-                    toastr['error']('An unexpected error occurred!');
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
                 }
             });
         },
@@ -35609,19 +35598,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 toastr['success'](response.data.message);
                 _this4.$router.push('/notification');
             }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.error_type == 'token_error') {
+                if (error.status == 'fail') {
+                    if (error.type == "token_error") {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this4.$router.push('/login');
                     } else {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
-                            toastr['error']('An unexpected error occurred!');
-                        }
+                        toastr['error'](error.message);
                     }
                 } else {
-                    toastr['error']('An unexpected error occurred!');
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
                 }
             });
         },
@@ -36199,7 +36187,7 @@ var render = function() {
             "li",
             { staticClass: "breadcrumb-item" },
             [
-              _c("router-link", { attrs: { to: "/Notification" } }, [
+              _c("router-link", { attrs: { to: "/notification" } }, [
                 _vm._v("Notification")
               ])
             ],
@@ -36290,7 +36278,1993 @@ var normalizeComponent = __webpack_require__(0)
 /* script */
 var __vue_script__ = __webpack_require__(119)
 /* template */
-var __vue_template__ = __webpack_require__(128)
+var __vue_template__ = __webpack_require__(120)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/views/sys_noti/index.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-82c73dc4", Component.options)
+  } else {
+    hotAPI.reload("data-v-82c73dc4", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 119 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_laravel_vue_pagination__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_laravel_vue_pagination___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_laravel_vue_pagination__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_helper__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_click_confirm__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_click_confirm___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_click_confirm__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    components: { pagination: __WEBPACK_IMPORTED_MODULE_0_laravel_vue_pagination___default.a, ClickConfirm: __WEBPACK_IMPORTED_MODULE_2_click_confirm___default.a },
+    data: function data() {
+        return {
+            ntfs: {},
+            countries: {},
+            filterNtfForm: {
+                sortBy: 'created_at',
+                order: 'desc',
+                country: '',
+                email: '',
+                contents: '',
+                created_at: '',
+                status: '',
+                pageLength: 25
+            },
+            ntf_id: 0,
+            has_group: 0,
+            deletingNtf: 1
+        };
+    },
+    created: function created() {
+        this.getCountries();
+        this.getNtfs();
+    },
+
+
+    methods: {
+        getCountries: function getCountries() {
+            var _this = this;
+
+            axios.post('/api/country/all').then(function (response) {
+                _this.countries = response.data;
+            }).catch(function (error) {
+                if (error.response.data.status == 'fail') {
+                    if (error.response.data.type == "token_error") {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                        _this.$router.push('/login');
+                    } else {
+                        toastr['error'](error.response.data.message);
+                    }
+                } else {
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
+                }
+            });
+        },
+        getNtfs: function getNtfs(page) {
+            var _this2 = this;
+
+            if (typeof page === 'undefined') {
+                page = 1;
+            }
+            var url = __WEBPACK_IMPORTED_MODULE_1__services_helper__["a" /* default */].getFilterURL(this.filterNtfForm);
+            axios.get('/api/sysnoti?page=' + page + url).then(function (response) {
+                _this2.ntfs = response.data;
+            }).catch(function (error) {
+                if (error.response.data.status == 'fail') {
+                    if (error.response.data.type == "token_error") {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                        _this2.$router.push('/login');
+                    } else {
+                        toastr['error'](error.response.data.message);
+                    }
+                } else {
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
+                }
+            });
+        },
+        getNtfEmail: function getNtfEmail(ntf) {
+            if (typeof ntf.user != 'undefined') {
+                return ntf.user.email;
+            }
+            return "";
+        },
+        getNtfCountry: function getNtfCountry(ntf) {
+            if (typeof ntf.country != 'undefined' && ntf.country !== null && ntf.country !== '') {
+                return ntf.country;
+            }
+            return "All";
+        },
+        getNtfImages: function getNtfImages(ntf) {
+            var image_html = "";
+            if (typeof ntf.images != 'undefined') {
+                if (ntf.images.length > 0) {
+                    for (var index = 0; index < ntf.images.length; index++) {
+                        image_html += '<img src="http://szlogin.com/images/notifications/' + ntf.images[index]['url'] + '" class="img-responsive-height img-max-height-100">';
+                    }
+                }
+            }
+            return image_html;
+        },
+        getNtfStatus: function getNtfStatus(ntf) {
+            return ntf.status == 1 ? '<span class="label label-success">Active</span>' : '<span class="label label-danger">Deactive</span>';
+        },
+        modalDeleteNtf: function modalDeleteNtf(ntf) {
+            this.ntf_id = ntf.id;
+            $('#modal-delete-ntf').modal('show');
+        },
+        deleteNtf: function deleteNtf() {
+            var _this3 = this;
+
+            axios.delete('/api/notification/' + this.ntf_id).then(function (response) {
+                $('#modal-delete-ntf').modal('hide');
+                toastr['success'](response.data.message);
+                _this3.getNtfs();
+            }).catch(function (error) {
+                if (error.response.data.status == 'fail') {
+                    if (error.response.data.type == "token_error") {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                        _this3.$router.push('/login');
+                    } else {
+                        toastr['error'](error.response.data.message);
+                    }
+                } else {
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
+                }
+                $('#modal-delete-ntf').modal('hide');
+            });
+        },
+        viewNtf: function viewNtf(ntf) {
+            this.$router.push('/sys_noti/' + ntf.id);
+        },
+        toggleNtfStatus: function toggleNtfStatus(ntf) {
+            var _this4 = this;
+
+            axios.post('/api/notification/status', { id: ntf.id }).then(function (response) {
+                _this4.getNtfs();
+            }).catch(function (error) {
+                if (error.response.data.status == 'fail') {
+                    if (error.response.data.type == "token_error") {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                        _this4.$router.push('/login');
+                    } else {
+                        toastr['error'](error.response.data.message);
+                    }
+                } else {
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
+                }
+            });
+        }
+    }
+});
+
+/***/ }),
+/* 120 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("div", { staticClass: "row page-titles" }, [
+      _c("div", { staticClass: "col-md-12 col-12 align-self-center" }, [
+        _c("h3", { staticClass: "text-themecolor m-b-0 m-t-0" }, [
+          _vm._v("System Notification")
+        ]),
+        _vm._v(" "),
+        _c("ol", { staticClass: "breadcrumb" }, [
+          _c(
+            "li",
+            { staticClass: "breadcrumb-item" },
+            [
+              _c("router-link", { attrs: { to: "/dashboard" } }, [
+                _vm._v("Dashboard")
+              ])
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c("li", { staticClass: "breadcrumb-item active" }, [
+            _vm._v("System Notification")
+          ])
+        ])
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-lg-12 col-12" }, [
+        _c("div", { staticClass: "card" }, [
+          _c(
+            "div",
+            { staticClass: "card-body" },
+            [
+              _c(
+                "router-link",
+                {
+                  staticClass:
+                    "btn btn-success waves-effect waves-light m-t-10",
+                  attrs: { to: "/sys_noti/0" }
+                },
+                [_vm._v("Create System Notification")]
+              )
+            ],
+            1
+          )
+        ])
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-lg-12 col-12" }, [
+        _c("div", { staticClass: "card" }, [
+          _c("div", { staticClass: "card-body" }, [
+            _c("h4", { staticClass: "card-title" }, [
+              _vm._v("Filter Notification")
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "row m-t-20" }, [
+              _c("div", { staticClass: "col-md-3" }, [
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "" } }, [_vm._v("Country")]),
+                  _vm._v(" "),
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.filterNtfForm.country,
+                          expression: "filterNtfForm.country"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: { name: "country" },
+                      on: {
+                        change: [
+                          function($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function(o) {
+                                return o.selected
+                              })
+                              .map(function(o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.$set(
+                              _vm.filterNtfForm,
+                              "country",
+                              $event.target.multiple
+                                ? $$selectedVal
+                                : $$selectedVal[0]
+                            )
+                          },
+                          _vm.getNtfs
+                        ]
+                      }
+                    },
+                    [
+                      _c("option", { attrs: { value: "" } }, [_vm._v("All")]),
+                      _vm._v(" "),
+                      _vm._l(_vm.countries.countries, function(country) {
+                        return _c("option", { domProps: { value: country } }, [
+                          _vm._v(_vm._s(country))
+                        ])
+                      })
+                    ],
+                    2
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-3" }, [
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "" } }, [_vm._v("Email")]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.filterNtfForm.email,
+                        expression: "filterNtfForm.email"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    domProps: { value: _vm.filterNtfForm.email },
+                    on: {
+                      change: _vm.getNtfs,
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.filterNtfForm,
+                          "email",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-3" }, [
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "" } }, [_vm._v("Contents")]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.filterNtfForm.contents,
+                        expression: "filterNtfForm.contents"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    domProps: { value: _vm.filterNtfForm.contents },
+                    on: {
+                      change: _vm.getNtfs,
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.filterNtfForm,
+                          "contents",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-3" }, [
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "" } }, [_vm._v("Status")]),
+                  _vm._v(" "),
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.filterNtfForm.status,
+                          expression: "filterNtfForm.status"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: { name: "status" },
+                      on: {
+                        change: [
+                          function($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function(o) {
+                                return o.selected
+                              })
+                              .map(function(o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.$set(
+                              _vm.filterNtfForm,
+                              "status",
+                              $event.target.multiple
+                                ? $$selectedVal
+                                : $$selectedVal[0]
+                            )
+                          },
+                          _vm.getNtfs
+                        ]
+                      }
+                    },
+                    [
+                      _c("option", { attrs: { value: "" } }, [_vm._v("All")]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "1" } }, [
+                        _vm._v("Active")
+                      ]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "0" } }, [
+                        _vm._v("Deactive")
+                      ])
+                    ]
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-3" }, [
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "" } }, [_vm._v("Sort By")]),
+                  _vm._v(" "),
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.filterNtfForm.sortBy,
+                          expression: "filterNtfForm.sortBy"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: { name: "sortBy" },
+                      on: {
+                        change: [
+                          function($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function(o) {
+                                return o.selected
+                              })
+                              .map(function(o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.$set(
+                              _vm.filterNtfForm,
+                              "sortBy",
+                              $event.target.multiple
+                                ? $$selectedVal
+                                : $$selectedVal[0]
+                            )
+                          },
+                          _vm.getNtfs
+                        ]
+                      }
+                    },
+                    [
+                      _c("option", { attrs: { value: "country" } }, [
+                        _vm._v("Country")
+                      ]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "email" } }, [
+                        _vm._v("Email")
+                      ]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "contents" } }, [
+                        _vm._v("Contents")
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "option",
+                        { attrs: { value: "created_at", selected: "" } },
+                        [_vm._v("Created At")]
+                      )
+                    ]
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-3" }, [
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "" } }, [_vm._v("Order")]),
+                  _vm._v(" "),
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.filterNtfForm.order,
+                          expression: "filterNtfForm.order"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: { name: "order" },
+                      on: {
+                        change: [
+                          function($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function(o) {
+                                return o.selected
+                              })
+                              .map(function(o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.$set(
+                              _vm.filterNtfForm,
+                              "order",
+                              $event.target.multiple
+                                ? $$selectedVal
+                                : $$selectedVal[0]
+                            )
+                          },
+                          _vm.getNtfs
+                        ]
+                      }
+                    },
+                    [
+                      _c("option", { attrs: { value: "asc" } }, [
+                        _vm._v("Asc")
+                      ]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "desc", selected: "" } }, [
+                        _vm._v("Desc")
+                      ])
+                    ]
+                  )
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("h4", { staticClass: "card-title" }, [
+              _vm._v("Notification List")
+            ]),
+            _vm._v(" "),
+            _vm.ntfs.total
+              ? _c("h6", { staticClass: "card-subtitle" }, [
+                  _vm._v("Total " + _vm._s(_vm.ntfs.total) + " result found!")
+                ])
+              : _c("h6", { staticClass: "card-subtitle" }, [
+                  _vm._v("No result found!")
+                ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "table-responsive" }, [
+              _vm.ntfs.total
+                ? _c("table", { staticClass: "table" }, [
+                    _vm._m(0),
+                    _vm._v(" "),
+                    _c(
+                      "tbody",
+                      _vm._l(_vm.ntfs.data, function(ntf) {
+                        return _c("tr", [
+                          _c("td", {
+                            domProps: {
+                              textContent: _vm._s(_vm.getNtfCountry(ntf))
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("td", {
+                            domProps: {
+                              innerHTML: _vm._s(_vm.getNtfEmail(ntf))
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("td", {
+                            domProps: { textContent: _vm._s(ntf.contents) }
+                          }),
+                          _vm._v(" "),
+                          _c("td", {
+                            domProps: {
+                              innerHTML: _vm._s(_vm.getNtfImages(ntf))
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("td", {
+                            domProps: { textContent: _vm._s(ntf.created_at) }
+                          }),
+                          _vm._v(" "),
+                          _c("td", {
+                            domProps: {
+                              innerHTML: _vm._s(_vm.getNtfStatus(ntf))
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("td", [
+                            _c(
+                              "button",
+                              {
+                                staticClass: "btn btn-info btn-sm",
+                                attrs: {
+                                  "data-toggle": "tooltip",
+                                  title: "Edit Notification"
+                                },
+                                on: {
+                                  click: function($event) {
+                                    $event.preventDefault()
+                                    _vm.viewNtf(ntf)
+                                  }
+                                }
+                              },
+                              [_c("i", { staticClass: "fa fa-pencil" })]
+                            ),
+                            _vm._v(" "),
+                            ntf.status == 1
+                              ? _c(
+                                  "button",
+                                  {
+                                    staticClass: "btn btn-danger btn-sm",
+                                    attrs: {
+                                      "data-toggle": "tooltip",
+                                      title: "Mark as Dective"
+                                    },
+                                    on: {
+                                      click: function($event) {
+                                        $event.preventDefault()
+                                        _vm.toggleNtfStatus(ntf)
+                                      }
+                                    }
+                                  },
+                                  [_c("i", { staticClass: "fa fa-times" })]
+                                )
+                              : _c(
+                                  "button",
+                                  {
+                                    staticClass: "btn btn-success btn-sm",
+                                    attrs: {
+                                      "data-toggle": "tooltip",
+                                      title: "Mark as Active"
+                                    },
+                                    on: {
+                                      click: function($event) {
+                                        $event.preventDefault()
+                                        _vm.toggleNtfStatus(ntf)
+                                      }
+                                    }
+                                  },
+                                  [_c("i", { staticClass: "fa fa-check" })]
+                                ),
+                            _vm._v(" "),
+                            _c(
+                              "button",
+                              {
+                                staticClass: "btn btn-danger btn-sm",
+                                attrs: {
+                                  "data-toggle": "tooltip",
+                                  title: "Delete Notification"
+                                },
+                                on: {
+                                  click: function($event) {
+                                    $event.preventDefault()
+                                    _vm.modalDeleteNtf(ntf)
+                                  }
+                                }
+                              },
+                              [_c("i", { staticClass: "fa fa-trash" })]
+                            )
+                          ])
+                        ])
+                      })
+                    )
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _c("div", { staticClass: "row" }, [
+                _c(
+                  "div",
+                  { staticClass: "col-md-8" },
+                  [
+                    _c("pagination", {
+                      attrs: { data: _vm.ntfs, limit: 3 },
+                      on: { "pagination-change-page": _vm.getNtfs }
+                    })
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-md-4" }, [
+                  _c("div", { staticClass: "float-right" }, [
+                    _vm.ntfs.total
+                      ? _c(
+                          "select",
+                          {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.filterNtfForm.pageLength,
+                                expression: "filterNtfForm.pageLength"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            attrs: { name: "pageLength" },
+                            on: {
+                              change: [
+                                function($event) {
+                                  var $$selectedVal = Array.prototype.filter
+                                    .call($event.target.options, function(o) {
+                                      return o.selected
+                                    })
+                                    .map(function(o) {
+                                      var val =
+                                        "_value" in o ? o._value : o.value
+                                      return val
+                                    })
+                                  _vm.$set(
+                                    _vm.filterNtfForm,
+                                    "pageLength",
+                                    $event.target.multiple
+                                      ? $$selectedVal
+                                      : $$selectedVal[0]
+                                  )
+                                },
+                                _vm.getNtfs
+                              ]
+                            }
+                          },
+                          [
+                            _c("option", { attrs: { value: "5" } }, [
+                              _vm._v("5 per page")
+                            ]),
+                            _vm._v(" "),
+                            _c("option", { attrs: { value: "10" } }, [
+                              _vm._v("10 per page")
+                            ]),
+                            _vm._v(" "),
+                            _c("option", { attrs: { value: "25" } }, [
+                              _vm._v("25 per page")
+                            ]),
+                            _vm._v(" "),
+                            _c("option", { attrs: { value: "100" } }, [
+                              _vm._v("100 per page")
+                            ])
+                          ]
+                        )
+                      : _vm._e()
+                  ])
+                ])
+              ])
+            ])
+          ])
+        ])
+      ])
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal",
+        attrs: { id: "modal-delete-ntf", tabindex: "-1", role: "dialog" }
+      },
+      [
+        _vm.deletingNtf
+          ? _c("div", { staticClass: "modal-dialog" }, [
+              _c("div", { staticClass: "modal-content" }, [
+                _vm._m(1),
+                _vm._v(" "),
+                _c("div", { staticClass: "modal-body" }, [
+                  _vm._v(
+                    "\n                        Are you sure you want to delete this Notification?\n                    "
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "modal-footer" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-default",
+                      attrs: { type: "button", "data-dismiss": "modal" }
+                    },
+                    [_vm._v("No, Go Back")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-danger",
+                      attrs: { type: "button" },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          _vm.deleteNtf()
+                        }
+                      }
+                    },
+                    [
+                      _vm._v(
+                        "\n                            Yes, Delete\n                        "
+                      )
+                    ]
+                  )
+                ])
+              ])
+            ])
+          : _vm._e()
+      ]
+    )
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("Country")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Email")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Contents")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Images")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Created At")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Status")]),
+        _vm._v(" "),
+        _c("th", { staticStyle: { width: "180px" } }, [_vm._v("Action")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c("h5", { staticClass: "modal-title" }, [
+        _vm._v(
+          "\n                            Delete Notification\n                        "
+        )
+      ])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-82c73dc4", module.exports)
+  }
+}
+
+/***/ }),
+/* 121 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(0)
+/* script */
+var __vue_script__ = __webpack_require__(122)
+/* template */
+var __vue_template__ = __webpack_require__(126)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/views/sys_noti/edit.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-6720266e", Component.options)
+  } else {
+    hotAPI.reload("data-v-6720266e", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 122 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__form__ = __webpack_require__(123);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__form___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__form__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_helper__ = __webpack_require__(1);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    components: { SysNotificationForm: __WEBPACK_IMPORTED_MODULE_0__form___default.a },
+    data: function data() {
+        return {
+            id: this.$route.params.id
+        };
+    }
+});
+
+/***/ }),
+/* 123 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(0)
+/* script */
+var __vue_script__ = __webpack_require__(124)
+/* template */
+var __vue_template__ = __webpack_require__(125)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/views/sys_noti/form.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-23ded828", Component.options)
+  } else {
+    hotAPI.reload("data-v-23ded828", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 124 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_click_confirm__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_click_confirm___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_click_confirm__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_helper__ = __webpack_require__(1);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    components: { ClickConfirm: __WEBPACK_IMPORTED_MODULE_0_click_confirm___default.a },
+    data: function data() {
+        return {
+            uploadImages: [],
+            uploadDataForm: [],
+            percentCompleted: 0,
+
+            countries: {},
+            notificationForm: new Form({
+                'country': '',
+                'email': '',
+                'contents': '',
+                'created_at': '',
+                'images': {},
+                'comments': {}
+            }),
+
+            deleteImageEl: '',
+            deletingImage: 1
+        };
+    },
+    created: function created() {
+        this.getCountries();
+    },
+
+    props: ['id'],
+    mounted: function mounted() {
+        if (this.id != 0) {
+            this.getNotification();
+        }
+    },
+
+
+    methods: {
+        getNowDateTime: function getNowDateTime() {
+            var now = new Date();
+            var year = now.getFullYear();
+            var month = now.getMonth() + 1;
+            var day = now.getDate();
+            var hour = now.getHours();
+            var minute = now.getMinutes();
+            var second = now.getSeconds();
+            if (month.toString().length == 1) {
+                month = '0' + month;
+            }
+            if (day.toString().length == 1) {
+                day = '0' + day;
+            }
+            if (hour.toString().length == 1) {
+                hour = '0' + hour;
+            }
+            if (minute.toString().length == 1) {
+                minute = '0' + minute;
+            }
+            if (second.toString().length == 1) {
+                second = '0' + second;
+            }
+            var dateTime = year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second;
+            return dateTime;
+        },
+        proceed: function proceed() {
+            this.uploadDataForm = new FormData();
+            if (this.id != 0) {
+                this.updateNotification();
+            } else {
+                this.storeNotification();
+            }
+        },
+        getCountries: function getCountries() {
+            var _this = this;
+
+            axios.post('/api/country/all').then(function (response) {
+                _this.countries = response.data;
+            }).catch(function (error) {
+                if (error.response.data.status == 'fail') {
+                    if (error.response.data.type == "token_error") {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                        _this.$router.push('/login');
+                    } else {
+                        toastr['error'](error.response.data.message);
+                    }
+                } else {
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
+                }
+            });
+        },
+        getNotification: function getNotification() {
+            var _this2 = this;
+
+            axios.post('/api/notification/' + this.id).then(function (response) {
+                _this2.notificationForm.country = response.data.notification.country;
+                _this2.notificationForm.email = response.data.notification.user.email;
+                _this2.notificationForm.contents = response.data.notification.contents;
+                _this2.notificationForm.created_at = response.data.notification.created_at;
+                _this2.notificationForm.images = response.data.notification.images;
+            }).catch(function (error) {
+                if (error.response.data.status == 'fail') {
+                    if (error.response.data.type == "token_error") {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                        _this2.$router.push('/login');
+                    } else {
+                        toastr['error'](error.response.data.message);
+                    }
+                } else {
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
+                }
+            });
+        },
+        storeNotification: function storeNotification() {
+            var _this3 = this;
+
+            this.prepareFields();
+            var config = {
+                headers: { 'Content-Type': 'multipart/form-data' },
+                onUploadProgress: function (progressEvent) {
+                    this.percentCompleted = Math.round(progressEvent.loaded * 100 / progressEvent.total);
+                    this.$forceUpdate();
+                }.bind(this)
+            };
+
+            axios.post('/api/create-sysnoti', this.uploadDataForm, config).then(function (response) {
+                toastr['success'](response.data.message);
+                _this3.$router.push('/sys_noti');
+            }).catch(function (error) {
+                if (error.status == 'fail') {
+                    if (error.type == "token_error") {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                        _this3.$router.push('/login');
+                    } else {
+                        toastr['error'](error.message);
+                    }
+                } else {
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
+                }
+            });
+        },
+        updateNotification: function updateNotification() {
+            var _this4 = this;
+
+            this.prepareFields();
+            var config = {
+                headers: { 'Content-Type': 'multipart/form-data' },
+                onUploadProgress: function (progressEvent) {
+                    this.percentCompleted = Math.round(progressEvent.loaded * 100 / progressEvent.total);
+                    this.$forceUpdate();
+                }.bind(this)
+            };
+
+            axios.post('/api/update-notification', this.uploadDataForm, config).then(function (response) {
+                toastr['success'](response.data.message);
+                _this4.$router.push('/sys_noti');
+            }).catch(function (error) {
+                if (error.status == 'fail') {
+                    if (error.type == "token_error") {
+                        toastr['error']('The token is expired! Please refresh and try again!');
+                        _this4.$router.push('/login');
+                    } else {
+                        toastr['error'](error.response.data.message);
+                    }
+                } else {
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
+                }
+            });
+        },
+        prepareFields: function prepareFields() {
+            if (this.uploadImages.length > 0) {
+                for (var i = 0; i < this.uploadImages.length; i++) {
+                    var image = this.uploadImages[i];
+                    this.uploadDataForm.append('images[]', image);
+                }
+            }
+            if (this.id != 0) {
+                this.uploadDataForm.append('notification_id', this.id);
+            }
+            this.uploadDataForm.append('country', this.notificationForm.country);
+            this.uploadDataForm.append('contents', this.notificationForm.contents);
+            if (this.id != 0) {
+                this.uploadDataForm.append('datetime', this.notificationForm.created_at);
+            } else {
+                this.uploadDataForm.append('datetime', this.getNowDateTime());
+            }
+        },
+        getUploadImageSize: function getUploadImageSize() {
+            var _this5 = this;
+
+            this.upload_size = 0;
+            this.uploadImages.map(function (item) {
+                _this5.upload_size += parseInt(item.size);
+            });
+
+            this.upload_size = Number(this.upload_size.toFixed(1));
+            this.$forceUpdate();
+        },
+        removeUploadImage: function removeUploadImage(image) {
+            this.uploadImages.splice(this.uploadImages.indexOf(image), 1);
+            this.getUploadImageSize();
+            $('#uploadImages').val('');
+        },
+        modalDeleteImage: function modalDeleteImage(e) {
+            if (e.target.tagName == "BUTTON") {
+                this.deleteImageEl = e.target.parentElement.parentElement;
+            } else {
+                this.deleteImageEl = e.target.parentElement;
+            }
+            $('#modal-delete-image').modal('show');
+        },
+        deleteImage: function deleteImage() {
+            for (var index = 0; index < this.notificationForm.images.length; index++) {
+                if (this.notificationForm.images[index]['id'] == this.deleteImageEl.id) {
+                    this.notificationForm.images.splice(index, 1);
+                }
+            }
+            $('#modal-delete-image').modal('hide');
+        },
+        getNtfImage: function getNtfImage(image) {
+            if (image.url) {
+                return 'http://szlogin.com/images/notifications/' + image.url;
+            } else {
+                return 'http://szlogin.com/images/common/no-image.png';
+            }
+        },
+        uploadFieldChange: function uploadFieldChange(e) {
+            if ($('#uploadImages').val()) {
+                var files = e.target.files || e.dataTransfer.files;
+                if (!files.length) return;
+                for (var i = files.length - 1; i >= 0; i--) {
+                    this.uploadImages.push(files[i]);
+                }
+                $('#uploadImages').val('');
+            }
+        },
+        start: function start() {
+            console.log('Starting File Management Component');
+        }
+    },
+    computed: {}
+});
+
+/***/ }),
+/* 125 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "form",
+    {
+      on: {
+        submit: function($event) {
+          $event.preventDefault()
+          return _vm.proceed($event)
+        }
+      }
+    },
+    [
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "form-group col-md-6 col-lg-6 col-sm-12" }, [
+          _c("div", { staticClass: "card" }, [
+            _c("div", { staticClass: "card-body" }, [
+              _c("div", { staticClass: "row" }, [
+                _vm._m(0),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-md-9 col-lg-9 col-sm-12" }, [
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.notificationForm.country,
+                          expression: "notificationForm.country"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: { name: "country" },
+                      on: {
+                        change: function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.$set(
+                            _vm.notificationForm,
+                            "country",
+                            $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          )
+                        }
+                      }
+                    },
+                    [
+                      _c("option", { attrs: { value: "" } }, [_vm._v("All")]),
+                      _vm._v(" "),
+                      _vm._l(_vm.countries.countries, function(country) {
+                        return _c("option", { domProps: { value: country } }, [
+                          _vm._v(_vm._s(country))
+                        ])
+                      })
+                    ],
+                    2
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c("br"),
+              _vm._v(" "),
+              _c("div", { staticClass: "row" }, [
+                _vm._m(1),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-md-9 col-lg-9 col-sm-12" }, [
+                  _c("textarea", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.notificationForm.contents,
+                        expression: "notificationForm.contents"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: { rows: "5" },
+                    domProps: { value: _vm.notificationForm.contents },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.notificationForm,
+                          "contents",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
+                ])
+              ]),
+              _vm._v(" "),
+              _c("br"),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "row" },
+                [
+                  _c(
+                    "button",
+                    {
+                      staticClass:
+                        "btn btn-info waves-effect waves-light m-t-10",
+                      attrs: { type: "submit" }
+                    },
+                    [
+                      _vm.id != 0
+                        ? _c("span", [_vm._v("Update")])
+                        : _c("span", [_vm._v("Create")])
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "router-link",
+                    {
+                      staticClass:
+                        "btn btn-danger waves-effect waves-light m-t-10",
+                      attrs: { to: "/sys_noti" }
+                    },
+                    [_vm._v("Cancel")]
+                  )
+                ],
+                1
+              )
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "form-group col-md-6 col-lg-6 col-sm-12" }, [
+          _c("div", { staticClass: "row" }, [
+            _c(
+              "label",
+              { staticClass: "control-label", attrs: { for: "logo" } },
+              [_vm._v("Images")]
+            ),
+            _vm._v(" "),
+            _c("br"),
+            _c("br"),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-md-12" }, [
+              _c("input", {
+                attrs: {
+                  type: "file",
+                  multiple: "multiple",
+                  id: "uploadImages"
+                },
+                on: { change: _vm.uploadFieldChange }
+              }),
+              _vm._v(" "),
+              _c("p", [
+                _vm._v("You must upload the jpg, jpeg, png, gif file.")
+              ]),
+              _vm._v(" "),
+              _c("hr")
+            ]),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "col-md-12" },
+              _vm._l(_vm.uploadImages, function(image, index) {
+                return _c(
+                  "div",
+                  { staticClass: "attachment-holder animated fadeIn" },
+                  [
+                    _c("span", { staticClass: "label label-primary" }, [
+                      _vm._v(
+                        _vm._s(
+                          image.name +
+                            " (" +
+                            Number((image.size / 1024).toFixed(1)) +
+                            "KB)"
+                        )
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "span",
+                      {
+                        staticStyle: { background: "red", cursor: "pointer" },
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            _vm.removeUploadImage(image)
+                          }
+                        }
+                      },
+                      [
+                        _c("button", { staticClass: "btn btn-xs btn-danger" }, [
+                          _vm._v("Remove")
+                        ])
+                      ]
+                    )
+                  ]
+                )
+              })
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-md-12" }, [
+              _c(
+                "div",
+                { staticClass: "row" },
+                _vm._l(_vm.notificationForm.images, function(image) {
+                  return _c(
+                    "div",
+                    { staticClass: "col-md-4", attrs: { id: image.id } },
+                    [
+                      _c("img", {
+                        staticClass: "img-responsive",
+                        attrs: { src: _vm.getNtfImage(image) }
+                      }),
+                      _vm._v(" "),
+                      _c(
+                        "span",
+                        {
+                          staticClass: "text-center",
+                          staticStyle: {
+                            background: "red",
+                            cursor: "pointer",
+                            display: "block",
+                            width: "100%"
+                          },
+                          on: { click: _vm.modalDeleteImage }
+                        },
+                        [
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-xs btn-danger",
+                              attrs: { type: "button" }
+                            },
+                            [_vm._v("Delete")]
+                          )
+                        ]
+                      )
+                    ]
+                  )
+                })
+              )
+            ])
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          staticClass: "modal",
+          attrs: { id: "modal-delete-image", tabindex: "-1", role: "dialog" }
+        },
+        [
+          _vm.deletingImage
+            ? _c("div", { staticClass: "modal-dialog" }, [
+                _c("div", { staticClass: "modal-content" }, [
+                  _vm._m(2),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "modal-body" }, [
+                    _vm._v(
+                      "\n                    Are you sure you want to delete this Image?\n                "
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "modal-footer" }, [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-default",
+                        attrs: { type: "button", "data-dismiss": "modal" }
+                      },
+                      [_vm._v("No, Go Back")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-danger",
+                        attrs: { type: "button" },
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            _vm.deleteImage()
+                          }
+                        }
+                      },
+                      [
+                        _vm._v(
+                          "\n                        Yes, Delete\n                    "
+                        )
+                      ]
+                    )
+                  ])
+                ])
+              ])
+            : _vm._e()
+        ]
+      )
+    ]
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-md-3 col-lg-3 col-sm-12" }, [
+      _c("label", { attrs: { for: "" } }, [_vm._v("Country")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-md-3 col-lg-3 col-sm-12" }, [
+      _c("label", { attrs: { for: "" } }, [_vm._v("Contents")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c("h5", { staticClass: "modal-title" }, [
+        _vm._v("\n                        Delete Image\n                    ")
+      ])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-23ded828", module.exports)
+  }
+}
+
+/***/ }),
+/* 126 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("div", { staticClass: "row page-titles" }, [
+      _c("div", { staticClass: "col-md-6 col-8 align-self-center" }, [
+        _vm.id != 0
+          ? _c("h3", { staticClass: "text-themecolor m-b-0 m-t-0" }, [
+              _vm._v("Edit System Notification")
+            ])
+          : _c("h3", { staticClass: "text-themecolor m-b-0 m-t-0" }, [
+              _vm._v("Create System Notification")
+            ]),
+        _vm._v(" "),
+        _c("ol", { staticClass: "breadcrumb" }, [
+          _c(
+            "li",
+            { staticClass: "breadcrumb-item" },
+            [
+              _c("router-link", { attrs: { to: "/dashboard" } }, [
+                _vm._v("Dashboard")
+              ])
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "li",
+            { staticClass: "breadcrumb-item" },
+            [
+              _c("router-link", { attrs: { to: "/sys_noti" } }, [
+                _vm._v("System Notification")
+              ])
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _vm.id != 0
+            ? _c("li", { staticClass: "breadcrumb-item active" }, [
+                _vm._v("Edit System Notification")
+              ])
+            : _c("li", { staticClass: "breadcrumb-item active" }, [
+                _vm._v("Create System Notification")
+              ])
+        ])
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-sm-12" }, [
+        _c("div", { staticClass: "card" }, [
+          _c(
+            "div",
+            { staticClass: "card-body" },
+            [
+              _vm.id != 0
+                ? _c("h4", { staticClass: "card-title" }, [
+                    _vm._v("Edit System Notification")
+                  ])
+                : _c("h4", { staticClass: "card-title" }, [
+                    _vm._v("Create System Notification")
+                  ]),
+              _vm._v(" "),
+              _c("sys-notification-form", { attrs: { id: _vm.id } })
+            ],
+            1
+          )
+        ])
+      ])
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-6720266e", module.exports)
+  }
+}
+
+/***/ }),
+/* 127 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(0)
+/* script */
+var __vue_script__ = __webpack_require__(128)
+/* template */
+var __vue_template__ = __webpack_require__(137)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -36329,7 +38303,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 119 */
+/* 128 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -36339,10 +38313,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_laravel_vue_pagination__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_laravel_vue_pagination___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_laravel_vue_pagination__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_helper__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_click_confirm__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_click_confirm__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_click_confirm___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_click_confirm__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_xlsx__ = __webpack_require__(120);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_xlsx__ = __webpack_require__(129);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_xlsx___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_xlsx__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -36642,6 +38628,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 start_date_oper: '',
                 end_date: '',
                 end_date_oper: '',
+                min_postal: '',
+                max_postal: '',
                 pageLength: 100
             },
             ad_id: 0,
@@ -36696,19 +38684,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             axios.get('/api/advertisement?page=' + page + url).then(function (response) {
                 _this.ads = response.data;
             }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.error_type == 'token_error') {
+                if (error.response.data.status == 'fail') {
+                    if (error.response.data.type == "token_error") {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this.$router.push('/login');
                     } else {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
-                            toastr['error']('An unexpected error occurred!');
-                        }
+                        toastr['error'](error.response.data.message);
                     }
                 } else {
-                    toastr['error']('An unexpected error occurred!');
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
                 }
             });
         },
@@ -36718,16 +38705,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             axios.post('/api/country/all').then(function (response) {
                 _this2.countries = response.data;
             }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.message) {
-                        toastr['error'](error.response.data.message);
-                    } else {
+                if (error.response.data.status == 'fail') {
+                    if (error.response.data.type == "token_error") {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this2.$router.push('/login');
+                    } else {
+                        toastr['error'](error.response.data.message);
                     }
                 } else {
-                    toastr['error']('The token is expired! Please refresh and try again!');
-                    _this2.$router.push('/login');
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
                 }
             });
         },
@@ -36743,19 +38732,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 toastr['success'](response.data.message);
                 _this3.getAds();
             }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.error_type == 'token_error') {
+                if (error.response.data.status == 'fail') {
+                    if (error.response.data.type == "token_error") {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this3.$router.push('/login');
                     } else {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
-                            toastr['error']('An unexpected error occurred!');
-                        }
+                        toastr['error'](error.response.data.message);
                     }
                 } else {
-                    toastr['error']('An unexpected error occurred!');
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
                 }
                 $('#modal-delete-ad').modal('hide');
             });
@@ -36772,19 +38760,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             axios.post('/api/ad/status', { id: ad.id }).then(function (response) {
                 _this4.getAds();
             }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.error_type == 'token_error') {
+                if (error.response.data.status == 'fail') {
+                    if (error.response.data.type == "token_error") {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this4.$router.push('/login');
                     } else {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
-                            toastr['error']('An unexpected error occurred!');
-                        }
+                        toastr['error'](error.response.data.message);
                     }
                 } else {
-                    toastr['error']('An unexpected error occurred!');
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
                 }
             });
         },
@@ -36881,19 +38868,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 $('#modal-export-ad').modal('hide');
                 toastr['success'](response.data.message);
             }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.error_type == 'token_error') {
+                if (error.response.data.status == 'fail') {
+                    if (error.response.data.type == "token_error") {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this5.$router.push('/login');
                     } else {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
-                            toastr['error']('An unexpected error occurred!');
-                        }
+                        toastr['error'](error.response.data.message);
                     }
                 } else {
-                    toastr['error']('An unexpected error occurred!');
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
                 }
                 $('#modal-export-ad').modal('hide');
             });
@@ -36913,7 +38899,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 120 */
+/* 129 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, Buffer, process) {/*! xlsx.js (C) 2013-present SheetJS -- http://sheetjs.com */
@@ -39755,7 +41741,7 @@ var jszip;
 if(typeof JSZipSync !== 'undefined') jszip = JSZipSync;
 if(true) {
 	if(typeof module !== 'undefined' && module.exports) {
-		if(typeof jszip === 'undefined') jszip = __webpack_require__(124);
+		if(typeof jszip === 'undefined') jszip = __webpack_require__(133);
 	}
 }
 
@@ -40376,7 +42362,7 @@ var make_offcrypto = function(O, _crypto) {
 	var crypto;
 	if(typeof _crypto !== 'undefined') crypto = _crypto;
 	else if(true) {
-		try { crypto = __webpack_require__(126); }
+		try { crypto = __webpack_require__(135); }
 		catch(e) { crypto = null; }
 	}
 
@@ -57747,7 +59733,7 @@ return utils;
 })(utils);
 
 if(has_buf && "function" != 'undefined') (function() {
-	var Readable = __webpack_require__(127).Readable;
+	var Readable = __webpack_require__(136).Readable;
 
 	var write_csv_stream = function(sheet, opts) {
 		var stream = Readable();
@@ -57895,7 +59881,7 @@ var XLS = XLSX, ODS = XLSX;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5), __webpack_require__(9).Buffer, __webpack_require__(7)))
 
 /***/ }),
-/* 121 */
+/* 130 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -58053,7 +60039,7 @@ function fromByteArray (uint8) {
 
 
 /***/ }),
-/* 122 */
+/* 131 */
 /***/ (function(module, exports) {
 
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -58143,7 +60129,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 
 /***/ }),
-/* 123 */
+/* 132 */
 /***/ (function(module, exports) {
 
 var toString = {}.toString;
@@ -58154,7 +60140,7 @@ module.exports = Array.isArray || function (arr) {
 
 
 /***/ }),
-/* 124 */
+/* 133 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(Buffer, global) {var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var require;var require;/*
@@ -58173,7 +60159,7 @@ Note: since JSZip 3 removed critical functionality, this version assigns to the
 */
 (function(e){
 	if("object"==typeof exports&&"undefined"!=typeof module&&"undefined"==typeof DO_NOT_EXPORT_JSZIP)module.exports=e();
-	else if("function"=="function"&&__webpack_require__(125)&&"undefined"==typeof DO_NOT_EXPORT_JSZIP){JSZipSync=e();!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_FACTORY__ = (e),
+	else if("function"=="function"&&__webpack_require__(134)&&"undefined"==typeof DO_NOT_EXPORT_JSZIP){JSZipSync=e();!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_FACTORY__ = (e),
 				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));}
@@ -67163,7 +69149,7 @@ module.exports = ZStream;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9).Buffer, __webpack_require__(5)))
 
 /***/ }),
-/* 125 */
+/* 134 */
 /***/ (function(module, exports) {
 
 /* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {/* globals __webpack_amd_options__ */
@@ -67172,19 +69158,19 @@ module.exports = __webpack_amd_options__;
 /* WEBPACK VAR INJECTION */}.call(exports, {}))
 
 /***/ }),
-/* 126 */
+/* 135 */
 /***/ (function(module, exports) {
 
 /* (ignored) */
 
 /***/ }),
-/* 127 */
+/* 136 */
 /***/ (function(module, exports) {
 
 /* (ignored) */
 
 /***/ }),
-/* 128 */
+/* 137 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -67278,7 +69264,7 @@ var render = function() {
                 ])
               ]),
               _vm._v(" "),
-              _c("div", { staticClass: "col-md-2" }, [
+              _c("div", { staticClass: "col-md-3" }, [
                 _c("div", { staticClass: "form-group" }, [
                   _c("label", { attrs: { for: "" } }, [_vm._v("Country")]),
                   _vm._v(" "),
@@ -67332,7 +69318,7 @@ var render = function() {
                 ])
               ]),
               _vm._v(" "),
-              _c("div", { staticClass: "col-md-2" }, [
+              _c("div", { staticClass: "col-md-3" }, [
                 _c("div", { staticClass: "row" }, [
                   _c("div", { staticClass: "col-md-6" }, [
                     _c("div", { staticClass: "form-group" }, [
@@ -67730,7 +69716,77 @@ var render = function() {
                 ])
               ]),
               _vm._v(" "),
-              _c("div", { staticClass: "col-md-2" }, [
+              _c("div", { staticClass: "col-md-3" }, [
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "" } }, [
+                    _vm._v("Postal Code Min")
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.filterAdForm.min_postal,
+                        expression: "filterAdForm.min_postal"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: { name: "min_postal" },
+                    domProps: { value: _vm.filterAdForm.min_postal },
+                    on: {
+                      change: _vm.getAds,
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.filterAdForm,
+                          "min_postal",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-3" }, [
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "" } }, [
+                    _vm._v("Postal Code Max")
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.filterAdForm.max_postal,
+                        expression: "filterAdForm.max_postal"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: { name: "max_postal" },
+                    domProps: { value: _vm.filterAdForm.max_postal },
+                    on: {
+                      change: _vm.getAds,
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.filterAdForm,
+                          "max_postal",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-3" }, [
                 _c("div", { staticClass: "form-group" }, [
                   _c("label", { attrs: { for: "" } }, [_vm._v("Status")]),
                   _vm._v(" "),
@@ -68945,15 +71001,15 @@ if (false) {
 }
 
 /***/ }),
-/* 129 */
+/* 138 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(130)
+var __vue_script__ = __webpack_require__(139)
 /* template */
-var __vue_template__ = __webpack_require__(134)
+var __vue_template__ = __webpack_require__(143)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -68992,12 +71048,12 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 130 */
+/* 139 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__form__ = __webpack_require__(131);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__form__ = __webpack_require__(140);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__form___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__form__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_helper__ = __webpack_require__(1);
 //
@@ -69043,15 +71099,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 131 */
+/* 140 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(132)
+var __vue_script__ = __webpack_require__(141)
 /* template */
-var __vue_template__ = __webpack_require__(133)
+var __vue_template__ = __webpack_require__(142)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -69090,16 +71146,28 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 132 */
+/* 141 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vuejs_datepicker__ = __webpack_require__(20);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vuejs_datepicker___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vuejs_datepicker__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_click_confirm__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_click_confirm__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_click_confirm___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_click_confirm__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_helper__ = __webpack_require__(1);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -69188,7 +71256,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 'link': '',
                 'start_date': '',
                 'end_date': '',
-                'country': ''
+                'country': '',
+                'min_postal': '',
+                'max_postal': ''
             }),
 
             previewImage: ''
@@ -69234,19 +71304,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             axios.post('/api/country/all').then(function (response) {
                 _this.countries = response.data;
             }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.error_type == 'token_error') {
+                if (error.response.data.status == 'fail') {
+                    if (error.response.data.type == "token_error") {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this.$router.push('/login');
                     } else {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
-                            toastr['error']('An unexpected error occurred!');
-                        }
+                        toastr['error'](error.response.data.message);
                     }
                 } else {
-                    toastr['error']('An unexpected error occurred!');
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
                 }
             });
         },
@@ -69276,20 +71345,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this2.advertisementForm.start_date = response.data.start_date != "" ? response.data.start_date : 0;
                 _this2.advertisementForm.end_date = response.data.end_date != "" ? response.data.end_date : 0;
                 _this2.advertisementForm.country = response.data.country;
+                _this2.advertisementForm.min_postal = response.data.min_postal != 0 ? response.data.min_postal : '';
+                _this2.advertisementForm.max_postal = response.data.max_postal != 0 ? response.data.max_postal : '';
             }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.error_type == 'token_error') {
+                if (error.response.data.status == 'fail') {
+                    if (error.response.data.type == "token_error") {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this2.$router.push('/login');
                     } else {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
-                            toastr['error']('An unexpected error occurred!');
-                        }
+                        toastr['error'](error.response.data.message);
                     }
                 } else {
-                    toastr['error']('An unexpected error occurred!');
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
                 }
             });
         },
@@ -69309,19 +71379,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 toastr['success'](response.data.message);
                 _this3.$router.push('/advertisement');
             }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.error_type == 'token_error') {
+                if (error.status == 'fail') {
+                    if (error.type == "token_error") {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this3.$router.push('/login');
                     } else {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
-                            toastr['error']('An unexpected error occurred!');
-                        }
+                        toastr['error'](error.message);
                     }
+                } else if (error.response.data.status == 'fail') {
+                    toastr['error'](error.response.data.message);
                 } else {
-                    toastr['error']('An unexpected error occurred!');
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
                 }
             });
         },
@@ -69341,19 +71412,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 toastr['success'](response.data.message);
                 _this4.$router.push('/advertisement');
             }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.error_type == 'token_error') {
+                if (error.status == 'fail') {
+                    if (error.type == "token_error") {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this4.$router.push('/login');
                     } else {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
-                            toastr['error']('An unexpected error occurred!');
-                        }
+                        toastr['error'](error.message);
                     }
+                } else if (error.response.data.status == 'fail') {
+                    toastr['error'](error.response.data.message);
                 } else {
-                    toastr['error']('An unexpected error occurred!');
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
                 }
             });
         },
@@ -69382,9 +71454,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
             this.uploadDataForm.append('name', this.advertisementForm.name);
             this.uploadDataForm.append('link', this.advertisementForm.link);
-            this.uploadDataForm.append('start_date', this.advertisementForm.start_date);
-            this.uploadDataForm.append('end_date', this.advertisementForm.end_date);
+            if (this.advertisementForm.start_date) this.uploadDataForm.append('start_date', this.advertisementForm.start_date);
+            if (this.advertisementForm.end_date) this.uploadDataForm.append('end_date', this.advertisementForm.end_date);
             this.uploadDataForm.append('country', this.advertisementForm.country);
+            if (this.advertisementForm.min_postal) this.uploadDataForm.append('min_postal', this.advertisementForm.min_postal);
+            if (this.advertisementForm.max_postal) this.uploadDataForm.append('max_postal', this.advertisementForm.max_postal);
         },
         removeAttachment: function removeAttachment(image) {
             this.uploadImages.splice(this.uploadImages.indexOf(image), 1);
@@ -69407,7 +71481,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 133 */
+/* 142 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -69712,6 +71786,74 @@ var render = function() {
                   })
                 )
               ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-md-4" }, [
+              _c("div", { staticClass: "form-group" }, [
+                _c("label", { attrs: { for: "" } }, [
+                  _vm._v("Postal Code Min")
+                ]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.advertisementForm.min_postal,
+                      expression: "advertisementForm.min_postal"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: { type: "text", value: "" },
+                  domProps: { value: _vm.advertisementForm.min_postal },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(
+                        _vm.advertisementForm,
+                        "min_postal",
+                        $event.target.value
+                      )
+                    }
+                  }
+                })
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-md-4" }, [
+              _c("div", { staticClass: "form-group" }, [
+                _c("label", { attrs: { for: "" } }, [
+                  _vm._v("Postal Code Max")
+                ]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.advertisementForm.max_postal,
+                      expression: "advertisementForm.max_postal"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: { type: "text", value: "" },
+                  domProps: { value: _vm.advertisementForm.max_postal },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(
+                        _vm.advertisementForm,
+                        "max_postal",
+                        $event.target.value
+                      )
+                    }
+                  }
+                })
+              ])
             ])
           ])
         ])
@@ -69730,7 +71872,7 @@ if (false) {
 }
 
 /***/ }),
-/* 134 */
+/* 143 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -69817,15 +71959,15 @@ if (false) {
 }
 
 /***/ }),
-/* 135 */
+/* 144 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(136)
+var __vue_script__ = __webpack_require__(145)
 /* template */
-var __vue_template__ = __webpack_require__(137)
+var __vue_template__ = __webpack_require__(146)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -69864,7 +72006,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 136 */
+/* 145 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -69872,7 +72014,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_laravel_vue_pagination__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_laravel_vue_pagination___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_laravel_vue_pagination__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_helper__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_click_confirm__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_click_confirm__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_click_confirm___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_click_confirm__);
 //
 //
@@ -70114,19 +72256,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             axios.get('/api/user?&page=' + page + url).then(function (response) {
                 _this.admins = response.data;
             }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.error_type == 'token_error') {
+                if (error.response.data.status == 'fail') {
+                    if (error.response.data.type == "token_error") {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this.$router.push('/login');
                     } else {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
-                            toastr['error']('An unexpected error occurred!');
-                        }
+                        toastr['error'](error.response.data.message);
                     }
                 } else {
-                    toastr['error']('An unexpected error occurred!');
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
                 }
             });
         },
@@ -70163,19 +72304,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 toastr['success'](response.data.message);
                 _this2.getAdmins();
             }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.error_type == 'token_error') {
+                if (error.response.data.status == 'fail') {
+                    if (error.response.data.type == "token_error") {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this2.$router.push('/login');
                     } else {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
-                            toastr['error']('An unexpected error occurred!');
-                        }
+                        toastr['error'](error.response.data.message);
                     }
                 } else {
-                    toastr['error']('An unexpected error occurred!');
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
                 }
                 $('#modal-delete-admin').modal('hide');
             });
@@ -70195,19 +72335,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 toastr['success'](response.data.message);
                 _this3.getAdmins();
             }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.error_type == 'token_error') {
+                if (error.response.data.status == 'fail') {
+                    if (error.response.data.type == "token_error") {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this3.$router.push('/login');
                     } else {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
-                            toastr['error']('An unexpected error occurred!');
-                        }
+                        toastr['error'](error.response.data.message);
                     }
                 } else {
-                    toastr['error']('An unexpected error occurred!');
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
                 }
                 $('#modal-administrator').modal('hide');
             });
@@ -70224,19 +72363,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 toastr['success'](response.data.message);
                 _this4.getAdmins();
             }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.error_type == 'token_error') {
+                if (error.response.data.status == 'fail') {
+                    if (error.response.data.type == "token_error") {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this4.$router.push('/login');
                     } else {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
-                            toastr['error']('An unexpected error occurred!');
-                        }
+                        toastr['error'](error.response.data.message);
                     }
                 } else {
-                    toastr['error']('An unexpected error occurred!');
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
                 }
                 $('#modal-disable-administrator').modal('hide');
             });
@@ -70245,7 +72383,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 137 */
+/* 146 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -70964,15 +73102,15 @@ if (false) {
 }
 
 /***/ }),
-/* 138 */
+/* 147 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(139)
+var __vue_script__ = __webpack_require__(148)
 /* template */
-var __vue_template__ = __webpack_require__(143)
+var __vue_template__ = __webpack_require__(152)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -71011,12 +73149,12 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 139 */
+/* 148 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__form__ = __webpack_require__(140);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__form__ = __webpack_require__(149);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__form___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__form__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_helper__ = __webpack_require__(1);
 //
@@ -71059,15 +73197,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 140 */
+/* 149 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(141)
+var __vue_script__ = __webpack_require__(150)
 /* template */
-var __vue_template__ = __webpack_require__(142)
+var __vue_template__ = __webpack_require__(151)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -71106,7 +73244,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 141 */
+/* 150 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -71249,19 +73387,18 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 _this.adminForm.city = _this.admin_data.profile.city ? _this.admin_data.profile.city : "";
                 _this.adminForm.created_at = _this.admin_data.profile.created_at ? _this.admin_data.profile.created_at : "";
             }).catch(function (error) {
-                if (error.response.data) {
-                    if (error.response.data.error_type == 'token_error') {
+                if (error.response.data.status == 'fail') {
+                    if (error.response.data.type == "token_error") {
                         toastr['error']('The token is expired! Please refresh and try again!');
                         _this.$router.push('/login');
                     } else {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
-                            toastr['error']('An unexpected error occurred!');
-                        }
+                        toastr['error'](error.response.data.message);
                     }
                 } else {
-                    toastr['error']('An unexpected error occurred!');
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
                 }
             });
         }
@@ -71278,7 +73415,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 });
 
 /***/ }),
-/* 142 */
+/* 151 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -71508,7 +73645,7 @@ if (false) {
 }
 
 /***/ }),
-/* 143 */
+/* 152 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -71583,15 +73720,15 @@ if (false) {
 }
 
 /***/ }),
-/* 144 */
+/* 153 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(145)
+var __vue_script__ = __webpack_require__(154)
 /* template */
-var __vue_template__ = __webpack_require__(146)
+var __vue_template__ = __webpack_require__(155)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -71630,7 +73767,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 145 */
+/* 154 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -71665,7 +73802,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 146 */
+/* 155 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -71685,15 +73822,15 @@ if (false) {
 }
 
 /***/ }),
-/* 147 */
+/* 156 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(148)
+var __vue_script__ = __webpack_require__(157)
 /* template */
-var __vue_template__ = __webpack_require__(151)
+var __vue_template__ = __webpack_require__(160)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -71732,13 +73869,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 148 */
+/* 157 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__services_helper__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__layouts_guest_footer_vue__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__layouts_guest_footer_vue__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__layouts_guest_footer_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__layouts_guest_footer_vue__);
 //
 //
@@ -71812,7 +73949,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 149 */
+/* 158 */
 /***/ (function(module, exports) {
 
 //
@@ -71824,7 +73961,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 
 /***/ }),
-/* 150 */
+/* 159 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -71866,7 +74003,7 @@ if (false) {
 }
 
 /***/ }),
-/* 151 */
+/* 160 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -72052,15 +74189,15 @@ if (false) {
 }
 
 /***/ }),
-/* 152 */
+/* 161 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(153)
+var __vue_script__ = __webpack_require__(162)
 /* template */
-var __vue_template__ = __webpack_require__(154)
+var __vue_template__ = __webpack_require__(163)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -72099,12 +74236,12 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 153 */
+/* 162 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__layouts_guest_footer_vue__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__layouts_guest_footer_vue__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__layouts_guest_footer_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__layouts_guest_footer_vue__);
 //
 //
@@ -72168,7 +74305,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 154 */
+/* 163 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -72304,15 +74441,15 @@ if (false) {
 }
 
 /***/ }),
-/* 155 */
+/* 164 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(156)
+var __vue_script__ = __webpack_require__(165)
 /* template */
-var __vue_template__ = __webpack_require__(157)
+var __vue_template__ = __webpack_require__(166)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -72351,12 +74488,12 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 156 */
+/* 165 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__layouts_guest_footer_vue__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__layouts_guest_footer_vue__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__layouts_guest_footer_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__layouts_guest_footer_vue__);
 //
 //
@@ -72452,7 +74589,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 157 */
+/* 166 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -72746,15 +74883,15 @@ if (false) {
 }
 
 /***/ }),
-/* 158 */
+/* 167 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(159)
+var __vue_script__ = __webpack_require__(168)
 /* template */
-var __vue_template__ = __webpack_require__(160)
+var __vue_template__ = __webpack_require__(169)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -72793,12 +74930,12 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 159 */
+/* 168 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__layouts_guest_footer_vue__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__layouts_guest_footer_vue__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__layouts_guest_footer_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__layouts_guest_footer_vue__);
 //
 //
@@ -72852,7 +74989,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 160 */
+/* 169 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -72978,15 +75115,15 @@ if (false) {
 }
 
 /***/ }),
-/* 161 */
+/* 170 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(162)
+var __vue_script__ = __webpack_require__(171)
 /* template */
-var __vue_template__ = __webpack_require__(163)
+var __vue_template__ = __webpack_require__(172)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -73025,12 +75162,12 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 162 */
+/* 171 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__layouts_guest_footer_vue__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__layouts_guest_footer_vue__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__layouts_guest_footer_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__layouts_guest_footer_vue__);
 //
 //
@@ -73112,7 +75249,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 163 */
+/* 172 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -73353,15 +75490,15 @@ if (false) {
 }
 
 /***/ }),
-/* 164 */
+/* 173 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(165)
+var __vue_script__ = __webpack_require__(174)
 /* template */
-var __vue_template__ = __webpack_require__(166)
+var __vue_template__ = __webpack_require__(175)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -73400,12 +75537,12 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 165 */
+/* 174 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__layouts_guest_footer_vue__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__layouts_guest_footer_vue__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__layouts_guest_footer_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__layouts_guest_footer_vue__);
 //
 //
@@ -73528,7 +75665,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 166 */
+/* 175 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -73958,15 +76095,15 @@ if (false) {
 }
 
 /***/ }),
-/* 167 */
+/* 176 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(168)
+var __vue_script__ = __webpack_require__(177)
 /* template */
-var __vue_template__ = __webpack_require__(169)
+var __vue_template__ = __webpack_require__(178)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -74005,12 +76142,12 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 168 */
+/* 177 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__layouts_guest_footer_vue__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__layouts_guest_footer_vue__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__layouts_guest_footer_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__layouts_guest_footer_vue__);
 //
 //
@@ -74063,7 +76200,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 169 */
+/* 178 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -74187,15 +76324,15 @@ if (false) {
 }
 
 /***/ }),
-/* 170 */
+/* 179 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(171)
+var __vue_script__ = __webpack_require__(180)
 /* template */
-var __vue_template__ = __webpack_require__(172)
+var __vue_template__ = __webpack_require__(181)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -74234,12 +76371,12 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 171 */
+/* 180 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__layouts_guest_footer_vue__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__layouts_guest_footer_vue__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__layouts_guest_footer_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__layouts_guest_footer_vue__);
 //
 //
@@ -74291,7 +76428,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 172 */
+/* 181 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -74368,15 +76505,15 @@ if (false) {
 }
 
 /***/ }),
-/* 173 */
+/* 182 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(174)
+var __vue_script__ = __webpack_require__(183)
 /* template */
-var __vue_template__ = __webpack_require__(175)
+var __vue_template__ = __webpack_require__(184)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -74415,12 +76552,12 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 174 */
+/* 183 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__layouts_guest_footer_vue__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__layouts_guest_footer_vue__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__layouts_guest_footer_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__layouts_guest_footer_vue__);
 //
 //
@@ -74516,7 +76653,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 175 */
+/* 184 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -74736,15 +76873,15 @@ if (false) {
 }
 
 /***/ }),
-/* 176 */
+/* 185 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(177)
+var __vue_script__ = __webpack_require__(186)
 /* template */
-var __vue_template__ = __webpack_require__(178)
+var __vue_template__ = __webpack_require__(187)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -74783,12 +76920,12 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 177 */
+/* 186 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__layouts_guest_footer_vue__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__layouts_guest_footer_vue__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__layouts_guest_footer_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__layouts_guest_footer_vue__);
 //
 //
@@ -74836,7 +76973,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 178 */
+/* 187 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -74902,15 +77039,15 @@ if (false) {
 }
 
 /***/ }),
-/* 179 */
+/* 188 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(180)
+var __vue_script__ = __webpack_require__(189)
 /* template */
-var __vue_template__ = __webpack_require__(181)
+var __vue_template__ = __webpack_require__(190)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -74949,7 +77086,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 180 */
+/* 189 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -74970,7 +77107,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 181 */
+/* 190 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -74990,15 +77127,15 @@ if (false) {
 }
 
 /***/ }),
-/* 182 */
+/* 191 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(183)
+var __vue_script__ = __webpack_require__(192)
 /* template */
-var __vue_template__ = __webpack_require__(184)
+var __vue_template__ = __webpack_require__(193)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -75037,7 +77174,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 183 */
+/* 192 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -75060,7 +77197,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 184 */
+/* 193 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -75115,7 +77252,7 @@ if (false) {
 }
 
 /***/ }),
-/* 185 */
+/* 194 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

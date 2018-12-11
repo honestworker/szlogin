@@ -32,7 +32,7 @@
                                     <input name="search" class="form-control" v-model="filterAdForm.name" @change="getAds">
                                 </div>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Country</label>
                                     <select name="status" class="form-control" v-model="filterAdForm.country" @change="getAds">
@@ -41,7 +41,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
@@ -59,7 +59,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">                            
+                                    <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="">Click Count</label>
                                             <div class="row">
@@ -113,7 +113,19 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="">Postal Code Min</label>
+                                    <input name="min_postal" class="form-control" v-model="filterAdForm.min_postal" @change="getAds">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="">Postal Code Max</label>
+                                    <input name="max_postal" class="form-control" v-model="filterAdForm.max_postal" @change="getAds">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Status</label>
                                     <select name="status" class="form-control" v-model="filterAdForm.status" @change="getAds">
@@ -297,6 +309,8 @@
                     start_date_oper : '',
                     end_date : '',
                     end_date_oper : '',
+                    min_postal : '',
+                    max_postal : '',
                     pageLength: 100
                 },
                 ad_id : 0,
@@ -349,19 +363,18 @@
                 axios.get('/api/advertisement?page=' + page + url).then(response => {
                     this.ads = response.data;
                 }).catch(error => {
-                    if (error.response.data) {
-                        if (error.response.data.error_type == 'token_error') {
+                    if (error.response.data.status == 'fail') {
+                        if (error.response.data.type == "token_error") {
                             toastr['error']('The token is expired! Please refresh and try again!');
                             this.$router.push('/login');
                         } else {
-                            if (error.response.data.message) {
-                                toastr['error'](error.response.data.message);
-                            } else {
-                                toastr['error']('An unexpected error occurred!');
-                            }
-                        } 
+                            toastr['error'](error.response.data.message);
+                        }
                     } else {
-                        toastr['error']('An unexpected error occurred!');
+                        if (error.message) {
+                            toastr['error']('An unexpected error occurred!');
+                            console.log(error.message);
+                        }
                     }
                 });
             },
@@ -369,16 +382,18 @@
                 axios.post('/api/country/all').then(response => {
                     this.countries = response.data;
                 }).catch(error => {
-                    if (error.response.data) {
-                        if (error.response.data.message) {
-                            toastr['error'](error.response.data.message);
-                        } else {
+                    if (error.response.data.status == 'fail') {
+                        if (error.response.data.type == "token_error") {
                             toastr['error']('The token is expired! Please refresh and try again!');
                             this.$router.push('/login');
+                        } else {
+                            toastr['error'](error.response.data.message);
                         }
                     } else {
-                        toastr['error']('The token is expired! Please refresh and try again!');
-                        this.$router.push('/login');
+                        if (error.message) {
+                            toastr['error']('An unexpected error occurred!');
+                            console.log(error.message);
+                        }
                     }
                 });
             },
@@ -392,19 +407,18 @@
                     toastr['success'](response.data.message);
                     this.getAds();
                 }).catch(error => {
-                    if (error.response.data) {
-                        if (error.response.data.error_type == 'token_error') {
+                    if (error.response.data.status == 'fail') {
+                        if (error.response.data.type == "token_error") {
                             toastr['error']('The token is expired! Please refresh and try again!');
                             this.$router.push('/login');
                         } else {
-                            if (error.response.data.message) {
-                                toastr['error'](error.response.data.message);
-                            } else {
-                                toastr['error']('An unexpected error occurred!');
-                            }
-                        } 
+                            toastr['error'](error.response.data.message);
+                        }
                     } else {
-                        toastr['error']('An unexpected error occurred!');
+                        if (error.message) {
+                            toastr['error']('An unexpected error occurred!');
+                            console.log(error.message);
+                        }
                     }
                     $('#modal-delete-ad').modal('hide');
                 });
@@ -419,19 +433,18 @@
                 axios.post('/api/ad/status', {id: ad.id}).then((response) => {
                     this.getAds();
                 }).catch(error => {
-                    if (error.response.data) {
-                        if (error.response.data.error_type == 'token_error') {
+                    if (error.response.data.status == 'fail') {
+                        if (error.response.data.type == "token_error") {
                             toastr['error']('The token is expired! Please refresh and try again!');
                             this.$router.push('/login');
                         } else {
-                            if (error.response.data.message) {
-                                toastr['error'](error.response.data.message);
-                            } else {
-                                toastr['error']('An unexpected error occurred!');
-                            }
-                        } 
+                            toastr['error'](error.response.data.message);
+                        }
                     } else {
-                        toastr['error']('An unexpected error occurred!');
+                        if (error.message) {
+                            toastr['error']('An unexpected error occurred!');
+                            console.log(error.message);
+                        }
                     }
                 });
             },
@@ -526,19 +539,18 @@
                     $('#modal-export-ad').modal('hide');
                     toastr['success'](response.data.message);
                 }).catch(error => {
-                    if (error.response.data) {
-                        if (error.response.data.error_type == 'token_error') {
+                    if (error.response.data.status == 'fail') {
+                        if (error.response.data.type == "token_error") {
                             toastr['error']('The token is expired! Please refresh and try again!');
                             this.$router.push('/login');
                         } else {
-                            if (error.response.data.message) {
-                                toastr['error'](error.response.data.message);
-                            } else {
-                                toastr['error']('An unexpected error occurred!');
-                            }
-                        } 
+                            toastr['error'](error.response.data.message);
+                        }
                     } else {
-                        toastr['error']('An unexpected error occurred!');
+                        if (error.message) {
+                            toastr['error']('An unexpected error occurred!');
+                            console.log(error.message);
+                        }
                     }
                     $('#modal-export-ad').modal('hide');
                 });

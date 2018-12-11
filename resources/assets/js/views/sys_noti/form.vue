@@ -6,38 +6,16 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-3 col-lg-3 col-sm-12">
-                                <label for="">Type</label>
+                                <label for="">Country</label>
                             </div>
                             <div class="col-md-9 col-lg-9 col-sm-12">
-                                <select name="type" class="form-control" v-model="notificationForm.type">
-                                    <option v-for="(type, index) in ntf_types.data" v-bind:value="type.id" v-bind:selected="getSeletedType(type.id, index)">{{type.name}}</option>
+                                <select name="country" class="form-control" v-model="notificationForm.country">
+                                    <option value="">All</option>
+                                    <option v-for="country in countries.countries" v-bind:value="country">{{country}}</option>
                                 </select>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-3 col-lg-3 col-sm-12">
-                                <label for="">Group ID</label>
-                            </div>
-                            <div class="col-md-9 col-lg-9 col-sm-12">
-                                <span v-text="notificationForm.group_id"></span>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-3 col-lg-3 col-sm-12">
-                                <label for="">User Full Name</label>
-                            </div>
-                            <div class="col-md-9 col-lg-9 col-sm-12">
-                                <span v-text="notificationForm.full_name"></span>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-3 col-lg-3 col-sm-12">
-                                <label for="">Email</label>
-                            </div>
-                            <div class="col-md-9 col-lg-9 col-sm-12">
-                                <span v-text="notificationForm.email"></span>
-                            </div>
-                        </div>
+                        <br>
                         <div class="row">
                             <div class="col-md-3 col-lg-3 col-sm-12">
                                 <label for="">Contents</label>
@@ -46,58 +24,41 @@
                                 <textarea v-model="notificationForm.contents" class="form-control" rows="5"></textarea>
                             </div>
                         </div>
-                        <div class="row" v-if="id != 0">
-                            <div class="col-md-3 col-lg-3 col-sm-12">
-                                <label for="">Created At</label>
-                            </div>
-                            <div class="col-md-9 col-lg-9 col-sm-12">
-                                <span v-text="notificationForm.created_at"></span>
-                            </div>
-                        </div>
-                        <div class="row hide" v-else>
-                            <div class="col-md-3 col-lg-3 col-sm-12">
-                                <label for="">Created At</label>
-                            </div>
-                            <div class="col-md-9 col-lg-9 col-sm-12">
-                                <span v-text="notificationForm.created_at"></span>
-                            </div>
-                        </div>
+                        <br>
                         <div class="row">
-                            <label for="logo" class="control-label">Images</label>
-                            <br><br>
-                            <div class="col-md-12">
-                                <input type="file" multiple="multiple" id="uploadImages" @change="uploadFieldChange">
-                                <p>You must upload the jpg, jpeg, png, gif file.</p>
-                                <hr>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="attachment-holder animated fadeIn" v-cloak v-for="(image, index) in uploadImages"> 
-                                    <span class="label label-primary">{{ image.name + ' (' + Number((image.size / 1024).toFixed(1)) + 'KB)'}}</span> 
-                                    <span class="" style="background: red; cursor: pointer;" @click.prevent="removeUploadImage(image)"><button class="btn btn-xs btn-danger">Remove</button></span>
-                                </div>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="row">
-                                    <div class="col-md-4" v-for="image in notificationForm.images" v-bind:id="image.id">
-                                        <img v-bind:src="getNtfImage(image)" class="img-responsive">
-                                        <span class="text-center" style="background: red; cursor: pointer; display: block; width: 100%" @click="modalDeleteImage"><button type="button" class="btn btn-xs btn-danger">Delete</button></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <br><br>
-                            <div class="col-md-12">
-                                <button type="submit" class="btn btn-info waves-effect waves-light m-t-10">
-                                    <span v-if="id != 0">Update</span>
-                                    <span v-else>Create</span>
-                                </button>
-                                <router-link to="/notification" class="btn btn-danger waves-effect waves-light m-t-10">Cancel</router-link>
-                            </div>
+                            <button type="submit" class="btn btn-info waves-effect waves-light m-t-10">
+                                <span v-if="id != 0">Update</span>
+                                <span v-else>Create</span>
+                            </button>
+                            <router-link to="/sys_noti" class="btn btn-danger waves-effect waves-light m-t-10">Cancel</router-link>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="form-group col-md-6 col-lg-6 col-sm-12" v-if="id != 0">
-                <label for="logo" class="control-label">Comments</label>
+            <div class="form-group col-md-6 col-lg-6 col-sm-12">
+                <div class="row">
+                    <label for="logo" class="control-label">Images</label>
+                    <br><br>
+                    <div class="col-md-12">
+                        <input type="file" multiple="multiple" id="uploadImages" @change="uploadFieldChange">
+                        <p>You must upload the jpg, jpeg, png, gif file.</p>
+                        <hr>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="attachment-holder animated fadeIn" v-cloak v-for="(image, index) in uploadImages"> 
+                            <span class="label label-primary">{{ image.name + ' (' + Number((image.size / 1024).toFixed(1)) + 'KB)'}}</span> 
+                            <span class="" style="background: red; cursor: pointer;" @click.prevent="removeUploadImage(image)"><button class="btn btn-xs btn-danger">Remove</button></span>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-4" v-for="image in notificationForm.images" v-bind:id="image.id">
+                                <img v-bind:src="getNtfImage(image)" class="img-responsive">
+                                <span class="text-center" style="background: red; cursor: pointer; display: block; width: 100%" @click="modalDeleteImage"><button type="button" class="btn btn-xs btn-danger">Delete</button></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -139,13 +100,9 @@
                 uploadDataForm: [],
                 percentCompleted: 0,
 
-                ntf_types : {},
-                comments : {},
-                profile : {},
+                countries: {},
                 notificationForm: new Form({
-                    'group_id' : '',
-                    'type' : '',
-                    'full_name' : '',
+                    'country' : '',
                     'email' : '',
                     'contents' : '',
                     'created_at' : '',
@@ -158,15 +115,12 @@
             }
         },
         created() {
-            this.getNtfTypes();
-            this.getProfile();
+            this.getCountries();
         },
         props: ['id'],
         mounted() {
-            if (this.id != 0) {
-                this.updateNotification();
-            } else {
-                this.storeNotification();
+            if(this.id != 0) {
+                this.getNotification();
             }
         },
 
@@ -200,82 +154,38 @@
             proceed() {
                 this.uploadDataForm = new FormData();
                 if (this.id != 0) {
-                    this.storeNotification();
-                } else {
                     this.updateNotification();
-                }
-            },
-            getNtfTypes() {
-                axios.get('/api/noti_type').then(response => {
-                    this.ntf_types = response.data;
-                }).catch(error => {
-                    if (error.response.data.status == 'fail') {
-                        if (error.response.data.type == "token_error") {
-                            toastr['error']('The token is expired! Please refresh and try again!');
-                            this.$router.push('/login');
-                        } else {
-                            toastr['error'](error.response.data.message);
-                        }
-                    } else {
-                        if (error.message) {
-                            toastr['error']('An unexpected error occurred!');
-                            console.log(error.message);
-                        }
-                    }
-                });
-            },
-            getProfile() {
-                axios.post('/api/user/profile').then(response => {
-                    if (response.data.data) {
-                        this.notificationForm.group_id = response.data.data.group_id;
-                        this.notificationForm.email = response.data.data.email;
-                        if (response.data.data.profile) {
-                            this.notificationForm.full_name = response.data.data.profile.full_name;
-                        }
-                    }
-                }).catch(error => {
-                    if (error.response.data.status == 'fail') {
-                        if (error.response.data.type == "token_error") {
-                            toastr['error']('The token is expired! Please refresh and try again!');
-                            this.$router.push('/login');
-                        } else {
-                            toastr['error'](error.response.data.message);
-                        }
-                    } else {
-                        if (error.message) {
-                            toastr['error']('An unexpected error occurred!');
-                            console.log(error.message);
-                        }
-                    }
-                });
-
-            },
-            getSeletedType(type, index) {
-                if (this.id != 0) {
-                    if (type == this.notificationForm.type) {
-                        return true;
-                    } else {
-                        return false;
-                    }
                 } else {
-                    if (index == 0) {
-                        return true;
-                    } else {
-                        return false;
-                    }
+                    this.storeNotification();
                 }
+            },
+            getCountries() {
+                axios.post('/api/country/all').then(response => {
+                    this.countries = response.data;
+                }).catch(error => {
+                    if (error.response.data.status == 'fail') {
+                        if (error.response.data.type == "token_error") {
+                            toastr['error']('The token is expired! Please refresh and try again!');
+                            this.$router.push('/login');
+                        } else {
+                            toastr['error'](error.response.data.message);
+                        }
+                    } else {
+                        if (error.message) {
+                            toastr['error']('An unexpected error occurred!');
+                            console.log(error.message);
+                        }
+                    }
+                });
             },
             getNotification() {
                 axios.post('/api/notification/' + this.id)
                 .then(response => {
-                    this.notificationForm.group_id = response.data.notification.group.group_id;
-                    this.notificationForm.type = response.data.notification.type;
-                    this.notificationForm.full_name = response.data.notification.user.profile.full_name;
+                    this.notificationForm.country = response.data.notification.country;
                     this.notificationForm.email = response.data.notification.user.email;
                     this.notificationForm.contents = response.data.notification.contents;
                     this.notificationForm.created_at = response.data.notification.created_at;
                     this.notificationForm.images = response.data.notification.images;
-                    this.comments = response.data.notification.comments;
                 }).catch(error => {
                     if (error.response.data.status == 'fail') {
                         if (error.response.data.type == "token_error") {
@@ -302,10 +212,10 @@
                     }.bind(this)
                 };
 
-                axios.post('/api/create-notification', this.uploadDataForm, config)
+                axios.post('/api/create-sysnoti', this.uploadDataForm, config)
                 .then(response => {
                     toastr['success'](response.data.message);
-                    this.$router.push('/notification');
+                    this.$router.push('/sys_noti');
                 }).catch(error => {
                     if (error.status == 'fail') {
                         if (error.type == "token_error") {
@@ -313,6 +223,36 @@
                             this.$router.push('/login');
                         } else {
                             toastr['error'](error.message);
+                        }
+                    } else {
+                        if (error.message) {
+                            toastr['error']('An unexpected error occurred!');
+                            console.log(error.message);
+                        }
+                    }
+                });
+            },
+            updateNotification() {
+                this.prepareFields();
+                var config = {
+                    headers: { 'Content-Type': 'multipart/form-data' } ,
+                    onUploadProgress: function(progressEvent) {
+                        this.percentCompleted = Math.round( (progressEvent.loaded * 100) / progressEvent.total );
+                        this.$forceUpdate();
+                    }.bind(this)
+                };
+
+                axios.post('/api/update-notification', this.uploadDataForm, config)
+                .then(response => {
+                    toastr['success'](response.data.message);
+                    this.$router.push('/sys_noti');
+                }).catch(error => {
+                    if (error.status == 'fail') {
+                        if (error.type == "token_error") {
+                            toastr['error']('The token is expired! Please refresh and try again!');
+                            this.$router.push('/login');
+                        } else {
+                            toastr['error'](error.response.data.message);
                         }
                     } else {
                         if (error.message) {
@@ -332,7 +272,7 @@
                 if (this.id != 0) {
                     this.uploadDataForm.append('notification_id', this.id);
                 }
-                this.uploadDataForm.append('type', this.notificationForm.type);
+                this.uploadDataForm.append('country', this.notificationForm.country);
                 this.uploadDataForm.append('contents', this.notificationForm.contents);
                 if (this.id != 0) {
                     this.uploadDataForm.append('datetime', this.notificationForm.created_at);
@@ -353,7 +293,11 @@
                 $('#uploadImages').val('');
             },
             modalDeleteImage(e) {
-                this.deleteImageEl = e.target.parentElement;
+                if (e.target.tagName == "BUTTON") {
+                    this.deleteImageEl = e.target.parentElement.parentElement;
+                } else {
+                    this.deleteImageEl = e.target.parentElement;
+                }
                 $('#modal-delete-image').modal('show');
             },
             deleteImage() {

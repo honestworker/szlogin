@@ -82,13 +82,13 @@ class GroupController extends Controller
             'org_number' => 'required',
             'contact_person' => 'required',
             'org_name' => 'required',
-            'email' => 'required|email|unique:users',
+            'email' => 'required|email',
             'mobile_number' => 'required',
             'country' => 'required',
         ]);
         
         if($validation->fails())
-            return response()->json(['status' => 'success', 'message' => $validation->messages()->first()], 422);
+            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
             
         $user = \JWTAuth::parseToken()->authenticate();
         $group = new \App\Group;
@@ -139,7 +139,7 @@ class GroupController extends Controller
             'org_number' => 'required',
             'contact_person' => 'required',
             'org_name' => 'required',
-            'email' => 'required|email|unique:users',
+            'email' => 'required|email',
             'mobile_number' => 'required',
             'country' => 'required',
         ]);

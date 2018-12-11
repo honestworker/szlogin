@@ -95,19 +95,18 @@
                 axios.post('/api/country/all').then(response => {
                     this.countries = response.data
                 }).catch(error => {
-                    if (error.response.data) {
-                        if (error.response.data.error_type == 'token_error') {
+                    if (error.response.data.status == 'fail') {
+                        if (error.response.data.type == "token_error") {
                             toastr['error']('The token is expired! Please refresh and try again!');
                             this.$router.push('/login');
                         } else {
-                            if (error.response.data.message) {
-                                toastr['error'](error.response.data.message);
-                            } else {
-                                toastr['error']('An unexpected error occurred!');
-                            }
-                        } 
+                            toastr['error'](error.response.data.message);
+                        }
                     } else {
-                        toastr['error']('An unexpected error occurred!');
+                        if (error.message) {
+                            toastr['error']('An unexpected error occurred!');
+                            console.log(error.message);
+                        }
                     }
                 });
             },
@@ -130,19 +129,18 @@
                     this.$emit('completed', response.group);
                     this.$router.push('/group');
                 }).catch(error => {
-                    if (error.response.data) {
-                        if (error.response.data.error_type == 'token_error') {
+                    if (error.status == 'fail') {
+                        if (error.type == "token_error") {
                             toastr['error']('The token is expired! Please refresh and try again!');
                             this.$router.push('/login');
                         } else {
-                            if (error.response.data.message) {
-                                toastr['error'](error.response.data.message);
-                            } else {
-                                toastr['error']('An unexpected error occurred!');
-                            }
-                        } 
+                            toastr['error'](error.response.data.message);
+                        }
                     } else {
-                        toastr['error']('An unexpected error occurred!');
+                        if (error.message) {
+                            toastr['error']('An unexpected error occurred!');
+                            console.log(error.message);
+                        }
                     }
                 });
             },
@@ -157,47 +155,42 @@
                     this.groupForm.mobile_number = response.data.mobile_number;
                     this.groupForm.country = response.data.country;
                 }).catch(error => {
-                    if (error.response.data) {
-                        if (error.response.data.error_type == 'token_error') {
+                    if (error.response.data.status == 'fail') {
+                        if (error.response.data.type == "token_error") {
                             toastr['error']('The token is expired! Please refresh and try again!');
                             this.$router.push('/login');
                         } else {
-                            if (error.response.data.message) {
-                                toastr['error'](error.response.data.message);
-                            } else {
-                                toastr['error']('An unexpected error occurred!');
-                            }
-                        } 
+                            toastr['error'](error.response.data.message);
+                        }
                     } else {
-                        toastr['error']('An unexpected error occurred!');
+                        if (error.message) {
+                            toastr['error']('An unexpected error occurred!');
+                            console.log(error.message);
+                        }
                     }
                 });
             },
             updateGroup() {
                 this.groupForm.patch('/api/group/' + this.id)
                 .then(response => {
-                    if(response.type == 'error') {
-                        if (response.message) {
-                            toastr['error'](response.message);
-                        } else {
-                            toastr['error']('The token is expired! Please refresh and try again!');
-                        }
+                    if (response.message) {
+                        toastr['success'](response.message);
+                        console.log(response.data);
                     }
                     this.$router.push('/group');
                 }).catch(error => {
-                    if (error.response.data) {
-                        if (error.response.data.error_type == 'token_error') {
+                    if (error.status == 'fail') {
+                        if (error.type == "token_error") {
                             toastr['error']('The token is expired! Please refresh and try again!');
                             this.$router.push('/login');
                         } else {
-                            if (error.response.data.message) {
-                                toastr['error'](error.response.data.message);
-                            } else {
-                                toastr['error']('An unexpected error occurred!');
-                            }
-                        } 
+                            toastr['error'](error.message);
+                        }
                     } else {
-                        toastr['error']('An unexpected error occurred!');
+                        if (error.message) {
+                            toastr['error']('An unexpected error occurred!');
+                            console.log(error.message);
+                        }
                     }
                 });
             }

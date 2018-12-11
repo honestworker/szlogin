@@ -101,12 +101,13 @@ Route::group(['middleware' => ['jwt.auth']], function () {
 
     ///// Notification
     Route::get('/notification','NotificationController@index');
+    Route::post('/notification/status','NotificationController@toggleStatus');
     Route::post('/notification/{id}','NotificationController@getNotification');
     Route::delete('/notification/{id}','NotificationController@deleteNotificationBackend');
-    
+    Route::post('/update-notification','NotificationController@updateNotificationBackend');
+
     // Notification app only
     Route::post('/get-notification','NotificationController@getNotifications');
-    Route::post('/create-notification','NotificationController@createNotification');
     Route::post('/get-notification-detail','NotificationController@getNotificationDetail');
     Route::patch('/update-notification','NotificationController@updateNotification');
 
@@ -117,6 +118,10 @@ Route::group(['middleware' => ['jwt.auth']], function () {
 
     Route::post('/get-alarms','NotificationController@getAlarms');
 
+    ///// System Notification
+    Route::get('/sysnoti','NotificationController@indexSys');
+    Route::post('/create-sysnoti','NotificationController@createSysNotification');
+    
     // Comment app only
     Route::post('/create-comment','NotificationController@createComment');
 
