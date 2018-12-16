@@ -18,28 +18,28 @@ class NotificationController extends Controller
     
     protected $app_page_rows = 10;
     
-	public function index() {
+    public function index() {
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {
             return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
         }
         
-		$notifications = \App\Notification::with('user', 'type', 'group', 'images');
-		
-		if(request()->has('group_id'))
+        $notifications = \App\Notification::with('user', 'type', 'group', 'images');
+        
+        if(request()->has('group_id'))
             if (request('group_id'))
                 $notifications->whereHas('group', function($q) {
                     $q->where('group_id', '=', request('group_id'));
                 });
-			    
-		if(request()->has('type'))
+                
+        if(request()->has('type'))
             if (request('type'))
                 $notifications->whereHas('type', function($q) {
                     $q->where('name', '=', request('type'));
                 });
             
-		if(request()->has('email'))
+        if(request()->has('email'))
             $notifications->whereHas('user', function($q) {
                 $q->where('email', 'like', '%' . request('email') . '%');
             });
@@ -61,23 +61,37 @@ class NotificationController extends Controller
                 $notifications->select('id', 'contents', 'type', 'group_id', 'user_id', 'status', 'created_at', \DB::raw('(select ' . request('sortBy') . ' from users where notifications.user_id = users.id) as '. request('sortBy')))->orderBy(request('sortBy'), request('order'));
         }
         
-		return $notifications->paginate(request('pageLength'));
-	}
-	
-	public function indexSys() {
+        return $notifications->paginate(request('pageLength'));
+    }
+    
+    public function indexSys() {
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {
             return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
         }
         
-		$notifications = \App\Notification::with('user', 'type', 'images')->where('type', '=', 5);
-		
-		if(request()->has('email'))
+        $notifications = \App\Notification::with('user', 'type', 'images')->where('type', '=', 5);
+        
+        if(request()->has('country'))
+            $notifications->where('country', '=', request('country'));
+            
+        if(request()->has('group_id')) {
+            $groups = \App\Group::where('group_id', 'like', '%'. request('group_id').'%')->get();
+            $group_ids = array();
+            if ($groups) {
+                foreach($groups as $group) {
+                    array_push($group_ids, $group->id);
+                }
+            }
+            $notifications->whereIn('group_id', $group_ids);
+        }
+            
+        if(request()->has('email'))
             $notifications->whereHas('user', function($q) {
                 $q->where('email', 'like', '%' . request('email') . '%');
             });
-                
+            
         if(request()->has('contents'))
             $notifications->where('contents', 'like', '%'. request('contents').'%');
             
@@ -91,10 +105,9 @@ class NotificationController extends Controller
                 $notifications->select('id', 'contents', 'type', 'group_id', 'user_id', 'status', 'country', 'created_at', \DB::raw('(select ' . request('sortBy') . ' from users where notifications.user_id = users.id) as '. request('sortBy')))->orderBy(request('sortBy'), request('order'));
         }
         
-		return $notifications->paginate(request('pageLength'));
-	}
-	
-    
+        return $notifications->paginate(request('pageLength'));
+    }
+        
     private function stampImage($filename_x, $filename_result, $mergeType = 0) {
         if ( !file_exists( $filename_x ) || !file_exists( $this->stamp_image_path ) ) {
             return false;
@@ -125,32 +138,38 @@ class NotificationController extends Controller
             $image_y = imagecreatefromgif($this->stamp_image_path);
         }
         
-        $image = imagecreatetruecolor($width_x, $height_x);
-        imagealphablending($image, true);
-        imagesavealpha($image, true);
+        $max_x = ($width_x > $height_x) ? $width_x : $height_x;
+        if ( $max_x > 512 ) {
+            $new_width_x = $width_x * 512 / $max_x;
+            $new_height_x = $height_x * 512 / $max_x;
+        }
+        $image = imagecreatetruecolor($new_width_x, $new_height_x);
         
-        $min_x = ($width_x > $height_x) ? $width_x : $height_x;
-        $ratio = $min_x / 1024 * (120 / $width_y);
-        $offset_x = 120 * $ratio;
-        $offset_y = (120 + $height_y) * $ratio;
+        $min_x = ($new_width_x < $new_height_x) ? $new_width_x : $new_height_x;
+        $ratio = $min_x / 512 * (60 / $width_y);
+        $offset_x = 60 * $ratio;
+        $offset_y = (60 + $height_y) * $ratio;
         
         $new_width = $width_y * $ratio;
         $new_height = $height_y * $ratio;
         $image_tmp = imagecreate($new_width, $new_height);
+        imagecopyresampled($image_tmp, $image_y, 0, 0, 0, 0, $new_width, $new_height, $width_y, $height_y);
         imagealphablending($image_tmp, true);
         imagesavealpha($image_tmp, true);
-        imagecopyresampled($image_tmp, $image_y, 0, 0, 0, 0, $new_width, $new_height, $width_y, $height_y);
         
-        imagecopy($image, $image_x, 0, 0, 0, 0, $width_x, $height_x);
-        imagecopy($image, $image_tmp, $offset_x, $height_x - $offset_y, 0, 0, $new_width, $new_height);
+        $image_xx = imagecreatetruecolor($new_width_x, $new_height_x);
+        imagecopyresampled($image_xx, $image_x, 0, 0, 0, 0, $new_width_x, $new_height_x, $width_x, $height_x);
+        
+        imagecopy($image, $image_xx, 0, 0, 0, 0, $new_width_x, $new_height_x);
+        imagecopy($image, $image_tmp, $offset_x, $new_height_x - $offset_y, 0, 0, $new_width, $new_height);
         
         $lowerFileName = strtolower($filename_result); 
         if (substr_count($lowerFileName, '.jpg') > 0 || substr_count($lowerFileName, '.jpeg') > 0) {
-            imagejpeg($image, $filename_result);
+            imagejpeg($image, $filename_result, 100);
         } else if (substr_count($lowerFileName, '.png') > 0) {
-            imagepng($image, $filename_result);
+            imagepng($image, $filename_result, 100);
         } else if( substr_count($lowerFileName, '.gif') > 0) {
-            imagegif($image, $filename_result); 
+            imagegif($image, $filename_result, 100); 
         }
         
         // Clean up
@@ -190,17 +209,25 @@ class NotificationController extends Controller
                             'contents' => array('en' => $notification_name),
                             'data' => array('notification_id' => $notification_id)
                         );
-                        $sound = $profile->sound;
-                        if ( $profile->vibration == 0 && $profile->sound == 'no_sound' ) {
-                            $sound = "nil";
-                        }
                         if ( $profile->os_type == 'android' ) {
-                            $params['android_sound'] = $sound;
+                            if ( $profile->sound == "sound1" && $profile->vibration == 1 ) {
+                                $params['android_channel_id'] = '';
+                            } else if ( $profile->sound == "sound1" && $profile->vibration == 0 ) {
+                                $params['android_channel_id'] = '';
+                            } else if ( $profile->sound == "sound2" && $profile->vibration == 1 ) {
+                                $params['android_channel_id'] = '';
+                            } else if ( $profile->sound == "sound2" && $profile->vibration == 0 ) {
+                                $params['android_channel_id'] = '';
+                            } else if ( $profile->sound == "no_sound" && $profile->vibration == 1 ) {
+                                $params['android_channel_id'] = '';
+                            } else if ( $profile->sound == "no_sound" && $profile->vibration == 0 ) {
+                                $params['android_channel_id'] = '';
+                            }
                         } else if ( $profile->os_type == 'ios' ) {
-                            if ( $sound == "nil" ) {
-                                $params['ios_sound'] = $sound;
+                            if ( $profile->vibration == 0 && $profile->sound == 'no_sound' ) {
+                                $params['ios_sound'] = "nil";
                             } else {
-                                $params['ios_sound'] = $sound . ".wav";
+                                $params['ios_sound'] = $profile->sound . ".wav";
                             }
                         }
                         $requests[] = $params;
@@ -220,13 +247,13 @@ class NotificationController extends Controller
                         
                         curl_close($ch);
                     }
-                }                    
+                }
             }
         }
         return array('request' => $requests, 'response' => $responses);
     }
 
-	// Notification
+    // Notification
     public function createNotification(Request $request){
         try {
             JWTAuth::parseToken()->authenticate();
@@ -366,7 +393,7 @@ class NotificationController extends Controller
             $user->save();
         }
         
-        return response()->json(['status' => 'success', 'message' => 'Notification has created succesfully!', 'notification_id' => $notification->id], 200); // , 'notification_name' => $notification_name, 'push_result' => $push_result
+        return response()->json(['status' => 'success', 'message' => 'Notification has created succesfully!', 'notification_id' => $notification->id, 'push_result' => $push_result], 200); // , 'notification_name' => $notification_name, 'push_result' => $push_result
     }
     
     public function createSysNotification(Request $request){
@@ -382,7 +409,8 @@ class NotificationController extends Controller
         }
         
         $validation = Validator::make($request->all(), [
-            'country' => 'required',
+            'country' => '',
+            'group_id' => '',
             'contents' => 'required|min:1',
             'datetime' => 'date_format:"Y-m-d H:i:s"|required',
         ]);
@@ -404,11 +432,16 @@ class NotificationController extends Controller
         if (request('country') != '') {
             $country = request('country');
         }
+        $group_id = 0;
+        if (request('group_id') != '') {
+            $group_id = request('group_id');
+        }
         $notification = new \App\Notification;
         $notification->type = 5;
         $notification->contents = request('contents');
         $notification->user_id = $user->id;
         $notification->country = $country;
+        $notification->group_id = $group_id;
         $notification->status = 1;
         $notification->created_at = request('datetime');
         $notification->save();
@@ -455,6 +488,11 @@ class NotificationController extends Controller
                 $q->where('country', $country);
             });
         }
+        if ($group_id) {
+            $users->whereHas('profile', function($q) use ($group_id) {
+                $q->where('group_id', $group_id);
+            });
+        }
         $users->whereNotNull('push_token')->where('push_token', '<>', '')->where('status', '=', 'activated')->where(function($q) {
             $q->whereIn('deactivated_at', [null, ''])
               ->orWhere('activated_at', '>', 'deactivated_at');
@@ -468,6 +506,11 @@ class NotificationController extends Controller
         if ($country) {
             $users->whereHas('profile', function($q) use ($country) {
                 $q->where('country', $country);
+            });
+        }
+        if ($group_id) {
+            $users->whereHas('profile', function($q) use ($group_id) {
+                $q->where('group_id', $group_id);
             });
         }
         $users->where('status', '=', 'activated')->where('activated_at', '<=', 'deactivated_at')->where('id', '!=', $user->id);
@@ -528,7 +571,19 @@ class NotificationController extends Controller
         }
         
         $country = $profile->country;
-        $attched_notification_ids = \App\Notification::whereStatus(1)->where('type', '=', 5)->where(function ($q) use($country) { $q->where('country', '')->orWhere('country', $country); } )->pluck('id')->toArray();
+        $group_id = $profile->group_id;
+        $attched_notification_ids = \App\Notification::whereStatus(1)->where('type', '=', 5)->where(
+            function ($q) use($country, $group_id) {
+                $q->where(function ($qq) use ($country, $group_id) {
+                    $qq->where('country',  '')->where('group_id',  '0');
+                })->orwhere(function ($qq) use ($country, $group_id) {
+                    $qq->where('country',  $country)->where('group_id',  '0');
+                })->orwhere(function ($qq) use ($country, $group_id) {
+                    $qq->where('country',  '')->where('group_id',  $group_id);
+                })->orwhere(function ($qq) use ($country, $group_id) {
+                    $qq->where('country',  $country)->where('group_id',  $group_id);
+                });
+            } )->pluck('id')->toArray();
         $notification_ids = array_merge($notification_ids, $attched_notification_ids);
         
         $notifications = \App\Notification::with('user.simple_profile');
@@ -615,7 +670,7 @@ class NotificationController extends Controller
         $page_end = false;
         $result = [];
         $comments = \App\Comment::with('images', 'user.simple_profile')->where('notification_id', '=', request('notification_id'));
-        $comments->orderBy('created_at', 'DESC');
+        $comments->orderBy('created_at', 'ASC');
         if($request->has('page')) {
             $page_id = request('page');
             if (($page_id + 1) * $this->app_page_rows >= $total_counts) {
@@ -674,6 +729,11 @@ class NotificationController extends Controller
             $notification->country = request('country');
         } else {
             $notification->country = '';
+        }
+        if (request('group_id') != '') {
+            $notification->group_id = request('group_id');
+        } else {
+            $notification->group_id = 0;
         }
         $notification->contents = request('contents');
         $notification->save();
@@ -734,10 +794,24 @@ class NotificationController extends Controller
         if($validation->fails())
             return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
                 
+        $user = JWTAuth::parseToken()->authenticate();
+        $profile = $user->Profile;
+        if (!$profile)
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
+            
         $notification = \App\Notification::find(request('notification_id'));
         if(!$notification)
             return response()->json(['status' => 'fail', 'message' => 'Could not find the notification.', 'error_type' => 'no_notification'], 422);
         
+        $permission = 0;
+        if($user->backend || $notification->user_id == $user->id) {
+            $permission = 1;
+        } else if ($profile->is_admin && $profile->group_id == $notification->group_id) {
+            $permission = 1;
+        }
+        if(!$permission)
+            return response()->json(['status' => 'fail', 'message' => 'You have to get a permission!', 'error_type' => 'no_permission'], 422);
+            
         $notification->contents = request('contents');
         $notification->save();
         
@@ -751,10 +825,13 @@ class NotificationController extends Controller
             return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
         }
         
+        $user = JWTAuth::parseToken()->authenticate();
+        if (!$user->backend)
+            return response()->json(['status' => 'fail', 'message' => 'You must be an administrator.', 'error_type' => 'no_permissioin'], 422);
+            
         $notification = \App\Notification::find(request('id'));
-        
         if(!$notification)
-            return response()->json(['status' => 'fail', 'message' => 'Couldnot find notificaioin!'], 422);
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find notificaioin!', 'error_type' => 'no_notification'], 422);
             
         $notification->status = !$notification->status;
         $notification->save();
@@ -769,9 +846,13 @@ class NotificationController extends Controller
             return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
         }
         
+        $user = JWTAuth::parseToken()->authenticate();
+        if (!$user->backend)
+            return response()->json(['status' => 'fail', 'message' => 'You must be an administrator.', 'error_type' => 'no_permissioin'], 422);
+            
         $notification = \App\Notification::find($id);
         if(!$notification)
-            return response()->json(['status' => 'fail', 'message' => 'Couldnot find notificaioin!'], 422);
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find notificaioin!', 'error_type' => 'no_notification'], 422);
             
         $images = $notification->Images;
         if ($images) {
@@ -809,9 +890,23 @@ class NotificationController extends Controller
         if ($validation->fails())
             return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
             
+        $user = JWTAuth::parseToken()->authenticate();
+        $profile = $user->Profile;
+        if (!$profile)
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
+            
         $notification = \App\Notification::find(request('notification_id'));
         if(!$notification)
-            return response()->json(['status' => 'fail', 'message' => 'Couldnot find notificaioin!'], 422);
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find notificaioin!', 'error_type' => 'no_notification'], 422);
+            
+        $permission = 0;
+        if($user->backend || $notification->user_id == $user->id) {
+            $permission = 1;
+        } else if ($profile->is_admin && $profile->group_id == $notification->group_id) {
+            $permission = 1;
+        }
+        if(!$permission)
+            return response()->json(['status' => 'fail', 'message' => 'You have to get a permission!', 'error_type' => 'no_permission'], 422);
             
         $images = $notification->Images;
         if ($images) {
@@ -850,9 +945,23 @@ class NotificationController extends Controller
         if ($validation->fails())
             return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
             
+        $user = JWTAuth::parseToken()->authenticate();
+        $profile = $user->Profile;
+        if (!$profile)
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
+            
         $notification = \App\Notification::find(request('notification_id'));
         if(!$notification)
-            return response()->json(['status' => 'fail', 'message' => 'Couldnot find notificaioin!'], 422);
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find notificaioin!', 'error_type' => 'no_notification'], 422);
+            
+        $permission = 0;
+        if($user->backend || $notification->user_id == $user->id) {
+            $permission = 1;
+        } else if ($profile->is_admin && $profile->group_id == $notification->group_id) {
+            $permission = 1;
+        }
+        if(!$permission)
+            return response()->json(['status' => 'fail', 'message' => 'You have to get a permission!', 'error_type' => 'no_permission'], 422);
             
         $images = $notification->Images;
         if ($images) {
@@ -866,7 +975,7 @@ class NotificationController extends Controller
         return response()->json(['status' => 'success', 'message' => 'Notification Image deleted!'], 200);
     }
 
-	// Comments
+    // Comments
     public function createComment(Request $request) {
         try {
             JWTAuth::parseToken()->authenticate();
@@ -961,10 +1070,13 @@ class NotificationController extends Controller
             return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
         }
         
+        $user = JWTAuth::parseToken()->authenticate();
+        if (!$user->backend)
+            return response()->json(['status' => 'fail', 'message' => 'You must be an administrator.', 'error_type' => 'no_permissioin'], 422);
+            
         $comment = \App\Comment::find(request('id'));
-        
         if(!$comment)
-            return response()->json(['status' => 'fail', 'message' => 'Couldnot find comment!'], 422);
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find comment!', 'error_type' => 'no_comment'], 422);
             
         $comment->status = !$comment->status;
         $comment->save();
@@ -987,7 +1099,21 @@ class NotificationController extends Controller
             
         $comment = \App\Comment::find(request('comment_id'));
         if(!$comment)
-            return response()->json(['status' => 'fail', 'message' => 'Couldnot find comment!'], 422);
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find comment!', 'error_type' => 'no_comment'], 422);
+            
+        $user = JWTAuth::parseToken()->authenticate();
+        $profile = $user->Profile;
+        if (!$profile)
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
+            
+        $permission = 0;
+        if($user->backend || $notification->user_id == $user->id) {
+            $permission = 1;
+        } else if ($profile->is_admin && $profile->group_id == $notification->group_id) {
+            $permission = 1;
+        }
+        if(!$permission)
+            return response()->json(['status' => 'fail', 'message' => 'You have to get a permission!', 'error_type' => 'no_permission'], 422);
             
         $images = $comment->Images;
         if ($images) {
@@ -1014,6 +1140,20 @@ class NotificationController extends Controller
         if ($validation->fails())
             return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
             
+        $user = JWTAuth::parseToken()->authenticate();
+        $profile = $user->Profile;
+        if (!$profile)
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
+            
+        $permission = 0;
+        if($user->backend || $notification->user_id == $user->id) {
+            $permission = 1;
+        } else if ($profile->is_admin && $profile->group_id == $notification->group_id) {
+            $permission = 1;
+        }
+        if(!$permission)
+            return response()->json(['status' => 'fail', 'message' => 'You have to get a permission!', 'error_type' => 'no_permission'], 422);
+            
         $comment = \App\Comment::find(request('comment_id'));
         if(!$comment)
             return response()->json(['status' => 'fail', 'message' => 'Couldnot find comment!'], 422);
@@ -1031,21 +1171,25 @@ class NotificationController extends Controller
     }
 
     // Notification Type
-	public function indexType(){
+    public function indexType(){
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {
             return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
         }
         
-		$notification_type = \App\NotificationType::whereNotNull('id');
-		
-		if(request()->has('name'))
+        $user = JWTAuth::parseToken()->authenticate();
+        if (!$user->backend)
+            return response()->json(['status' => 'fail', 'message' => 'You must be an administrator.', 'error_type' => 'no_permissioin'], 422);
+            
+        $notification_type = \App\NotificationType::whereNotNull('id');
+        
+        if(request()->has('name'))
             $notification_type->where('name', 'like', '%'.request('name').'%');
             
         if(request()->has('trans_name'))
                 $notification_type->where('trans_name', 'like', '%'.request('trans_name').'%');
-		
+        
         if(request()->has('status'))
             $notification_type->whereStatus(request('status'));
         
@@ -1054,24 +1198,28 @@ class NotificationController extends Controller
                 $notification_type->orderBy(request('sortBy'), request('order'));
         }
         
-		return $notification_type->paginate(request('pageLength'));
-	}
+        return $notification_type->paginate(request('pageLength'));
+    }
 
-	public function allType(){
+    public function allType(){
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {
             return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
         }
         
-		$notification_type = \App\NotificationType::whereNotNull('id');
-		
+        $user = JWTAuth::parseToken()->authenticate();
+        if (!$user->backend)
+            return response()->json(['status' => 'fail', 'message' => 'You must be an administrator.', 'error_type' => 'no_permissioin'], 422);
+            
+        $notification_type = \App\NotificationType::whereNotNull('id');
+        
         $notification_type->whereStatus(1);
         $notification_type->orderBy('name', 'ASC');
         $countries = $notification_type->pluck('name');
         
-		return response()->json(['status' => 'success', 'message' => 'Get Notification Type Data Successfully!', 'types' => $countries], 200);
-	}
+        return response()->json(['status' => 'success', 'message' => 'Get Notification Type Data Successfully!', 'types' => $countries], 200);
+    }
 
     public function storeType(Request $request){
         try {
@@ -1083,10 +1231,13 @@ class NotificationController extends Controller
         $validation = Validator::make($request->all(), [
             'name' => 'required|unique:notification_type',
         ]);
-        
         if($validation->fails())
-        	return response()->json(['status' => 'fail', 'message' => $validation->messages()->first()], 422);
+            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first()], 422);
         
+        $user = JWTAuth::parseToken()->authenticate();
+        if (!$user->backend)
+            return response()->json(['status' => 'fail', 'message' => 'You must be an administrator.', 'error_type' => 'no_permissioin'], 422);
+            
         $notification_type = new \App\NotificationType;
         $notification_type->fill(request()->all());
         $notification_type->name = request('name');
@@ -1108,9 +1259,12 @@ class NotificationController extends Controller
         }
         
         $notification_type = \App\NotificationType::find($id);
-        
         if(!$notification_type)
-            return response()->json(['status' => 'fail', 'message' => 'Couldnot find notification type!'], 422);
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find notification type!', 'error_type' => 'no_type'], 422);
+            
+        $user = JWTAuth::parseToken()->authenticate();
+        if (!$user->backend)
+            return response()->json(['status' => 'fail', 'message' => 'You must be an administrator.', 'error_type' => 'no_permissioin'], 422);
             
         $notification_type->delete();
         
@@ -1125,9 +1279,12 @@ class NotificationController extends Controller
         }
         
         $notification_type = \App\NotificationType::whereIdx($idx)->first();
-        
         if(!$notification_type)
-            return response()->json(['status' => 'fail', 'message' => 'Couldnot find notification type!'], 422);
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find notification type!', 'error_type' => 'no_type'], 422);
+            
+        $user = JWTAuth::parseToken()->authenticate();
+        if (!$user->backend)
+            return response()->json(['status' => 'fail', 'message' => 'You must be an administrator.', 'error_type' => 'no_permissioin'], 422);
             
         return $notification_type;
     }
@@ -1140,16 +1297,18 @@ class NotificationController extends Controller
         }
         
         $notification_type = \App\NotificationType::whereId($id)->first();
-        
         if(!$notification_type)
-            return response()->json(['status' => 'fail', 'message' => 'Couldnot find notification type!'], 422);
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find notification type!', 'error_type' => 'no_type'], 422);
             
         $validation = Validator::make($request->all(), [
             'name' => 'required|unique:notification_type,name,'.$notification_type->id.',id',
         ]);
-        
         if($validation->fails())
             return response()->json(['status' => 'fail', 'message' => $validation->messages()->first()], 422);
+            
+        $user = JWTAuth::parseToken()->authenticate();
+        if (!$user->backend)
+            return response()->json(['status' => 'fail', 'message' => 'You must be an administrator.', 'error_type' => 'no_permissioin'], 422);
             
         $notification_type->name = request('name');
         if(request()->has('trans_name'))
@@ -1166,9 +1325,12 @@ class NotificationController extends Controller
         }
         
         $notification_type = \App\NotificationType::find(request('id'));
-        
         if(!$notification_type)
-            return response()->json(['status' => 'fail', 'message' => 'Couldnot find notification type!'], 422);
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find notification type!', 'error_type' => 'no_type'], 422);
+            
+        $user = JWTAuth::parseToken()->authenticate();
+        if (!$user->backend)
+            return response()->json(['status' => 'fail', 'message' => 'You must be an administrator.', 'error_type' => 'no_permissioin'], 422);
             
         $notification_type->status = !$notification_type->status;
         $notification_type->save();

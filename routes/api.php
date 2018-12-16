@@ -45,7 +45,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::patch('/group/{id}','GroupController@update');
     Route::post('/group/status','GroupController@toggleStatus');
 
-    // User app only
+    // Group App only
     Route::post('/group/attach','GroupController@attachGroup');
     Route::post('/group/delete-attach','GroupController@deleteAttachGroup');
     Route::post('/group/attached','GroupController@getAttachedGroups');
@@ -97,7 +97,6 @@ Route::group(['middleware' => ['jwt.auth']], function () {
 
     // User Push Notification Effect app only
     Route::post('/push_effect','UserController@setPushEffect');
-    
 
     ///// Notification
     Route::get('/notification','NotificationController@index');
@@ -107,6 +106,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::post('/update-notification','NotificationController@updateNotificationBackend');
 
     // Notification app only
+    Route::post('/create-notification','NotificationController@createNotification');
     Route::post('/get-notification','NotificationController@getNotifications');
     Route::post('/get-notification-detail','NotificationController@getNotificationDetail');
     Route::patch('/update-notification','NotificationController@updateNotification');

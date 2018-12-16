@@ -11,7 +11,6 @@ date_default_timezone_set("Europe/Stockholm");
 
 class GroupController extends Controller
 {
-
     public function index(){
         try {
             JWTAuth::parseToken()->authenticate();
@@ -97,6 +96,20 @@ class GroupController extends Controller
         $group->save();
         
         return response()->json(['status' => 'success', 'message' => 'Group added!', 'data' => $group]);
+    }
+    
+    public function getByCountry($country){
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
+        
+        $groups = \App\Group::whereNotNull('id');
+        if ($country != '0')
+            $groups->where('country', $country);
+        
+        return response()->json(['status' => 'success', 'message' => 'Get Group Data successfully!', 'data' => $groups->get(), 'data1' => $country]);
     }
 
     public function toggleStatus(Request $request){

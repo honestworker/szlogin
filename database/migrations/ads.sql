@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.7.7
+-- version 4.8.3
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Nov 02, 2018 at 03:06 PM
+-- Generation Time: Dec 16, 2018 at 02:49 AM
 -- Server version: 10.1.36-MariaDB-cll-lve
--- PHP Version: 5.6.30
+-- PHP Version: 7.2.7
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -28,20 +28,40 @@ SET time_zone = "+00:00";
 -- Table structure for table `ads`
 --
 
-DROP TABLE IF EXISTS `ads`;
-CREATE TABLE IF NOT EXISTS `ads` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `ads` (
+  `id` int(11) NOT NULL,
   `name` varchar(512) NOT NULL,
   `image` varchar(512) DEFAULT '',
   `link` varchar(1024) DEFAULT '',
   `country` varchar(512) DEFAULT '',
   `start_date` date DEFAULT NULL,
   `end_date` date DEFAULT NULL,
+  `min_postal` varchar(20) DEFAULT '',
+  `max_postal` varchar(20) DEFAULT '',
   `status` int(11) NOT NULL DEFAULT '1',
   `created_at` datetime NOT NULL,
-  `updated_at` datetime NOT NULL,
-  PRIMARY KEY (`id`)
+  `updated_at` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `ads`
+--
+ALTER TABLE `ads`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `ads`
+--
+ALTER TABLE `ads`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

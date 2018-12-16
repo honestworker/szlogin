@@ -34,7 +34,7 @@ class User extends Authenticatable
     
     public function sound_profile()
     {
-        return $this->hasOne('App\Profile', 'user_id', 'id')->select('id', 'user_id', 'os_type', 'sound');
+        return $this->hasOne('App\Profile', 'user_id', 'id')->select('id', 'user_id', 'os_type', 'sound', 'vibration', 'language');
     }
     
     public function profile()

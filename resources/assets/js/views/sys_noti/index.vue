@@ -37,6 +37,12 @@
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
+                                    <label for="">Group ID</label>
+                                    <input class="form-control" v-model="filterNtfForm.group_id" @change="getNtfs">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
                                     <label for="">Email</label>
                                     <input class="form-control" v-model="filterNtfForm.email" @change="getNtfs">
                                 </div>
@@ -87,6 +93,7 @@
                                 <thead>
                                     <tr>
                                         <th>Country</th>
+                                        <th>Group ID</th>
                                         <th>Email</th>
                                         <th>Contents</th>
                                         <th>Images</th>
@@ -98,6 +105,7 @@
                                 <tbody>
                                     <tr v-for="ntf in ntfs.data">
                                         <td v-text="getNtfCountry(ntf)"></td>
+                                        <td v-text="getNtfGroupID(ntf)"></td>
                                         <td v-html="getNtfEmail(ntf)"></td>
                                         <td v-text="ntf.contents"></td>
                                         <td v-html="getNtfImages(ntf)"></td>
@@ -172,10 +180,12 @@
             return {
                 ntfs: {},
                 countries: {},
+                groups: {},
                 filterNtfForm: {
                     sortBy : 'created_at',
                     order: 'desc',
                     country : '',
+                    group_id : '',
                     email : '',
                     contents: '',
                     created_at : '',
@@ -190,6 +200,7 @@
 
         created() {
             this.getCountries();
+            this.getGroups();
             this.getNtfs();
         },
 
@@ -197,6 +208,25 @@
             getCountries() {
                 axios.post('/api/country/all').then(response => {
                     this.countries = response.data;
+                }).catch(error => {
+                    if (error.response.data.status == 'fail') {
+                        if (error.response.data.type == "token_error") {
+                            toastr['error']('The token is expired! Please refresh and try again!');
+                            this.$router.push('/login');
+                        } else {
+                            toastr['error'](error.response.data.message);
+                        }
+                    } else {
+                        if (error.message) {
+                            toastr['error']('An unexpected error occurred!');
+                            console.log(error.message);
+                        }
+                    }
+                });
+            },
+            getGroups() {
+                axios.post('/api/group/all').then(response => {
+                    this.groups = response.data.data;
                 }).catch(error => {
                     if (error.response.data.status == 'fail') {
                         if (error.response.data.type == "token_error") {
@@ -237,17 +267,29 @@
                 });
             },
 
-            getNtfEmail(ntf) {
-                if (typeof ntf.user != 'undefined') {
-                    return ntf.user.email;
-                }
-                return "";
-            },
             getNtfCountry(ntf) {
                 if (typeof ntf.country != 'undefined' && ntf.country !== null && ntf.country !== '') {
                     return ntf.country;
                 }
                 return "All";
+            },
+            getNtfGroupID(ntf) {
+                if (typeof ntf.group_id != 'undefined' && ntf.group_id !== null && ntf.group_id !== "0" && ntf.group_id !== 0) {
+                    if(this.groups) {
+                        for(var index = 0; index < this.groups.length; index++) {
+                            if (this.groups[index].id == ntf.group_id) {
+                                return this.groups[index].group_id;
+                            }
+                        }
+                    }
+                }
+                return "All";
+            },
+            getNtfEmail(ntf) {
+                if (typeof ntf.user != 'undefined') {
+                    return ntf.user.email;
+                }
+                return "";
             },
             getNtfImages(ntf) {
                 var image_html = "";

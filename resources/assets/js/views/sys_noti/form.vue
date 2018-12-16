@@ -9,9 +9,21 @@
                                 <label for="">Country</label>
                             </div>
                             <div class="col-md-9 col-lg-9 col-sm-12">
-                                <select name="country" class="form-control" v-model="notificationForm.country">
+                                <select name="country" class="form-control" v-model="notificationForm.country" @change="changeCountry">
                                     <option value="">All</option>
                                     <option v-for="country in countries.countries" v-bind:value="country">{{country}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-md-3 col-lg-3 col-sm-12">
+                                <label for="">Group ID</label>
+                            </div>
+                            <div class="col-md-9 col-lg-9 col-sm-12">
+                                <select name="group_id" class="form-control" v-model="notificationForm.group_id">
+                                    <option value="">All</option>
+                                    <option v-for="group in groups" v-bind:value="group.id">{{group.group_id}}</option>
                                 </select>
                             </div>
                         </div>
@@ -101,8 +113,10 @@
                 percentCompleted: 0,
 
                 countries: {},
+                groups: {},
                 notificationForm: new Form({
                     'country' : '',
+                    'group_id' : '',
                     'email' : '',
                     'contents' : '',
                     'created_at' : '',
@@ -116,6 +130,7 @@
         },
         created() {
             this.getCountries();
+            this.getGroups();
         },
         props: ['id'],
         mounted() {
@@ -178,10 +193,59 @@
                     }
                 });
             },
+            getGroups() {
+                axios.post('/api/group/all').then(response => {
+                    this.groups = response.data.data;
+                }).catch(error => {
+                    if (error.response.data.status == 'fail') {
+                        if (error.response.data.type == "token_error") {
+                            toastr['error']('The token is expired! Please refresh and try again!');
+                            this.$router.push('/login');
+                        } else {
+                            toastr['error'](error.response.data.message);
+                        }
+                    } else {
+                        if (error.message) {
+                            toastr['error']('An unexpected error occurred!');
+                            console.log(error.message);
+                        }
+                    }
+                });
+            },
+            changeCountry(e) {
+                if(e.target.options.selectedIndex > -1) {
+                    var country = e.target.options[e.target.options.selectedIndex].value;
+                    if (!country) {
+                        country = "All";
+                    }
+                    axios.get('/api/country_group/' + country).then(response => {
+                        this.groups = response.data.data;
+                    }).catch(error => {
+                        if (error.response.data.status == 'fail') {
+                            if (error.response.data.type == "token_error") {
+                                toastr['error']('The token is expired! Please refresh and try again!');
+                                this.$router.push('/login');
+                            } else {
+                                toastr['error'](error.response.data.message);
+                            }
+                        } else {
+                            if (error.message) {
+                                toastr['error']('An unexpected error occurred!');
+                                console.log(error.message);
+                            }
+                        }
+                    });
+                }
+            },
             getNotification() {
                 axios.post('/api/notification/' + this.id)
                 .then(response => {
                     this.notificationForm.country = response.data.notification.country;
+                    if (!response.data.notification.group_id || response.data.notification.group_id == '0') {
+                        this.notificationForm.group_id = '';
+                    } else {
+                        this.notificationForm.group_id = response.data.notification.group_id;
+                    }
                     this.notificationForm.email = response.data.notification.user.email;
                     this.notificationForm.contents = response.data.notification.contents;
                     this.notificationForm.created_at = response.data.notification.created_at;
@@ -217,12 +281,12 @@
                     toastr['success'](response.data.message);
                     this.$router.push('/sys_noti');
                 }).catch(error => {
-                    if (error.status == 'fail') {
-                        if (error.type == "token_error") {
+                    if (error.response.data.status == 'fail') {
+                        if (error.response.data.type == "token_error") {
                             toastr['error']('The token is expired! Please refresh and try again!');
                             this.$router.push('/login');
                         } else {
-                            toastr['error'](error.message);
+                            toastr['error'](error.response.data.message);
                         }
                     } else {
                         if (error.message) {
@@ -247,8 +311,8 @@
                     toastr['success'](response.data.message);
                     this.$router.push('/sys_noti');
                 }).catch(error => {
-                    if (error.status == 'fail') {
-                        if (error.type == "token_error") {
+                    if (error.response.data.status == 'fail') {
+                        if (error.response.data.type == "token_error") {
                             toastr['error']('The token is expired! Please refresh and try again!');
                             this.$router.push('/login');
                         } else {
@@ -272,6 +336,7 @@
                 if (this.id != 0) {
                     this.uploadDataForm.append('notification_id', this.id);
                 }
+                this.uploadDataForm.append('group_id', this.notificationForm.group_id);
                 this.uploadDataForm.append('country', this.notificationForm.country);
                 this.uploadDataForm.append('contents', this.notificationForm.contents);
                 if (this.id != 0) {

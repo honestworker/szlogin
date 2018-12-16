@@ -102,7 +102,6 @@ class AdvertisementController extends Controller
             if($validation->fails())
                 return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_end_date_format'], 422);
         }
-        
         if($request->hasfile('images')) {
             foreach($request->file('images') as $image)
             {
@@ -111,6 +110,20 @@ class AdvertisementController extends Controller
                     return response()->json(['status' => 'fail', 'message' => 'Your images must be jpeg, png, jpg, gif!'], 422);
                 }
             }
+        }
+        if ($request->has('min_postal')) {
+            $validation = Validator::make($request->all(), [
+                'min_postal' => 'max:30',
+            ]);
+            if($validation->fails())
+                return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_min_postal'], 422);
+        }
+        if ($request->has('max_postal')) {
+            $validation = Validator::make($request->all(), [
+                'max_postal' => 'max:30',
+            ]);
+            if($validation->fails())
+                return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_max_postal'], 422);
         }
         
         if($request->has('id')) {
@@ -142,15 +155,19 @@ class AdvertisementController extends Controller
             if (!is_null(request('min_postal'))) {
                 $advertisement->min_postal = request('min_postal');
             } else {
-                $advertisement->min_postal = 0;
+                $advertisement->min_postal = '';
             }
+        } else {
+            $advertisement->min_postal = '';
         }
         if ($request->has('max_postal')) {
             if (!is_null(request('max_postal'))) {
                 $advertisement->max_postal = request('max_postal');
             } else {
-                $advertisement->max_postal = 0;
+                $advertisement->max_postal = '';
             }
+        } else {
+            $advertisement->max_postal = '';
         }
         
         if($request->hasfile('images')) {
@@ -242,6 +259,29 @@ class AdvertisementController extends Controller
             if($validation->fails())
                 return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_end_date_format'], 422);
         }
+        if($request->hasfile('images')) {
+            foreach($request->file('images') as $image)
+            {
+                $extension = $image->getClientOriginalExtension();
+                if (!in_array($extension, $this->image_extensions)) {
+                    return response()->json(['status' => 'fail', 'message' => 'Your images must be jpeg, png, jpg, gif!'], 422);
+                }
+            }
+        }
+        if ($request->has('min_postal')) {
+            $validation = Validator::make($request->all(), [
+                'min_postal' => 'max:30',
+            ]);
+            if($validation->fails())
+                return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_min_postal'], 422);
+        }
+        if ($request->has('max_postal')) {
+            $validation = Validator::make($request->all(), [
+                'max_postal' => 'max:30',
+            ]);
+            if($validation->fails())
+                return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_max_postal'], 422);
+        }
         
         $advertisement->name = request('name');
         $advertisement->link = request('link');
@@ -260,15 +300,19 @@ class AdvertisementController extends Controller
             if (!is_null(request('min_postal'))) {
                 $advertisement->min_postal = request('min_postal');
             } else {
-                $advertisement->min_postal = 0;
+                $advertisement->min_postal = '';
             }
+        } else {
+            $advertisement->min_postal = '';
         }
         if ($request->has('max_postal')) {
             if (!is_null(request('max_postal'))) {
                 $advertisement->max_postal = request('max_postal');
             } else {
-                $advertisement->max_postal = 0;
+                $advertisement->max_postal = '';
             }
+        } else {
+            $advertisement->max_postal = '';
         }
         
         if($request->hasfile('images')) {
@@ -325,7 +369,7 @@ class AdvertisementController extends Controller
         
         $now_date = date("Y-m-d");
         $advertisements->whereRaw("((`start_date` IS NOT NULL AND `end_date` IS NOT NULL AND `start_date` <= '" . $now_date . "' AND `end_date` >= '" . $now_date . "') OR (`start_date` IS NULL AND `end_date` IS NULL) OR (`start_date` IS NULL AND `end_date` >= '" . $now_date . "') OR (`end_date` IS NULL AND `start_date` <= '" . $now_date . "'))");
-        $advertisements->whereRaw("((`min_postal` = '0' AND `max_postal` = '0') OR (`min_postal` = '0' AND `max_postal` >= " . $profile->postal_code . ") OR (`max_postal` = '0' AND `min_postal` <= " . $profile->postal_code . ") OR (`min_postal` <= " . $profile->postal_code . " AND `max_postal` >= " . $profile->postal_code . "))");
+        $advertisements->whereRaw("((`min_postal` = '' AND `max_postal` = '') OR (`min_postal` = '' AND `max_postal` >= " . $profile->postal_code . ") OR (`max_postal` = '' AND `min_postal` <= " . $profile->postal_code . ") OR (`min_postal` <= " . $profile->postal_code . " AND `max_postal` >= " . $profile->postal_code . "))");
         $advertisements->whereStatus(1);
         if ($profile->country) {
             $advertisements->where('country', '=', $profile->country);
@@ -333,14 +377,18 @@ class AdvertisementController extends Controller
 
         $advertisements_result = $advertisements->get();
         $advertisements_count = 0;
+        $ad_ids = array();
         if ($advertisements_result) {
             $advertisements_count = count($advertisements_result);
+            foreach($advertisements_result as $advertisement) {
+               array_push($ad_ids, $advertisement->id);
+            }
         }
         if (!$advertisements_count) {
             return response()->json(['status' => 'success', 'message' => 'Advertisement!', 'id' => 0, 'image' => basename($this->images_base_path), 'link' => url('/')], 200);
         }
         
-        $min_count = \App\UserAdsCount::whereUserId($user->id)->whereViewDate($now_date)->orderBy('count', 'asc')->first();
+        $min_count = \App\UserAdsCount::whereUserId($user->id)->whereViewDate($now_date)->whereIn('ad_id', $ad_ids)->orderBy('count', 'asc')->first();
         if (!$min_count) {
             $advertisement_index = rand(1, $advertisements_count);
             $advertisement = $advertisements_result[$advertisement_index - 1];

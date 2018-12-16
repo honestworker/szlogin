@@ -183,8 +183,8 @@
                     this.advertisementForm.start_date = (response.data.start_date != "") ? response.data.start_date : 0;
                     this.advertisementForm.end_date = (response.data.end_date != "") ? response.data.end_date : 0;
                     this.advertisementForm.country = response.data.country;
-                    this.advertisementForm.min_postal = (response.data.min_postal != 0) ? response.data.min_postal : '';
-                    this.advertisementForm.max_postal = (response.data.max_postal != 0) ? response.data.max_postal : '';
+                    this.advertisementForm.min_postal = (response.data.min_postal != '') ? response.data.min_postal : '';
+                    this.advertisementForm.max_postal = (response.data.max_postal != '') ? response.data.max_postal : '';
                 }).catch(error => {
                     if (error.response.data.status == 'fail') {
                         if (error.response.data.type == "token_error") {
