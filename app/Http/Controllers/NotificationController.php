@@ -1107,10 +1107,16 @@ class NotificationController extends Controller
             return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
             
         $permission = 0;
-        if($user->backend || $notification->user_id == $user->id) {
+        if($user->backend || $comment->user_id == $user->id) {
             $permission = 1;
-        } else if ($profile->is_admin && $profile->group_id == $notification->group_id) {
-            $permission = 1;
+        } else if ($profile->is_admin) {
+            $comment_user = Profile::where('user_id', '=', $comment->user_id)->get();
+            if (!$comment_user)
+                return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
+                    
+            if ($comment_user->group_id == $profile->group_id) {
+                $permission = 1;
+            }
         }
         if(!$permission)
             return response()->json(['status' => 'fail', 'message' => 'You have to get a permission!', 'error_type' => 'no_permission'], 422);

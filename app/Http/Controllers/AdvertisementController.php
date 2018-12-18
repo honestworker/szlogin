@@ -369,7 +369,7 @@ class AdvertisementController extends Controller
         
         $now_date = date("Y-m-d");
         $advertisements->whereRaw("((`start_date` IS NOT NULL AND `end_date` IS NOT NULL AND `start_date` <= '" . $now_date . "' AND `end_date` >= '" . $now_date . "') OR (`start_date` IS NULL AND `end_date` IS NULL) OR (`start_date` IS NULL AND `end_date` >= '" . $now_date . "') OR (`end_date` IS NULL AND `start_date` <= '" . $now_date . "'))");
-        $advertisements->whereRaw("((`min_postal` = '' AND `max_postal` = '') OR (`min_postal` = '' AND `max_postal` >= " . $profile->postal_code . ") OR (`max_postal` = '' AND `min_postal` <= " . $profile->postal_code . ") OR (`min_postal` <= " . $profile->postal_code . " AND `max_postal` >= " . $profile->postal_code . "))");
+        $advertisements->whereRaw("((`min_postal` = '' AND `max_postal` = '') OR (`min_postal` = '' AND `max_postal` >= '" . $profile->postal_code . "') OR (`max_postal` = '' AND `min_postal` <= '" . $profile->postal_code . "') OR (`min_postal` <= '" . $profile->postal_code . "' AND `max_postal` >= '" . $profile->postal_code . "'))");
         $advertisements->whereStatus(1);
         if ($profile->country) {
             $advertisements->where('country', '=', $profile->country);
