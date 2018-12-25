@@ -26376,13 +26376,19 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("footer", { staticClass: "footer" }, [
       _vm._v("\n        Designed with love by "),
-      _c("a", { attrs: { href: "http://wmlab.in", target: "_blank" } }, [
-        _vm._v("WMLab")
-      ]),
+      _c(
+        "a",
+        {
+          attrs: { href: "https://github.com/honestworker", target: "_blank" }
+        },
+        [_vm._v("Honestworker")]
+      ),
       _vm._v(" | Theme by "),
-      _c("a", { attrs: { href: "http://wrappixel.com", target: "_blank" } }, [
-        _vm._v("Wrappixel")
-      ])
+      _c(
+        "a",
+        { attrs: { href: "https://safetyzonemessage.com", target: "_blank" } },
+        [_vm._v("Safety Zone")]
+      )
     ])
   }
 ]
@@ -72498,11 +72504,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             return '';
         },
-        getAdminEmail: function getAdminEmail(admin) {
-            if (admin.profile) return admin.profile.email;
-
-            return '';
-        },
         getAdminStatus: function getAdminStatus(admin) {
             if (admin.status == 'pending') return '<span class="label label-warning">Pending</span>';else if (admin.status == 'activated') return '<span class="label label-success">Activated</span>';
         },
@@ -72885,9 +72886,7 @@ var render = function() {
                           }),
                           _vm._v(" "),
                           _c("td", {
-                            domProps: {
-                              textContent: _vm._s(_vm.getAdminEmail(admin))
-                            }
+                            domProps: { textContent: _vm._s(admin.email) }
                           }),
                           _vm._v(" "),
                           _c("td", {
@@ -74196,14 +74195,23 @@ var staticRenderFns = [
       _c("p", { staticClass: "text-center" }, [
         _c("small", [
           _vm._v("Designed with love by "),
-          _c("a", { attrs: { href: "http://wmlab.in", target: "_blank" } }, [
-            _vm._v("WMLab")
-          ]),
+          _c(
+            "a",
+            {
+              attrs: {
+                href: "https://github.com/honestworker",
+                target: "_blank"
+              }
+            },
+            [_vm._v("Honestworker")]
+          ),
           _vm._v(" | Theme by "),
           _c(
             "a",
-            { attrs: { href: "http://wrappixel.com", target: "_blank" } },
-            [_vm._v("Wrappixel")]
+            {
+              attrs: { href: "https://safetyzonemessage.com", target: "_blank" }
+            },
+            [_vm._v("Safety Zone")]
           )
         ])
       ])
@@ -75186,9 +75194,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
 
 
 
@@ -75309,15 +75314,7 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "form-group m-b-0" }, [
       _c("div", { staticClass: "col-sm-12 text-center" }, [
-        _c("p", [_vm._v("You have registered successfully.")]),
-        _vm._v(" "),
-        _c("p", [_vm._v("We will send your Group ID on your email.")]),
-        _vm._v(" "),
-        _c("p", [_vm._v("Please wait today and activate your account.")]),
-        _vm._v(" "),
-        _c("p", [
-          _vm._v("Then you can register app account and use this app. Thanks.")
-        ])
+        _c("p", [_vm._v("You have registered successfully.")])
       ])
     ])
   }
@@ -76398,8 +76395,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
 
 
 
@@ -76520,13 +76515,7 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "form-group m-b-0" }, [
       _c("div", { staticClass: "col-sm-12 text-center" }, [
-        _c("p", [_vm._v("You have signed up successfully.")]),
-        _vm._v(" "),
-        _c("p", [_vm._v("We will send activation link on your email.")]),
-        _vm._v(" "),
-        _c("p", [
-          _vm._v("Please wait 1 or 2 day and activate your account. Thanks.")
-        ])
+        _c("p", [_vm._v("You have signed up successfully.")])
       ])
     ])
   }

@@ -8,8 +8,6 @@
                     <div class="form-group m-b-0">
                         <div class="col-sm-12 text-center">
                             <p>You have signed up successfully.</p>
-                            <p>We will send activation link on your email.</p>
-                            <p>Please wait 1 or 2 day and activate your account. Thanks.</p>
                         </div>
                     </div>
                     <div class="form-group m-b-0">

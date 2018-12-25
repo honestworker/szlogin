@@ -359,7 +359,7 @@ class AuthController extends Controller
         $profile->full_name = request('full_name');
         $user->profile()->save($profile);
         
-        return response()->json(['status' => 'success', 'message' => 'You have signed up successfully.']);
+        return response()->json(['status' => 'success', 'message' => 'You have signed up successfully.\n Please contact the administrator.\n The administrator will send you the activation link to your email.']);
     }
 
     public function assignGroup(Request $request){

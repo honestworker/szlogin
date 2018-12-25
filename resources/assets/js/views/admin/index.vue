@@ -80,7 +80,7 @@
                                     <tr v-for="admin in admins.data">
                                         <td v-text="getAdminFullName(admin)"></td>
                                         <td v-text="getAdminPhoneNumber(admin)"></td>
-                                        <td v-text="getAdminEmail(admin)"></td>
+                                        <td v-text="admin.email"></td>
                                         <td v-html="getAdminStatus(admin)"></td>
                                         <td>
                                             <button class="btn btn-info btn-sm" @click.prevent="viewAdminProfile(admin)" data-toggle="tooltip" title="View User Profile"><i class="fa fa-eye"></i></button>
@@ -259,12 +259,6 @@
             getAdminPhoneNumber(admin){
                 if(admin.profile)
                     return admin.profile.phone_number;
-                    
-                return '';
-            },
-            getAdminEmail(admin){
-                if(admin.profile)
-                    return admin.profile.email;
                     
                 return '';
             },
