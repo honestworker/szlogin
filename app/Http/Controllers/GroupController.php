@@ -36,7 +36,7 @@ class GroupController extends Controller
         }
         
         if(request()->has('email')) {
-            $groups->where('group_id','like','%'.request('email').'%');
+            $groups->where('group_id','like','%'.strtolower(request('email')).'%');
         }
         
         if(request()->has('mobile_number')) {
@@ -164,7 +164,7 @@ class GroupController extends Controller
         $group->org_number = request('org_number');
         $group->contact_person = request('contact_person');
         $group->org_name = request('org_name');
-        $group->email = request('email');
+        $group->email = strtolower(request('email'));
         $group->mobile_number = request('mobile_number');
         $group->country = request('country');
         $group->save();

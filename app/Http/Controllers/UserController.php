@@ -50,7 +50,7 @@ class UserController extends Controller
             });
             
         if(request()->has('email'))
-            $users->where('email','like','%'.request('email').'%');
+            $users->where('email','like','%'.strtolower(request('email')).'%');
             
         if(request()->has('group_id'))
             $users->whereHas('profile.group',function($q) {

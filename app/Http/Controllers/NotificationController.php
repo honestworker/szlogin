@@ -41,7 +41,7 @@ class NotificationController extends Controller
             
         if(request()->has('email'))
             $notifications->whereHas('user', function($q) {
-                $q->where('email', 'like', '%' . request('email') . '%');
+                $q->where('email', 'like', '%' . strtolower(request('email')) . '%');
             });
                 
         if(request()->has('contents'))
@@ -89,7 +89,7 @@ class NotificationController extends Controller
             
         if(request()->has('email'))
             $notifications->whereHas('user', function($q) {
-                $q->where('email', 'like', '%' . request('email') . '%');
+                $q->where('email', 'like', '%' . strtolower(request('email')) . '%');
             });
             
         if(request()->has('contents'))
