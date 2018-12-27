@@ -155,6 +155,8 @@
 
                 deleteImageEl: '',
                 deletingImage: 1,
+
+                baseUrl : '',
             }
         },
         created() {
@@ -206,6 +208,7 @@
                 }
             },
             getNtfTypes() {
+                this.baseUrl = window.location.origin;
                 axios.get('/api/noti_type').then(response => {
                     this.ntf_types = response.data;
                 }).catch(error => {
@@ -366,9 +369,9 @@
             },
             getNtfImage(image) {
                 if (image.url) {
-                    return 'http://szlogin.com/images/notifications/' + image.url;
+                    return this.baseUrl + '/images/notifications/' + image.url;
                 } else {
-                    return 'http://szlogin.com/images/common/no-image.png';
+                    return this.baseUrl + '/images/common/no-image.png';
                 }
             },
             

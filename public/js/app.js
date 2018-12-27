@@ -34251,7 +34251,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             },
             ntf_id: 0,
             has_group: 0,
-            deletingNtf: 1
+            deletingNtf: 1,
+
+            baseUrl: ''
         };
     },
     created: function created() {
@@ -34264,6 +34266,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         checkHasGroup: function checkHasGroup() {
             var _this = this;
 
+            this.baseUrl = window.location.origin;
             axios.post('/api/user/group').then(function (response) {
                 if (response.data.data) {
                     _this.has_group = 1;
@@ -34332,7 +34335,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             if (typeof ntf.images != 'undefined') {
                 if (ntf.images.length > 0) {
                     for (var index = 0; index < ntf.images.length; index++) {
-                        image_html += '<img src="http://szlogin.com/images/notifications/' + ntf.images[index]['url'] + '" class="img-responsive-height img-max-height-100">';
+                        image_html += '<img src="' + this.baseUrl + '/images/notifications/' + ntf.images[index]['url'] + '" class="img-responsive-height img-max-height-100">';
                     }
                 }
             }
@@ -35444,7 +35447,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }),
 
             deleteImageEl: '',
-            deletingImage: 1
+            deletingImage: 1,
+
+            baseUrl: ''
         };
     },
     created: function created() {
@@ -35500,6 +35505,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         getNtfTypes: function getNtfTypes() {
             var _this = this;
 
+            this.baseUrl = window.location.origin;
             axios.get('/api/noti_type').then(function (response) {
                 _this.ntf_types = response.data;
             }).catch(function (error) {
@@ -35667,9 +35673,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         getNtfImage: function getNtfImage(image) {
             if (image.url) {
-                return 'http://szlogin.com/images/notifications/' + image.url;
+                return this.baseUrl + '/images/notifications/' + image.url;
             } else {
-                return 'http://szlogin.com/images/common/no-image.png';
+                return this.baseUrl + '/images/common/no-image.png';
             }
         },
         uploadFieldChange: function uploadFieldChange(e) {
@@ -36529,7 +36535,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             },
             ntf_id: 0,
             has_group: 0,
-            deletingNtf: 1
+            deletingNtf: 1,
+
+            baseUrl: ''
         };
     },
     created: function created() {
@@ -36543,6 +36551,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         getCountries: function getCountries() {
             var _this = this;
 
+            this.baseUrl = window.location.origin;
             axios.post('/api/country/all').then(function (response) {
                 _this.countries = response.data;
             }).catch(function (error) {
@@ -36636,7 +36645,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             if (typeof ntf.images != 'undefined') {
                 if (ntf.images.length > 0) {
                     for (var index = 0; index < ntf.images.length; index++) {
-                        image_html += '<img src="http://szlogin.com/images/notifications/' + ntf.images[index]['url'] + '" class="img-responsive-height img-max-height-100">';
+                        image_html += '<img src="' + his.baseUrl + '/images/notifications/' + ntf.images[index]['url'] + '" class="img-responsive-height img-max-height-100">';
                     }
                 }
             }
@@ -37689,7 +37698,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }),
 
             deleteImageEl: '',
-            deletingImage: 1
+            deletingImage: 1,
+
+            baseUrl: ''
         };
     },
     created: function created() {
@@ -37743,6 +37754,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         getCountries: function getCountries() {
             var _this = this;
 
+            this.baseUrl = window.location.origin;
             axios.post('/api/country/all').then(function (response) {
                 _this.countries = response.data;
             }).catch(function (error) {
@@ -37954,9 +37966,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         getNtfImage: function getNtfImage(image) {
             if (image.url) {
-                return 'http://szlogin.com/images/notifications/' + image.url;
+                return this.baseUrl + '/images/notifications/' + image.url;
             } else {
-                return 'http://szlogin.com/images/common/no-image.png';
+                return his.baseUrl + '/images/common/no-image.png';
             }
         },
         uploadFieldChange: function uploadFieldChange(e) {
@@ -38874,7 +38886,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 click_year: 1,
                 click_unique: 1
             },
-            isCheckAll: false
+            isCheckAll: false,
+
+            baseUrl: ''
         };
     },
     created: function created() {
@@ -38899,6 +38913,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         getAds: function getAds(page) {
             var _this = this;
 
+            this.baseUrl = window.location.origin;
             if (typeof page === 'undefined') {
                 page = 1;
             }
@@ -39007,9 +39022,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         getImageUrl: function getImageUrl(url) {
             if (url) {
-                return 'http://szlogin.com/images/advertisements/' + url;
+                return this.baseUrl + '/images/advertisements/' + url;
             } else {
-                return 'http://szlogin.com/images/common/no-image.png';
+                return this.baseUrl + '/images/common/no-image.png';
             }
         },
         changeShowCountOper: function changeShowCountOper(e) {
@@ -71484,7 +71499,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 'max_postal': ''
             }),
 
-            previewImage: ''
+            previewImage: '',
+
+            baseUrl: ''
         };
     },
     created: function created() {
@@ -71524,6 +71541,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         getCountries: function getCountries() {
             var _this = this;
 
+            this.baseUrl = window.location.origin;
             axios.post('/api/country/all').then(function (response) {
                 _this.countries = response.data;
             }).catch(function (error) {
@@ -71559,9 +71577,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             axios.get('/api/advertisement/' + this.id).then(function (response) {
                 if (response.data.image) {
-                    _this2.previewImage = 'http://szlogin.com/images/advertisements/' + response.data.image;
+                    _this2.previewImage = _this2.baseUrl + '/images/advertisements/' + response.data.image;
                 } else {
-                    _this2.previewImage = 'http://szlogin.com/images/common/no-image.png';
+                    _this2.previewImage = _this2.baseUrl + '/images/common/no-image.png';
                 }
                 _this2.advertisementForm.name = response.data.name;
                 _this2.advertisementForm.link = response.data.link;

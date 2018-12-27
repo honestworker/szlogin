@@ -195,6 +195,8 @@
                 ntf_id : 0,
                 has_group : 0,
                 deletingNtf : 1,
+                
+                baseUrl : '',
             }
         },
 
@@ -206,6 +208,7 @@
 
         methods: {
             getCountries() {
+                this.baseUrl = window.location.origin;
                 axios.post('/api/country/all').then(response => {
                     this.countries = response.data;
                 }).catch(error => {
@@ -296,7 +299,7 @@
                 if (typeof ntf.images != 'undefined') {
                     if (ntf.images.length > 0) {
                         for (var index = 0; index < ntf.images.length; index++) {
-                            image_html += '<img src="http://szlogin.com/images/notifications/' + ntf.images[index]['url'] + '" class="img-responsive-height img-max-height-100">';
+                            image_html += '<img src="' + his.baseUrl + '/images/notifications/' + ntf.images[index]['url'] + '" class="img-responsive-height img-max-height-100">';
                         }                        
                     }
                 }

@@ -126,6 +126,8 @@
 
                 deleteImageEl: '',
                 deletingImage: 1,
+
+                baseUrl : '',
             }
         },
         created() {
@@ -175,6 +177,7 @@
                 }
             },
             getCountries() {
+                this.baseUrl = window.location.origin;
                 axios.post('/api/country/all').then(response => {
                     this.countries = response.data;
                 }).catch(error => {
@@ -375,9 +378,9 @@
             },
             getNtfImage(image) {
                 if (image.url) {
-                    return 'http://szlogin.com/images/notifications/' + image.url;
+                    return this.baseUrl + '/images/notifications/' + image.url;
                 } else {
-                    return 'http://szlogin.com/images/common/no-image.png';
+                    return his.baseUrl + '/images/common/no-image.png';
                 }
             },
             

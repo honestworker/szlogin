@@ -104,7 +104,9 @@
                     'max_postal' : '',
                 }),
 
-                previewImage: ''
+                previewImage: '',
+
+                baseUrl : '',
             }
         },
         created() {
@@ -140,6 +142,7 @@
                 this.storeAdvertisement();
             },
             getCountries() {
+                this.baseUrl = window.location.origin;
                 axios.post('/api/country/all').then(response => {
                     this.countries = response.data;
                 }).catch(error => {
@@ -174,9 +177,9 @@
                 axios.get('/api/advertisement/' + this.id)
                 .then(response => {
                     if (response.data.image) {
-                        this.previewImage = 'http://szlogin.com/images/advertisements/' + response.data.image;
+                        this.previewImage = this.baseUrl + '/images/advertisements/' + response.data.image;
                     } else {
-                        this.previewImage = 'http://szlogin.com/images/common/no-image.png';
+                        this.previewImage = this.baseUrl + '/images/common/no-image.png';
                     }
                     this.advertisementForm.name = response.data.name;
                     this.advertisementForm.link = response.data.link;

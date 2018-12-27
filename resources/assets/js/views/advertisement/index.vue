@@ -333,6 +333,8 @@
                     click_unique: 1,
                 },
                 isCheckAll : false,
+
+                baseUrl : '',
             }
         },
 
@@ -355,6 +357,7 @@
                 }
             },
             getAds(page) {
+                this.baseUrl = window.location.origin;
                 if (typeof page === 'undefined') {
                     page = 1;
                 }
@@ -457,9 +460,9 @@
             },
             getImageUrl(url) {
                 if (url) {
-                    return 'http://szlogin.com/images/advertisements/' + url;
+                    return this.baseUrl + '/images/advertisements/' + url;
                 } else {
-                    return 'http://szlogin.com/images/common/no-image.png';
+                    return this.baseUrl + '/images/common/no-image.png';
                 }                
             },
             changeShowCountOper(e) {
