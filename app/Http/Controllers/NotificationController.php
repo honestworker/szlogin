@@ -283,7 +283,7 @@ class NotificationController extends Controller
             foreach($request->file('images') as $image)
             {
                 $extension = $image->getClientOriginalExtension();
-                if (!in_array($extension, $this->image_extensions)) {
+                if (!in_array(strtolower($extension), $this->image_extensions)) {
                     return response()->json(['status' => 'fail', 'message' => 'Your images must be jpeg, png, jpg, gif, bmp!', 'error_type' => 'image_type_error'], 422);
                 }
             }
@@ -422,7 +422,7 @@ class NotificationController extends Controller
             foreach($request->file('images') as $image)
             {
                 $extension = $image->getClientOriginalExtension();
-                if (!in_array($extension, $this->image_extensions)) {
+                if (!in_array(strtolower($extension), $this->image_extensions)) {
                     return response()->json(['status' => 'fail', 'message' => 'Your images must be jpeg, png, jpg, gif, bmp!', 'error_type' => 'image_type_error'], 422);
                 }
             }
@@ -705,7 +705,7 @@ class NotificationController extends Controller
             foreach($request->file('images') as $image)
             {
                 $extension = $image->getClientOriginalExtension();
-                if (!in_array($extension, $this->image_extensions)) {
+                if (!in_array(strtolower($extension), $this->image_extensions)) {
                     return response()->json(['status' => 'fail', 'message' => 'Your images must be jpeg, png, jpg, gif, bmp!', 'error_type' => 'image_type_error'], 422);
                 }
             }
@@ -1012,7 +1012,7 @@ class NotificationController extends Controller
             foreach($request->file('images') as $image)
             {
                 $extension = $image->getClientOriginalExtension();
-                if (!in_array($extension, $this->image_extensions)) {
+                if (!in_array(strtolower($extension), $this->image_extensions)) {
                     return response()->json(['status' => 'fail', 'message' => 'Your images must be jpeg, png, jpg!', 'error_type' => 'image_type_error'], 422);
                 }
             }
