@@ -97,10 +97,10 @@
                                 </thead>
                                 <tbody>
                                     <tr v-for="user in users.data">
-                                        <td v-text="getAdminFullName(user)"></td>
+                                        <td v-text="getUserFullName(user)"></td>
                                         <td v-html="getUserGroupID(user)"></td>
-                                        <td v-text="getAdminPhoneNumber(user)"></td>
-                                        <td v-text="getAdminEmail(user)"></td>
+                                        <td v-text="getUserPhoneNumber(user)"></td>
+                                        <td v-text="user.email"></td>
                                         <td v-html="getUserRole(user)"></td>
                                         <td v-html="getUserStatus(user)"></td>
                                         <td>
@@ -243,7 +243,6 @@
                 },
                 deletingUser : 1,
                 groupManagerPermission : 1,
-                administratorPermission : 1,
                 user_id: 0
             }
         },
@@ -291,21 +290,15 @@
                     user_role = user_role + '<span class="label label-success">User</span>';
                 return user_role;
             },
-            getAdminFullName(user){
+            getUserFullName(user){
                 if(user.profile)
                     return user.profile.full_name;
                     
                 return '';
             },
-            getAdminPhoneNumber(user){
+            getUserPhoneNumber(user){
                 if(user.profile)
                     return user.profile.phone_number;
-                    
-                return '';
-            },
-            getAdminEmail(user){
-                if(user.profile)
-                    return user.profile.email;
                     
                 return '';
             },

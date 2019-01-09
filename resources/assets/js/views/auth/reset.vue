@@ -79,7 +79,14 @@
                     this.showMessage = true;
                     this.status = true;
                 }).catch(error => {
-                    toastr['error'](error.response.data.message);
+                    if (error.response.data.status == 'fail') {
+                        toastr['error'](error.response.data.message);
+                    } else {
+                        if (error.message) {
+                            toastr['error']('An unexpected error occurred!');
+                            console.log(error.message);
+                        }
+                    }
                 });
             }
         }

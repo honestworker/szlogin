@@ -91,8 +91,8 @@ let routes = [
                 component: require('./views/auth/login')
             },
             {
-                path: '/password',
-                component: require('./views/auth/password')
+                path: '/forgot_password',
+                component: require('./views/auth/forgot_password')
             },
             {
                 path: '/register',

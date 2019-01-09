@@ -21,7 +21,7 @@
 
                     <div class="form-group m-b-0">
                         <div class="col-sm-12 text-center">
-                            <p>Forgot your password? <router-link to="/password" class="text-info m-l-5"><b>Reset here!</b></router-link></p>
+                            <p>Forgot your password? <router-link to="/forgot_password" class="text-info m-l-5"><b>Reset here!</b></router-link></p>
                             <p>Don't have an account? <router-link to="/signup" class="text-info m-l-5"><b>Sign Up</b></router-link></p>
                         </div>
                     </div>
@@ -60,7 +60,14 @@
                     toastr['success'](response.data.message);
                     this.$router.push('/dashboard');
                 }).catch(error => {
-                    toastr['error'](error.response.data.message);
+                    if (error.response.data.status == 'fail') {
+                        toastr['error'](error.response.data.message);
+                    } else {
+                        if (error.message) {
+                            toastr['error']('An unexpected error occurred!');
+                            console.log(error.message);
+                        }
+                    }
                 });
             }
         }

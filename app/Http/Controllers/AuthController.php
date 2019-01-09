@@ -423,7 +423,7 @@ class AuthController extends Controller
         return $result_uuid6;
     }
 
-    public function forgetPassword(Request $request){
+    public function forgotPassword(Request $request){
         $validation = Validator::make($request->all(), [
             'email' => 'required|email'
         ]);

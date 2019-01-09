@@ -46,11 +46,14 @@
         },
         methods: {
             submit(e){
-                axios.post('/api/auth/password', this.passwordForm).then(response =>  {
+                axios.post('/api/auth/forgot-password', this.passwordForm).then(response =>  {
                     toastr['success'](response.data.message);
                     this.$router.push('/login');
                 }).catch(error => {
-                    toastr['error'](error.response.data.message);
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
                 });
             }
         }

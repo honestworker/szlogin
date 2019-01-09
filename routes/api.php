@@ -22,7 +22,7 @@ Route::group(['prefix' => 'auth'], function () {
     Route::post('/signup_backend','AuthController@signupBackend');
     Route::post('/signup','AuthController@signup');
     Route::get('/activate/{token}','AuthController@activate');
-    Route::post('/forget-password','AuthController@forgetPassword');
+    Route::post('/forgot-password','AuthController@forgotPassword');
     Route::post('/validate-password-reset','AuthController@validatePasswordReset');
     Route::post('/reset-password','AuthController@resetPassword');
     Route::post('/social/token','SocialAuthController@getToken');

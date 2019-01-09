@@ -25377,7 +25377,7 @@ var routes = [{
         path: '/login',
         component: __webpack_require__(156)
     }, {
-        path: '/password',
+        path: '/forgot_password',
         component: __webpack_require__(161)
     }, {
         path: '/register',
@@ -31184,7 +31184,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             },
             deletingUser: 1,
             groupManagerPermission: 1,
-            administratorPermission: 1,
             user_id: 0
         };
     },
@@ -31232,18 +31231,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             if (user.profile.is_admin == 1) user_role = user_role + '<span class="label label-primary">Group</span>';else user_role = user_role + '<span class="label label-success">User</span>';
             return user_role;
         },
-        getAdminFullName: function getAdminFullName(user) {
+        getUserFullName: function getUserFullName(user) {
             if (user.profile) return user.profile.full_name;
 
             return '';
         },
-        getAdminPhoneNumber: function getAdminPhoneNumber(user) {
+        getUserPhoneNumber: function getUserPhoneNumber(user) {
             if (user.profile) return user.profile.phone_number;
-
-            return '';
-        },
-        getAdminEmail: function getAdminEmail(user) {
-            if (user.profile) return user.profile.email;
 
             return '';
         },
@@ -31706,7 +31700,7 @@ var render = function() {
                         return _c("tr", [
                           _c("td", {
                             domProps: {
-                              textContent: _vm._s(_vm.getAdminFullName(user))
+                              textContent: _vm._s(_vm.getUserFullName(user))
                             }
                           }),
                           _vm._v(" "),
@@ -31718,14 +31712,12 @@ var render = function() {
                           _vm._v(" "),
                           _c("td", {
                             domProps: {
-                              textContent: _vm._s(_vm.getAdminPhoneNumber(user))
+                              textContent: _vm._s(_vm.getUserPhoneNumber(user))
                             }
                           }),
                           _vm._v(" "),
                           _c("td", {
-                            domProps: {
-                              textContent: _vm._s(_vm.getAdminEmail(user))
-                            }
+                            domProps: { textContent: _vm._s(user.email) }
                           }),
                           _vm._v(" "),
                           _c("td", {
@@ -74176,7 +74168,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 toastr['success'](response.data.message);
                 _this.$router.push('/dashboard');
             }).catch(function (error) {
-                toastr['error'](error.response.data.message);
+                if (error.response.data.status == 'fail') {
+                    toastr['error'](error.response.data.message);
+                } else {
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
+                }
             });
         }
     }
@@ -74365,7 +74364,7 @@ var render = function() {
                             "router-link",
                             {
                               staticClass: "text-info m-l-5",
-                              attrs: { to: "/password" }
+                              attrs: { to: "/forgot_password" }
                             },
                             [_c("b", [_vm._v("Reset here!")])]
                           )
@@ -74457,7 +74456,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources/assets/js/views/auth/password.vue"
+Component.options.__file = "resources/assets/js/views/auth/forgot_password.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -74466,9 +74465,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-57481b7f", Component.options)
+    hotAPI.createRecord("data-v-71028e03", Component.options)
   } else {
-    hotAPI.reload("data-v-57481b7f", Component.options)
+    hotAPI.reload("data-v-71028e03", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -74537,11 +74536,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         submit: function submit(e) {
             var _this = this;
 
-            axios.post('/api/auth/password', this.passwordForm).then(function (response) {
+            axios.post('/api/auth/forgot-password', this.passwordForm).then(function (response) {
                 toastr['success'](response.data.message);
                 _this.$router.push('/login');
             }).catch(function (error) {
-                toastr['error'](error.response.data.message);
+                if (error.message) {
+                    toastr['error']('An unexpected error occurred!');
+                    console.log(error.message);
+                }
             });
         }
     }
@@ -74679,7 +74681,7 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-57481b7f", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-71028e03", module.exports)
   }
 }
 
@@ -74825,7 +74827,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 toastr['success'](response.data.message);
                 _this.$router.push('/success_register');
             }).catch(function (error) {
-                toastr['error'](error.response.data.message);
+                if (error.response.data.status == 'fail') {
+                    toastr['error'](error.response.data.message);
+                } else {
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
+                }
             });
         }
     }
@@ -75474,7 +75483,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 toastr['success'](response.data.message);
                 _this.$router.push('/success_signup');
             }).catch(function (error) {
-                toastr['error'](error.response.data.message);
+                if (error.response.data.status == 'fail') {
+                    toastr['error'](error.response.data.message);
+                } else {
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
+                }
             });
         }
     }
@@ -75890,7 +75906,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 toastr['success'](response.data.message);
                 _this.$router.push('/success_signup');
             }).catch(function (error) {
-                toastr['error'](error.response.data.message);
+                if (error.response.data.status == 'fail') {
+                    toastr['error'](error.response.data.message);
+                } else {
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
+                }
             });
         }
     }
@@ -76870,7 +76893,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this2.showMessage = true;
                 _this2.status = true;
             }).catch(function (error) {
-                toastr['error'](error.response.data.message);
+                if (error.response.data.status == 'fail') {
+                    toastr['error'](error.response.data.message);
+                } else {
+                    if (error.message) {
+                        toastr['error']('An unexpected error occurred!');
+                        console.log(error.message);
+                    }
+                }
             });
         }
     }

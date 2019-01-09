@@ -82,7 +82,14 @@
                     toastr['success'](response.data.message);
                     this.$router.push('/success_register');
                 }).catch(error => {
-                    toastr['error'](error.response.data.message);
+                    if (error.response.data.status == 'fail') {
+                        toastr['error'](error.response.data.message);
+                    } else {
+                        if (error.message) {
+                            toastr['error']('An unexpected error occurred!');
+                            console.log(error.message);
+                        }
+                    }
                 });
             }
         }

@@ -20,36 +20,36 @@ class GroupController extends Controller
         $groups = \App\Group::whereNotNull('id');
         
         if(request()->has('group_id')) {
-            $groups->where('group_id','like','%'.request('group_id').'%');
+            $groups->where('group_id', 'like', '%' . request('group_id') . '%');
         }
         
         if(request()->has('org_name')) {
-            $groups->where('group_id','like','%'.request('org_name').'%');
+            $groups->where('org_name', 'like', '%' . request('org_name') . '%');
         }
         
         if(request()->has('org_number')) {
-            $groups->where('group_id','like','%'.request('org_number').'%');
+            $groups->where('org_number', 'like', '%' . request('org_number') . '%');
         }
         
         if(request()->has('contact_person')) {
-            $groups->where('group_id','like','%'.request('contact_person').'%');
+            $groups->where('contact_person', 'like', '%' . request('contact_person') . '%');
         }
         
         if(request()->has('email')) {
-            $groups->where('group_id','like','%'.strtolower(request('email')).'%');
+            $groups->where('email', 'like', '%' . request('email') . '%');
         }
         
         if(request()->has('mobile_number')) {
-            $groups->where('group_id','like','%'.request('mobile_number').'%');
+            $groups->where('mobile_number', 'like', '%' . request('mobile_number') . '%');
         }
         
         if(request()->has('country')) {
-            $groups->where('group_id','like','%'.request('country').'%');
+            $groups->where('country', 'like', '%' . request('country') . '%');
         }
         
         if(request()->has('status'))
             $groups->whereStatus(request('status'));
-            
+
         if (request()->has('sortBy') && request()->has('order') )
             $groups->orderBy(request('sortBy'), request('order'));
             

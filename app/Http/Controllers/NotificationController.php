@@ -345,8 +345,7 @@ class NotificationController extends Controller
             $q->where('group_id', $group_id);
         });
         $users->whereNotNull('push_token')->where('push_token', '<>', '')->where('status', '=', 'activated')->where(function($q) {
-            $q->whereIn('deactivated_at', [null, ''])
-              ->orWhere('activated_at', '>', 'deactivated_at');
+            $q->whereNull('deactivated_at')->orWhere('deactivated_at', '')->orWhereRaw('users.activated_at > users.deactivated_at');
         })->where('id', '!=', $user->id);
         $group_users = $users->pluck('id')->toArray();
         
@@ -354,9 +353,8 @@ class NotificationController extends Controller
         $users->whereHas('groups', function($q) use ($group_id) {
             $q->where('group_id', $group_id);
         });
-        $users->where('status', '=', 'activated')->where(function($q) {
-            $q->whereIn('deactivated_at', [null, ''])
-              ->orWhere('activated_at', '>', 'deactivated_at');
+        $users->whereNotNull('push_token')->where('push_token', '<>', '')->where('status', '=', 'activated')->where(function($q) {
+            $q->whereNull('deactivated_at')->orWhere('deactivated_at', '')->orWhereRaw('users.activated_at > users.deactivated_at');
         })->where('id', '!=', $user->id);
         $attached_users = $users->pluck('id')->toArray();
         
@@ -370,14 +368,18 @@ class NotificationController extends Controller
         $users->whereHas('profile', function($q) use ($group_id) {
             $q->where('group_id', $group_id);
         });
-        $users->where('status', '=', 'activated')->where('activated_at', '<=', 'deactivated_at')->where('id', '!=', $user->id);
+        $users->where('status', '=', 'activated')->where(function($q) {
+            $q->whereNotNull('deactivated_at')->where('deactivated_at', '!=', '')->whereRaw('users.activated_at < users.deactivated_at');
+        })->where('id', '!=', $user->id);
         $group_users = $users->pluck('id')->toArray();
         
         $users = \App\User::with('groups');
         $users->whereHas('groups', function($q) use ($group_id) {
             $q->where('group_id', $group_id);
         });
-        $users->where('status', '=', 'activated')->where('activated_at', '<=', 'deactivated_at')->where('id', '!=', $user->id);
+        $users->where('status', '=', 'activated')->where(function($q) {
+            $q->whereNotNull('deactivated_at')->where('deactivated_at', '!=', '')->whereRaw('users.activated_at < users.deactivated_at');
+        })->where('id', '!=', $user->id);
         $attached_users = $users->pluck('id')->toArray();
         
         $diff_users = array_diff($attached_users, $group_users);
@@ -494,8 +496,7 @@ class NotificationController extends Controller
             });
         }
         $users->whereNotNull('push_token')->where('push_token', '<>', '')->where('status', '=', 'activated')->where(function($q) {
-            $q->whereIn('deactivated_at', [null, ''])
-              ->orWhere('activated_at', '>', 'deactivated_at');
+            $q->whereNull('deactivated_at')->orWhere('deactivated_at', '')->orWhereRaw('users.activated_at > users.deactivated_at');
         })->where('id', '!=', $user->id);
         $push_users = $users->pluck('id')->toArray();
         
@@ -513,7 +514,9 @@ class NotificationController extends Controller
                 $q->where('group_id', $group_id);
             });
         }
-        $users->where('status', '=', 'activated')->where('activated_at', '<=', 'deactivated_at')->where('id', '!=', $user->id);
+        $users->where('status', '=', 'activated')->where(function($q) {
+            $q->whereNotNull('deactivated_at')->where('deactivated_at', '!=', '')->whereRaw('users.activated_at < users.deactivated_at');
+        })->where('id', '!=', $user->id);
         $alarm_users = $users->pluck('id')->toArray();        
         
         $users = \App\User::whereIn('id', $alarm_users)->get();
