@@ -46,5 +46,10 @@ There are many Laravel+Vue.js starter kit available but none of them are complet
 
 ## Change Log
 
+2.1 2019/01/16
+	- Display of the Common Notification in Backend.
+  - Display The User as the image, mail and name.
+  - Fix some Filter Bugs.
+
 1.1 2018/12/01
 	Fix Image handle function from mobile app(NotifiactionController)

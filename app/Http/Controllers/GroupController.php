@@ -106,7 +106,7 @@ class GroupController extends Controller
         }
         
         $groups = \App\Group::whereNotNull('id');
-        if ($country != '0')
+        if ($country && $country != 'All')
             $groups->where('country', $country);
         
         return response()->json(['status' => 'success', 'message' => 'Get Group Data successfully!', 'data' => $groups->get(), 'data1' => $country]);

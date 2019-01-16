@@ -10,16 +10,6 @@
             </div>
         </div>
 
-        <div class="row" v-if="has_group != 0">
-            <div class="col-lg-12 col-12">
-                <div class="card">
-                    <div class="card-body">
-                        <router-link to="/notification/0" class="btn btn-success waves-effect waves-light m-t-10">Create Notification</router-link>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <div class="row">
             <div class="col-lg-12 col-12">
                 <div class="card">
@@ -28,26 +18,29 @@
                         <div class="row m-t-20">
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="">Group ID</label>
-                                    <select name="status" class="form-control" v-model="filterNtfForm.group_id" @change="getNtfs">
+                                    <label for="">Type</label>
+                                    <select name="country" class="form-control" v-model="filterNtfForm.type" @change="getNtfs">
                                         <option value="">All</option>
-                                        <option v-for="group_id in group_ids.data" v-bind:value="group_id.group_id">{{group_id.group_id}}</option>
+                                        <option v-for="type in types" v-bind:value="type">{{type}}</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="">Type</label>
-                                    <select name="status" class="form-control" v-model="filterNtfForm.type" @change="getNtfs">
-                                        <option value="">All</option>
-                                        <option v-for="type in ntf_types.data" v-bind:value="type.name">{{type.name}}</option>
-                                    </select>
+                                    <label for="">Group ID</label>
+                                    <input class="form-control" v-model="filterNtfForm.group_id" @change="getNtfs">
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Email</label>
                                     <input class="form-control" v-model="filterNtfForm.email" @change="getNtfs">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="">Contents</label>
+                                    <input class="form-control" v-model="filterNtfForm.contents" @change="getNtfs">
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -60,18 +53,12 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="">Contents</label>
-                                    <input class="form-control" v-model="filterNtfForm.contents" @change="getNtfs">
-                                </div>
-                            </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Sort By</label>
                                     <select name="sortBy" class="form-control" v-model="filterNtfForm.sortBy" @change="getNtfs">
-                                        <option value="group_id">Group ID</option>
                                         <option value="type">Type</option>
+                                        <option value="group_id">Group ID</option>
                                         <option value="email">Email</option>
                                         <option value="contents">Contents</option>
                                         <option value="created_at" selected>Created At</option>
@@ -96,9 +83,9 @@
                             <table class="table" v-if="ntfs.total">
                                 <thead>
                                     <tr>
-                                        <th>Group ID</th>
                                         <th>Type</th>
-                                        <th>Email</th>
+                                        <th>User</th>
+                                        <th>Group ID</th>
                                         <th>Contents</th>
                                         <th>Images</th>
                                         <th>Created At</th>
@@ -108,9 +95,9 @@
                                 </thead>
                                 <tbody>
                                     <tr v-for="ntf in ntfs.data">
-                                        <td v-html="getNtfGroupId(ntf)"></td>
                                         <td v-html="getNtfType(ntf)"></td>
-                                        <td v-html="getNtfEmail(ntf)"></td>
+                                        <td class="user-profile" v-html="getNtfUser(ntf)"></td>
+                                        <td v-text="getNtfGroupID(ntf)"></td>
                                         <td v-text="ntf.contents"></td>
                                         <td v-html="getNtfImages(ntf)"></td>
                                         <td v-text="ntf.created_at"></td>
@@ -183,39 +170,58 @@
         data() {
             return {
                 ntfs: {},
-                ntf_types: {},
-                group_ids : {},
+                groups: {},
+                types: {},
+
                 filterNtfForm: {
                     sortBy : 'created_at',
                     order: 'desc',
-                    group_id: '',
-                    email : '',
                     type : '',
+                    group_id : '',
+                    email : '',
                     contents: '',
                     created_at : '',
                     status: '',
-                    pageLength: 25
+                    pageLength: 100
                 },
+
                 ntf_id : 0,
                 has_group : 0,
                 deletingNtf : 1,
-
+                
                 baseUrl : '',
             }
         },
 
         created() {
-            this.checkHasGroup();
+            this.getGroups();
+            this.getNtfTypes();
             this.getNtfs();
         },
 
         methods: {
-            checkHasGroup() {
-                this.baseUrl = window.location.origin;
-                axios.post('/api/user/group').then(response => {
-                    if (response.data.data) {
-                        this.has_group = 1;
+            getGroups() {
+                axios.post('/api/group/all').then(response => {
+                    this.groups = response.data.data;
+                }).catch(error => {
+                    if (error.response.data.status == 'fail') {
+                        if (error.response.data.type == "token_error") {
+                            toastr['error']('The token is expired! Please refresh and try again!');
+                            this.$router.push('/login');
+                        } else {
+                            toastr['error'](error.response.data.message);
+                        }
+                    } else {
+                        if (error.message) {
+                            toastr['error']('An unexpected error occurred!');
+                            console.log(error.message);
+                        }
                     }
+                });
+            },
+            getNtfTypes() {
+                axios.post('/api/noti_type/commons').then(response => {
+                    this.types = response.data.types;
                 }).catch(error => {
                     if (error.response.data.status == 'fail') {
                         if (error.response.data.type == "token_error") {
@@ -238,7 +244,7 @@
                 }
                 let url = helper.getFilterURL(this.filterNtfForm);
                 axios.get('/api/notification?page=' + page + url).then(response => {
-                    this.ntfs = response.data;                    
+                    this.ntfs = response.data;
                 }).catch(error => {
                     if (error.response.data.status == 'fail') {
                         if (error.response.data.type == "token_error") {
@@ -255,24 +261,46 @@
                     }
                 });
             },
-            
-            getNtfGroupId(ntf) {
-                if (typeof ntf.group != 'undefined') {
-                    return ntf.group.group_id;
+
+            getNtfUser(ntf) {
+                var ntfUserHtml = "";
+                if (typeof ntf.user != 'undefined' && ntf.user !== null && ntf.user !== '') {
+                    ntfUserHtml = "<div class='profile-img'>";
+                    if (typeof ntf.user.simple_profile != 'undefined' && ntf.user.simple_profile !== null && ntf.user.simple_profile !== '') {
+                        if (ntf.user.simple_profile.avatar) {
+                            ntfUserHtml = ntfUserHtml + "<img src='/images/users/" + ntf.user.simple_profile.avatar + "' alt='user'>";
+                        } else {
+                            ntfUserHtml = ntfUserHtml + "<img src='/images/common/no-user.png' alt='user'>";
+                        }
+                        ntfUserHtml = ntfUserHtml + "</div>";
+                        ntfUserHtml = ntfUserHtml + "<p style='margin-bottom: 0px'>" + ntf.user.simple_profile.first_name + " " + ntf.user.simple_profile.family_name + "</p>";
+                        ntfUserHtml = ntfUserHtml + "<p style='margin-bottom: 0px'>" + ntf.user.email + "</p>";
+                    } else {
+                        ntfUserHtml = ntfUserHtml + "<img src='/images/common/no-user.png' alt='user'></div>";
+                    }
                 }
-                return "";
+                return ntfUserHtml;
             },
             getNtfType(ntf) {
-                if (typeof ntf.type != 'undefined') {
-                    return ntf.type.name;
+                if (typeof ntf.type != 'undefined' && ntf.type !== null && ntf.type !== '') {
+                    if (ntf.type.image) {
+                        return "<img src='/images/noti_type/" + ntf.type.image + "' alt='type' class='img-responsive-height img-max-height-60'>";
+                    } else {
+                        return "<img src='/images/common/no-image.png' alt='type' class='img-responsive-height img-max-height-60'>";
+                    }
                 }
-                return "";
             },
-            getNtfEmail(ntf) {
-                if (typeof ntf.user != 'undefined') {
-                    return ntf.user.email;
+            getNtfGroupID(ntf) {
+                if (typeof ntf.group_id != 'undefined' && ntf.group_id !== null && ntf.group_id !== "0" && ntf.group_id !== 0) {
+                    if(this.groups) {
+                        for(var index = 0; index < this.groups.length; index++) {
+                            if (this.groups[index].id == ntf.group_id) {
+                                return this.groups[index].group_id;
+                            }
+                        }
+                    }
                 }
-                return "";
+                return "All";
             },
             getNtfImages(ntf) {
                 var image_html = "";
@@ -280,7 +308,7 @@
                     if (ntf.images.length > 0) {
                         for (var index = 0; index < ntf.images.length; index++) {
                             image_html += '<img src="' + this.baseUrl + '/images/notifications/' + ntf.images[index]['url'] + '" class="img-responsive-height img-max-height-100">';
-                        }
+                        }                        
                     }
                 }
                 return image_html;
@@ -319,7 +347,7 @@
                 this.$router.push('/notification/' + ntf.id);
             },
             toggleNtfStatus(ntf) {
-                axios.post('/api/notificationi/status', {id: ntf.id}).then((response) => {
+                axios.post('/api/notification/status', {id: ntf.id}).then((response) => {
                     this.getNtfs();
                 }).catch(error => {
                     if (error.response.data.status == 'fail') {

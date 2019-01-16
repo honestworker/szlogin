@@ -49,7 +49,7 @@ let routes = [
             },
             {
                 path: '/notification/:id',
-                component: require('./views/notification/edit')
+                component: require('./views/notification/detail')
             },
             {
                 path: '/noti_type',

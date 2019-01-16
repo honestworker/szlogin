@@ -44,6 +44,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::get('/group/{id}','GroupController@show');
     Route::patch('/group/{id}','GroupController@update');
     Route::post('/group/status','GroupController@toggleStatus');
+    Route::get('/group/country/{country}','GroupController@getByCountry');
 
     // Group App only
     Route::post('/group/attach','GroupController@attachGroup');
@@ -102,6 +103,9 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::get('/notification','NotificationController@index');
     Route::post('/notification/status','NotificationController@toggleStatus');
     Route::post('/notification/{id}','NotificationController@getNotification');
+    Route::get('/noti_comment','NotificationController@indexComments');
+    Route::post('/noti_comment/status','NotificationController@toggleCommentStatus');
+    Route::delete('/noti_comment/{id}','NotificationController@deleteCommentBackend');
     Route::delete('/notification/{id}','NotificationController@deleteNotificationBackend');
     Route::post('/update-notification','NotificationController@updateNotificationBackend');
 
@@ -133,6 +137,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::patch('/noti_type/{id}','NotificationController@updateType');
     Route::post('/noti_type/status','NotificationController@toggleTypeStatus');
     Route::post('/noti_type/all','NotificationController@allType');
+    Route::post('/noti_type/commons','NotificationController@allCommonType');
     
     ///// Advertisement
     Route::get('/advertisement','AdvertisementController@index'); // Get All

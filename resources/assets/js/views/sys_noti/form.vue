@@ -21,7 +21,7 @@
                                 <label for="">Group ID</label>
                             </div>
                             <div class="col-md-9 col-lg-9 col-sm-12">
-                                <select name="group_id" class="form-control" v-model="notificationForm.group_id">
+                                <select name="group_id" class="form-control" v-model="notificationForm.group_id" @change="changeGroupID">
                                     <option value="">All</option>
                                     <option v-for="group in groups" v-bind:value="group.id">{{group.group_id}}</option>
                                 </select>
@@ -113,6 +113,7 @@
                 percentCompleted: 0,
 
                 countries: {},
+                all_countries: {},
                 groups: {},
                 notificationForm: new Form({
                     'country' : '',
@@ -179,7 +180,7 @@
             getCountries() {
                 this.baseUrl = window.location.origin;
                 axios.post('/api/country/all').then(response => {
-                    this.countries = response.data;
+                    this.countries = this.all_countries = response.data;
                 }).catch(error => {
                     if (error.response.data.status == 'fail') {
                         if (error.response.data.type == "token_error") {
@@ -221,7 +222,7 @@
                     if (!country) {
                         country = "All";
                     }
-                    axios.get('/api/country_group/' + country).then(response => {
+                    axios.get('/api/group/country/' + country).then(response => {
                         this.groups = response.data.data;
                     }).catch(error => {
                         if (error.response.data.status == 'fail') {
@@ -238,6 +239,18 @@
                             }
                         }
                     });
+                }
+            },
+            changeGroupID(e) {
+                if(e.target.options.selectedIndex > -1) {
+                    var group_id = e.target.options[e.target.options.selectedIndex].value;
+                    if (group_id) {
+                        for (var index = 0; index < this.groups.length; index++) {
+                            if (group_id == this.groups[index].id) {
+                                this.notificationForm.country = this.groups[index].country;
+                            }
+                        }
+                    }
                 }
             },
             getNotification() {

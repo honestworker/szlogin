@@ -190,7 +190,7 @@
                     contents: '',
                     created_at : '',
                     status: '',
-                    pageLength: 25
+                    pageLength: 100
                 },
                 ntf_id : 0,
                 has_group : 0,
@@ -252,7 +252,7 @@
                 }
                 let url = helper.getFilterURL(this.filterNtfForm);
                 axios.get('/api/sysnoti?page=' + page + url).then(response => {
-                    this.ntfs = response.data;                    
+                    this.ntfs = response.data;
                 }).catch(error => {
                     if (error.response.data.status == 'fail') {
                         if (error.response.data.type == "token_error") {
@@ -299,8 +299,8 @@
                 if (typeof ntf.images != 'undefined') {
                     if (ntf.images.length > 0) {
                         for (var index = 0; index < ntf.images.length; index++) {
-                            image_html += '<img src="' + his.baseUrl + '/images/notifications/' + ntf.images[index]['url'] + '" class="img-responsive-height img-max-height-100">';
-                        }                        
+                            image_html += '<img src="' + this.baseUrl + '/images/notifications/' + ntf.images[index]['url'] + '" class="img-responsive-height img-max-height-100">';
+                        }
                     }
                 }
                 return image_html;

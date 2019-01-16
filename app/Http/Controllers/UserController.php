@@ -787,7 +787,7 @@ class UserController extends Controller
         for ($month_index = 1; $month_index <= 12; $month_index++) {
             $visitor = \App\Visitor::where('year', '=', $year - 1)->where('month', '=', $month_index)->first();
             if ($visitor) {
-                $visitor_infor1[] = $visitor->value;
+                $visitor_infor1[] = $visitor->value + 0;
             } else {
                 $visitor_infor1[] = 0;
             }
@@ -795,7 +795,7 @@ class UserController extends Controller
         for ($month_index = 1; $month_index <= 12; $month_index++) {
             $visitor = \App\Visitor::where('year', '=', $year)->where('month', '=', $month_index)->first();
             if ($visitor) {
-                $visitor_infor2[] = $visitor->value;
+                $visitor_infor2[] = $visitor->value + 0;
             } else {
                 $visitor_infor2[] = 0;
             }
@@ -806,6 +806,6 @@ class UserController extends Controller
         //$activated_users = count($users->whereStatus('activated')->where('activated_at', '>=',  $month_before)->get());
         $activated_users = count($users->where('backend', '=', '0')->where('activated_at', '>=',  $month_before)->get());
         
-        return response()->json(['status' => 'success', 'message' => 'User and Visitor Overview!', 'data' => compact('total', 'infor', 'activated_users', 'visitor_infor', 'visitors_infor')]);
+        return response()->json(['status' => 'success', 'message' => 'User and Visitor Overview!', 'data' => compact('total', 'infor', 'year',  'activated_users', 'visitor_infor', 'visitors_infor')]);
     }
 }

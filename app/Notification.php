@@ -41,6 +41,6 @@ class Notification extends Eloquent {
 
     public function type()
     {
-        return $this->belongsTo('App\NotificationType', 'type', 'id')->select('id', 'name');
+        return $this->belongsTo('App\NotificationType', 'type', 'id')->select('id', 'name', 'image');
     }
 }

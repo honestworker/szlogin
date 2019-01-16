@@ -156,6 +156,7 @@ CREATE TABLE `notification_type` (
   `id` int(11) NOT NULL,
   `name` varchar(512) NOT NULL,
   `trans_name` varchar(512) NOT NULL,
+  `image` varchar(512) NOT NULL,
   `status` int(11) NOT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL
@@ -165,12 +166,12 @@ CREATE TABLE `notification_type` (
 -- Dumping data for table `notification_type`
 --
 
-INSERT INTO `notification_type` (`id`, `name`, `trans_name`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Burglary', 'Inbrott', 1, '2018-10-05 02:31:12', '2018-10-05 02:37:40'),
-(2, 'Fire and Smoke', 'Brand och Rök', 1, '2018-10-05 02:31:47', '2018-10-05 02:37:43'),
-(3, 'Suspicious Activity', 'Misstänkt Aktivitet', 1, '2018-10-05 02:32:03', '2018-10-05 02:37:47'),
-(4, 'Other', 'Övrigt', 1, '2018-10-05 02:32:14', '2018-10-05 02:37:51'),
-(5, 'Message from the Safety Zone team', 'Meddelande från Safety Zone teamet', 1, '2018-12-05 02:32:14', '2018-12-05 02:32:51');
+INSERT INTO `notification_type` (`id`, `name`, `trans_name`, `image`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'Burglary', 'Inbrott', 'burglary.png', 1, '2018-10-05 02:31:12', '2018-10-05 02:37:40'),
+(2, 'Fire and Smoke', 'Brand och Rök', 'fire.png', 1, '2018-10-05 02:31:47', '2018-10-05 02:37:43'),
+(3, 'Suspicious Activity', 'Misstänkt Aktivitet', 'suspicious.png', 1, '2018-10-05 02:32:03', '2018-10-05 02:37:47'),
+(4, 'Other', 'Övrigt', 'help112.png', 1, '2018-10-05 02:32:14', '2018-10-05 02:37:51'),
+(5, 'Message from the Safety Zone team', 'Meddelande från Safety Zone teamet', 'system.png', 1, '2018-12-05 02:32:14', '2018-12-05 02:32:51');
 
 -- --------------------------------------------------------
 

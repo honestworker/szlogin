@@ -341,6 +341,7 @@
                 axios.get('/api/user/overview').then(response =>  {
                     this.users_total = response.data.data.total;
                     this.users_infor = response.data.data.infor;
+                    this.year = response.data.data.year;
                     this.activated_users = response.data.data.activated_users;
                     this.users_visitor_infor = response.data.data.visitor_infor;
                     this.users_visitors_infor = response.data.data.visitors_infor;
@@ -352,7 +353,7 @@
                     this.$refs.userChart.drawChart();
 
                     this.visitorChartData[0] = ["Year", (this.year - 1) + "", this.year];
-                    for (var index = 1; index <= this.groups_infor.length; index++){
+                    for (var index = 1; index <= this.users_visitors_infor[0].length; index++){
                         this.visitorChartData[index] = [this.monthNames[index - 1], this.users_visitors_infor[0][index - 1], this.users_visitors_infor[1][index - 1]];
                     }
                     this.$refs.visitorChart.drawChart();
