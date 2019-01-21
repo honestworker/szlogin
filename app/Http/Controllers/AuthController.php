@@ -32,8 +32,8 @@ class AuthController extends Controller
         } catch (JWTException $e) {
             return response()->json(['status' => 'fail', 'message' => 'This is something wrong. Please try again!'], 500);
         }
-        
-        $user = \App\User::whereEmail(strtolower(request('email')))->where('backend', '=', 1)->first();
+        $email = strtolower(trim(request('email')));
+        $user = \App\User::whereEmail($email)->where('backend', '=', 1)->first();
         if (!$user)
             return response()->json(['status' => 'fail', 'message' => 'You do not have any administrator account. Please sign up.'], 422);
             
@@ -83,8 +83,9 @@ class AuthController extends Controller
         } catch (JWTException $e) {
             return response()->json(['status' => 'fail', 'message' => 'This is something wrong. Please try again!', 'error_type' => 'token_error'], 500);
         }
-        
-        $user = \App\User::whereEmail(strtolower(request('email')))->where('backend', '=', 0)->first();
+
+        $email = strtolower(trim(request('email')));
+        $user = \App\User::whereEmail($email)->where('backend', '=', 0)->first();
         if (!$user)
             return response()->json(['status' => 'fail', 'message' => 'You have not registed. Please sign up and try to login again.', 'error_type' => 'no_user'], 422);
             
@@ -104,7 +105,7 @@ class AuthController extends Controller
         else
             $manager = false;
             
-        $user = \App\User::with('profile')->whereEmail(strtolower(request('email')))->where('backend', '=', 0)->select('id', 'email')->get();
+        $user = \App\User::with('profile')->whereEmail($email)->where('backend', '=', 0)->select('id', 'email')->get();
         
         return response()->json(['status' => 'success', 'message' => 'You are successfully logged in!', 'token' => $token, 'user' => $user], 200);
     }
@@ -176,13 +177,14 @@ class AuthController extends Controller
         
         if($validation->fails())
             return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'incorrect'], 422);
-            
-        $user = \App\User::whereEmail(strtolower(request('email')))->first();
+        
+        $email = strtolower(trim(request('email')));
+        $user = \App\User::whereEmail($email)->first();
         if($user)
             return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'email_registered'], 422);
             
         $user = \App\User::create([
-            'email' => strtolower(request('email')),
+            'email' => $email,
             'status' => 'pending',
         ]);
         
@@ -214,8 +216,9 @@ class AuthController extends Controller
         
         if($validation->fails())
             return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
-            
-        $user = \App\User::whereEmail(strtolower(request('email')))->first();
+        
+        $email = strtolower(trim(request('email')));
+        $user = \App\User::whereEmail($email)->first();
         if (!$user) {
             return response()->json(['status' => 'fail', 'message' => 'Your email does not exist! Please first register your email!', 'error_type' => 'no_user'], 422);
         }
@@ -288,8 +291,9 @@ class AuthController extends Controller
         
         if($validation->fails())
             return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
-            
-        $user = \App\User::whereEmail(strtolower(request('email')))->where('backend', '=', 0)->first();
+        
+        $email = strtolower(trim(request('email')));
+        $user = \App\User::whereEmail($email)->where('backend', '=', 0)->first();
         if ($user) {
             return response()->json(['status' => 'fail', 'message' => 'Your email already have registed! Please try with other email again.', 'error_type' => 'email_exist'], 422);
         }
@@ -301,7 +305,7 @@ class AuthController extends Controller
         }
         
         $user = \App\User::create([
-            'email' => strtolower(request('email')),
+            'email' => $email,
             'status' => 'activated',
             'password' => bcrypt(request('password'))
         ]);
@@ -341,14 +345,15 @@ class AuthController extends Controller
         
         if($validation->fails())
             return response()->json(['status' => 'fail', 'message' => $validation->messages()->first()], 422);
-            
-        $user = \App\User::whereEmail(strtolower(request('email')))->where('backend', '=', 1)->first();
+        
+        $email = strtolower(trim(request('email')));
+        $user = \App\User::whereEmail($email)->where('backend', '=', 1)->first();
         if ($user) {
             return response()->json(['status' => 'fail', 'message' => 'Your email already registerd! Please try again!'], 422);
         }
-                
+        
         $user = \App\User::create([
-            'email' => strtolower(request('email')),
+            'email' => $email,
             'status' => 'pending',
             'backend' => 1,
         ]);
@@ -415,9 +420,9 @@ class AuthController extends Controller
         return response()->json(['message' => 'Your account has been activated!']);
     }
 
-    private function generateUuid6() {
+    private function generateUuid($count) {
         $result_uuid6 = '';
-        for ($no = 0; $no < 6; $no++) {
+        for ($no = 0; $no < $count; $no++) {
             $result_uuid6 = $result_uuid6 . mt_rand(0, 9);
         }
         return $result_uuid6;
@@ -430,18 +435,26 @@ class AuthController extends Controller
         
         if($validation->fails())
             return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
-            
-        $user = \App\User::whereEmail(strtolower(request('email')))->first();
+        
+        $email = strtolower(trim(request('email')));
+        $user = \App\User::whereEmail($email)->first();
         if(!$user)
             return response()->json(['status' => 'fail', 'message' => 'We couldn\'t found any user with this email. Please try again!', 'error_type' => 'no_user'], 422);
-            
-        $code = $this->generateUuid6();
-        $password_reset = \DB::table('password_resets')->where('email','=',strtolower(request('email')))->first();
+        
+        if($user->status != 'activated')
+            return response()->json(['status' => 'fail', 'message' => 'We couldn\'t found any user with this email. Please try again!', 'error_type' => 'no_activated'], 422);
+        
+        if($user->backend) {
+            $code = $this->generateUuid(100);
+        } else {
+            $code = $this->generateUuid(6);
+        }
+        $password_reset = \DB::table('password_resets')->where('email','=',$email)->first();
         if($password_reset) {
-            \DB::table('password_resets')->where('email','=',strtolower(request('email')))->update(array('code' => $code, 'created_at' => date("Y-m-d H:i:s")));
+            \DB::table('password_resets')->where('email','=',$email)->update(array('code' => $code, 'created_at' => date("Y-m-d H:i:s")));
         } else {
             \DB::table('password_resets')->insert([
-                'email' => strtolower(request('email')),
+                'email' => $email,
                 'code' => $code,
                 'created_at' => date("Y-m-d H:i:s"),
             ]);
@@ -451,6 +464,21 @@ class AuthController extends Controller
         
         return response()->json(['status' => 'success', 'message' => 'We have sent the verification code to your email. Please check your inbox!']);
     }
+    
+    public function validatePasswordResetBackend(Request $request) {
+        $validation = Validator::make($request->all(), [
+            'token' => 'required',
+        ]);
+
+        $validate_password_request = \DB::table('password_resets')->where('code','=', request('token'))->first();        
+        if(!$validate_password_request)
+            return response()->json(['status' => 'fail', 'message' => 'Invalid password reset code!', 'error_type' => 'invalid_code'], 422);
+        
+        if(date("Y-m-d H:i:s", strtotime($validate_password_request->created_at . "+30 minutes")) < date('Y-m-d H:i:s'))
+            return response()->json(['status' => 'fail', 'message' => 'Password reset code is expired. Please request reset password again!', 'error_type' => 'code_expired'], 422);
+            
+        return response()->json(['status' => 'success', 'message' => 'Please reset the password!']);
+    }
 
     public function validatePasswordReset(Request $request) {
         $validation = Validator::make($request->all(), [
@@ -458,12 +486,13 @@ class AuthController extends Controller
             'code' => 'required',
             //'password_confirmation' => 'required|same:password'
         ]);
-        
-        $validate_password_request = \DB::table('password_resets')->where('email','=', strtolower(request('email')))->first();
+
+        $email = strtolower(trim(request('email')));
+        $validate_password_request = \DB::table('password_resets')->where('email','=', $email)->first();
         if(!$validate_password_request)
             return response()->json(['status' => 'fail', 'message' => 'Invalid email!', 'error_type' => 'no_user'], 422);
             
-        $validate_password_request = \DB::table('password_resets')->where('email','=', strtolower(request('email')))->where('code','=', request('code'))->first();        
+        $validate_password_request = \DB::table('password_resets')->where('email','=', $email)->where('code','=', request('code'))->first();        
         if(!$validate_password_request)
             return response()->json(['status' => 'fail', 'message' => 'Invalid password reset code!', 'error_type' => 'invalid_code'], 422);
         
@@ -485,18 +514,53 @@ class AuthController extends Controller
         
         if($validation->fails())
             return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
-            
-        $user = \App\User::whereEmail(strtolower(request('email')))->first();
+        
+        $email = strtolower(trim(request('email')));
+        $user = \App\User::whereEmail($email)->first();
         if(!$user)
             return response()->json(['status' => 'fail', 'message' => 'We couldn\'t found any user with this email. Please try again!', 'error_type' => 'no_user'], 422);
             
-        $validate_password_request = \DB::table('password_resets')->where('email','=',strtolower(request('email')))->where('code','=', request('code'))->first();
+        $validate_password_request = \DB::table('password_resets')->where('email','=',$email)->where('code','=', request('code'))->first();
         if(!$validate_password_request)
             return response()->json(['status' => 'fail', 'message' => 'Invalid password reset code!', 'error_type' => 'invalid_code'], 422);
             
         if(date("Y-m-d H:i:s", strtotime($validate_password_request->created_at . "+30 minutes")) < date('Y-m-d H:i:s'))
             return response()->json(['status' => 'fail', 'message' => 'Password reset code is expired. Please request reset password again!', 'error_type' => 'code_expired'], 422);
             
+        $user->password = bcrypt(request('password'));
+        $user->save();
+        
+        $user->notify(new PasswordResetted($user, $user->Profile->country, $user->Profile->first_name));
+        
+        return response()->json(['status' => 'success', 'message' => 'Your password has been changed successfully!. Please login again!']);
+    }
+
+    public function resetPasswordBackend(Request $request){
+        if(env('IS_DEMO'))
+            return response()->json(['message' => 'You are not allowed to perform this action in this mode.'], 422);
+            
+        $validation = Validator::make($request->all(), [
+            'email' => 'required|email',
+            'token' => 'required',
+            'password' => 'required|min:6',
+            'password_confirmation' => 'required|same:password'
+        ]);
+        
+        if($validation->fails())
+            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
+        
+        $email = strtolower(trim(request('email')));
+        $user = \App\User::whereEmail($email)->first();
+        if(!$user)
+            return response()->json(['status' => 'fail', 'message' => 'We couldn\'t found any user with this email. Please try again!', 'error_type' => 'no_user'], 422);
+            
+        $validate_password_request = \DB::table('password_resets')->where('email','=',$email)->where('code','=', request('token'))->first();
+        if(!$validate_password_request)
+            return response()->json(['status' => 'fail', 'message' => 'Invalid password reset code!', 'error_type' => 'invalid_code'], 422);
+            
+        if(date("Y-m-d H:i:s", strtotime($validate_password_request->created_at . "+30 minutes")) < date('Y-m-d H:i:s'))
+            return response()->json(['status' => 'fail', 'message' => 'Password reset code is expired. Please request reset password again!', 'error_type' => 'code_expired'], 422);
+        
         $user->password = bcrypt(request('password'));
         $user->save();
         

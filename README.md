@@ -46,6 +46,9 @@ There are many Laravel+Vue.js starter kit available but none of them are complet
 
 ## Change Log
 
+2.1.1 2019/01/20
+	- Fix Forgot Password
+  
 2.1 2019/01/16
 	- Display of the Common Notification in Backend.
   - Display The User as the image, mail and name.

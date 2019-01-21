@@ -52,7 +52,7 @@ class PasswordResetted extends Notification
         if (strtolower($this->country) == 'sweden') {
             return (new MailMessage)
                 ->from(config('mail.username'), config('app.name'))
-                ->subject('Ditt lösenord har återställts!')
+                ->subject('Ditt lösenord har återställts framgångsrikt!')
                 ->markdown('vendor.mail.message', [
                     'country' => $this->country,
                     'name' => $this->name,
@@ -64,18 +64,18 @@ class PasswordResetted extends Notification
         } else {
             return (new MailMessage)
                 ->from(config('mail.username'), config('app.name'))
-                ->subject('our password has been reset successfully!')
+                ->subject('Your password has been reset successfully!')
                 ->markdown('vendor.mail.message', [
                     'country' => $this->country,
                     'name' => $this->name,
                     'contents' => [
-                        'our password has been reset successfully!',
+                        'Your password has been reset successfully!',
                         'Thank you!',
                     ]
                 ]);
         }
     }
-
+    
     /**
      * Get the array representation of the notification.
      *

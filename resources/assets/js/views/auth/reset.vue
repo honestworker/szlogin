@@ -51,7 +51,7 @@
                     email: '',
                     password: '',
                     password_confirmation: '',
-                    token:this.$route.params.token,
+                    token: this.$route.params.token,
                 },
                 message: '',
                 status: true,
@@ -62,8 +62,8 @@
             GuestFooter
         },
         mounted(){
-            axios.post('/api/auth/validate-password-reset',{
-                token: this.reset.token
+            axios.post('/api/auth/validate-resetpassword',{
+                token: this.resetForm.token
             }).then(response => {
                 this.showMessage = false;
             }).catch(error => {

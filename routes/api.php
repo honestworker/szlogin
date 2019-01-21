@@ -14,21 +14,25 @@ use Illuminate\Http\Request;
 */
 
 Route::group(['prefix' => 'auth'], function () {
-    Route::post('/login','AuthController@authenticate');
-    Route::post('/login_backend','AuthController@login');
-    Route::post('/logout','AuthController@logout');
-    Route::post('/check','AuthController@check');
-    //Route::post('/register','AuthController@register');
     Route::post('/signup_backend','AuthController@signupBackend');
-    Route::post('/signup','AuthController@signup');
+    Route::post('/login_backend','AuthController@login');
+    Route::post('/check','AuthController@check');
     Route::get('/activate/{token}','AuthController@activate');
+    Route::post('/logout','AuthController@logout');
+
     Route::post('/forgot-password','AuthController@forgotPassword');
-    Route::post('/validate-password-reset','AuthController@validatePasswordReset');
-    Route::post('/reset-password','AuthController@resetPassword');
-    Route::post('/social/token','SocialAuthController@getToken');
-    
-    // app only
+    Route::post('/reset','AuthController@resetPasswordBackend');    
+    Route::post('/validate-resetpassword','AuthController@validatePasswordResetBackend');
+
+    //Route::post('/register','AuthController@register');
+    //Route::post('/social/token','SocialAuthController@getToken');
+
+    // Mobile APP only
+    Route::post('/signup','AuthController@signup');
+    Route::post('/login','AuthController@authenticate');
     Route::post('/country/all','CountryController@all');
+    Route::post('/forget-password','AuthController@forgotPassword');
+    Route::post('/validate-password-reset','AuthController@validatePasswordReset');
 });
 
 Route::group(['middleware' => ['jwt.auth']], function () {
@@ -46,7 +50,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::post('/group/status','GroupController@toggleStatus');
     Route::get('/group/country/{country}','GroupController@getByCountry');
 
-    // Group App only
+    // Mobile APP only (Group)
     Route::post('/group/attach','GroupController@attachGroup');
     Route::post('/group/delete-attach','GroupController@deleteAttachGroup');
     Route::post('/group/attached','GroupController@getAttachedGroups');
@@ -79,10 +83,8 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::post('/user/admin/{id}','UserController@makeAdministrator');
     Route::delete('/user/admin/{id}','UserController@disableAdministrator');
     
-    // User app only
+    // Mobile APP only (User)
     Route::post('/get-group-users','UserController@getGroupUsers');
-    
-    // User app only
     Route::post('/profile', 'UserController@profile');
     Route::post('/change-password','UserController@changePassword');
     Route::post('/change-avatar','UserController@updateAvatar');
@@ -93,10 +95,8 @@ Route::group(['middleware' => ['jwt.auth']], function () {
 
     Route::post('/logout','AuthController@logout');
 
-    // User Push Notification app only
+    // Mobile APP only (Push Notification)
     Route::post('/push_token','UserController@savePushToken');
-
-    // User Push Notification Effect app only
     Route::post('/push_effect','UserController@setPushEffect');
 
     ///// Notification
@@ -109,7 +109,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::delete('/notification/{id}','NotificationController@deleteNotificationBackend');
     Route::post('/update-notification','NotificationController@updateNotificationBackend');
 
-    // Notification app only
+    // Mobile APP only (Notification)
     Route::post('/create-notification','NotificationController@createNotification');
     Route::post('/get-notification','NotificationController@getNotifications');
     Route::post('/get-notification-detail','NotificationController@getNotificationDetail');
@@ -119,6 +119,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::post('/notification-image-delete','NotificationController@deleteNotificationImage');
     Route::post('/comment-delete','NotificationController@deleteComment');
     Route::post('/comment-image-delete','NotificationController@deleteCommentImage');
+    Route::post('/create-comment','NotificationController@createComment');
 
     Route::post('/get-alarms','NotificationController@getAlarms');
 
@@ -126,9 +127,6 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::get('/sysnoti','NotificationController@indexSys');
     Route::post('/create-sysnoti','NotificationController@createSysNotification');
     
-    // Comment app only
-    Route::post('/create-comment','NotificationController@createComment');
-
     ///// Notification Type
     Route::post('/noti_type','NotificationController@storeType');
     Route::get('/noti_type','NotificationController@indexType');
@@ -150,7 +148,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::post('/advertisement/infor','AdvertisementController@infor');
     Route::post('/advertisement/overview','AdvertisementController@overview');
 
-    // Advertisement app only
+    // Mobile APP only (Advertisement)
     Route::post('/advertisement/get','AdvertisementController@get');
     Route::post('/advertisement/click','AdvertisementController@click');
 });
