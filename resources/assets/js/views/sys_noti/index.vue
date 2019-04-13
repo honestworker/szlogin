@@ -37,8 +37,14 @@
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="">Group ID</label>
-                                    <input class="form-control" v-model="filterNtfForm.group_id" @change="getNtfs">
+                                    <label for="">Group Name</label>
+                                    <input class="form-control" v-model="filterNtfForm.group_name" @change="getNtfs">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="">Full Name</label>
+                                    <input class="form-control" v-model="filterNtfForm.full_name" @change="getNtfs">
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -93,7 +99,7 @@
                                 <thead>
                                     <tr>
                                         <th>Country</th>
-                                        <th>Group ID</th>
+                                        <th>Group Name</th>
                                         <th>Email</th>
                                         <th>Contents</th>
                                         <th>Images</th>
@@ -105,9 +111,9 @@
                                 <tbody>
                                     <tr v-for="ntf in ntfs.data">
                                         <td v-text="getNtfCountry(ntf)"></td>
-                                        <td v-text="getNtfGroupID(ntf)"></td>
+                                        <td v-text="getNtfGroupName(ntf)"></td>
                                         <td v-html="getNtfEmail(ntf)"></td>
-                                        <td v-text="ntf.contents"></td>
+                                        <td v-html="getNtfContents(ntf)"></td>
                                         <td v-html="getNtfImages(ntf)"></td>
                                         <td v-text="ntf.created_at"></td>
                                         <td v-html="getNtfStatus(ntf)"></td>
@@ -173,6 +179,7 @@
     import pagination from 'laravel-vue-pagination'
     import helper from '../../services/helper'
     import ClickConfirm from 'click-confirm'
+    import { stringToEmoticon } from 'emoticons-converter'
 
     export default {
         components : { pagination, ClickConfirm },
@@ -185,7 +192,8 @@
                     sortBy : 'created_at',
                     order: 'desc',
                     country : '',
-                    group_id : '',
+                    group_name : '',
+                    full_name : '',
                     email : '',
                     contents: '',
                     created_at : '',
@@ -209,7 +217,7 @@
         methods: {
             getCountries() {
                 this.baseUrl = window.location.origin;
-                axios.post('/api/country/all').then(response => {
+                axios.get('/admin/countries').then(response => {
                     this.countries = response.data;
                 }).catch(error => {
                     if (error.response.data.status == 'fail') {
@@ -228,7 +236,7 @@
                 });
             },
             getGroups() {
-                axios.post('/api/group/all').then(response => {
+                axios.get('/admin/groups').then(response => {
                     this.groups = response.data.data;
                 }).catch(error => {
                     if (error.response.data.status == 'fail') {
@@ -251,7 +259,7 @@
                     page = 1;
                 }
                 let url = helper.getFilterURL(this.filterNtfForm);
-                axios.get('/api/sysnoti?page=' + page + url).then(response => {
+                axios.get('/admin/sysnoti?page=' + page + url).then(response => {
                     this.ntfs = response.data;
                 }).catch(error => {
                     if (error.response.data.status == 'fail') {
@@ -276,21 +284,21 @@
                 }
                 return "All";
             },
-            getNtfGroupID(ntf) {
-                if (typeof ntf.group_id != 'undefined' && ntf.group_id !== null && ntf.group_id !== "0" && ntf.group_id !== 0) {
-                    if(this.groups) {
-                        for(var index = 0; index < this.groups.length; index++) {
-                            if (this.groups[index].id == ntf.group_id) {
-                                return this.groups[index].group_id;
-                            }
-                        }
-                    }
+            getNtfGroupName(ntf) {
+                if (typeof ntf.group != 'undefined' && ntf.group !== null && ntf.group !== '') {
+                    return ntf.group.name;
                 }
                 return "All";
             },
             getNtfEmail(ntf) {
                 if (typeof ntf.user != 'undefined') {
                     return ntf.user.email;
+                }
+                return "";
+            },
+            getNtfContents(ntf) {
+                if (typeof ntf.contents != 'undefined' && ntf.contents !== null && ntf.contents !== '') {
+                    return stringToEmoticon(ntf.contents);
                 }
                 return "";
             },
@@ -314,7 +322,7 @@
                 $('#modal-delete-ntf').modal('show');
             },
             deleteNtf() {
-                axios.delete('/api/notification/' + this.ntf_id).then(response => {
+                axios.delete('/admin/notification/' + this.ntf_id).then(response => {
                     $('#modal-delete-ntf').modal('hide');
                     toastr['success'](response.data.message);
                     this.getNtfs();
@@ -339,7 +347,7 @@
                 this.$router.push('/sys_noti/' + ntf.id);
             },
             toggleNtfStatus(ntf) {
-                axios.post('/api/notification/status', {id: ntf.id}).then((response) => {
+                axios.post('/admin/notification/status', {id: ntf.id}).then((response) => {
                     this.getNtfs();
                 }).catch(error => {
                     if (error.response.data.status == 'fail') {

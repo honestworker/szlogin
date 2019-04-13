@@ -2,52 +2,54 @@
     <div class="m-t-20">
         <div class="row">
             <div class="form-group col-md-6 col-lg-6 col-sm-12">
+                <h5 class="card-title">User Information</h5>
                 <div class="row">
-                    <div class="col-md-3 col-lg-3 col-sm-12">
-                        <label for="type">Type</label>
+                    <div class="col-md-3 col-lg-3 col-sm-12 text-right">
+                        <label><strong>Full Name: </strong></label>
                     </div>
                     <div class="col-md-9 col-lg-9 col-sm-12">
-                        <span v-text="type"></span>
+                        <label v-text="full_name"></label>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-3 col-lg-3 col-sm-12">
-                        <label for="">Group ID</label>
+                    <div class="col-md-3 col-lg-3 col-sm-12 text-right">
+                        <label><strong>Email: </strong></label>
                     </div>
                     <div class="col-md-9 col-lg-9 col-sm-12">
-                        <span v-text="group_id"></span>
+                        <label v-text="email"></label>
+                    </div>
+                </div>
+                <h5 class="card-title">Notification Information</h5>
+                <div class="row">
+                    <div class="col-md-3 col-lg-3 col-sm-12 text-right">
+                        <label><strong>Type: </strong></label>
+                    </div>
+                    <div class="col-md-9 col-lg-9 col-sm-12">
+                        <label v-text="type"></label>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-3 col-lg-3 col-sm-12">
-                        <label for="">User Full Name</label>
+                    <div class="col-md-3 col-lg-3 col-sm-12 text-right">
+                        <label><strong>Group Name: </strong></label>
                     </div>
                     <div class="col-md-9 col-lg-9 col-sm-12">
-                        <span v-text="full_name"></span>
+                        <label v-text="group_name"></label>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-3 col-lg-3 col-sm-12">
-                        <label for="">Email</label>
-                    </div>
-                    <div class="col-md-9 col-lg-9 col-sm-12">
-                        <span v-text="email"></span>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-3 col-lg-3 col-sm-12">
-                        <label for="">Contents</label>
+                    <div class="col-md-3 col-lg-3 col-sm-12 text-right">
+                        <label><strong>Contents: </strong></label>
                     </div>
                     <div class="col-md-9 col-lg-9 col-sm-12">
                         <textarea v-model="contents" class="form-control" rows="5" readonly></textarea>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-3 col-lg-3 col-sm-12">
-                        <label for="">Created At</label>
+                    <div class="col-md-3 col-lg-3 col-sm-12 text-right">
+                        <label><strong>Created At: </strong></label>
                     </div>
                     <div class="col-md-9 col-lg-9 col-sm-12">
-                        <span v-text="created_at"></span>
+                        <label v-text="created_at"></label>
                     </div>
                     <br><br>
                     <div class="col-md-12">
@@ -56,7 +58,7 @@
                 </div>
             </div>
             <div class="form-group col-md-6 col-lg-6 col-sm-12">
-                <label for="logo" class="control-label">Images</label>
+                <h4 class="card-title">Images</h4>
                 <br><br>
                 <div class="col-md-12">
                     <div class="row">
@@ -73,6 +75,12 @@
                     <div class="card-body">
                         <h4 class="card-title">Filter Comment</h4>
                         <div class="row m-t-20">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="">Full Name</label>
+                                    <input class="form-control" v-model="filterCommentForm.full_name" @change="getComments">
+                                </div>
+                            </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Email</label>
@@ -102,6 +110,7 @@
                                         <option value="email">Email</option>
                                         <option value="contents">Contents</option>
                                         <option value="created_at" selected>Created At</option>
+                                        <option value="updated_at" selected>Updated At</option>
                                     </select>
                                 </div>
                             </div>
@@ -127,6 +136,7 @@
                                         <th>Contents</th>
                                         <th>Images</th>
                                         <th>Created At</th>
+                                        <th>Updated At</th>
                                         <th>Status</th>
                                         <th style="width:180px;">Action</th>
                                     </tr>
@@ -134,9 +144,10 @@
                                 <tbody>
                                     <tr v-for="comment in comments.data">
                                         <td class="user-profile" v-html="getCommentUser(comment)"></td>
-                                        <td v-text="comment.contents"></td>
+                                        <td v-html="getCommentContents(comment)"></td>
                                         <td v-html="getCommentImages(comment)"></td>
                                         <td v-text="comment.created_at"></td>
+                                        <td v-text="comment.updated_at"></td>
                                         <td v-html="getCommentStatus(comment)"></td>
                                         <td>
                                             <button v-if="comment.status == 1" class="btn btn-danger btn-sm" @click.prevent="toggleCommentStatus(comment)" data-toggle="tooltip" title="Mark as Dective"><i class="fa fa-times"></i></button>
@@ -199,17 +210,19 @@
     import pagination from 'laravel-vue-pagination'
     import ClickConfirm from 'click-confirm'
     import helper from '../../services/helper'
+    import { stringToEmoticon } from 'emoticons-converter'
     
     export default {
         components : { pagination, ClickConfirm },
         data() {
             return {
-                group_id: '',
+                group_name: '',
                 type: '',
                 full_name: '',
                 email: '',
                 contents: '',
                 created_at: '',
+                updated_at: '',
                 images: {},
 
                 comments: {},
@@ -218,11 +231,13 @@
 
                 filterCommentForm: {
                     id: this.id,
-                    sortBy : 'created_at',
+                    sortBy : 'updated_at',
                     order: 'desc',
+                    full_name: '',
                     email : '',
                     contents: '',
                     created_at : '',
+                    updated_at: '',
                     status: '',
                     pageLength: 100
                 },
@@ -244,14 +259,15 @@
             proceed() {
             },
             getNotification() {
-                axios.post('/api/notification/' + this.id)
+                axios.post('/admin/notification/' + this.id)
                 .then(response => {
-                    this.group_id = response.data.notification.group.group_id;
+                    this.group_name = response.data.notification.group.name;
                     this.type = response.data.notification.type.name;
                     this.full_name = response.data.notification.user.profile.full_name;
                     this.email = response.data.notification.user.email;
-                    this.contents = response.data.notification.contents;
+                    this.contents = stringToEmoticon(response.data.notification.contents);
                     this.created_at = response.data.notification.created_at;
+                    this.updated_at = response.data.notification.updated_at;
                     this.images = response.data.notification.images;
                 }).catch(error => {
                     if (error.response.data.status == 'fail') {
@@ -274,7 +290,7 @@
                     page = 1;
                 }
                 let url = helper.getFilterURL(this.filterCommentForm);
-                axios.get('/api/noti_comment?page=' + page + url).then(response => {
+                axios.get('/admin/noti_comment?page=' + page + url).then(response => {
                     this.comments = response.data;                    
                 }).catch(error => {
                     if (error.response.data.status == 'fail') {
@@ -308,16 +324,22 @@
                         if (comment.user.simple_profile.avatar) {
                             commentUserHtml = commentUserHtml + "<img src='/images/users/" + comment.user.simple_profile.avatar + "' alt='user'>";
                         } else {
-                            commentUserHtml = commentUserHtml + "<img src='/images/common/no-user.png' alt='user'";
+                            commentUserHtml = commentUserHtml + "<img src='/images/common/no-user.png' alt='user'>";
                         }
                         commentUserHtml = commentUserHtml + "</div>";
-                        commentUserHtml = commentUserHtml + "<p style='margin-bottom: 0px'>" + comment.user.simple_profile.first_name + " " + comment.user.simple_profile.family_name + "</p>";
+                        commentUserHtml = commentUserHtml + "<p style='margin-bottom: 0px'>" + comment.user.simple_profile.full_name + "</p>";
                         commentUserHtml = commentUserHtml + "<p style='margin-bottom: 0px'>" + comment.user.email + "</p>";
                     } else {
                         commentUserHtml = commentUserHtml + "<img src='/images/common/no-user.png' alt='user'></div>";
                     }
                 }
                 return commentUserHtml;
+            },
+            getCommentContents(comment) {
+                if (typeof comment.contents != 'undefined' && comment.contents !== null && comment.contents !== '') {
+                    return stringToEmoticon(comment.contents);
+                }
+                return "";
             },
             getCommentImages(comment) {
                 var image_html = "";
@@ -339,7 +361,7 @@
                 $('#modal-delete-comment').modal('show');
             },
             deleteComment() {
-                axios.delete('/api/noti_comment/' + this.comment_id).then(response => {
+                axios.delete('/admin/noti_comment/' + this.comment_id).then(response => {
                     $('#modal-delete-comment').modal('hide');
                     toastr['success'](response.data.message);
                     this.getComments();
@@ -361,7 +383,7 @@
                 });
             },
             toggleCommentStatus(comment) {
-                axios.post('/api/noti_comment/status', {id: comment.id}).then((response) => {
+                axios.post('/admin/noti_comment/status', {id: comment.id}).then((response) => {
                     this.getComments();
                 }).catch(error => {
                     if (error.response.data.status == 'fail') {

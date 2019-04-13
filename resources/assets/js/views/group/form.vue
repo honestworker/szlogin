@@ -3,38 +3,14 @@
         <div class="row">
             <div class="col-md-3">
                 <div class="form-group">
-                    <label for="">Group ID</label>
-                    <input class="form-control" type="text" value="" v-model="groupForm.group_id">
+                    <label for="">Group Name</label>
+                    <input class="form-control" type="text" value="" v-model="groupForm.name">
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="form-group">
-                    <label for="">Organization Number</label>
-                    <input class="form-control" type="text" value="" v-model="groupForm.org_number">
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    <label for="">Organization Name</label>
-                    <input class="form-control" type="text" value="" v-model="groupForm.org_name">
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    <label for="">Contact Person</label>
-                    <input class="form-control" type="text" value="" v-model="groupForm.contact_person">
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    <label for="">Email</label>
-                    <input class="form-control" type="text" value="" v-model="groupForm.email">
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    <label for="">Mobile Number</label>
-                    <input class="form-control" type="text" value="" v-model="groupForm.mobile_number">
+                    <label for="">Postal Code</label>
+                    <input class="form-control" type="text" value="" v-model="groupForm.postal_code">
                 </div>
             </div>
             <div class="col-md-3">
@@ -62,12 +38,8 @@
             return {
                 countries : {},
                 groupForm: new Form({
-                    'group_id' : '',
-                    'org_number' : '',
-                    'contact_person' : '',
-                    'org_name' : '',
-                    'email' : '',
-                    'mobile_number' : '',
+                    'name' : '',
+                    'postal_code' : '',
                     'country' : '',
                 }),
             };
@@ -92,7 +64,7 @@
                     this.storeGroup();
             },
             getCountries() {
-                axios.post('/api/country/all').then(response => {
+                axios.get('/admin/countries').then(response => {
                     this.countries = response.data
                 }).catch(error => {
                     if (error.response.data.status == 'fail') {
@@ -123,7 +95,7 @@
                 }
             },
             storeGroup(){
-                this.groupForm.post('/api/group')
+                this.groupForm.post('/admin/group')
                 .then(response => {
                     toastr['success'](response.message);
                     this.$emit('completed', response.group);
@@ -145,14 +117,10 @@
                 });
             },
             getGroups(){
-                axios.get('/api/group/' + this.id)
+                axios.get('/admin/group/' + this.id)
                 .then(response => {
-                    this.groupForm.group_id = response.data.group_id;
-                    this.groupForm.org_number = response.data.org_number;
-                    this.groupForm.contact_person = response.data.contact_person;
-                    this.groupForm.org_name = response.data.org_name;
-                    this.groupForm.email = response.data.email;
-                    this.groupForm.mobile_number = response.data.mobile_number;
+                    this.groupForm.name = response.data.name;
+                    this.groupForm.postal_code = response.data.postal_code;
                     this.groupForm.country = response.data.country;
                 }).catch(error => {
                     if (error.response.data.status == 'fail') {
@@ -171,7 +139,7 @@
                 });
             },
             updateGroup() {
-                this.groupForm.patch('/api/group/' + this.id)
+                this.groupForm.patch('/admin/group/' + this.id)
                 .then(response => {
                     if (response.message) {
                         toastr['success'](response.message);

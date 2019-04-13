@@ -18,12 +18,12 @@
                         <br>
                         <div class="row">
                             <div class="col-md-3 col-lg-3 col-sm-12">
-                                <label for="">Group ID</label>
+                                <label for="">Group Name</label>
                             </div>
                             <div class="col-md-9 col-lg-9 col-sm-12">
                                 <select name="group_id" class="form-control" v-model="notificationForm.group_id" @change="changeGroupID">
                                     <option value="">All</option>
-                                    <option v-for="group in groups" v-bind:value="group.id">{{group.group_id}}</option>
+                                    <option v-for="group in groups" v-bind:value="group.id">{{group.name}}</option>
                                 </select>
                             </div>
                         </div>
@@ -179,7 +179,7 @@
             },
             getCountries() {
                 this.baseUrl = window.location.origin;
-                axios.post('/api/country/all').then(response => {
+                axios.get('/admin/countries').then(response => {
                     this.countries = this.all_countries = response.data;
                 }).catch(error => {
                     if (error.response.data.status == 'fail') {
@@ -198,8 +198,8 @@
                 });
             },
             getGroups() {
-                axios.post('/api/group/all').then(response => {
-                    this.groups = response.data.data;
+                axios.get('/admin/groups').then(response => {
+                    this.groups = response.data.groups;
                 }).catch(error => {
                     if (error.response.data.status == 'fail') {
                         if (error.response.data.type == "token_error") {
@@ -219,11 +219,12 @@
             changeCountry(e) {
                 if(e.target.options.selectedIndex > -1) {
                     var country = e.target.options[e.target.options.selectedIndex].value;
+                    this.notificationForm.country = country;
                     if (!country) {
                         country = "All";
                     }
-                    axios.get('/api/group/country/' + country).then(response => {
-                        this.groups = response.data.data;
+                    axios.get('/admin/group/country/' + country).then(response => {
+                        this.groups = response.data.groups;
                     }).catch(error => {
                         if (error.response.data.status == 'fail') {
                             if (error.response.data.type == "token_error") {
@@ -254,7 +255,7 @@
                 }
             },
             getNotification() {
-                axios.post('/api/notification/' + this.id)
+                axios.post('/admin/notification/' + this.id)
                 .then(response => {
                     this.notificationForm.country = response.data.notification.country;
                     if (!response.data.notification.group_id || response.data.notification.group_id == '0') {
@@ -292,7 +293,7 @@
                     }.bind(this)
                 };
 
-                axios.post('/api/create-sysnoti', this.uploadDataForm, config)
+                axios.post('/admin/create-sysnoti', this.uploadDataForm, config)
                 .then(response => {
                     toastr['success'](response.data.message);
                     this.$router.push('/sys_noti');
@@ -322,7 +323,7 @@
                     }.bind(this)
                 };
 
-                axios.post('/api/update-notification', this.uploadDataForm, config)
+                axios.post('/admin/update-notification', this.uploadDataForm, config)
                 .then(response => {
                     toastr['success'](response.data.message);
                     this.$router.push('/sys_noti');

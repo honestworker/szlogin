@@ -15,7 +15,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'first_name', 'family_name', 'email', 'status', 'avatar', 'password', 'backend', 'alarms', 'push_token',
+        'email', 'status', 'password', 'backend',
     ];
 
     /**
@@ -29,22 +29,17 @@ class User extends Authenticatable
     
     public function simple_profile()
     {
-        return $this->hasOne('App\Profile', 'user_id', 'id')->select('id', 'user_id', 'first_name', 'family_name', 'avatar', 'street_address');
+        return $this->hasOne('App\Profile', 'user_id', 'id')->select('id', 'user_id', 'full_name', 'avatar', 'street_address');
     }
     
     public function sound_profile()
     {
-        return $this->hasOne('App\Profile', 'user_id', 'id')->select('id', 'user_id', 'os_type', 'sound', 'vibration', 'language');
+        return $this->hasOne('App\Profile', 'user_id', 'id')->select('id', 'user_id', 'os_type', 'sound', 'vibration', 'language', 'push_token');
     }
     
     public function profile()
     {
-        return $this->hasOne('App\Profile', 'user_id', 'id')->select('id', 'user_id', 'group_id', 'phone_number', 'first_name', 'family_name', 'full_name', 'avatar', 'street_address', 'postal_code', 'country', 'city', 'language',  'is_admin', 'created_at');
-    }
-    
-    public function profile_short()
-    {
-        return $this->hasOne('App\Profile', 'user_id', 'id');
+        return $this->hasOne('App\Profile', 'user_id', 'id')->select('id', 'user_id', 'full_name', 'avatar', 'street_address', 'postal_code', 'country', 'language', 'push_token', 'created_at');
     }
     
     public function notification()
@@ -54,6 +49,6 @@ class User extends Authenticatable
 
     public function groups()
     {
-        return $this->hasOne('App\UserGroups', 'user_id', 'id');
+        return $this->hasMany('App\GroupUser', 'user_id', 'id')->select('id','user_id', 'group_id', 'admin', 'status')->where('status', 'activated')->with('group');
     }
 }

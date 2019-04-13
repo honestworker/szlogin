@@ -11,6 +11,67 @@ date_default_timezone_set("Europe/Stockholm");
 
 class GroupController extends Controller
 {
+    private function sendPushNotificationHttpRequest($user_id, $notification_names, $params_data = array()){
+        $requests = $responses = [];
+
+        $user = \App\User::find($user_id);
+        $profile = $user->Sound_Profile;
+        if ($profile) {
+            if ( $profile->push_token != '' ) {
+                $notification_name = '';
+                if (strtolower($profile->language) == 'swedish') {
+                    $notification_name = $notification_names['swedish'];
+                } else {
+                    $notification_name = $notification_names['else'];
+                }
+                $params = array(
+                    'app_id' => SZ_PUSHNOTI_APP_ID,
+                    'include_player_ids' => [ $profile->push_token ],
+                    'headings' => array('en' => 'Safety Zone'),
+                    'contents' => array('en' => $notification_name),
+                    'data' => $params_data
+                );
+                if ( $profile->os_type == 'android' ) {
+                    if ( $profile->sound == "sound1" && $profile->vibration == 1 ) {
+                        $params['android_channel_id'] = SZ_PUSHNOTI_ANDROID_CHANNEL_1;
+                    } else if ( $profile->sound == "sound1" && $profile->vibration == 0 ) {
+                        $params['android_channel_id'] = SZ_PUSHNOTI_ANDROID_CHANNEL_2;
+                    } else if ( $profile->sound == "sound2" && $profile->vibration == 1 ) {
+                        $params['android_channel_id'] = SZ_PUSHNOTI_ANDROID_CHANNEL_3;
+                    } else if ( $profile->sound == "sound2" && $profile->vibration == 0 ) {
+                        $params['android_channel_id'] = SZ_PUSHNOTI_ANDROID_CHANNEL_4;
+                    } else if ( $profile->sound == "no_sound" && $profile->vibration == 1 ) {
+                        $params['android_channel_id'] = SZ_PUSHNOTI_ANDROID_CHANNEL_5;
+                    } else if ( $profile->sound == "no_sound" && $profile->vibration == 0 ) {
+                        $params['android_channel_id'] = SZ_PUSHNOTI_ANDROID_CHANNEL_6;
+                    }
+                } else if ( $profile->os_type == 'ios' ) {
+                    if ( $profile->vibration == 0 && $profile->sound == 'no_sound' ) {
+                        $params['ios_sound'] = "nil";
+                    } else {
+                        $params['ios_sound'] = $profile->sound . ".wav";
+                    }
+                }
+                $requests[] = $params;
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, SZ_PUSHNOTI_URL);
+                curl_setopt($ch, CURLOPT_POST, 1);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-type: application/json", "Authorization: Basic ". SZ_PUSHNOTI_AUTH));
+                curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($params));
+                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 120);
+                curl_setopt($ch, CURLOPT_TIMEOUT, 120);
+                
+                $responses[] = curl_exec($ch);
+                if(curl_errno($ch) !== 0) {
+                    error_log('cURL error when connecting to ' . SZ_PUSHNOTI_URL . ': ' . curl_error($ch));
+                }
+                
+                curl_close($ch);
+            }
+        }
+        return array('request' => $requests, 'response' => $responses);
+    }
     public function index(){
         try {
             JWTAuth::parseToken()->authenticate();
@@ -19,32 +80,16 @@ class GroupController extends Controller
         }
         $groups = \App\Group::whereNotNull('id');
         
-        if(request()->has('group_id')) {
-            $groups->where('group_id', 'like', '%' . request('group_id') . '%');
+        if(request()->has('name')) {
+            $groups->where('name', 'like', '%' . request('name') . '%');
         }
-        
-        if(request()->has('org_name')) {
-            $groups->where('org_name', 'like', '%' . request('org_name') . '%');
-        }
-        
-        if(request()->has('org_number')) {
-            $groups->where('org_number', 'like', '%' . request('org_number') . '%');
-        }
-        
-        if(request()->has('contact_person')) {
-            $groups->where('contact_person', 'like', '%' . request('contact_person') . '%');
-        }
-        
-        if(request()->has('email')) {
-            $groups->where('email', 'like', '%' . request('email') . '%');
-        }
-        
-        if(request()->has('mobile_number')) {
-            $groups->where('mobile_number', 'like', '%' . request('mobile_number') . '%');
-        }
-        
+
         if(request()->has('country')) {
             $groups->where('country', 'like', '%' . request('country') . '%');
+        }
+
+        if(request()->has('postal_code')) {
+            $groups->where('postal_code', 'like', '%' . request('postal_code') . '%');
         }
         
         if(request()->has('status'))
@@ -52,8 +97,20 @@ class GroupController extends Controller
 
         if (request()->has('sortBy') && request()->has('order') )
             $groups->orderBy(request('sortBy'), request('order'));
-            
-        return $groups->paginate(request('pageLength'));
+        
+        
+        $groups_result = $groups->paginate(request('pageLength'));
+        if ($groups_result) {
+            foreach ($groups_result as $group) {
+                $all_member_count = count(\App\GroupUser::where('group_id', $group->id)->get());
+                $all_manager_active_count = count(\App\GroupUser::where('group_id', $group->id)->where('admin', 1)->where('status', 'activated')->get());
+                $all_manager_pending_count = count(\App\GroupUser::where('group_id', $group->id)->where('admin', 1)->where('status', 'pending')->get());
+                $all_user_active_count = count(\App\GroupUser::where('group_id', $group->id)->where('admin', 0)->where('status', 'activated')->get());
+                $all_user_pending_count = count(\App\GroupUser::where('group_id', $group->id)->where('admin', 0)->where('status', 'pending')->get());
+                $group['members'] = array('all'=> $all_member_count, 'manager_active'=> $all_manager_active_count, 'manager_deactive'=> $all_manager_pending_count, 'user_active'=> $all_user_active_count, 'user_deactive'=> $all_user_pending_count);
+            }
+        }
+        return $groups_result;
     }
 
     public function all(){
@@ -65,39 +122,11 @@ class GroupController extends Controller
         $groups = \App\Group::whereNotNull('id');
         
         $groups->whereStatus(1);
-        $groups->orderBy('group_id', 'ASC');
+        $groups->orderBy('name', 'ASC');
         
-        return response()->json(['status' => 'success', 'message' => 'Get Group Data Successfully!', 'data' => $groups->get()], 200);
+        return response()->json(['status' => 'success', 'message' => 'Get Group Data Successfully!', 'groups' => $groups->get()], 200);
     }
-    
-    public function store(Request $request){
-        try {
-            JWTAuth::parseToken()->authenticate();
-        } catch (JWTException $e) {
-            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
-        }
-        $validation = Validator::make($request->all(), [
-            'group_id' => 'required|unique:groups',
-            'org_number' => 'required',
-            'contact_person' => 'required',
-            'org_name' => 'required',
-            'email' => 'required|email',
-            'mobile_number' => 'required',
-            'country' => 'required',
-        ]);
         
-        if($validation->fails())
-            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
-            
-        $user = \JWTAuth::parseToken()->authenticate();
-        $group = new \App\Group;
-        $group->fill(request()->all());
-        $group->status = 1;
-        $group->save();
-        
-        return response()->json(['status' => 'success', 'message' => 'Group added!', 'data' => $group]);
-    }
-    
     public function getByCountry($country){
         try {
             JWTAuth::parseToken()->authenticate();
@@ -109,7 +138,7 @@ class GroupController extends Controller
         if ($country && $country != 'All')
             $groups->where('country', $country);
         
-        return response()->json(['status' => 'success', 'message' => 'Get Group Data successfully!', 'data' => $groups->get(), 'data1' => $country]);
+        return response()->json(['status' => 'success', 'message' => 'Get Group Data successfully!', 'groups' => $groups->get()]);
     }
 
     public function toggleStatus(Request $request){
@@ -137,7 +166,30 @@ class GroupController extends Controller
         return $group;
     }
 
-    public function update(Request $request, $id) {
+    public function store(Request $request){
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
+            
+        $validation = Validator::make($request->all(), [
+            'country' => 'required',
+            'name' => 'required',
+            'postal_code' => 'required',
+        ]);
+        
+        if($validation->fails())
+            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first()], 422);
+            
+        $group = new \App\Group;
+        $country->fill(request()->all());
+        $group->save();
+        
+        return response()->json(['status' => 'success', 'message' => 'Group created!', 'data' => $group], 200);
+    }
+
+    public function update(Request $request, $id){
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {
@@ -148,25 +200,17 @@ class GroupController extends Controller
             return response()->json(['status' => 'fail', 'message' => 'Couldnot find group!']);
             
         $validation = Validator::make($request->all(), [
-            'group_id' => 'required|unique:groups,group_id,'.$group->id.',id',
-            'org_number' => 'required',
-            'contact_person' => 'required',
-            'org_name' => 'required',
-            'email' => 'required|email',
-            'mobile_number' => 'required',
             'country' => 'required',
+            'name' => 'required',
+            'postal_code' => 'required',
         ]);
         
         if($validation->fails())
             return response()->json(['status' => 'fail', 'message' => $validation->messages()->first()], 422);
-            
-        $group->group_id = request('group_id');
-        $group->org_number = request('org_number');
-        $group->contact_person = request('contact_person');
-        $group->org_name = request('org_name');
-        $group->email = strtolower(request('email'));
-        $group->mobile_number = request('mobile_number');
+        
         $group->country = request('country');
+        $group->name = request('name');
+        $group->postal_code = request('postal_code');
         $group->save();
         
         return response()->json(['status' => 'success', 'message' => 'Group updated!', 'data' => $group], 200);
@@ -181,94 +225,91 @@ class GroupController extends Controller
         $group = \App\Group::find($id);
         if(!$group)
             return response()->json(['message' => 'Couldnot find group!'], 422);
+        
+        $notifications = \App\Notification::where('group_id', $group->id)->get();
+        if($notifications) {
+            foreach ($notifications as $notification) {
+                $notification_unreads = \App\NotificationUnread::where('notification_id', $notification->id)->get();
+                if ($notification_unreads) {
+                    foreach ($notification_unreads as $notification_unread) {
+                        $notification_unread->delete();
+                    }
+                }
+                $images = $notification->Images;
+                if ($images) {
+                    foreach ($images as $image) {
+                        $image->delete();
+                    }
+                }
+                $comments = $notification->Comments;
+                if ($comments) {
+                    foreach ($comments as $comment) {
+                        $comment_unreads = \App\CommentUnread::where('comment_id', $comment->id)->get();
+                        if ($comment_unreads) {
+                            foreach ($comment_unreads as $comment_unread) {
+                                $comment_unread->delete();
+                            }
+                        }
+                        $images = $comment->Images;
+                        if ($images) {
+                            foreach ($images as $image) {
+                                $image->delete();
+                            }
+                        }
+                        $comment->delete();
+                    }
+                }
+                $notification->delete();
+            }
+        }
+        $group_users = \App\GroupUser::where('group_id', $id)->get();
+        foreach ($group_users as $group_user) {
+            $notifications = \App\Notification::where('group_id', $group->id)->get();
+            if($notifications) {
+                foreach ($notifications as $notification) {
+                    $notification_unreads = \App\NotificationUnread::where('notification_id', $notification->id)->where('user_id', $group_user->user_id)->get();
+                    if ($notification_unreads) {
+                        foreach ($notification_unreads as $notification_unread) {
+                            $notification_unread->delete();
+                        }
+                    }
+                    $comments = $notification->Comments;
+                    if ($comments) {
+                        foreach ($comments as $comment) {
+                            $comment_unreads = \App\CommentUnread::where('comment_id', $comment->id)->where('user_id', $group_user->user_id)->get();
+                            if ($comment_unreads) {
+                                foreach ($comment_unreads as $comment_unread) {
+                                    $comment_unread->delete();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            $group_user->delete();
+
+            $notification_names = array();
+            $notification_names['swedish'] = 'Du har blivit borttagen från gruppen ' . $group->name;
+            $notification_names['else'] = 'You have been removed from the group ' . $group->name;
+            $params_data = array(
+                'notification_id' => 0,
+                'group_id' => $group->id,
+                'group_name' => $group->name,
+                'user_id' => $group_user->user_id,
+                'status' => 'delete'
+            );
+
+            $this->sendPushNotificationHttpRequest($group_user->user_id, $notification_names, $params_data);
+
+            $group_user->delete();
+        }
 
         $group->delete();
-        
+
         return response()->json(['status' => 'success', 'message' => 'Group deleted!'], 200);
     }
-    
-    public function attachGroup(Request $request){
-        try {
-            JWTAuth::parseToken()->authenticate();
-        } catch (JWTException $e) {
-            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
-        }
-        $validation = Validator::make($request->all(), [
-            'group_id' => 'required',
-        ]);
         
-        if($validation->fails())
-            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
-        
-        $group = \App\Group::where('group_id', '=', request('group_id'))->first();
-        if(!$group)
-            return response()->json(['message' => 'Couldnot find group!', 'error_type' => 'no_group'], 422);
-            
-        $user = \JWTAuth::parseToken()->authenticate();
-        $profile = $user->Profile;
-        if (!$profile)
-            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
-            
-        if($profile->group_id == request('group_id'))
-            return response()->json(['status' => 'fail', 'message' => 'You are already this group member!', 'error_type' => 'is_member'], 422);
-            
-        $user_groups = \App\UserGroups::create([
-            'user_id' => $user->id,
-            'group_id' => $group->id
-        ]);
-        
-        return response()->json(['status' => 'success', 'message' => 'Group attached!', 'group_id' => $group->id], 200);
-    }
-
-    public function deleteAttachGroup(Request $request) {
-        try {
-            JWTAuth::parseToken()->authenticate();
-        } catch (JWTException $e) {
-            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
-        }
-        $validation = Validator::make($request->all(), [
-            'group_id' => 'required',
-        ]);
-        
-        if($validation->fails())
-            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
-        
-        $group = \App\Group::where('group_id', '=', request('group_id'))->first();
-        if(!$group)
-            return response()->json(['message' => 'Couldnot find group!', 'error_type' => 'no_group'], 422);
-            
-        $user = \JWTAuth::parseToken()->authenticate();
-        $user_group = \App\UserGroups::where('group_id', '=', $group->id)->where('user_id', '=', $user->id)->first();
-        if(!$user_group)
-            return response()->json(['message' => 'You are not attached this group!', 'error_type' => 'no_attach'], 422);
-        
-        $user_group->delete();
-        
-        return response()->json(['status' => 'success', 'message' => 'Attached Group deleted!'], 200);
-    }
-
-    public function getAttachedGroups(Request $request){
-        try {
-            JWTAuth::parseToken()->authenticate();
-        } catch (JWTException $e) {
-            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
-        }
-        $user = \JWTAuth::parseToken()->authenticate();
-        $profile = $user->Profile;
-        if (!$profile)
-            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
-        
-        $main_group = \App\Group::find($profile->group_id);
-        if(!$main_group)
-            return response()->json(['message' => 'Couldnot find group!', 'error_type' => 'no_group'], 422);
-            
-        $user_groups = \App\UserGroups::where('user_id', '=', $user->id)->pluck('group_id');
-        $other_groups = \App\Group::whereIn('id', $user_groups)->pluck('group_id');
-        
-        return response()->json(['status' => 'success', 'message' => 'Group attached!', 'main' => $main_group->group_id, 'others' => $other_groups], 200);
-    }
-    
-    public function overview(Request $request) {
+    public function overview(Request $request){
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {

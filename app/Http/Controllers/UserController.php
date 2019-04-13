@@ -13,10 +13,7 @@ date_default_timezone_set("Europe/Stockholm");
 
 class UserController extends Controller
 {
-
     protected $avatar_path = 'images/users/';
-
-    protected $app_page_rows = 10;
     
     public function index(){
         try {
@@ -27,35 +24,27 @@ class UserController extends Controller
         
         $user = JWTAuth::parseToken()->authenticate();
         
-        $users = \App\User::with('profile', 'profile.group')->whereNotNull('id');
+        $users = \App\User::with('profile', 'groups')->whereNotNull('id');
         
-        // if(request()->has('first_name'))
-        //     $users->whereHas('profile',function($q) use ($request){
-        //         $q->where('first_name','like','%'.request('first_name').'%');
-        //     });
-            
-        // if(request()->has('family_name'))
-        //     $users->whereHas('profile',function($q) use ($request){
-        //         $q->where('family_name','like','%'.request('family_name').'%');
-        //     });
-            
         if(request()->has('full_name'))
             $users->whereHas('profile',function($q) {
                 $q->where('full_name','like', '%'.request('full_name').'%');
             });
             
-        if(request()->has('phone_number'))
-            $users->whereHas('profile',function($q) {
-                $q->where('phone_number','like','%'.request('phone_number').'%');
-            });
-            
         if(request()->has('email'))
             $users->where('email','like','%'.strtolower(request('email')).'%');
-            
+        
         if(request()->has('group_id'))
-            $users->whereHas('profile.group',function($q) {
-                $q->where('group_id','like','%'.request('group_id').'%');
-            });
+            if (request('group_id'))
+                $users->whereHas('groups',function($q) {
+                    $q->where('group_id', request('group_id'));
+                });
+
+        if(request()->has('country'))
+            if (request('country'))
+                $users->whereHas('profile',function($q) {
+                    $q->where('country','like', '%'. request('country') . '%');
+                });
             
         if(request()->has('backend')) {
             $users->whereBackend(request('backend'));
@@ -63,22 +52,20 @@ class UserController extends Controller
             $users->whereBackend(0);
         }
         
-        if(request()->has('is_admin'))
-            if(request('is_admin') >= 0)
-                $users->whereHas('profile', function($q) {
-                    $q->where('is_admin', '=', request('is_admin'));
+        if(request()->has('admin'))
+            if(request('admin') >= 0)
+                $users->whereHas('groups', function($q) {
+                    $q->where('admin', '=', request('admin'));
                 });
-                
+        
         if(request()->has('status'))
             $users->whereStatus(request('status'));
                 
         if(request()->has('sortBy') && request()->has('order')) {
-            if(request('sortBy') == 'status' || request('sortBy') == 'email')
-                $users->select('id', 'email', 'status')->orderBy(request('sortBy'), request('order'));
-            else if(request('sortBy') == 'contact_person' || request('sortBy') == 'phone_number' || request('sortBy') == 'full_name' || request('sortBy') == 'group_id')
-                $users->select('id', 'email', 'status', \DB::raw('(select ' . request('sortBy') . ' from profiles where users.id = profiles.user_id) as '. request('sortBy')))->orderBy(request('sortBy'), request('order'));
-            else if(request('sortBy') == 'group_id')
-                $users->select('id', 'email', 'status', \DB::raw('(select ' . request('sortBy') . ' from groups where profiles.user_id = groups.group_id) as '. request('sortBy')))->orderBy(request('sortBy'), request('order'));
+            if(request('sortBy') == 'status' || request('sortBy') == 'email' || request('sortBy') == 'created_at')
+                $users->select('id', 'email', 'status', 'created_at')->orderBy(request('sortBy'), request('order'));
+            else if(request('sortBy') == 'full_name' || request('sortBy') == 'country')
+                $users->select('id', 'email', 'status', 'created_at', \DB::raw('(select ' . request('sortBy') . ' from profiles where users.id = profiles.user_id) as '. request('sortBy')))->orderBy(request('sortBy'), request('order'));
         }
         
         return $users->paginate(request('pageLength'));
@@ -100,14 +87,8 @@ class UserController extends Controller
             return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
 
         $email = $user->email;
-        $group_id = $role = "";
-                
-        $user_group = \App\Group::where('id', '=', $profile->group_id)->pluck('group_id');
-        if (count($user_group)) {
-            $group_id = $user_group[0];
-        }
         
-        return response()->json(['status' => 'success', 'message' => 'Get User Data Successfully!', 'data' => compact('profile', 'group_id', 'email')], 200);
+        return response()->json(['status' => 'success', 'message' => 'Get User Data Successfully!', 'data' => compact('profile', 'email')], 200);
     }
     
     public function getMyProfile(Request $request){
@@ -126,90 +107,11 @@ class UserController extends Controller
             return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
             
         $email = $user->email;
-        $group_id = $role = "";
-                
-        $user_group = \App\Group::where('id', '=', $profile->group_id)->pluck('group_id');
-        if (count($user_group)) {
-            $group_id = $user_group[0];
-        }
         
-        return response()->json(['status' => 'success', 'message' => 'Get User Data Successfully!', 'data' => compact('profile', 'user', 'group_id', 'email')], 200);
+        return response()->json(['status' => 'success', 'message' => 'Get User Data Successfully!', 'data' => compact('profile', 'user', 'email')], 200);
     }
-
-    public function ownGroup(Request $request){
-        try {
-            JWTAuth::parseToken()->authenticate();
-        } catch (JWTException $e) {
-            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
-        }
-        
-        $user = JWTAuth::parseToken()->authenticate();
-        if(!$user)
-            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user!', 'data' => null, 'error_type' => 'no_user'], 422);
-            
-        $profile = $user->Profile;
-        if (!$profile)
-            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
-                
-        $result = \App\Group::where('id', '=', $profile->group_id)->get();
-        if (count($result)) {
-            $user_group = $result[0];
-        } else {
-            $user_group = null;
-        }
-        
-        return response()->json(['status' => 'success', 'message' => 'Get User Data Successfully!', 'data' => $user_group], 200);
-    }
-
-
-    public function profile() {
-        try {
-            JWTAuth::parseToken()->authenticate();
-        } catch (JWTException $e) {
-            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
-        }
-        
-        $user = JWTAuth::parseToken()->authenticate();
-        if (!$user) {
-            return response()->json(['status' => 'fail', 'message' => 'Your token is invaild!', 'error_type' => 'token_error']);
-        }
-        $profile = $user->Profile;
-        if (!$profile)
-            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
-
-        $user_avatar = "";
-        if ($profile->avatar) {
-            $user_avatar = url('/') . '/images/users/' . $profile->avatar;
-        }
-        return response()->json(['status' => 'success', 'first_name' => $profile->first_name, 'family_name' => $profile->family_name, 'full_name' => $profile->full_name, 'email' => $user->email, 'phone_number' => $profile->phone_number, 'avatar' => $user_avatar]);
-    }
-    
-    public function changePassword(Request $request) {
-        try {
-            JWTAuth::parseToken()->authenticate();
-        } catch (JWTException $e) {
-            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
-        }
-        
-        $user = JWTAuth::parseToken()->authenticate();
-        if (!$user) {
-            return response()->json(['status' => 'fail', 'message' => 'Your token is invaild!', 'error_type' => 'no_user']);
-        }
-        
-        $validation = Validator::make($request->all(),[
-            'password' => 'required|min:6',
-        ]);
-        
-        if($validation->fails())
-            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
-            
-        $user->password = bcrypt(request('password'));
-        $user->save();
-        
-        return response()->json(['status' => 'success', 'message' => 'Your password has been updated!'], 200);
-    }
-    
-    public function changePasswordBackend(Request $request) {
+   
+    public function changePassword(Request $request){
         if(env('IS_DEMO'))
             return response()->json(['message' => 'You are not allowed to perform this action in this mode.'], 422);
         
@@ -233,58 +135,6 @@ class UserController extends Controller
         return response()->json(['status' => 'success', 'message' => 'Your password has been changed successfully!']);
     }
 
-    public function getGroupUsers(Request $request) {
-        try {
-            JWTAuth::parseToken()->authenticate();
-        } catch (JWTException $e) {
-            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
-        }
-        
-        $user = JWTAuth::parseToken()->authenticate();
-        $is_manager = $user->Profile->is_admin;
-        
-        if (!$is_manager) {
-            return response()->json(['status' => 'fail', 'message' => 'You do not have a manager permission.', 'error_type' => 'no_manager'], 422);
-        }
-        
-        $profile = $user->Profile;
-        if (!$profile)
-            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
-            
-        $group_id = $profile->group_id;
-        if (!$group_id) {
-            return response()->json(['status' => 'fail', 'message' => 'You must became a group member.', 'error_type' => 'no_memeber'], 422);
-        }
-        
-        $group = \App\Group::find($group_id);
-        if (!$group) {
-            return response()->json(['status' => 'fail', 'message' => 'Could not find the your group.', 'error_type' => 'no_group'], 422);
-        }
-        
-        $users = \App\User::with('profile');
-        $users->whereHas('profile', function($q) use ($group_id) {
-            $q->where('group_id', $group_id);
-        });
-        $users_tmp = $users->where('id', '!=', $user->id)->select('id', 'email');
-        $total_counts = count($users_tmp->get());
-        
-        $page_end = false;
-        $result = [];
-        if($request->has('page')) {
-            $page_id = request('page');
-            if (($page_id + 1) * $this->app_page_rows >= $total_counts) {
-                $page_end = true;
-            }
-            if ($page_id * $this->app_page_rows <= $total_counts) {
-                $result = $users->offset($page_id * $this->app_page_rows)->limit($this->app_page_rows)->get();
-            }
-        } else {
-            $result = $users->get();
-        }
-        
-        return response()->json(['status' => 'success', 'message' => 'Get Group User Data successfully!', 'users' => $result, 'end' => $page_end], 200);
-    }
-
     public function updateProfile(Request $request){
         try {
             JWTAuth::parseToken()->authenticate();
@@ -292,32 +142,15 @@ class UserController extends Controller
             return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
         }
         
-        // $validation = Validator::make($request->all(),[
-        //     'contact_person' => 'required|min:1',
-        //     'group_name' => 'required|min:1',
-        //     'org_number' => 'required|min:1',
-        // ]);
-        
-        // if($validation->fails())
-        //     return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
-            
         $user = JWTAuth::parseToken()->authenticate();
         $profile = $user->Profile;
         if (!$profile)
             return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
         
-        // $profile->contact_person = request('contact_person');
-        // $profile->group_name = request('group_name');
-        // $profile->org_number = request('org_number');
-        $profile->first_name = request('first_name');
-        $profile->family_name = request('family_name');
-        $profile->full_name = request('first_name') . " " . request('family_name');
-        $profile->phone_number = request('phone_number');
+        $profile->full_name = request('full_name');
         $profile->street_address = request('street_address');
         $profile->postal_code = request('postal_code');
         $profile->country = request('country');
-        $profile->group_id = request('group_id');
-        $profile->city = request('city');
         $profile->save();
         
         return response()->json(['message' => 'Your profile has been updated!','user' => $user]);
@@ -356,55 +189,6 @@ class UserController extends Controller
         return response()->json(['status' => 'success', 'message' => 'Avatar updated!', 'profile' => $profile]);
     }
     
-    public function destroy(Request $request){
-        try {
-            JWTAuth::parseToken()->authenticate();
-        } catch (JWTException $e) {
-            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
-        }
-        
-        $user = JWTAuth::parseToken()->authenticate();
-        if(!$user)
-            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user!', 'error_type' => 'no_user'], 422);
-            
-        if($user->avatar && \File::exists($this->avatar_path.$user->avatar))
-            \File::delete($this->avatar_path.$user->avatar);
-        
-        $profile = $user->Profile;
-        if ($profile)
-            $profile->delete();
-        
-        $notifications = $user->Notification;
-        if ($notifications) {
-            foreach ($notifications as $notification) {
-                $images = $notification->Images;
-                if ($images) {
-                    foreach ($images as $image) {
-                        $image->delete();
-                    }
-                    $notification->delete();
-                }
-            }
-        }
-        
-        $comments = $user->Comments;
-        if ($comments) {
-            foreach ($comments as $comment) {
-                $images = $comment->Images;
-                if ($images) {
-                    foreach ($images as $image) {
-                        $image->delete();
-                    }
-                }
-                $comment->delete();
-            }
-        }
-        
-        $user->delete();
-        
-        return response()->json(['status' => 'success', 'message' => 'The account has deleted successfully!'], 200);
-    }
-
     public function removeAvatar(Request $request){
         try {
             JWTAuth::parseToken()->authenticate();
@@ -430,7 +214,7 @@ class UserController extends Controller
         return response()->json(['status' => 'success', 'message' => 'Avatar removed!'], 200);
     }
 
-    public function deleteAccountBackend(Request $request, $id){
+    public function deleteAccount(Request $request, $id){
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {
@@ -457,7 +241,13 @@ class UserController extends Controller
         
         $notifications = $user->Notification;
         if ($notifications) {
-            foreach ($notifications as $notification) {
+            foreach ($notifications as $notification) {                
+                $notification_unreads = \App\NotificationUnread::where('notification_id', $notification->id)->get();
+                if ($notification_unreads) {
+                    foreach ($notification_unreads as $notification_unread) {
+                        $notification_unread->delete();
+                    }
+                }
                 $images = $notification->Images;
                 if ($images) {
                     foreach ($images as $image) {
@@ -471,6 +261,12 @@ class UserController extends Controller
         $comments = $user->Comments;
         if ($comments) {
             foreach ($comments as $comment) {
+                $comment_unreads = \App\CommentUnread::where('comment_id', $comment->id)->get();
+                if ($comment_unreads) {
+                    foreach ($comment_unreads as $comment_unread) {
+                        $comment_unread->delete();
+                    }
+                }
                 $images = $comment->Images;
                 if ($images) {
                     foreach ($images as $image) {
@@ -480,132 +276,39 @@ class UserController extends Controller
                 $comment->delete();
             }
         }
-        
-        $user->delete();
-        
-        return response()->json(['status' => 'success', 'message' => 'User deleted!'], 200);
-    }
 
-    public function deleteAccount(Request $request){
-        try {
-            JWTAuth::parseToken()->authenticate();
-        } catch (JWTException $e) {
-            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
-        }
-          
-        $validation = Validator::make($request->all(),[
-            'id' => 'required',
-        ]);
-        if ($validation->fails())
-            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
-            
-        $user = JWTAuth::parseToken()->authenticate();
-        if(!$user->Profile)
-            return response()->json(['status' => 'fail', 'message' => 'Could not find user!', 'error_type' => 'no_profile'], 422);
-            
-        $is_manager = $user->Profile->is_admin;
-        
-        if (!$is_manager) {
-            return response()->json(['status' => 'fail', 'message' => 'You do not have a manager permission.', 'error_type' => 'no_manager'], 422);
-        }
-        
-        $user = \App\User::find(request('id'));
-        if(!$user)
-            return response()->json(['status' => 'fail', 'message' => 'Could not find user!', 'error_type' => 'no_user'], 422);
-            
-            
-        if($user->avatar && \File::exists($this->avatar_path.$user->avatar))
-            \File::delete($this->avatar_path.$user->avatar);
-            
-        $profile = $user->Profile;
-        if ($profile)
-            $profile->delete();
-        
-        $notifications = $user->Notification;
-        if ($notifications) {
-            foreach ($notifications as $notification) {
-                $images = $notification->Images;
-                if ($images) {
-                    foreach ($images as $image) {
-                        $image->delete();
-                    }
-                    $notification->delete();
-                }
-            }
-        }
-        
-        $comments = $user->Comments;
-        if ($comments) {
-            foreach ($comments as $comment) {
-                $images = $comment->Images;
-                if ($images) {
-                    foreach ($images as $image) {
-                        $image->delete();
+        $user_groups = \App\GroupUser::where('user_id', $user->id)->get();
+        if ($user_groups) {
+            foreach ($user_groups as $user_group) {
+                $notifications = \App\Notification::where('group_id', $user_group->group_id)->where('user_id', '!=', $user->id)->get();
+                if($notifications) {
+                    foreach ($notifications as $notification) {
+                        $notification_unreads = \App\NotificationUnread::where('notification_id', $notification->id)->where('user_id', $user->id)->get();
+                        if ($notification_unreads) {
+                            foreach ($notification_unreads as $notification_unread) {
+                                $notification_unread->delete();
+                            }
+                        }
+                        $comments = $notification->Comments;
+                        if ($comments) {
+                            foreach ($comments as $comment) {
+                                $comment_unreads = \App\CommentUnread::where('comment_id', $comment->id)->where('user_id', $user->id)->get();
+                                if ($comment_unreads) {
+                                    foreach ($comment_unreads as $comment_unread) {
+                                        $comment_unread->delete();
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
-                $comment->delete();
+                $user_group->delete();
             }
         }
         
         $user->delete();
         
         return response()->json(['status' => 'success', 'message' => 'User deleted!'], 200);
-    }
-
-    public function makeGroupManager(Request $request, $id){
-        try {
-            JWTAuth::parseToken()->authenticate();
-        } catch (JWTException $e) {
-            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
-        }
-        
-        $user = \App\User::find($id);
-        if(!$user)
-            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user!'], 422);
-            
-        $profile = $user->Profile;
-        if (!$profile)
-            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
-            
-        $group = \App\Group::find($profile->group_id);
-        if(!$group)
-            return response()->json(['status' => 'fail', 'message' => 'This user is not any group member.'], 422);
-            
-        if ($profile->is_admin)
-            return response()->json(['status' => 'fail', 'message' => 'This user already is group manager!'], 422);
-            
-        $profile->is_admin = 1;
-        $profile->save();
-        
-        $user->notify(new GroupManager(true, $profile->country, $profile->first_name));
-        
-        return response()->json(['status' => 'success', 'message' => 'The user is made as a group manager successfully.', 'user' => $user]);
-    }
-
-    public function disableGroupManager(Request $request, $id){
-        try {
-            JWTAuth::parseToken()->authenticate();
-        } catch (JWTException $e) {
-            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
-        }
-        
-        $user = \App\User::find($id);
-        if(!$user)
-            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user!'], 422);
-        
-        $profile = $user->Profile;
-        if (!$profile)
-            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
-            
-        if (!$profile->is_admin)
-            return response()->json(['status' => 'fail', 'message' => 'This user already is not group manager!'], 422);
-            
-        $profile->is_admin = 0;
-        $profile->save();
-        
-        $user->notify(new GroupManager(false, $profile->country, $profile->first_name));
-        
-        return response()->json(['status' => 'success', 'message' => 'The user is made as not group manager successfully.', 'user' => $user]);
     }
 
     public function makeAdministrator(Request $request, $id){
@@ -628,7 +331,7 @@ class UserController extends Controller
         $user->status = 'activated';
         $user->save();
         
-        //$user->notify(new Administrator(true, $profile->country, $profile->first_name));
+        //$user->notify(new Administrator(true, $profile->country, $profile->full_name));
         
         return response()->json(['status' => 'success', 'message' => 'The user is made as a administrator successfully.', 'user' => $user]);
     }
@@ -653,98 +356,12 @@ class UserController extends Controller
         $user->status = 'pending';
         $user->save();
         
-        //$user->notify(new Administrator(false, $profile->country, $profile->first_name));
+        //$user->notify(new Administrator(false, $profile->country, $profile->full_name));
         
         return response()->json(['status' => 'success', 'message' => 'The user is made as not administrator successfully.', 'user' => $user]);
     }
-
-    public function savePushToken(Request $request){
-        try {
-            JWTAuth::parseToken()->authenticate();
-        } catch (JWTException $e) {
-            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
-        }
-        
-        $validation = Validator::make($request->all(),[
-            'push_token' => 'required',
-            'os_type' => 'required',
-        ]);
-        if ($validation->fails())
-            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
-        
-        $users = \App\User::where('push_token', '=', request('push_token'))->get();
-        if (count($users)) {
-            foreach ($users as $user) {
-                $user->push_token = '';
-                $user->save();
-            }
-        }
-        
-        $user = JWTAuth::parseToken()->authenticate();
-        $user->push_token = request('push_token');
-        $user->save();
-        
-        $profile = $user->Profile;
-        if (!$profile)
-            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
-            
-        $profile->os_type = request('os_type');
-        $profile->save();
-        
-        return response()->json(['status' => 'success', 'message' => 'Your push token is saved successfully.', 'user' => $user]);
-    }
-
-    public function setPushEffect(Request $request){
-        try {
-            JWTAuth::parseToken()->authenticate();
-        } catch (JWTException $e) {
-            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
-        }
-        
-        $validation = Validator::make($request->all(),[
-            'sound' => 'required',
-            'vibration' => 'required',
-        ]);
-        if ($validation->fails())
-            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
-        
-        $user = JWTAuth::parseToken()->authenticate();
-        $profile = $user->Profile;
-        if (!$profile)
-            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
-            
-        $profile->sound = request('sound');
-        $profile->vibration = request('vibration');
-        $profile->save();
-        
-        return response()->json(['status' => 'success', 'message' => 'Your push notification effect is saved successfully.', 'user' => $user]);
-    }
-
-    public function setLanguage(Request $request){
-        try {
-            JWTAuth::parseToken()->authenticate();
-        } catch (JWTException $e) {
-            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
-        }
-        
-        $validation = Validator::make($request->all(),[
-            'language' => 'required',
-        ]);
-        if ($validation->fails())
-            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
-        
-        $user = JWTAuth::parseToken()->authenticate();
-        $profile = $user->Profile;
-        if (!$profile)
-            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
-            
-        $profile->language = request('language');
-        $profile->save();
-        
-        return response()->json(['status' => 'success', 'message' => 'Your language is updated successfully.']);
-    }
     
-    public function overview() {
+    public function overview(){
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {

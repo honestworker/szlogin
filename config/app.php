@@ -168,6 +168,8 @@ return [
          * Package Service Providers...
          */
         'Tymon\JWTAuth\Providers\JWTAuthServiceProvider',
+        
+        ChristofferOK\LaravelEmojiOne\LaravelEmojiOneServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -228,6 +230,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'JWTAuth' => 'Tymon\JWTAuth\Facades\JWTAuth',
         'JWTFactory' => 'Tymon\JWTAuth\Facades\JWTFactory',
+        'LaravelEmojiOne' => ChristofferOK\LaravelEmojiOne\LaravelEmojiOneFacade::class,
     ],
 
 ];

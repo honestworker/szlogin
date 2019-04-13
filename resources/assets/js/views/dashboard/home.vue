@@ -311,7 +311,7 @@
         },
         methods: {
             getGroupInfor(){
-                axios.post('/api/group/overview').then(response =>  {
+                axios.get('/admin/group/overview').then(response =>  {
                     this.groups_total = response.data.data.total;
                     this.groups_infor = response.data.data.infor;
                     this.year = response.data.data.year;
@@ -338,7 +338,7 @@
                 });
             },
             getUserInfor(){
-                axios.get('/api/user/overview').then(response =>  {
+                axios.get('/admin/user/overview').then(response =>  {
                     this.users_total = response.data.data.total;
                     this.users_infor = response.data.data.infor;
                     this.year = response.data.data.year;
@@ -380,7 +380,7 @@
                 });
             },
             getAdsCountsInfor(){
-                axios.post('/api/advertisement/overview').then(response =>  {
+                axios.get('/admin/advertisement/overview').then(response =>  {
                     this.show_count_infor = response.data.data.show_count_infor;
                     this.click_count_infor = response.data.data.click_count_infor;
                     this.statistics = response.data.data.statistics;

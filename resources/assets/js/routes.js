@@ -32,6 +32,10 @@ let routes = [
                 component: require('./views/group/edit')
             },
             {
+                path: '/group/:id/view',
+                component: require('./views/group/view')
+            },
+            {
                 path: '/user',
                 component: require('./views/user/index')
             },
@@ -95,20 +99,8 @@ let routes = [
                 component: require('./views/auth/forgot_password')
             },
             {
-                path: '/register',
-                component: require('./views/auth/register')
-            },
-            {
-                path: '/success_register',
-                component: require('./views/auth/success_register')
-            },
-            {
                 path: '/signup',
                 component: require('./views/auth/signup')
-            },
-            {
-                path: '/msignup',
-                component: require('./views/auth/msignup')
             },
             {
                 path: '/success_signup',

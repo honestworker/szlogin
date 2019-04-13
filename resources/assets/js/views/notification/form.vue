@@ -209,7 +209,7 @@
             },
             getNtfTypes() {
                 this.baseUrl = window.location.origin;
-                axios.get('/api/noti_type').then(response => {
+                axios.get('/admin/noti_type').then(response => {
                     this.ntf_types = response.data;
                 }).catch(error => {
                     if (error.response.data.status == 'fail') {
@@ -228,7 +228,7 @@
                 });
             },
             getProfile() {
-                axios.post('/api/user/profile').then(response => {
+                axios.get('/admin/user/profile').then(response => {
                     if (response.data.data) {
                         this.notificationForm.group_id = response.data.data.group_id;
                         this.notificationForm.email = response.data.data.email;
@@ -269,7 +269,7 @@
                 }
             },
             getNotification() {
-                axios.post('/api/notification/' + this.id)
+                axios.post('/admin/notification/' + this.id)
                 .then(response => {
                     this.notificationForm.group_id = response.data.notification.group.group_id;
                     this.notificationForm.type = response.data.notification.type;
@@ -305,7 +305,7 @@
                     }.bind(this)
                 };
 
-                axios.post('/api/create-notification', this.uploadDataForm, config)
+                axios.post('/admin/create-notification', this.uploadDataForm, config)
                 .then(response => {
                     toastr['success'](response.data.message);
                     this.$router.push('/notification');

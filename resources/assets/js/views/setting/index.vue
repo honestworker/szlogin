@@ -21,7 +21,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="">Contact Person</label>
-                                <input class="form-control" type="text" value="" v-model="settingForm.contact_person">
+                                <input class="form-control" type="text" value="" v-model="settingForm.full_name">
                             </div>
                             <button type="submit" class="btn btn-info waves-effect waves-light m-t-10">Save</button>
                         </form>
@@ -40,19 +40,19 @@
             return {
                 settingForm: new Form({
                     company_name : '',
-                    contact_person: '',
+                    full_name: '',
                 }, false)
             };
         },
         mounted(){
-            axios.get('/api/setting/fetch').then(response => {
+            axios.get('/admin/setting/fetch').then(response => {
                 this.settingForm = helper.formAssign(this.settingForm, response.data.config);
             }).catch();
         },
         components : { },
         methods: {
             saveSetting(){
-                this.settingForm.post('/api/setting').then(response => {
+                this.settingForm.post('/admin/setting').then(response => {
                     this.$store.dispatch('setConfig',this.settingForm);
                     toastr['success'](response.message);
                 }).catch(response => {

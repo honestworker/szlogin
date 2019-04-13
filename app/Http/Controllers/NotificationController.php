@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Validator;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
+use LaravelEmojiOne;
 
 date_default_timezone_set("Europe/Stockholm");
 
@@ -18,7 +19,7 @@ class NotificationController extends Controller
     
     protected $app_page_rows = 10;
     
-    public function index() {
+    public function index(){
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {
@@ -27,10 +28,10 @@ class NotificationController extends Controller
         
         $notifications = \App\Notification::with('user.simple_profile', 'type', 'group', 'images');
         
-        if(request()->has('group_id'))
-            if (request('group_id'))
+        if(request()->has('group_name'))
+            if (request('group_name'))
                 $notifications->whereHas('group', function($q) {
-                    $q->where('name', '=', request('group_id'));
+                    $q->where('name', 'like', '%' . strtolower(request('group_name')) . '%');
                 });
         
         $notifications->where('type', '!=', 5);
@@ -40,7 +41,12 @@ class NotificationController extends Controller
                 $notifications->whereHas('type', function($q) {
                     $q->where('name', 'like', '%' . strtolower(request('type')) . '%');
                 });
-            
+        
+        if(request()->has('full_name'))
+            $notifications->whereHas('user.simple_profile', function($q) {
+                $q->where('full_name', 'like', '%' . strtolower(request('full_name')) . '%');
+            });
+
         if(request()->has('email'))
             $notifications->whereHas('user', function($q) {
                 $q->where('email', 'like', '%' . strtolower(request('email')) . '%');
@@ -53,100 +59,25 @@ class NotificationController extends Controller
             $notifications->whereStatus(request('status'));
             
         if(request()->has('sortBy') && request()->has('order')) {
-            if(request('sortBy') == 'contents' || request('sortBy') == 'created_at')
-                $notifications->select('id', 'contents', 'type', 'group_id', 'user_id', 'status','created_at')->orderBy(request('sortBy'), request('order'));
-            else if(request('sortBy') == 'group_id')
-                $notifications->select('id', 'contents', 'type', 'group_id', 'user_id', 'status','created_at', \DB::raw('(select ' . request('sortBy') . ' from groups where notifications.group_id = groups.id) as '. request('sortBy') . '_order'))->orderBy(request('sortBy') . '_order', request('order'));
+            if(request('sortBy') == 'contents' || request('sortBy') == 'created_at' || request('sortBy') == 'updated_at' || request('sortBy') == 'group_id')
+                $notifications->select('id', 'contents', 'type', 'group_id', 'user_id', 'status', 'created_at', 'updated_at')->orderBy(request('sortBy'), request('order'));
             else if(request('sortBy') == 'type')
-                $notifications->select('id', 'contents', 'type', 'group_id', 'user_id', 'status','created_at', \DB::raw('(select ' . request('sortBy') . ' from notification_type where notifications.type = notification_type.id) as '. request('sortBy')))->orderBy(request('sortBy'), request('order'));
+                $notifications->select('id', 'contents', 'type', 'group_id', 'user_id', 'status', 'created_at', 'updated_at', \DB::raw('(select ' . request('sortBy') . ' from notification_type where notifications.type = notification_type.id) as '. request('sortBy')))->orderBy(request('sortBy'), request('order'));
             else if(request('sortBy') == 'email')
-                $notifications->select('id', 'contents', 'type', 'group_id', 'user_id', 'status', 'created_at', \DB::raw('(select ' . request('sortBy') . ' from users where notifications.user_id = users.id) as '. request('sortBy')))->orderBy(request('sortBy'), request('order'));
+                $notifications->select('id', 'contents', 'type', 'group_id', 'user_id', 'status', 'created_at', 'updated_at', \DB::raw('(select ' . request('sortBy') . ' from users where notifications.user_id = users.id) as '. request('sortBy')))->orderBy(request('sortBy'), request('order'));
         }
         
-        return $notifications->paginate(request('pageLength'));
+        $notifications_result = $notifications->paginate(request('pageLength'));
+        if ($notifications_result) {
+            foreach ($notifications_result as $notification) {
+                $notification['contents'] = LaravelEmojiOne::toImage($notification['contents']);
+            }
+        }
+
+        return $notifications_result;
     }
     
-    public function indexSys() {
-        try {
-            JWTAuth::parseToken()->authenticate();
-        } catch (JWTException $e) {
-            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
-        }
-        
-        $notifications = \App\Notification::with('user', 'type', 'images')->where('type', '=', 5);
-        
-        if(request()->has('country'))
-            $notifications->where('country', '=', request('country'));
-            
-        if(request()->has('group_id')) {
-            $groups = \App\Group::where('group_id', 'like', '%'. request('group_id').'%')->get();
-            $group_ids = array();
-            if ($groups) {
-                foreach($groups as $group) {
-                    array_push($group_ids, $group->id);
-                }
-            }
-            $notifications->whereIn('group_id', $group_ids);
-        }
-            
-        if(request()->has('email'))
-            $notifications->whereHas('user', function($q) {
-                $q->where('email', 'like', '%' . strtolower(request('email')) . '%');
-            });
-            
-        if(request()->has('contents'))
-            $notifications->where('contents', 'like', '%'. request('contents').'%');
-            
-        if(request()->has('status'))
-            $notifications->whereStatus(request('status'));
-            
-        if(request()->has('sortBy') && request()->has('order')) {
-            if(request('sortBy') == 'contents' || request('sortBy') == 'created_at' || request('sortBy') == 'country')
-                $notifications->select('id', 'contents', 'type', 'group_id', 'user_id', 'status', 'country', 'created_at')->orderBy(request('sortBy'), request('order'));
-            else if(request('sortBy') == 'email')
-                $notifications->select('id', 'contents', 'type', 'group_id', 'user_id', 'status', 'country', 'created_at', \DB::raw('(select ' . request('sortBy') . ' from users where notifications.user_id = users.id) as '. request('sortBy')))->orderBy(request('sortBy'), request('order'));
-        }
-        
-        return $notifications->paginate(request('pageLength'));
-    }
-
-    public function indexComments() {
-        try {
-            JWTAuth::parseToken()->authenticate();
-        } catch (JWTException $e) {
-            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
-        }
-
-        $notification = null;
-        if(request()->has('id'))
-            $notification = \App\Notification::find(request('id'));
-            
-        if(!$notification)
-            return response()->json(['status' => 'fail', 'message' => 'Couldnot find notificaioin!', 'error_type' => 'no_notification'], 422);
-        
-        $comments = \App\Comment::with('images', 'user.simple_profile')->where('notification_id', '=', request('id'));
-        if(request()->has('email'))
-            $comments->whereHas('user', function($q) {
-                $q->where('email', 'like', '%' . strtolower(request('email')) . '%');
-            });
-            
-        if(request()->has('contents'))
-            $comments->where('contents', 'like', '%'. request('contents').'%');
-            
-        if(request()->has('status'))
-            $comments->whereStatus(request('status'));
-            
-        if(request()->has('sortBy') && request()->has('order')) {
-            if(request('sortBy') == 'contents' || request('sortBy') == 'created_at')
-                $comments->select('id', 'contents', 'notification_id', 'user_id', 'status', 'created_at')->orderBy(request('sortBy'), request('order'));
-            else if(request('sortBy') == 'email')
-                $comments->select('id', 'contents', 'notification_id', 'user_id', 'status', 'created_at', \DB::raw('(select ' . request('sortBy') . ' from users where comments.user_id = users.id) as '. request('sortBy')))->orderBy(request('sortBy'), request('order'));
-        }
-        
-        return $comments->paginate(request('pageLength'));
-    }
-
-    private function stampImage($filename_x, $filename_result, $mergeType = 0) {
+    private function stampImage($filename_x, $filename_result, $mergeType = 0){
         if ( !file_exists( $filename_x ) || !file_exists( $this->stamp_image_path ) ) {
             return false;
         }
@@ -219,21 +150,20 @@ class NotificationController extends Controller
         return true;
     }
 
-    private function sendPushNotificationHttpRequest($user_ids, $notification_id, $notification_type) {
+    private function sendPushNotificationHttpRequest($user_ids, $notification_id, $notification_type){
         if (!$user_ids) return null;
         
         $notification_names = array();
         $notification_names['swedish'] = \App\NotificationType::where('id', '=', $notification_type)->pluck('trans_name')[0];
         $notification_names['else'] = \App\NotificationType::where('id', '=', $notification_type)->pluck('name')[0];
         
-        $url = 'https://onesignal.com/api/v1/notifications';
         $requests = $responses = [];
         if ( is_array( $user_ids ) ) {
             foreach( $user_ids as $user_id ) {
                 $user = \App\User::find($user_id);
                 $profile = $user->Sound_Profile;
                 if ($profile) {
-                    if ( $user->push_token != '' ) {
+                    if ( $profile->push_token != '' ) {
                         $notification_name = '';
                         if (strtolower($profile->language) == 'swedish') {
                             $notification_name = $notification_names['swedish'];
@@ -241,25 +171,25 @@ class NotificationController extends Controller
                             $notification_name = $notification_names['else'];
                         }
                         $params = array(
-                            'app_id' => "Your App ID",
-                            'include_player_ids' => [ $user->push_token ],
+                            'app_id' => SZ_PUSHNOTI_APP_ID,
+                            'include_player_ids' => [ $profile->push_token ],
                             'headings' => array('en' => 'Safety Zone'),
                             'contents' => array('en' => $notification_name),
-                            'data' => array('notification_id' => $notification_id)
+                            'data' => array('notification_id' => $notification_id, 'group_id' => 0, 'group_name' => '', 'user_id' => 0, 'status' => 'notification')
                         );
                         if ( $profile->os_type == 'android' ) {
                             if ( $profile->sound == "sound1" && $profile->vibration == 1 ) {
-                                $params['android_channel_id'] = '';
+                                $params['android_channel_id'] = SZ_PUSHNOTI_ANDROID_CHANNEL_1;
                             } else if ( $profile->sound == "sound1" && $profile->vibration == 0 ) {
-                                $params['android_channel_id'] = '';
+                                $params['android_channel_id'] = SZ_PUSHNOTI_ANDROID_CHANNEL_2;
                             } else if ( $profile->sound == "sound2" && $profile->vibration == 1 ) {
-                                $params['android_channel_id'] = '';
+                                $params['android_channel_id'] = SZ_PUSHNOTI_ANDROID_CHANNEL_3;
                             } else if ( $profile->sound == "sound2" && $profile->vibration == 0 ) {
-                                $params['android_channel_id'] = '';
+                                $params['android_channel_id'] = SZ_PUSHNOTI_ANDROID_CHANNEL_4;
                             } else if ( $profile->sound == "no_sound" && $profile->vibration == 1 ) {
-                                $params['android_channel_id'] = '';
+                                $params['android_channel_id'] = SZ_PUSHNOTI_ANDROID_CHANNEL_5;
                             } else if ( $profile->sound == "no_sound" && $profile->vibration == 0 ) {
-                                $params['android_channel_id'] = '';
+                                $params['android_channel_id'] = SZ_PUSHNOTI_ANDROID_CHANNEL_6;
                             }
                         } else if ( $profile->os_type == 'ios' ) {
                             if ( $profile->vibration == 0 && $profile->sound == 'no_sound' ) {
@@ -270,17 +200,17 @@ class NotificationController extends Controller
                         }
                         $requests[] = $params;
                         $ch = curl_init();
-                        curl_setopt($ch, CURLOPT_URL, $url);
+                        curl_setopt($ch, CURLOPT_URL, SZ_PUSHNOTI_URL);
                         curl_setopt($ch, CURLOPT_POST, 1);
                         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                        curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-type: application/json", "Authorization: Basic Your App Token"));
+                        curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-type: application/json", "Authorization: Basic " . SZ_PUSHNOTI_AUTH));
                         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($params));
                         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 120);
                         curl_setopt($ch, CURLOPT_TIMEOUT, 120);
                         
                         $responses[] = curl_exec($ch);
                         if(curl_errno($ch) !== 0) {
-                            error_log('cURL error when connecting to ' . $url . ': ' . curl_error($ch));
+                            error_log('cURL error when connecting to ' . SZ_PUSHNOTI_URL . ': ' . curl_error($ch));
                         }
                         
                         curl_close($ch);
@@ -291,366 +221,7 @@ class NotificationController extends Controller
         return array('request' => $requests, 'response' => $responses);
     }
 
-    // Notification
-    public function createNotification(Request $request){
-        try {
-            JWTAuth::parseToken()->authenticate();
-        } catch (JWTException $e) {
-            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
-        }
-        
-        $validation = Validator::make($request->all(), [
-            'type' => 'required',
-            'contents' => 'required|min:1',
-            'datetime' => 'date_format:"Y-m-d H:i:s"|required',
-        ]);
-        
-        if($validation->fails())
-            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
-            
-        $user = JWTAuth::parseToken()->authenticate();
-        $profile = $user->Profile;
-        if (!$profile)
-            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
-            
-        $group = \App\Group::find($profile->group_id);
-        if(!$group)
-            return response()->json(['status' => 'fail', 'message' => 'You must be any group memeber!', 'error_type' => 'no_member'], 422);
-        
-        if($request->hasfile('images')) {
-            foreach($request->file('images') as $image)
-            {
-                $extension = $image->getClientOriginalExtension();
-                if (!in_array(strtolower($extension), $this->image_extensions)) {
-                    return response()->json(['status' => 'fail', 'message' => 'Your images must be jpeg, png, jpg, gif, bmp!', 'error_type' => 'image_type_error'], 422);
-                }
-            }
-        }
-        
-        $notification_type = \App\NotificationType::find(request('type'));
-        if (!$notification_type) {
-            return response()->json(['status' => 'fail', 'message' => 'You must specify the right notification type!', 'error_type' => 'type_error'], 422);
-        }
-        
-        $notification = new \App\Notification;
-        $notification->type = request('type');
-        $notification->contents = request('contents');
-        $notification->user_id = $user->id;
-        $notification->group_id = $group->id;
-        $notification->status = 1;
-        $notification->created_at = request('datetime');
-        $notification->save();
-        
-        if($request->hasfile('images')) {
-            if (is_array($request->file('images'))) {
-                if (count($request->file('images'))) {
-                    foreach($request->file('images') as $image)
-                    {
-                        $extension = $image->getClientOriginalExtension();
-                        $mt = explode(' ', microtime());
-                        $name = ((int)$mt[1]) * 1000000 + ((int)round($mt[0] * 1000000));
-                        $file_name = $name . '.' . $extension;
-                        $image_flag = true;
-                        if( $this->stamp_image_path && \File::exists($this->stamp_image_path) ) {
-                            $file_tmp_name = $name . 'tmp.' . $extension;
-                            $file = $image->move($this->images_path, $file_tmp_name);
-                            if ( ( $image_flag = $this->stampImage($this->images_path . $file_tmp_name, $this->images_path . $file_name) ) ) {
-                                \File::delete($this->images_path . $file_tmp_name);
-                            }
-                        } else {
-                            $file = $image->move($this->images_path, $file_name);
-                        }
-                        
-                        if ( $image_flag ) {
-                            list($width, $height) = getimagesize($this->images_path . $file_name);
-                            $notificaion_image = new \App\Image;
-                            $notificaion_image->type = 'notification';
-                            $notificaion_image->width = $width;
-                            $notificaion_image->height = $height;
-                            $notificaion_image->parent_id = $notification->id;
-                            $notificaion_image->url = $file_name;
-                            $notificaion_image->save();
-                        }
-                    }
-                }
-            }
-        }
-        
-        $group_id = $group->id;
-        // Signed Users
-        $users = \App\User::with('profile');
-        $users->whereHas('profile', function($q) use ($group_id) {
-            $q->where('group_id', $group_id);
-        });
-        $users->whereNotNull('push_token')->where('push_token', '<>', '')->where('status', '=', 'activated')->where(function($q) {
-            $q->whereNull('deactivated_at')->orWhere('deactivated_at', '')->orWhereRaw('users.activated_at > users.deactivated_at');
-        })->where('id', '!=', $user->id);
-        $group_users = $users->pluck('id')->toArray();
-        
-        $users = \App\User::with('groups');
-        $users->whereHas('groups', function($q) use ($group_id) {
-            $q->where('group_id', $group_id);
-        });
-        $users->whereNotNull('push_token')->where('push_token', '<>', '')->where('status', '=', 'activated')->where(function($q) {
-            $q->whereNull('deactivated_at')->orWhere('deactivated_at', '')->orWhereRaw('users.activated_at > users.deactivated_at');
-        })->where('id', '!=', $user->id);
-        $attached_users = $users->pluck('id')->toArray();
-        
-        $diff_users = array_diff($attached_users, $group_users);
-        $push_users = array_merge($group_users, $diff_users);
-        
-        $push_result = $this->sendPushNotificationHttpRequest($push_users, $notification->id, request('type'));
-        
-        // Signed Out Users
-        $users = \App\User::with('profile');
-        $users->whereHas('profile', function($q) use ($group_id) {
-            $q->where('group_id', $group_id);
-        });
-        $users->where('status', '=', 'activated')->where(function($q) {
-            $q->whereNotNull('deactivated_at')->where('deactivated_at', '!=', '')->whereRaw('users.activated_at < users.deactivated_at');
-        })->where('id', '!=', $user->id);
-        $group_users = $users->pluck('id')->toArray();
-        
-        $users = \App\User::with('groups');
-        $users->whereHas('groups', function($q) use ($group_id) {
-            $q->where('group_id', $group_id);
-        });
-        $users->where('status', '=', 'activated')->where(function($q) {
-            $q->whereNotNull('deactivated_at')->where('deactivated_at', '!=', '')->whereRaw('users.activated_at < users.deactivated_at');
-        })->where('id', '!=', $user->id);
-        $attached_users = $users->pluck('id')->toArray();
-        
-        $diff_users = array_diff($attached_users, $group_users);
-        $alarm_users = array_merge($group_users, $diff_users);
-        
-        $users = \App\User::whereIn('id', $alarm_users)->get();
-        foreach($users as $user) {
-            if ($user->alarms) {
-                $user->alarms = $user->alarms . ',' . $notification->id;
-            } else {
-                $user->alarms = $notification->id;
-            }
-            $user->save();
-        }
-        
-        return response()->json(['status' => 'success', 'message' => 'Notification has created succesfully!', 'notification_id' => $notification->id, 'push_result' => $push_result], 200); // , 'notification_name' => $notification_name, 'push_result' => $push_result
-    }
-    
-    public function createSysNotification(Request $request){
-        try {
-            JWTAuth::parseToken()->authenticate();
-        } catch (JWTException $e) {
-            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
-        }
-
-        $user = JWTAuth::parseToken()->authenticate();
-        if (!$user->backend) {
-            return response()->json(['status' => 'fail', 'message' => 'You must be an administrator!', 'error_type' => 'no_permission'], 422);
-        }
-        
-        $validation = Validator::make($request->all(), [
-            'country' => '',
-            'group_id' => '',
-            'contents' => 'required|min:1',
-            'datetime' => 'date_format:"Y-m-d H:i:s"|required',
-        ]);
-        
-        if($validation->fails())
-            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
-            
-        if($request->hasfile('images')) {
-            foreach($request->file('images') as $image)
-            {
-                $extension = $image->getClientOriginalExtension();
-                if (!in_array(strtolower($extension), $this->image_extensions)) {
-                    return response()->json(['status' => 'fail', 'message' => 'Your images must be jpeg, png, jpg, gif, bmp!', 'error_type' => 'image_type_error'], 422);
-                }
-            }
-        }
-        
-        $country = "";
-        if (request('country') != '') {
-            $country = request('country');
-        }
-        $group_id = 0;
-        if (request('group_id') != '') {
-            $group_id = request('group_id');
-        }
-        $notification = new \App\Notification;
-        $notification->type = 5;
-        $notification->contents = request('contents');
-        $notification->user_id = $user->id;
-        $notification->country = $country;
-        $notification->group_id = $group_id;
-        $notification->status = 1;
-        $notification->created_at = request('datetime');
-        $notification->save();
-        
-        if($request->hasfile('images')) {
-            if (is_array($request->file('images'))) {
-                if (count($request->file('images'))) {
-                    foreach($request->file('images') as $image)
-                    {
-                        $extension = $image->getClientOriginalExtension();
-                        $mt = explode(' ', microtime());
-                        $name = ((int)$mt[1]) * 1000000 + ((int)round($mt[0] * 1000000));
-                        $file_name = $name . '.' . $extension;
-                        $image_flag = true;
-                        if( $this->stamp_image_path && \File::exists($this->stamp_image_path) ) {
-                            $file_tmp_name = $name . 'tmp.' . $extension;
-                            $file = $image->move($this->images_path, $file_tmp_name);
-                            if ( ( $image_flag = $this->stampImage($this->images_path . $file_tmp_name, $this->images_path . $file_name) ) ) {
-                                \File::delete($this->images_path . $file_tmp_name);
-                            }
-                        } else {
-                            $file = $image->move($this->images_path, $file_name);
-                        }
-                        
-                        if ( $image_flag ) {
-                            list($width, $height) = getimagesize($this->images_path . $file_name);
-                            $notificaion_image = new \App\Image;
-                            $notificaion_image->type = 'notification';
-                            $notificaion_image->width = $width;
-                            $notificaion_image->height = $height;
-                            $notificaion_image->parent_id = $notification->id;
-                            $notificaion_image->url = $file_name;
-                            $notificaion_image->save();
-                        }
-                    }
-                }
-            }
-        }
-        
-        // Signed Users
-        $users = \App\User::with('profile');
-        if ($country) {
-            $users->whereHas('profile', function($q) use ($country) {
-                $q->where('country', $country);
-            });
-        }
-        if ($group_id) {
-            $users->whereHas('profile', function($q) use ($group_id) {
-                $q->where('group_id', $group_id);
-            });
-        }
-        $users->whereNotNull('push_token')->where('push_token', '<>', '')->where('status', '=', 'activated')->where(function($q) {
-            $q->whereNull('deactivated_at')->orWhere('deactivated_at', '')->orWhereRaw('users.activated_at > users.deactivated_at');
-        })->where('id', '!=', $user->id);
-        $push_users = $users->pluck('id')->toArray();
-        
-        $push_result = $this->sendPushNotificationHttpRequest($push_users, $notification->id, 5);
-        
-        // Signed Out Users
-        $users = \App\User::with('profile');
-        if ($country) {
-            $users->whereHas('profile', function($q) use ($country) {
-                $q->where('country', $country);
-            });
-        }
-        if ($group_id) {
-            $users->whereHas('profile', function($q) use ($group_id) {
-                $q->where('group_id', $group_id);
-            });
-        }
-        $users->where('status', '=', 'activated')->where(function($q) {
-            $q->whereNotNull('deactivated_at')->where('deactivated_at', '!=', '')->whereRaw('users.activated_at < users.deactivated_at');
-        })->where('id', '!=', $user->id);
-        $alarm_users = $users->pluck('id')->toArray();        
-        
-        $users = \App\User::whereIn('id', $alarm_users)->get();
-        foreach($users as $user) {
-            if ($user->alarms) {
-                $user->alarms = $user->alarms . ',' . $notification->id;
-            } else {
-                $user->alarms = $notification->id;
-            }
-            $user->save();
-        }
-        
-        return response()->json(['status' => 'success', 'message' => 'System Notification has created succesfully!', 'notification_id' => $notification->id, 'push_result' => $push_result], 200); // , 'notification_name' => $notification_name, 'push_result' => $push_result
-    }
-    
-    public function getAlarms() {
-        try {
-            JWTAuth::parseToken()->authenticate();
-        } catch (JWTException $e) {
-            return response()->json(['authenticated' => false], 422);
-        }
-        
-        $user = JWTAuth::parseToken()->authenticate();
-        $user_alarms = $user->alarms;
-        $user->alarms = '';
-        $user->save();
-        
-        $notifications = \App\Notification::whereIn('id', explode(',', $user_alarms))->pluck('id')->toArray();
-        
-        return response()->json(['status' => 'success', 'message' => 'Get Notification Alarms succesfully!', 'notifications' => $notifications], 200);
-    }
-
-    public function getNotifications(Request $request) {
-        try {
-            JWTAuth::parseToken()->authenticate();
-        } catch (JWTException $e) {
-            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
-        }
-        
-        $user = JWTAuth::parseToken()->authenticate();
-        $profile = $user->Profile;
-        if (!$profile)
-            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
-            
-        $group = \App\Group::find($profile->group_id);
-        if(!$group)
-            return response()->json(['status' => 'fail', 'message' => 'You must be any group memeber!', 'error_type' => 'no_member'], 422);
-        
-        $notification_ids = \App\Notification::whereStatus(1)->where('group_id', '=', $profile->group_id)->where('created_at', '>=', $user->created_at)->pluck('id')->toArray();
-        
-        $user_groups = \App\UserGroups::where('user_id', '=', $user->id)->get();
-        foreach ($user_groups as $user_group) {
-            $attched_notification_ids = \App\Notification::whereStatus(1)->where('group_id', '=', $user_group->group_id)->where('created_at', '>=', $user_group->created_at)->pluck('id')->toArray();
-            $notification_ids = array_merge($notification_ids, $attched_notification_ids);
-        }
-        
-        $country = $profile->country;
-        $group_id = $profile->group_id;
-        $attched_notification_ids = \App\Notification::whereStatus(1)->where('type', '=', 5)->where(
-            function ($q) use($country, $group_id) {
-                $q->where(function ($qq) use ($country, $group_id) {
-                    $qq->where('country',  '')->where('group_id',  '0');
-                })->orwhere(function ($qq) use ($country, $group_id) {
-                    $qq->where('country',  $country)->where('group_id',  '0');
-                })->orwhere(function ($qq) use ($country, $group_id) {
-                    $qq->where('country',  '')->where('group_id',  $group_id);
-                })->orwhere(function ($qq) use ($country, $group_id) {
-                    $qq->where('country',  $country)->where('group_id',  $group_id);
-                });
-            } )->pluck('id')->toArray();
-        $notification_ids = array_merge($notification_ids, $attched_notification_ids);
-        
-        $notifications = \App\Notification::with('user.simple_profile');
-        $notifications_tmp = $notifications->whereIn('id', $notification_ids)->whereStatus(1);
-        $total_counts = count($notifications_tmp->get());
-        
-        $notifications->orderBy('created_at', 'DESC');
-        
-        $page_end = false;
-        $result = [];
-        if($request->has('page')) {
-            $page_id = request('page');
-            if (($page_id + 1) * $this->app_page_rows >= $total_counts) {
-                $page_end = true;
-            }
-            if ($page_id * $this->app_page_rows <= $total_counts) {
-                $result = $notifications->offset($page_id * $this->app_page_rows)->limit($this->app_page_rows)->get();
-            }
-        } else {
-            $result = $notifications->get();
-        }
-        
-        return response()->json(['status' => 'success', 'message' => 'Get Notification Data Successfully!', 'notifications' => $result, 'end' => $page_end], 200);
-    }
-
-    public function getNotification(Request $request, $id) {
+    public function getNotification(Request $request, $id){
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {
@@ -676,61 +247,7 @@ class NotificationController extends Controller
         return response()->json(['status' => 'success', 'message' => 'Get Notification Detail Data Successfully!', 'notification' => $notification_result], 200);
     }
     
-    public function getNotificationDetail(Request $request) {
-        try {
-            JWTAuth::parseToken()->authenticate();
-        } catch (JWTException $e) {
-            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
-        }
-        
-        $user = JWTAuth::parseToken()->authenticate();
-        $profile = $user->Profile;
-        if (!$profile)
-            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
-        
-        $validation = Validator::make($request->all(), [
-            'notification_id' => 'required',
-        ]);
-        if($validation->fails())
-            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
-        
-        $group = \App\Group::find($profile->group_id);
-        if(!$group)
-            return response()->json(['status' => 'fail', 'message' => 'You must be any group memeber!', 'error_type' => 'no_member'], 422);
-        
-        $notification = \App\Notification::find(request('notification_id'));
-        if(!$notification)
-            return response()->json(['status' => 'fail', 'message' => 'We can not find the notification!', 'error_type' => 'no_notification'], 422);
-        
-        if(!$notification->status)
-            return response()->json(['status' => 'fail', 'message' => 'We can not find the notification!', 'error_type' => 'no_notification'], 422);
-       
-        $notification = \App\Notification::with('user.simple_profile', 'images');
-        $notification_tmp = $notification->where('id', '=', request('notification_id'));
-        
-        $comments = \App\Comment::where('notification_id', '=', request('notification_id'))->whereStatus(1);
-        $total_counts = count($comments->get());
-        
-        $page_end = false;
-        $result = [];
-        $comments = \App\Comment::with('images', 'user.simple_profile')->where('notification_id', '=', request('notification_id'))->whereStatus(1);
-        $comments->orderBy('created_at', 'ASC');
-        if($request->has('page')) {
-            $page_id = request('page');
-            if (($page_id + 1) * $this->app_page_rows >= $total_counts) {
-                $page_end = true;
-            }
-            if ($page_id * $this->app_page_rows <= $total_counts) {
-                $result = $comments->offset($page_id * $this->app_page_rows)->limit($this->app_page_rows)->get();
-            }
-        } else {
-            $result = $comments->get();
-        }
-        
-        return response()->json(['status' => 'success', 'message' => 'Get Notification Detail Data Successfully!', 'notification' => $notification->get(), 'my_avatar' => $profile->avatar, 'comments' => $result, 'end' => $page_end], 200);
-    }
-
-    public function updateNotificationBackend(Request $request) {
+    public function updateNotification(Request $request){
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {
@@ -819,52 +336,6 @@ class NotificationController extends Controller
         return response()->json(['status' => 'success', 'message' => 'Update Notification Data Successfully!'], 200);
     }
 
-    public function updateNotification(Request $request) {
-        try {
-            JWTAuth::parseToken()->authenticate();
-        } catch (JWTException $e) {
-            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
-        }
-        
-        $user = JWTAuth::parseToken()->authenticate();
-        $profile = $user->Profile;
-        if (!$profile)
-            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
-        
-        $validation = Validator::make($request->all(), [
-            'notification_id' => 'required',
-            'contents' => 'required',
-        ]);
-        if($validation->fails())
-            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
-                
-        $user = JWTAuth::parseToken()->authenticate();
-        $profile = $user->Profile;
-        if (!$profile)
-            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
-            
-        $notification = \App\Notification::find(request('notification_id'));
-        if(!$notification)
-            return response()->json(['status' => 'fail', 'message' => 'Couldnot find notificaioin!', 'error_type' => 'no_notification'], 422);
-        
-        if(!$notification->status)
-            return response()->json(['status' => 'fail', 'message' => 'Couldnot find notificaioin!', 'error_type' => 'no_notification'], 422);
-        
-        $permission = 0;
-        if($user->backend || $notification->user_id == $user->id) {
-            $permission = 1;
-        } else if ($profile->is_admin && $profile->group_id == $notification->group_id) {
-            $permission = 1;
-        }
-        if(!$permission)
-            return response()->json(['status' => 'fail', 'message' => 'You have to get a permission!', 'error_type' => 'no_permission'], 422);
-            
-        $notification->contents = request('contents');
-        $notification->save();
-        
-        return response()->json(['status' => 'success', 'message' => 'Update Notification Data Successfully!'], 200);
-    }
-
     public function toggleStatus(Request $request){
         try {
             JWTAuth::parseToken()->authenticate();
@@ -886,7 +357,7 @@ class NotificationController extends Controller
         return response()->json(['status' => 'success', 'message' => 'Notification updated!'], 200);
     }
     
-    public function deleteNotificationBackend(Request $request, $id){
+    public function deleteNotification(Request $request, $id){
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {
@@ -900,16 +371,28 @@ class NotificationController extends Controller
         $notification = \App\Notification::find($id);
         if(!$notification)
             return response()->json(['status' => 'fail', 'message' => 'Couldnot find notificaioin!', 'error_type' => 'no_notification'], 422);
-            
+        
+        $notification_unreads = \App\NotificationUnread::where('notification_id', $notification->id)->get();
+        if ($notification_unreads) {
+            foreach ($notification_unreads as $notification_unread) {
+                $notification_unread->delete();
+            }
+        }
         $images = $notification->Images;
         if ($images) {
             foreach ($images as $image) {
                 $image->delete();
             }
         }
-        $comments = $notification->comments;
+        $comments = $notification->Comments;
         if ($comments) {
             foreach ($comments as $comment) {
+                $comment_unreads = \App\CommentUnread::where('comment_id', $comment->id)->get();
+                if ($comment_unreads) {
+                    foreach ($comment_unreads as $comment_unread) {
+                        $comment_unread->delete();
+                    }
+                }
                 $images = $comment->Images;
                 if ($images) {
                     foreach ($images as $image) {
@@ -924,112 +407,57 @@ class NotificationController extends Controller
         return response()->json(['status' => 'success', 'message' => 'Notification deleted!'], 200);
     }
     
-    public function deleteNotification(Request $request){
+    // System Notification
+    public function indexSys(){
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {
             return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
         }
         
-        $validation = Validator::make($request->all(),[
-            'notification_id' => 'required',
-        ]);
-        if ($validation->fails())
-            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
-            
-        $user = JWTAuth::parseToken()->authenticate();
-        $profile = $user->Profile;
-        if (!$profile)
-            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
-            
-        $notification = \App\Notification::find(request('notification_id'));
-        if(!$notification)
-            return response()->json(['status' => 'fail', 'message' => 'Couldnot find notificaioin!', 'error_type' => 'no_notification'], 422);
-       
-        if(!$notification->status)
-            return response()->json(['status' => 'fail', 'message' => 'Couldnot find notificaioin!', 'error_type' => 'no_notification'], 422);
-             
-        $permission = 0;
-        if($user->backend || $notification->user_id == $user->id) {
-            $permission = 1;
-        } else if ($profile->is_admin && $profile->group_id == $notification->group_id) {
-            $permission = 1;
-        }
-        if(!$permission)
-            return response()->json(['status' => 'fail', 'message' => 'You have to get a permission!', 'error_type' => 'no_permission'], 422);
-            
-        $images = $notification->Images;
-        if ($images) {
-            foreach ($images as $image) {
-                $image->delete();
-            }
-        }
-        $comments = $notification->comments;
-        if ($comments) {
-            foreach ($comments as $comment) {
-                $images = $comment->Images;
-                if ($images) {
-                    foreach ($images as $image) {
-                        $image->delete();
-                    }
-                }
-                $comment->delete();
-            }
-        }
-        $notification->delete();
+        $notifications = \App\Notification::with('user', 'type', 'images')->where('type', '=', 5);
         
-        return response()->json(['status' => 'success', 'message' => 'Notification deleted!'], 200);
-    }
-    
-    public function deleteNotificationImage(Request $request){
-        try {
-            JWTAuth::parseToken()->authenticate();
-        } catch (JWTException $e) {
-            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
-        }
-          
-        $validation = Validator::make($request->all(),[
-            'notification_id' => 'required',
-            'url' => 'required',
-        ]);
-        if ($validation->fails())
-            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
+        if(request()->has('country'))
+            $notifications->where('country', '=', request('country'));
             
-        $user = JWTAuth::parseToken()->authenticate();
-        $profile = $user->Profile;
-        if (!$profile)
-            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
-            
-        $notification = \App\Notification::find(request('notification_id'));
-        if(!$notification)
-            return response()->json(['status' => 'fail', 'message' => 'Couldnot find notificaioin!', 'error_type' => 'no_notification'], 422);
-        
-        if(!$notification->status)
-            return response()->json(['status' => 'fail', 'message' => 'Couldnot find notificaioin!', 'error_type' => 'no_notification'], 422);
-            
-        $permission = 0;
-        if($user->backend || $notification->user_id == $user->id) {
-            $permission = 1;
-        } else if ($profile->is_admin && $profile->group_id == $notification->group_id) {
-            $permission = 1;
-        }
-        if(!$permission)
-            return response()->json(['status' => 'fail', 'message' => 'You have to get a permission!', 'error_type' => 'no_permission'], 422);
-            
-        $images = $notification->Images;
-        if ($images) {
-            foreach ($images as $image) {
-                if ($image->url == request('url')) {
-                    $image->delete();
+        if(request()->has('group_id')) {
+            $groups = \App\Group::where('group_id', 'like', '%'. request('group_id').'%')->get();
+            $group_ids = array();
+            if ($groups) {
+                foreach($groups as $group) {
+                    array_push($group_ids, $group->id);
                 }
             }
+            $notifications->whereIn('group_id', $group_ids);
+        }
+            
+        if(request()->has('full_name'))
+            $notifications->whereHas('user.simple_profile', function($q) {
+                $q->where('full_name', 'like', '%' . strtolower(request('full_name')) . '%');
+            });
+
+        if(request()->has('email'))
+            $notifications->whereHas('user', function($q) {
+                $q->where('email', 'like', '%' . strtolower(request('email')) . '%');
+            });
+            
+        if(request()->has('contents'))
+            $notifications->where('contents', 'like', '%'. request('contents').'%');
+            
+        if(request()->has('status'))
+            $notifications->whereStatus(request('status'));
+            
+        if(request()->has('sortBy') && request()->has('order')) {
+            if(request('sortBy') == 'contents' || request('sortBy') == 'created_at' || request('sortBy') == 'updated_at' || request('sortBy') == 'country')
+                $notifications->select('id', 'contents', 'type', 'group_id', 'user_id', 'status', 'country', 'created_at', 'updated_at')->orderBy(request('sortBy'), request('order'));
+            else if(request('sortBy') == 'email')
+                $notifications->select('id', 'contents', 'type', 'group_id', 'user_id', 'status', 'country', 'created_at', 'updated_at', \DB::raw('(select ' . request('sortBy') . ' from users where notifications.user_id = users.id) as '. request('sortBy')))->orderBy(request('sortBy'), request('order'));
         }
         
-        return response()->json(['status' => 'success', 'message' => 'Notification Image deleted!'], 200);
+        return $notifications->paginate(request('pageLength'));
     }
 
-    // Comments
-    public function createComment(Request $request) {
+    public function createSysNotification(Request $request){
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {
@@ -1037,83 +465,155 @@ class NotificationController extends Controller
         }
 
         $user = JWTAuth::parseToken()->authenticate();
-        $profile = $user->Profile;
-        if (!$profile)
-            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
+        if (!$user->backend) {
+            return response()->json(['status' => 'fail', 'message' => 'You must be an administrator!', 'error_type' => 'no_permission'], 422);
+        }
         
         $validation = Validator::make($request->all(), [
-            'notification_id' => 'required',
-            'contents' => 'required',
+            'country' => '',
+            'group_id' => '',
+            'contents' => 'required|min:1',
             'datetime' => 'date_format:"Y-m-d H:i:s"|required',
         ]);        
         if($validation->fails())
             return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
             
-        $group = \App\Group::find($profile->group_id);
-        if(!$group)
-            return response()->json(['status' => 'fail', 'message' => 'You must be any group memeber!', 'error_type' => 'no_member'], 422);
-        
-        if(request('notification_id') == 0) {
-            return response()->json(['status' => 'fail', 'message' => 'You must specify the notificaion!', 'error_type' => 'no_notification'], 422);
-        }
-        
-        $notification = \App\Notification::find(request('notification_id'));
-        if(!$notification)
-            return response()->json(['status' => 'fail', 'message' => 'You specify the empty notification!', 'error_type' => 'find_notification'], 422);
-        
         if($request->hasfile('images')) {
             foreach($request->file('images') as $image)
             {
                 $extension = $image->getClientOriginalExtension();
                 if (!in_array(strtolower($extension), $this->image_extensions)) {
-                    return response()->json(['status' => 'fail', 'message' => 'Your images must be jpeg, png, jpg!', 'error_type' => 'image_type_error'], 422);
+                    return response()->json(['status' => 'fail', 'message' => 'Your images must be jpeg, png, jpg, gif, bmp!', 'error_type' => 'image_type_error'], 422);
                 }
             }
         }
         
-        $comment = new \App\Comment;
-        $comment->notification_id = $notification->id;
-        $comment->contents = request('contents');
-        $comment->user_id = $user->id;
-        $comment->status = 1;
-        $comment->created_at = request('datetime');
-        $comment->save();
+        $country = "";
+        if (request('country') != '')
+            $country = request('country');
         
-        if($request->hasfile('images')) {
-            foreach($request->file('images') as $image)
-            {
-                $extension = $image->getClientOriginalExtension();
-                $mt = explode(' ', microtime());
-                $name = ((int)$mt[1]) * 1000000 + ((int)round($mt[0] * 1000000));
-                $file_name = $name . '.' . $extension;
-                $image_flag = true;
-                
-                if($this->stamp_image_path && \File::exists($this->stamp_image_path)) {
-                    $file_tmp_name = $name . 'tmp.' . $extension;
-                    $file = $image->move($this->images_path, $file_tmp_name);
-                    if ( ( $image_flag = $this->stampImage($this->images_path . $file_tmp_name, $this->images_path . $file_name) ) ) {
-                        \File::delete($this->images_path . $file_tmp_name);
-                    }
-                } else {
-                    $file = $image->move($this->images_path, $file_name);
-                }
-                
-                if ( $image_flag ) {
-                    list($width, $height) = getimagesize($this->images_path . $file_name);
-                    $comment_image = new \App\Image;
-                    $comment_image->type = 'comment';
-                    $comment_image->width = $width;
-                    $comment_image->height = $height;
-                    $comment_image->parent_id = $comment->id;
-                    $comment_image->url = $file_name;
-                    $comment_image->save();
-                }
-            }
-        }
-        
+        $group_id = 0;
+        if (request('group_id') != '')
+            $group_id = request('group_id');
+
+        $notification = new \App\Notification;
+        $notification->type = 5;
+        $notification->contents = request('contents');
+        $notification->user_id = $user->id;
+        $notification->country = $country;
+        $notification->group_id = $group_id;
+        $notification->status = 1;
+        $notification->created_at = request('datetime');
         $notification->save();
         
-        return response()->json(['status' => 'success', 'message' => 'Comment has created succesfully!', 'comment_id' => $comment->id], 200);
+        if($request->hasfile('images')) {
+            if (is_array($request->file('images'))) {
+                if (count($request->file('images'))) {
+                    foreach($request->file('images') as $image)
+                    {
+                        $extension = $image->getClientOriginalExtension();
+                        $mt = explode(' ', microtime());
+                        $name = ((int)$mt[1]) * 1000000 + ((int)round($mt[0] * 1000000));
+                        $file_name = $name . '.' . $extension;
+                        $image_flag = true;
+                        if( $this->stamp_image_path && \File::exists($this->stamp_image_path) ) {
+                            $file_tmp_name = $name . 'tmp.' . $extension;
+                            $file = $image->move($this->images_path, $file_tmp_name);
+                            if ( ( $image_flag = $this->stampImage($this->images_path . $file_tmp_name, $this->images_path . $file_name) ) ) {
+                                \File::delete($this->images_path . $file_tmp_name);
+                            }
+                        } else {
+                            $file = $image->move($this->images_path, $file_name);
+                        }
+                        
+                        if ( $image_flag ) {
+                            list($width, $height) = getimagesize($this->images_path . $file_name);
+                            $notificaion_image = new \App\Image;
+                            $notificaion_image->type = 'notification';
+                            $notificaion_image->width = $width;
+                            $notificaion_image->height = $height;
+                            $notificaion_image->parent_id = $notification->id;
+                            $notificaion_image->url = $file_name;
+                            $notificaion_image->save();
+                        }
+                    }
+                }
+            }
+        }
+        
+        // Signed Users
+        $users = \App\User::with('profile', 'groups')->where('backend', 0)->where('status', '=', 'activated');
+        if ($country)
+            $users->whereHas('profile',function($q) use($country) {
+                $q->where('country', $country);
+            });
+        if ($group_id)
+            $users->whereHas('groups',function($q) use($group_id) {
+                $q->where('group_id', $group_id);
+            });
+        $users->whereHas('profile',function($q) {
+            $q->whereNotNull('push_token')->where('push_token', '<>', '');
+        });
+        $users->where(function($q) {
+            $q->whereNull('deactivated_at')->orWhere('deactivated_at', '')->orWhereRaw('users.activated_at > users.deactivated_at');
+        });
+        $push_users = $users->pluck('id')->toArray();
+        
+        // Unread Notification
+        if ($push_users) {
+            foreach ($push_users as $push_user) {
+                $notification_unread = new \App\NotificationUnread;
+                $notification_unread->user_id = $push_user;
+                $notification_unread->notification_id = $notification->id;
+                $notification_unread->save();
+            }
+        }
+        $push_result = $this->sendPushNotificationHttpRequest($push_users, $notification->id, 5);
+        
+        return response()->json(['status' => 'success', 'message' => 'System Notification has created succesfully!', 'notification_id' => $notification->id], 200); // , 'notification_name' => $notification_name, 'push_result' => $push_result
+    }
+    
+    // Comments
+    public function indexComments(){
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
+        }
+
+        $notification = null;
+        if(request()->has('id'))
+            $notification = \App\Notification::find(request('id'));
+            
+        if(!$notification)
+            return response()->json(['status' => 'fail', 'message' => 'Couldnot find notificaioin!', 'error_type' => 'no_notification'], 422);
+        
+        $comments = \App\Comment::with('images', 'user.simple_profile')->where('notification_id', '=', request('id'));
+        
+        if(request()->has('full_name'))
+            $comments->whereHas('user.simple_profile', function($q) {
+                $q->where('full_name', 'like', '%' . strtolower(request('full_name')) . '%');
+            });
+        
+        if(request()->has('email'))
+            $comments->whereHas('user', function($q) {
+                $q->where('email', 'like', '%' . strtolower(request('email')) . '%');
+            });
+            
+        if(request()->has('contents'))
+            $comments->where('contents', 'like', '%'. request('contents').'%');
+            
+        if(request()->has('status'))
+            $comments->whereStatus(request('status'));
+            
+        if(request()->has('sortBy') && request()->has('order')) {
+            if(request('sortBy') == 'contents' || request('sortBy') == 'created_at' || request('sortBy') == 'updated_at')
+                $comments->select('id', 'contents', 'notification_id', 'user_id', 'status', 'created_at', 'updated_at')->orderBy(request('sortBy'), request('order'));
+            else if(request('sortBy') == 'email')
+                $comments->select('id', 'contents', 'notification_id', 'user_id', 'status', 'created_at', 'updated_at', \DB::raw('(select ' . request('sortBy') . ' from users where comments.user_id = users.id) as '. request('sortBy')))->orderBy(request('sortBy'), request('order'));
+        }
+        
+        return $comments->paginate(request('pageLength'));
     }
 
     public function toggleCommentStatus(Request $request){
@@ -1137,105 +637,7 @@ class NotificationController extends Controller
         return response()->json(['status' => 'success', 'message' => 'Comment updated!'], 200);
     }
     
-    public function deleteComment(Request $request){
-        try {
-            JWTAuth::parseToken()->authenticate();
-        } catch (JWTException $e) {
-            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
-        }
-          
-        $validation = Validator::make($request->all(),[
-            'comment_id' => 'required',
-        ]);
-        if ($validation->fails())
-            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
-            
-        $comment = \App\Comment::find(request('comment_id'));
-        if(!$comment)
-            return response()->json(['status' => 'fail', 'message' => 'Couldnot find comment!', 'error_type' => 'no_comment'], 422);
-        
-        if(!$comment->status)
-            return response()->json(['status' => 'fail', 'message' => 'Couldnot find comment!', 'error_type' => 'no_comment'], 422);
-            
-        $user = JWTAuth::parseToken()->authenticate();
-        $profile = $user->Profile;
-        if (!$profile)
-            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
-            
-        $permission = 0;
-        if($user->backend || $comment->user_id == $user->id) {
-            $permission = 1;
-        } else if ($profile->is_admin) {
-            $comment_user = Profile::where('user_id', '=', $comment->user_id)->get();
-            if (!$comment_user)
-                return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
-                    
-            if ($comment_user->group_id == $profile->group_id) {
-                $permission = 1;
-            }
-        }
-        if(!$permission)
-            return response()->json(['status' => 'fail', 'message' => 'You have to get a permission!', 'error_type' => 'no_permission'], 422);
-            
-        $images = $comment->Images;
-        if ($images) {
-            foreach ($images as $image) {
-                $image->delete();
-            }
-        }
-        $comment->delete();
-        
-        return response()->json(['status' => 'success', 'message' => 'Comment deleted!'], 200);
-    }
-
-    public function deleteCommentImage(Request $request){
-        try {
-            JWTAuth::parseToken()->authenticate();
-        } catch (JWTException $e) {
-            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
-        }
-          
-        $validation = Validator::make($request->all(),[
-            'comment_id' => 'required',
-            'url' => 'required',
-        ]);
-        if ($validation->fails())
-            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
-            
-        $user = JWTAuth::parseToken()->authenticate();
-        $profile = $user->Profile;
-        if (!$profile)
-            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
-            
-        $permission = 0;
-        if($user->backend || $notification->user_id == $user->id) {
-            $permission = 1;
-        } else if ($profile->is_admin && $profile->group_id == $notification->group_id) {
-            $permission = 1;
-        }
-        if(!$permission)
-            return response()->json(['status' => 'fail', 'message' => 'You have to get a permission!', 'error_type' => 'no_permission'], 422);
-            
-        $comment = \App\Comment::find(request('comment_id'));
-        if(!$comment)
-            return response()->json(['status' => 'fail', 'message' => 'Couldnot find comment!'], 422);
-        
-        if(!$comment->status)
-            return response()->json(['status' => 'fail', 'message' => 'Couldnot find comment!', 'error_type' => 'no_comment'], 422);
-        
-        $images = $comment->Images;
-        if ($images) {
-            foreach ($images as $image) {
-                if ($image->url == request('url')) {
-                    $image->delete();
-                }
-            }
-        }
-        
-        return response()->json(['status' => 'success', 'message' => 'Comment Image deleted!'], 200);
-    }
-
-    public function deleteCommentBackend(Request $request, $id){
+    public function deleteComment(Request $request, $id){
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {
@@ -1252,6 +654,16 @@ class NotificationController extends Controller
             
         $user = JWTAuth::parseToken()->authenticate();
         
+        $notification = \App\Notification::where('id', $comment->notification_id)->get();
+        if($notification)
+            $notification->save();
+        
+        $comment_unreads = \App\CommentUnread::where('comment_id', $comment->id)->get();
+        if ($comment_unreads) {
+            foreach ($comment_unreads as $comment_unread) {
+                $comment_unread->delete();
+            }
+        }
         $images = $comment->Images;
         if ($images) {
             foreach ($images as $image) {

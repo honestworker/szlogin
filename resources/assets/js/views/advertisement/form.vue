@@ -143,7 +143,7 @@
             },
             getCountries() {
                 this.baseUrl = window.location.origin;
-                axios.post('/api/country/all').then(response => {
+                axios.get('/admin/countries').then(response => {
                     this.countries = response.data;
                 }).catch(error => {
                     if (error.response.data.status == 'fail') {
@@ -174,7 +174,7 @@
                 }
             },
             getAdvertisement(){
-                axios.get('/api/advertisement/' + this.id)
+                axios.get('/admin/advertisement/' + this.id)
                 .then(response => {
                     if (response.data.image) {
                         this.previewImage = this.baseUrl + '/images/advertisements/' + response.data.image;
@@ -214,7 +214,7 @@
                     }.bind(this)
                 };
                 
-                axios.patch('/api/advertisement/' + this.id, this.uploadDataForm, config)
+                axios.patch('/admin/advertisement/' + this.id, this.uploadDataForm, config)
                 .then(response => {
                     toastr['success'](response.data.message);
                     this.$router.push('/advertisement');
@@ -246,7 +246,7 @@
                     }.bind(this)
                 };
                 
-                axios.post('/api/advertisement', this.uploadDataForm, config)
+                axios.post('/admin/advertisement', this.uploadDataForm, config)
                 .then(response => {
                     toastr['success'](response.data.message);
                     this.$router.push('/advertisement');

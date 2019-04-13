@@ -59,7 +59,7 @@ class AdvertisementController extends Controller
         return $advertisements->paginate(request('pageLength'));
     }
 
-    private function initUserAdsCount() {
+    private function initUserAdsCount(){
         $now_date = date("Y-m-d");
         $user_ads_count = \App\UserAdsCount::whereViewDate($now_date)->get();
         foreach ($user_ads_count as $user_ad_count) {
@@ -68,7 +68,7 @@ class AdvertisementController extends Controller
         }
     }
 
-    public function store(Request $request) {
+    public function store(Request $request){
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {
@@ -225,7 +225,7 @@ class AdvertisementController extends Controller
         return $advertisement;
     }
 
-    public function update(Request $request, $id) {
+    public function update(Request $request, $id){
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {
@@ -353,151 +353,7 @@ class AdvertisementController extends Controller
         return response()->json(['message' => 'Advertisement updated!']);
     }
 
-    public function get(Request $request) {
-        try {
-            JWTAuth::parseToken()->authenticate();
-        } catch (JWTException $e) {
-            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
-        }
-        
-        $user = JWTAuth::parseToken()->authenticate();
-        $profile = $user->Profile;
-        if (!$profile)
-            return response()->json(['status' => 'fail', 'message' => 'Couldnot find user profile!', 'data' => null, 'error_type' => 'no_profile'], 422);
-        
-        $advertisements = \App\Advertisement::whereNotNull('id');
-        
-        $now_date = date("Y-m-d");
-        $advertisements->whereRaw("((`start_date` IS NOT NULL AND `end_date` IS NOT NULL AND `start_date` <= '" . $now_date . "' AND `end_date` >= '" . $now_date . "') OR (`start_date` IS NULL AND `end_date` IS NULL) OR (`start_date` IS NULL AND `end_date` >= '" . $now_date . "') OR (`end_date` IS NULL AND `start_date` <= '" . $now_date . "'))");
-        $advertisements->whereRaw("((`min_postal` = '' AND `max_postal` = '') OR (`min_postal` = '' AND `max_postal` >= '" . $profile->postal_code . "') OR (`max_postal` = '' AND `min_postal` <= '" . $profile->postal_code . "') OR (`min_postal` <= '" . $profile->postal_code . "' AND `max_postal` >= '" . $profile->postal_code . "'))");
-        $advertisements->whereStatus(1);
-        if ($profile->country) {
-            $advertisements->where('country', '=', $profile->country);
-        }
-
-        $advertisements_result = $advertisements->get();
-        $advertisements_count = 0;
-        $ad_ids = array();
-        if ($advertisements_result) {
-            $advertisements_count = count($advertisements_result);
-            foreach($advertisements_result as $advertisement) {
-               array_push($ad_ids, $advertisement->id);
-            }
-        }
-        if (!$advertisements_count) {
-            return response()->json(['status' => 'success', 'message' => 'Advertisement!', 'id' => 0, 'image' => basename($this->images_base_path), 'link' => url('/')], 200);
-        }
-        
-        $min_count = \App\UserAdsCount::whereUserId($user->id)->whereViewDate($now_date)->whereIn('ad_id', $ad_ids)->orderBy('count', 'asc')->first();
-        if (!$min_count) {
-            $advertisement_index = rand(1, $advertisements_count);
-            $advertisement = $advertisements_result[$advertisement_index - 1];
-            
-            $user_ads_count = \App\UserAdsCount::create([
-                'ad_id' => $advertisement->id,
-                'user_id' => $user->id,
-                'view_date' => $now_date,
-                'count ' => 1,
-            ]);
-        } else {
-            $new_advertisements = array();
-            $new_advertisements_exist = array();
-            $all_show = 1;
-            foreach ($advertisements_result as $advertisement) {
-                $count = \App\UserAdsCount::whereUserId($user->id)->whereViewDate($now_date)->whereAdId($advertisement->id)->first();
-                if (!$count) {
-                    $all_show = 0;
-                }
-            }
-            
-            foreach ($advertisements_result as $advertisement) {
-                $count = \App\UserAdsCount::whereUserId($user->id)->whereViewDate($now_date)->whereAdId($advertisement->id)->first();
-                if (!$count) {
-                    $new_advertisements[] = $advertisement;
-                    $new_advertisements_exist[] = 0;
-                } else {
-                    if ($all_show) {
-                        if ($count->count <= $min_count->count) {
-                            $new_advertisements[] = $advertisement;
-                            $new_advertisements_exist[] = 1;
-                        }
-                    }
-                }
-            }
-            
-            $new_advertisements_count = count($new_advertisements);
-            $advertisement_index = rand(1, $new_advertisements_count);
-            $advertisement = $new_advertisements[$advertisement_index - 1];
-            $advertisement_exist = $new_advertisements_exist[$advertisement_index - 1];
-            
-            if ($advertisement_exist) {
-                $user_ads_count = \App\UserAdsCount::whereUserId($user->id)->whereViewDate($now_date)->whereAdId($advertisement->id)->first();
-                $user_ads_count->count = $user_ads_count->count + 1;
-                $user_ads_count->save();
-            } else {
-                \App\UserAdsCount::create([
-                    'ad_id' => $advertisement->id,
-                    'user_id' => $user->id,
-                    'view_date' => $now_date,
-                    'count ' => 1,
-                ]);
-            }
-        }
-        
-        $advertisement_count = \App\AdvertisementCount::whereUserId($user->id)->whereAdId($advertisement->id)->whereViewDate($now_date)->whereType('show')->first();
-        if (!$advertisement_count) {
-            \App\AdvertisementCount::create([
-                'ad_id' => $advertisement->id,
-                'type' => 'show',
-                'user_id' => $user->id,
-                'view_date' => $now_date,
-                'count ' => 1,
-            ]);
-        } else {
-            $advertisement_count->count = $advertisement_count->count + 1;
-            $advertisement_count->save();
-        }
-
-        return response()->json(['status' => 'success', 'message' => 'Advertisement!', 'id' => $advertisement->id, 'image' => $advertisement->image, 'link' => $advertisement->link], 200);
-    }
-
-    public function click(Request $request) {
-        try {
-            JWTAuth::parseToken()->authenticate();
-        } catch (JWTException $e) {
-            return response()->json(['status' => 'fail', 'authenticated' => false, 'error_type' => 'token_error'], 422);
-        }
-        
-        $validation = Validator::make($request->all(), [
-            'advertisement_id' => 'required'
-        ]);
-        if($validation->fails())
-            return response()->json(['status' => 'fail', 'message' => $validation->messages()->first(), 'error_type' => 'no_fill'], 422);
-            
-        $advertisement = \App\Advertisement::find(request('advertisement_id'));
-        if(!$advertisement)
-            return response()->json(['status' => 'fail', 'message' => 'Could not find the advertisement!', 'error_type' => 'no_advertisement'], 422);
-            
-        $user = JWTAuth::parseToken()->authenticate();
-        $now_date = date("Y-m-d");
-        $advertisement_count = \App\AdvertisementCount::whereUserId($user->id)->whereViewDate($now_date)->whereType('click')->whereAdId($advertisement->id)->first();
-        if ($advertisement_count) {
-            $advertisement_count->count = $advertisement_count->count + 1;
-            $advertisement_count->save();
-        } else {
-            $advertisement_count_new = \App\AdvertisementCount::create([
-                'ad_id' => $advertisement->id,
-                'type' => 'click',
-                'user_id' => $user->id,
-                'view_date' => $now_date,
-                'count ' => 1,
-            ]);
-        }
-        
-        return response()->json(['status' => 'success', 'message' => 'Advertisement Clicked!'], 200);
-    }
-
-    public function infor(Request $request) {
+    public function infor(Request $request){
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {
@@ -583,7 +439,7 @@ class AdvertisementController extends Controller
         return response()->json(['status' => 'success', 'message' => 'Advertisement Infor!', 'data' => $ad_infors], 200);
     }
 
-    public function overview(Request $request) {
+    public function overview(Request $request){
         try {
             JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {

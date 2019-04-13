@@ -180,7 +180,7 @@
                     page = 1;
                 }
                 let url = helper.getFilterURL(this.filterCountryForm);
-                axios.get('/api/country?page=' + page + url).then(response => {
+                axios.get('/admin/country?page=' + page + url).then(response => {
                     this.countries = response.data;
                 }).catch(error => {
                     if (error.response.data.status == 'fail') {
@@ -204,7 +204,7 @@
                 $('#modal-delete-country').modal('show');
             },
             deleteCountry() {
-                axios.delete('/api/country/' + this.country_id).then(response => {
+                axios.delete('/admin/country/' + this.country_id).then(response => {
                     $('#modal-delete-country').modal('hide');
                     toastr['success'](response.data.message);
                     this.getCountries();
@@ -240,7 +240,7 @@
                 return (country.status == 1) ? '<span class="label label-success">Active</span>' : '<span class="label label-danger">Deactive</span>';
             },
             toggleCountryStatus(country){
-                axios.post('/api/country/status', {id: country.id}).then((response) => {
+                axios.post('/admin/country/status', {id: country.id}).then((response) => {
                     this.getCountries();
                 }).catch(error => {
                     if (error.response.data.status == 'fail') {

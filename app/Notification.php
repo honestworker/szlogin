@@ -36,7 +36,7 @@ class Notification extends Eloquent {
     
     public function group()
     {
-        return $this->belongsTo('App\Group', 'group_id', 'id')->select('id', 'group_id');
+        return $this->belongsTo('App\Group', 'group_id', 'id')->select('id', 'name');
     }
 
     public function type()

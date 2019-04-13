@@ -53,7 +53,7 @@
                 }
             },
             storeCountry(){
-                this.countryForm.post('/api/country')
+                this.countryForm.post('/admin/country')
                 .then(response => {
                     toastr['success'](response.message);
                     this.$emit('completed',response.country);
@@ -74,7 +74,7 @@
                 });
             },
             updateCountry(){
-                this.countryForm.patch('/api/country/'+this.id)
+                this.countryForm.patch('/admin/country/'+this.id)
                 .then(response => {
                     toastr['success'](response.message);
                     this.$emit('completed',response.country);

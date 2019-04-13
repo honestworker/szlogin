@@ -19,12 +19,24 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <strong><span>Email: </span></strong>
-                                <span v-text="adminForm.email"></span>
+                                <div class="row">
+                                    <div class="col-lg-5 text-right">
+                                        <strong><span>Email: </span></strong>
+                                    </div>
+                                    <div class="col-lg-7">
+                                        <span v-text="adminForm.email"></span>
+                                    </div>
+                                </div>
                             </div>
                             <div class="form-group">
-                                <strong><span>Created At: </span></strong>
-                                <span v-text="adminForm.created_at"></span>
+                                <div class="row">
+                                    <div class="col-lg-5 text-right">
+                                        <strong><span>Created At: </span></strong>
+                                    </div>
+                                    <div class="col-lg-7">
+                                        <span v-text="adminForm.created_at"></span>
+                                    </div>
+                                </div>
                             </div>
                             <div class="form-group">
                                 <h4 class="card-title">Change Password</h4>
@@ -48,56 +60,47 @@
                 <div class="col-lg-6">
                     <div class="card">
                         <div class="card-body">
-                            <!-- <div class="form-group">
-                                <strong><span>Full Name: </span></strong>
-                                <input class="form-control" type="text" value="" v-model="adminForm.full_name">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-lg-5 text-right">
+                                        <strong><span>Full Name: </span></strong>
+                                    </div>
+                                    <div class="col-lg-7">
+                                        <input class="form-control" type="text" value="" v-model="adminForm.full_name">
+                                    </div>
+                                </div>
                             </div>
                             <div class="form-group">
-                                <strong><span>Group Name: </span></strong>
-                                <input class="form-control" type="text" value="" v-model="adminForm.group_name">
+                                <div class="row">
+                                    <div class="col-lg-5 text-right">
+                                        <strong><span>Street Address: </span></strong>
+                                    </div>
+                                    <div class="col-lg-7">
+                                        <input class="form-control" type="text" value="" v-model="adminForm.street_address">
+                                    </div>
+                                </div>
                             </div>
                             <div class="form-group">
-                                <strong><span>Organization Number: </span></strong>
-                                <input class="form-control" type="text" value="" v-model="adminForm.org_number">
-                            </div> -->
-                            <div class="form-group">
-                                <strong><span>Full Name: </span></strong>
-                                <span v-text="adminForm.full_name"></span>
+                                <div class="row">
+                                    <div class="col-lg-5 text-right">
+                                        <strong><span>Postal Code: </span></strong>
+                                    </div>
+                                    <div class="col-lg-7">
+                                        <input class="form-control" type="text" value="" v-model="adminForm.postal_code">
+                                    </div>
+                                </div>
                             </div>
                             <div class="form-group">
-                                <strong><span>First Name: </span></strong>
-                                <input class="form-control" type="text" value="" v-model="adminForm.first_name">
-                            </div>
-                            <div class="form-group">
-                                <strong><span>Fmaily Name: </span></strong>
-                                <input class="form-control" type="text" value="" v-model="adminForm.family_name">
-                            </div>
-                            <div class="form-group">
-                                <strong><span>Phone Number: </span></strong>
-                                <input class="form-control" type="text" value="" v-model="adminForm.phone_number">
-                            </div>
-                            <div class="form-group">
-                                <strong><span>Street Address: </span></strong>
-                                <input class="form-control" type="text" value="" v-model="adminForm.street_address">
-                            </div>
-                            <!-- <div class="form-group">
-                                <strong><span>Street Number: </span></strong>
-                                <input class="form-control" type="text" value="" v-model="adminForm.street_number">
-                            </div> -->
-                            <div class="form-group">
-                                <strong><span>Postal Code: </span></strong>
-                                <input class="form-control" type="text" value="" v-model="adminForm.postal_code">
-                            </div>
-                            <div class="form-group">
-                                <strong><span>Country: </span></strong>
-                                <select name="status" class="form-control" v-model="adminForm.country">
-                                    <option value="">None</option>
-                                    <option v-for="country in countries.countries" v-bind:value="country" v-bind:selected="getCountrySelectedStatus(country)">{{country}}</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <strong><span>City: </span></strong>
-                                <input class="form-control" type="text" value="" v-model="adminForm.city">
+                                <div class="row">
+                                    <div class="col-lg-5 text-right">
+                                        <strong><span>Country: </span></strong>
+                                    </div>
+                                    <div class="col-lg-7">
+                                        <select name="status" class="form-control" v-model="adminForm.country">
+                                            <option v-for="country in countries.countries" v-bind:value="country" v-bind:selected="getCountrySelectedStatus(country)">{{country}}</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -118,30 +121,12 @@
                 countries : {},
                 groups : {},
                 adminForm : {},
-                // adminForm: new Form({
-                //     // 'contact_person' : '',
-                //     'avatar' : '',
-                //     // 'group_name' : '',
-                //     // 'org_number' : '',
-                //     'email' : '',
-                //     'full_name' : '',
-                //     'first_name' : '',
-                //     'family_name' : '',
-                //     'full_name' : '',
-                //     'phone_number' : '',
-                //     'street_address' : '',
-                //     // 'street_number' : '',
-                //     'postal_code' : '',
-                //     'country' : '',
-                //     'city' : '',
-                //     'created_at' : '',
-                // }),
                 passwordForm: new Form({
                     'current_password' : '',
                     'new_password' : '',
                     'new_password_confirmation' : '',
                 }),
-                user_data : {}
+                admin_data : {}
             };
         },
         mounted() {
@@ -152,7 +137,7 @@
             proceed(){
             },
             getCountries() {
-                axios.post('/api/country/all').then(response => {
+                axios.get('/admin/countries').then(response => {
                     this.countries = response.data;
                 }).catch(error => {
                     if (error.response.data.status == 'fail') {
@@ -178,7 +163,7 @@
                 }
             },
             changePassword() {
-                this.passwordForm.post('/api/user/change-password').then(response => {
+                this.passwordForm.post('/admin/user/change-password').then(response => {
                     toastr['success'](response.message);
                 }).catch(error => {
                     if (error.status == 'fail') {
@@ -197,42 +182,25 @@
                 });
             },
             getUser(){
-                axios.post('/api/user/profile')
+                axios.get('/admin/user/profile')
                 .then(response => {
-                    this.user_data = response.data.data;
-                    // this.adminForm.contact_person =  this.user_data.profile.contact_person ? this.user_data.profile.contact_person : "";
+                    this.admin_data = response.data.data;
                     this.adminForm = new Form({
-                        // 'contact_person' : '',
                         'avatar' : '',
-                        // 'group_name' : '',
-                        // 'org_number' : '',
                         'email' : '',
                         'full_name' : '',
-                        'first_name' : '',
-                        'family_name' : '',
-                        'full_name' : '',
-                        'phone_number' : '',
                         'street_address' : '',
-                        // 'street_number' : '',
                         'postal_code' : '',
                         'country' : '',
-                        'city' : '',
                         'created_at' : '',
                     }),
-                    this.adminForm.avatar = this.user_data.profile.avatar ? this.user_data.profile.avatar : "";
-                    // this.adminForm.group_name = this.user_data.profile.group_name ? this.user_data.profile.group_name : "";
-                    // this.adminForm.org_number = this.user_data.profile.org_number ? this.user_data.profile.org_number : "";
-                    this.adminForm.email = this.user_data.email ? this.user_data.email : "";
-                    this.adminForm.first_name = this.user_data.profile.first_name ? this.user_data.profile.first_name : "";
-                    this.adminForm.family_name = this.user_data.profile.family_name ? this.user_data.profile.family_name : "";
-                    this.adminForm.full_name = this.user_data.profile.full_name ? this.user_data.profile.full_name : "";
-                    this.adminForm.phone_number = this.user_data.profile.phone_number ? this.user_data.profile.phone_number : "";
-                    this.adminForm.street_address = this.user_data.profile.street_address ? this.user_data.profile.street_address : "";
-                    // this.adminForm.street_number = this.user_data.profile.street_number ? this.user_data.profile.street_number : "";
-                    this.adminForm.postal_code = this.user_data.profile.postal_code ? this.user_data.profile.postal_code : "";
-                    this.adminForm.country = this.user_data.profile.country ? this.user_data.profile.country : "";
-                    this.adminForm.city = this.user_data.profile.city ? this.user_data.profile.city : "";
-                    this.adminForm.created_at = this.user_data.profile.created_at ? this.user_data.profile.created_at : "";
+                    this.adminForm.avatar = this.admin_data.profile.avatar ? this.admin_data.profile.avatar : "";
+                    this.adminForm.email = this.admin_data.email ? this.admin_data.email : "";
+                    this.adminForm.full_name = this.admin_data.profile.full_name ? this.admin_data.profile.full_name : "";
+                    this.adminForm.street_address = this.admin_data.profile.street_address ? this.admin_data.profile.street_address : "";
+                    this.adminForm.postal_code = this.admin_data.profile.postal_code ? this.admin_data.profile.postal_code : "";
+                    this.adminForm.country = this.admin_data.profile.country ? this.admin_data.profile.country : "";
+                    this.adminForm.created_at = this.admin_data.profile.created_at ? this.admin_data.profile.created_at : "";
                 }).catch(error => {
                     if (error.response.data.status == 'fail') {
                         if (error.response.data.type == "token_error") {
@@ -252,7 +220,7 @@
             uploadAvatar() {
                 let data = new FormData();
                 data.append('avatar', $('#avatarUpload')[0].files[0]);
-                axios.post('/api/user/update-avatar', data)
+                axios.post('/admin/user/update-avatar', data)
                 .then(response => {
                     this.$store.dispatch('setAuthUserDetail', {
                         avatar: response.data.profile.avatar
@@ -276,7 +244,7 @@
                 });
             },
             updateProfile() {
-                this.adminForm.post('/api/user/update-profile').then(response => {
+                this.adminForm.post('/admin/user/update-profile').then(response => {
                     toastr['success'](response.message);
                 }).catch(error => {
                     if (error.status == 'fail') {

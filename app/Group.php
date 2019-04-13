@@ -5,16 +5,9 @@ use Eloquent;
 class Group extends Eloquent {
     
 	protected $fillable = [
-							'group_id',
-							'org_number',
-							'contact_person',
-							'org_name',
-							'email',
-							'mobile_number',
-							'country',
-							'description',
 							'name',
-							'description',
+							'postal_code',
+							'country',
 						];
 	protected $primaryKey = 'id';
 	protected $table = 'groups';

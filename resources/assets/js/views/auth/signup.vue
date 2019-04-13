@@ -64,7 +64,7 @@
         },
         methods: {
             submit(e){
-                axios.post('/api/auth/signup_backend', this.signupForm).then(response =>  {
+                axios.post('/auth/signup', this.signupForm).then(response =>  {
                     toastr['success'](response.data.message);
                     this.$router.push('/success_signup');
                 }).catch(error => {

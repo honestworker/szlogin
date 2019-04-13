@@ -14,15 +14,8 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">Filter Administrator</h4>
-                        
+                        <h4 class="card-title">Filter Administrator</h4>                        
                         <div class="row m-t-20">
-                            <!-- <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="">Contact Person</label>
-                                    <input class="form-control" v-model="filterAdminForm.contact_person" @change="getAdmins">
-                                </div>
-                            </div> -->
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Full Name</label>
@@ -31,14 +24,23 @@
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="">Phone Number</label>
-                                    <input class="form-control" v-model="filterAdminForm.phone_number" @change="getAdmins">
+                                    <label for="">Street Address</label>
+                                    <input class="form-control" v-model="filterAdminForm.street_address" @change="getAdmins">
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="">Email</label>
-                                    <input class="form-control" v-model="filterAdminForm.email" @change="getAdmins">
+                                    <label for="">Zip Code</label>
+                                    <input class="form-control" v-model="filterAdminForm.postal_code" @change="getAdmins">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="">Country</label>
+                                    <select name="country" class="form-control" v-model="filterAdminForm.country" @change="getAdmins">
+                                        <option value="0">All</option>
+                                        <option v-for="country in countries.countries" v-bind:value="country">{{country}}</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -46,8 +48,10 @@
                                     <label for="">Sort By</label>
                                     <select name="sortBy" class="form-control" v-model="filterAdminForm.sortBy" @change="getAdmins">
                                         <option value="full_name">Full Name</option>
-                                        <option value="phone_number">Phone Number</option>
                                         <option value="email">Email</option>
+                                        <option value="postal_code">Zip Code</option>
+                                        <option value="country">Country</option>
+                                        <option value="created_at">Created At</option>
                                     </select>
                                 </div>
                             </div>
@@ -69,25 +73,29 @@
                             <table class="table" v-if="admins.total">
                                 <thead>
                                     <tr>
-                                        <th>Full Name</th>
-                                        <th>Phone Number</th>
-                                        <th>Email</th>
+                                        <th>User</th>
+                                        <th>Street Address</th>
+                                        <th>Zip Code</th>
+                                        <th>Country</th>
                                         <th>Status</th>
+                                        <th>Created At</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr v-for="admin in admins.data">
-                                        <td v-text="getAdminFullName(admin)"></td>
-                                        <td v-text="getAdminPhoneNumber(admin)"></td>
-                                        <td v-text="admin.email"></td>
+                                        <td class="user-profile" v-html="getAdmin(admin)"></td>
+                                        <td v-text="getAdminStreetAddress(admin)"></td>
+                                        <td v-text="getAdminZipCode(admin)"></td>
+                                        <td v-text="getAdminCountry(admin)"></td>
                                         <td v-html="getAdminStatus(admin)"></td>
+                                        <td v-text="admin.created_at"></td>
                                         <td>
                                             <button class="btn btn-info btn-sm" @click.prevent="viewAdminProfile(admin)" data-toggle="tooltip" title="View User Profile"><i class="fa fa-eye"></i></button>
 
                                             <span v-if="isAdministrator(admin) > -1">
                                                 <button v-if="isAdministrator(admin) == 0" class="btn btn-success btn-sm" @click.prevent="modalMakeAdministrator(admin)" data-toggle="tooltip" title="Make Administrator"><i class="fa fa-check"></i></button>
-                                                <button v-else class="btn btn-success btn-sm" @click.prevent="modalDisableAdministrator(admin)" data-toggle="tooltip" title="Disable Administrator"><i class="fa fa-times"></i></button> 
+                                                <button v-else class="btn btn-secondary btn-sm" @click.prevent="modalDisableAdministrator(admin)" data-toggle="tooltip" title="Disable Administrator"><i class="fa fa-times"></i></button> 
                                             </span>
                                             <span v-else>
                                                 <button class="btn btn-secondary btn-sm" @click.prevent="modalMakeAdministrator(admin)" data-toggle="tooltip" title="Make Administrator" disabled><i class="fa fa-check"></i></button>
@@ -207,32 +215,56 @@
         data() {
             return {
                 admins: {},
+                countries: {},
+
                 filterAdminForm: {
-                    sortBy : 'full_name',
+                    sortBy : 'created_at',
                     order: 'desc',
-                    org_num : '',
-                    // contact_person : '',
                     full_name : '',
-                    phone_number : '',
                     email : '',
+                    street_address : '',
+                    postal_code : '',
+                    country : 0,
                     backend : 1,
+                    created_at : '',
                     pageLength: 100
                 },
+
                 deletingAdmin : 1,
                 adminPermission : 1,
                 admin_id: 0
             }
         },
         mounted() {
+            this.getCountries();
             this.getAdmins();
         },
         methods: {
+            getCountries() {
+                axios.get('/admin/countries').then(response => {
+                    this.countries = response.data;
+                }).catch(error => {
+                    if (error.response.data.status == 'fail') {
+                        if (error.response.data.type == "token_error") {
+                            toastr['error']('The token is expired! Please refresh and try again!');
+                            this.$router.push('/login');
+                        } else {
+                            toastr['error'](error.response.data.message);
+                        }
+                    } else {
+                        if (error.message) {
+                            toastr['error']('An unexpected error occurred!');
+                            console.log(error.message);
+                        }
+                    }
+                });
+            },
             getAdmins(page) {
                 if (typeof page === 'undefined') {
                     page = 1;
                 }
                 let url = helper.getFilterURL(this.filterAdminForm);
-                axios.get('/api/user?&page=' + page + url).then(response => {
+                axios.get('/admin/user?&page=' + page + url).then(response => {
                     this.admins = response.data;
                 }).catch(error => {
                     if (error.response.data.status == 'fail') {
@@ -250,15 +282,40 @@
                     }
                 });
             },
-            getAdminFullName(admin){
+            getAdmin(admin) {
+                var adminHtml = "";
+                if (typeof admin != 'undefined' && admin !== null && admin !== '') {
+                    adminHtml = "<div class='profile-img'>";
+                    if (typeof admin.profile != 'undefined' && admin.profile !== null && admin.profile !== '') {
+                        if (admin.profile.avatar) {
+                            adminHtml = adminHtml + "<img src='/images/users/" + admin.profile.avatar + "' alt='user'>";
+                        } else {
+                            adminHtml = adminHtml + "<img src='/images/common/no-user.png' alt='user'>";
+                        }
+                        adminHtml = adminHtml + "</div>";
+                        adminHtml = adminHtml + "<p style='margin-bottom: 0px'>" + admin.profile.full_name + "</p>";
+                        adminHtml = adminHtml + "<p style='margin-bottom: 0px'>" + admin.email + "</p>";
+                    } else {
+                        adminHtml = adminHtml + "<img src='/images/common/no-user.png' alt='user'></div>";
+                    }
+                }
+                return adminHtml;
+            },
+            getAdminStreetAddress(admin) {
                 if(admin.profile)
-                    return admin.profile.full_name;
+                    return admin.profile.street_address;
                     
                 return '';
             },
-            getAdminPhoneNumber(admin){
+            getAdminZipCode(admin) {
                 if(admin.profile)
-                    return admin.profile.phone_number;
+                    return admin.profile.postal_code;
+                    
+                return '';
+            },
+            getAdminCountry(admin) {
+                if(admin.profile)
+                    return admin.profile.country;
                     
                 return '';
             },
@@ -267,6 +324,10 @@
                     return '<span class="label label-warning">Pending</span>';
                 else if(admin.status == 'activated')
                     return '<span class="label label-success">Activated</span>';
+                else if(admin.status == 'banned')
+                    return '<span class="label label-danger">Banned</span>';
+                else
+                    return;
             },
             viewAdminProfile(admin) {
                 this.$router.push('/admin/' + admin.id + '/view');
@@ -277,7 +338,7 @@
                 $('#modal-delete-admin').modal('show');
             },
             deleteAdmin() {
-                axios.delete('/api/user/' + this.admin_id).then(response => {
+                axios.delete('//admin/user/' + this.admin_id).then(response => {
                     $('#modal-delete-admin').modal('hide');
                     toastr['success'](response.data.message);
                     this.getAdmins();
@@ -311,7 +372,7 @@
                 $('#modal-administrator').modal('show');
             },
             makeAdministrator() {
-                axios.post('/api/user/admin/' + this.admin_id).then(response => {
+                axios.patch('/admin/user/admin/' + this.admin_id).then(response => {
                     $('#modal-administrator').modal('hide');
                     toastr['success'](response.data.message);
                     this.getAdmins();
@@ -338,7 +399,7 @@
                 $('#modal-disable-administrator').modal('show');
             },
             disableAdministrator() {
-                axios.delete('/api/user/admin/' + this.admin_id).then(response => {
+                axios.delete('/admin/user/admin/' + this.admin_id).then(response => {
                     $('#modal-disable-administrator').modal('hide');
                     toastr['success'](response.data.message);
                     this.getAdmins();

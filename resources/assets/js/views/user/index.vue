@@ -17,28 +17,10 @@
                         <h4 class="card-title">Filter User</h4>
                         
                         <div class="row m-t-20">
-                            <!-- <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="">Contact Person</label>
-                                    <input class="form-control" v-model="filterUserForm.contact_person" @change="getUsers">
-                                </div>
-                            </div> -->
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Full Name</label>
                                     <input class="form-control" v-model="filterUserForm.full_name" @change="getUsers">
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="">Group ID</label>
-                                    <input class="form-control" v-model="filterUserForm.group_id" @change="getUsers">
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="">Phone Number</label>
-                                    <input class="form-control" v-model="filterUserForm.phone_number" @change="getUsers">
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -49,8 +31,26 @@
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
+                                    <label for="">Group Name</label>
+                                    <select name="groups" class="form-control" v-model="filterUserForm.group_id" @change="getUsers">
+                                        <option value="0">All</option>
+                                        <option v-for="group in groups.groups" v-bind:value="group.id">{{group.name}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="">Country</label>
+                                    <select name="country" class="form-control" v-model="filterUserForm.country" @change="getUsers">
+                                        <option value="0">All</option>
+                                        <option v-for="country in countries.countries" v-bind:value="country">{{country}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
                                     <label for="">User Role</label>
-                                    <select name="groups" class="form-control" v-model="filterUserForm.is_admin" @change="getUsers">
+                                    <select name="roles" class="form-control" v-model="filterUserForm.admin" @change="getUsers">
                                         <option value="-1">All</option>
                                         <option value="1">Group Manager</option>
                                         <option value="0">User</option>
@@ -61,10 +61,10 @@
                                 <div class="form-group">
                                     <label for="">Sort By</label>
                                     <select name="sortBy" class="form-control" v-model="filterUserForm.sortBy" @change="getUsers">
-                                        <option value="group_id">Group ID</option>
+                                        <option value="created_at">Created At</option>
                                         <option value="full_name">Full Name</option>
-                                        <option value="phone_number">Phone Number</option>
                                         <option value="email">Email</option>
+                                        <option value="country">Country</option>
                                     </select>
                                 </div>
                             </div>
@@ -86,33 +86,25 @@
                             <table class="table" v-if="users.total">
                                 <thead>
                                     <tr>
-                                        <th>Full Name</th>
-                                        <th>Group ID</th>
-                                        <th>Phone Number</th>
-                                        <th>Email</th>
-                                        <th>User Role</th>
-                                        <th>Status</th>
+                                        <th>User</th>
+                                        <th>User Group</th>
+                                        <th>Street Address</th>
+                                        <th>Zip Code</th>
+                                        <th>Country</th>
+                                        <th>Created At</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr v-for="user in users.data">
-                                        <td v-text="getUserFullName(user)"></td>
-                                        <td v-html="getUserGroupID(user)"></td>
-                                        <td v-text="getUserPhoneNumber(user)"></td>
-                                        <td v-text="user.email"></td>
-                                        <td v-html="getUserRole(user)"></td>
-                                        <td v-html="getUserStatus(user)"></td>
+                                        <td class="user-profile" v-html="getUser(user)"></td>
+                                        <td v-html="getUserGroup(user)"></td>
+                                        <td v-text="getUserStreetAddress(user)"></td>
+                                        <td v-text="getUserZipCode(user)"></td>
+                                        <td v-text="getUserCountry(user)"></td>
+                                        <td v-text="user.created_at"></td>
                                         <td>
                                             <button class="btn btn-info btn-sm" @click.prevent="viewUserProfile(user)" data-toggle="tooltip" title="View User Profile"><i class="fa fa-eye"></i></button>
-                                            <span v-if="isGroupManager(user) > -1">
-                                                <button v-if="isGroupManager(user) == 0" class="btn btn-primary btn-sm" @click.prevent="modalMakeGroupManager(user)" data-toggle="tooltip" title="Make Group Manager"><i class="fa fa-check"></i></button>
-                                                <button v-else class="btn btn-primary btn-sm" @click.prevent="modalDisableGroupManager(user)" data-toggle="tooltip" title="Disable Group Manager"><i class="fa fa-times"></i></button>
-                                            </span>
-                                            <span v-else>
-                                                <button class="btn btn-secondary btn-sm" @click.prevent="modalMakeGroupManager(user)" data-toggle="tooltip" title="Make Group Manager" disabled><i class="fa fa-check"></i></button>
-                                            </span>
-
                                             <button class="btn btn-danger btn-sm" @click.prevent="modalDeleteUser(user)" data-toggle="tooltip" title="Delete User"><i class="fa fa-trash"></i></button>
                                         </td>
                                     </tr>
@@ -164,56 +156,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Make Group Manager -->
-        <div class="modal" id="modal-group-manager" tabindex="-1" role="dialog">
-            <div class="modal-dialog" v-if="groupManagerPermission">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">
-                            Make Group Manager Permission
-                        </h5>
-                    </div>
-
-                    <div class="modal-body">
-                        Are you sure you want to make this User as the group manager?
-                    </div>
-
-                    <!-- Modal Actions -->
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">No, Go Back</button>
-                        <button type="button" class="btn btn-success" @click.prevent="makeGroupManager()">
-                            Yes, Make
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Disable Group Manager -->
-        <div class="modal" id="modal-disable-group-manager" tabindex="-1" role="dialog">
-            <div class="modal-dialog" v-if="groupManagerPermission">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">
-                            Disable Group Manager Permission
-                        </h5>
-                    </div>
-
-                    <div class="modal-body">
-                        Are you sure you want to disable this User as the group manager?
-                    </div>
-
-                    <!-- Modal Actions -->
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">No, Go Back</button>
-                        <button type="button" class="btn btn-danger" @click.prevent="disableGroupManager()">
-                            Yes, Disable
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 </template>
 
@@ -228,34 +170,72 @@
             return {
                 users: {},
                 groups: {},
+                countries: {},
                 filterUserForm: {
-                    sortBy : 'group_id',
+                    sortBy : 'created_at',
                     order: 'desc',
-                    // org_num : '',
-                    // contact_person : '',
-                    group_id : '',
                     full_name : '',
-                    phone_number : '',
                     email : '',
-                    is_admin : -1,
+                    group_id : 0,
+                    country : 0,
+                    admin : -1,
                     user_role : 0,
                     pageLength: 100
                 },
                 deletingUser : 1,
-                groupManagerPermission : 1,
                 user_id: 0
             }
         },
         mounted() {
+            this.getCountries();
+            this.getGroups();
             this.getUsers();
         },
         methods: {
+            getCountries() {
+                axios.get('/admin/countries').then(response => {
+                    this.countries = response.data;
+                }).catch(error => {
+                    if (error.response.data.status == 'fail') {
+                        if (error.response.data.type == "token_error") {
+                            toastr['error']('The token is expired! Please refresh and try again!');
+                            this.$router.push('/login');
+                        } else {
+                            toastr['error'](error.response.data.message);
+                        }
+                    } else {
+                        if (error.message) {
+                            toastr['error']('An unexpected error occurred!');
+                            console.log(error.message);
+                        }
+                    }
+                });
+            },
+            getGroups() {
+                axios.get('/admin/groups').then(response => {
+                    this.groups = response.data;
+                }).catch(error => {
+                    if (error.response.data.status == 'fail') {
+                        if (error.response.data.type == "token_error") {
+                            toastr['error']('The token is expired! Please refresh and try again!');
+                            this.$router.push('/login');
+                        } else {
+                            toastr['error'](error.response.data.message);
+                        }
+                    } else {
+                        if (error.message) {
+                            toastr['error']('An unexpected error occurred!');
+                            console.log(error.message);
+                        }
+                    }
+                });
+            },
             getUsers(page) {
                 if (typeof page === 'undefined') {
                     page = 1;
                 }
                 let url = helper.getFilterURL(this.filterUserForm);
-                axios.get('/api/user?&page=' + page + url).then(response => {
+                axios.get('/admin/user?&page=' + page + url).then(response => {
                     this.users = response.data;
                 }).catch(error => {
                     if (error.response.data.status == 'fail') {
@@ -273,32 +253,65 @@
                     }
                 });
             },
-            getUserGroupID(user) {
-                let group_id = '';
-                if (typeof user.profile.group !== 'undefined') {
-                    if (user.profile.group) {
-                        group_id = user.profile.group.group_id
+            getUser(user) {
+                var userHtml = "";
+                if (typeof user != 'undefined' && user !== null && user !== '') {
+                    userHtml = "<div class='profile-img'>";
+                    if (typeof user.profile != 'undefined' && user.profile !== null && user.profile !== '') {
+                        if (user.profile.avatar) {
+                            userHtml = userHtml + "<img src='/images/users/" + user.profile.avatar + "' alt='user'>";
+                        } else {
+                            userHtml = userHtml + "<img src='/images/common/no-user.png' alt='user'>";
+                        }
+                        userHtml = userHtml + "</div>";
+                        userHtml = userHtml + "<p style='margin-bottom: 0px'>" + user.profile.full_name + "</p>";
+                        userHtml = userHtml + "<p style='margin-bottom: 0px'>" + user.email + "</p>";
+                    } else {
+                        userHtml = userHtml + "<img src='/images/common/no-user.png' alt='user'></div>";
                     }
                 }
-                return group_id;
+                return userHtml;
             },
-            getUserRole(user){
-                let user_role = '';
-                if (user.profile.is_admin == 1)
-                    user_role = user_role + '<span class="label label-primary">Group</span>';
-                else
-                    user_role = user_role + '<span class="label label-success">User</span>';
-                return user_role;
+            getUserGroup(user){
+                var userGroupHtml = "";
+                if (user.groups) {
+                    for (var index = 0; index < user.groups.length; index++) {
+                        if (user.groups[index].status == 'activated') {
+                            if (user.groups[index].admin == '1') {
+                                userGroupHtml = userGroupHtml + '<p class="label label-primary" style="display: block!important">';
+                            } else {
+                                userGroupHtml = userGroupHtml + '<p class="label label-success" style="display: block!important">';
+                            }
+                        } else {
+                            if (user.groups[index].admin == '1') {
+                                userGroupHtml = userGroupHtml + '<p class="label label-light-primary" style="display: block!important">';
+                            } else {
+                                userGroupHtml = userGroupHtml + '<p class="label label-light-success" style="display: block!important">';
+                            }
+                        }
+                        if (user.groups[index].group) {
+                            userGroupHtml = userGroupHtml + user.groups[index].group.name;
+                        }
+                        userGroupHtml = userGroupHtml + '</p>'
+                    }
+                }
+                return userGroupHtml;
             },
-            getUserFullName(user){
+            getUserStreetAddress(user) {
                 if(user.profile)
-                    return user.profile.full_name;
+                    return user.profile.street_address;
                     
                 return '';
             },
-            getUserPhoneNumber(user){
+            getUserZipCode(user) {
                 if(user.profile)
-                    return user.profile.phone_number;
+                    return user.profile.postal_code;
+                    
+                return '';
+            },
+            getUserCountry(user) {
+                if(user.profile)
+                    return user.profile.country;
                     
                 return '';
             },
@@ -307,8 +320,6 @@
                     return '<span class="label label-warning">Pending</span>';
                 else if(user.status == 'activated')
                     return '<span class="label label-success">Activated</span>';
-                // else if(user.status == 'assigned')
-                //     return '<span class="label label-info">Assigned</span>';
                 else if(user.status == 'banned')
                     return '<span class="label label-danger">Banned</span>';
                 else
@@ -323,7 +334,7 @@
                 $('#modal-delete-user').modal('show');
             },
             deleteUser() {
-                axios.delete('/api/user/' + this.user_id).then(response => {
+                axios.delete('/admin/user/' + this.user_id).then(response => {
                     $('#modal-delete-user').modal('hide');
                     toastr['success'](response.data.message);
                     this.getUsers();
@@ -342,67 +353,6 @@
                         }
                     }
                     $('#modal-delete-user').modal('hide');
-                });
-            },
-
-            isGroupManager(user) {
-                if (user.status != 'banned' && user.status != 'pending') {
-                    return user.profile.is_admin;
-                }
-                return -1;
-            },
-
-            modalMakeGroupManager(user) {
-                this.user_id = user.id;
-                $('#modal-group-manager').modal('show');
-            },
-            makeGroupManager() {
-                axios.post('/api/user/group/' + this.user_id).then(response => {
-                    $('#modal-group-manager').modal('hide');
-                    toastr['success'](response.data.message);
-                    this.getUsers();
-                }).catch(error => {
-                    if (error.response.data.status == 'fail') {
-                        if (error.response.data.type == "token_error") {
-                            toastr['error']('The token is expired! Please refresh and try again!');
-                            this.$router.push('/login');
-                        } else {
-                            toastr['error'](error.response.data.message);
-                        }
-                    } else {
-                        if (error.message) {
-                            toastr['error']('An unexpected error occurred!');
-                            console.log(error.message);
-                        }
-                    }
-                    $('#modal-group-manager').modal('hide');
-                });
-            },
-
-            modalDisableGroupManager(user) {
-                this.user_id = user.id;
-                $('#modal-disable-group-manager').modal('show');
-            },
-            disableGroupManager() {
-                axios.delete('/api/user/group/' + this.user_id).then(response => {
-                    $('#modal-disable-group-manager').modal('hide');
-                    toastr['success'](response.data.message);
-                    this.getUsers();
-                }).catch(error => {
-                    if (error.response.data.status == 'fail') {
-                        if (error.response.data.type == "token_error") {
-                            toastr['error']('The token is expired! Please refresh and try again!');
-                            this.$router.push('/login');
-                        } else {
-                            toastr['error'](error.response.data.message);
-                        }
-                    } else {
-                        if (error.message) {
-                            toastr['error']('An unexpected error occurred!');
-                            console.log(error.message);
-                        }
-                    }
-                    $('#modal-disable-group-manager').modal('hide');
                 });
             },
         },

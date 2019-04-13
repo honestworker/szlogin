@@ -288,8 +288,6 @@
     import helper from '../../services/helper'
     import ClickConfirm from 'click-confirm'
     import XLSX from 'xlsx'
-    // var jsPDF = require('jspdf');
-    // require('jspdf-autotable');
 
     export default {
         components : { datepicker, pagination, ClickConfirm },
@@ -363,7 +361,7 @@
                 }
                 this.processDataTimes();
                 let url = helper.getFilterURL(this.filterAdForm);
-                axios.get('/api/advertisement?page=' + page + url).then(response => {
+                axios.get('/admin/advertisement?page=' + page + url).then(response => {
                     this.ads = response.data;
                 }).catch(error => {
                     if (error.response.data.status == 'fail') {
@@ -382,7 +380,7 @@
                 });
             },
             getCountries() {
-                axios.post('/api/country/all').then(response => {
+                axios.get('/admin/countries').then(response => {
                     this.countries = response.data;
                 }).catch(error => {
                     if (error.response.data.status == 'fail') {
@@ -405,7 +403,7 @@
                 $('#modal-delete-ad').modal('show');
             },
             deleteAd() {
-                axios.delete('/api/advertisement/' + this.ad_id).then(response => {
+                axios.delete('/admin/advertisement/' + this.ad_id).then(response => {
                     $('#modal-delete-ad').modal('hide');
                     toastr['success'](response.data.message);
                     this.getAds();
@@ -433,7 +431,7 @@
                 return (ad.status == 1) ? '<span class="label label-success">Active</span>' : '<span class="label label-danger">Deactive</span>';
             },
             toggleAdStatus(ad){
-                axios.post('/api/ad/status', {id: ad.id}).then((response) => {
+                axios.patch('/admin/advertisement/status', {id: ad.id}).then((response) => {
                     this.getAds();
                 }).catch(error => {
                     if (error.response.data.status == 'fail') {
@@ -494,7 +492,7 @@
             },
             exportPDF() {
                 let url = helper.getFilterURL(this.exportAdForm);
-                axios.post('/api/advertisement/infor?' + url).then(response => {
+                axios.patch('/admin/advertisement/infor?' + url).then(response => {
                     var exportedPDFdata = response.data.data;
 
                     // var columns = [];

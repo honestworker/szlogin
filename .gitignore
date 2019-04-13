@@ -13,3 +13,4 @@ yarn-error.log
 /config/app.php
 /config/mail.php
 /config/database.php
+/config/constants.php

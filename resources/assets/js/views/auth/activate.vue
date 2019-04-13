@@ -35,7 +35,7 @@
             GuestFooter
         },
         mounted(){
-            axios.get('/api/auth/activate/'+this.token).then(response =>  {
+            axios.get('/auth/activate/' + this.token).then(response =>  {
                 this.message = response.data.message;
             }).catch(error => {
                 this.message = error.response.data.message;

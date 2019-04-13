@@ -14,141 +14,66 @@ use Illuminate\Http\Request;
 */
 
 Route::group(['prefix' => 'auth'], function () {
-    Route::post('/signup_backend','AuthController@signupBackend');
-    Route::post('/login_backend','AuthController@login');
-    Route::post('/check','AuthController@check');
-    Route::get('/activate/{token}','AuthController@activate');
-    Route::post('/logout','AuthController@logout');
+    Route::get('/countries','ApiController@allCountry');
 
-    Route::post('/forgot-password','AuthController@forgotPassword');
-    Route::post('/reset','AuthController@resetPasswordBackend');    
-    Route::post('/validate-resetpassword','AuthController@validatePasswordResetBackend');
+    Route::post('/signup','ApiController@signup');
+    Route::post('/login','ApiController@login');
+    Route::post('/logout','ApiController@logout');
 
-    //Route::post('/register','AuthController@register');
-    //Route::post('/social/token','SocialAuthController@getToken');
-
-    // Mobile APP only
-    Route::post('/signup','AuthController@signup');
-    Route::post('/login','AuthController@authenticate');
-    Route::post('/country/all','CountryController@all');
-    Route::post('/forget-password','AuthController@forgotPassword');
-    Route::post('/validate-password-reset','AuthController@validatePasswordReset');
+    Route::post('/forgot-password','ApiController@forgotPassword');
+    Route::post('/validate-password-reset','ApiController@validatePasswordReset');
+    Route::post('/reset-password','ApiController@resetPassword');
 });
 
 Route::group(['middleware' => ['jwt.auth']], function () {
+    // Unreads Of "Activity Logs" & "Group Members"
+    Route::get('/unreadpending', 'ApiController@unReadPending');
 
-    Route::get('/auth/user','AuthController@getAuthUser');
-    Route::post('/user/assign','AuthController@assignGroup');
-
-    ///// Group
-    Route::get('/group','GroupController@index');
-    Route::post('/group','GroupController@store');
-    Route::post('/group/all','GroupController@all');
-    Route::delete('/group/{id}','GroupController@destroy');
-    Route::get('/group/{id}','GroupController@show');
-    Route::patch('/group/{id}','GroupController@update');
-    Route::post('/group/status','GroupController@toggleStatus');
-    Route::get('/group/country/{country}','GroupController@getByCountry');
-
-    // Mobile APP only (Group)
-    Route::post('/group/attach','GroupController@attachGroup');
-    Route::post('/group/delete-attach','GroupController@deleteAttachGroup');
-    Route::post('/group/attached','GroupController@getAttachedGroups');
-
-    Route::post('/group/overview','GroupController@overview');
+    // Notification all admins of all pending groups
+    Route::post('/notify/joingroups','ApiController@nofifyJoinGroups');
     
-    ///// Country
-    Route::post('/country','CountryController@store');
-    Route::get('/country','CountryController@index');
-    Route::delete('/country/{id}','CountryController@destroy');
-    Route::get('/country/{id}','CountryController@show');
-    Route::patch('/country/{id}','CountryController@update');
-    Route::post('/country/status','CountryController@toggleStatus');
-    Route::post('/country/all','CountryController@all');
-
-    ///// User
-    Route::get('/user','UserController@index');
-    Route::post('/user/profile','UserController@getMyProfile');
-    Route::post('/user/group','UserController@ownGroup');
-    Route::post('/user/update-avatar','UserController@updateAvatar');
-    Route::post('/user/change-password','UserController@changePasswordBackend');
-    Route::post('/user/update-profile','UserController@updateProfile');
-    Route::post('/user/{id}','UserController@getUser');
-    Route::post('/user/remove-avatar','UserController@removeAvatar');
-    Route::delete('/user/{id}','UserController@deleteAccountBackend');
-    Route::get('/user/overview','UserController@overview');
+    // User
+    Route::get('/profile', 'ApiController@profile');
+    Route::post('/change-password','ApiController@changePassword');
+    Route::post('/update-avatar','ApiController@updateAvatar'); //
+    Route::delete('/delete-account','ApiController@destroyAccount'); //
+    Route::delete('/user','ApiController@deleteAccount'); //
+    Route::post('/language','ApiController@setLanguage');
     
-    Route::post('/user/group/{id}','UserController@makeGroupManager');
-    Route::delete('/user/group/{id}','UserController@disableGroupManager');
-    Route::post('/user/admin/{id}','UserController@makeAdministrator');
-    Route::delete('/user/admin/{id}','UserController@disableAdministrator');
+    // Group
+    Route::post('/group/users','ApiController@getGroupUsers');
+    Route::post('/group','ApiController@storeGroup');
     
-    // Mobile APP only (User)
-    Route::post('/get-group-users','UserController@getGroupUsers');
-    Route::post('/profile', 'UserController@profile');
-    Route::post('/change-password','UserController@changePassword');
-    Route::post('/change-avatar','UserController@updateAvatar');
-    Route::delete('/delete-account','UserController@destroy');
-    Route::delete('/user','UserController@deleteAccount');
-
-    Route::post('/language','UserController@setLanguage');
-
-    Route::post('/logout','AuthController@logout');
-
-    // Mobile APP only (Push Notification)
-    Route::post('/push_token','UserController@savePushToken');
-    Route::post('/push_effect','UserController@setPushEffect');
-
-    ///// Notification
-    Route::get('/notification','NotificationController@index');
-    Route::post('/notification/status','NotificationController@toggleStatus');
-    Route::post('/notification/{id}','NotificationController@getNotification');
-    Route::get('/noti_comment','NotificationController@indexComments');
-    Route::post('/noti_comment/status','NotificationController@toggleCommentStatus');
-    Route::delete('/noti_comment/{id}','NotificationController@deleteCommentBackend');
-    Route::delete('/notification/{id}','NotificationController@deleteNotificationBackend');
-    Route::post('/update-notification','NotificationController@updateNotificationBackend');
-
-    // Mobile APP only (Notification)
-    Route::post('/create-notification','NotificationController@createNotification');
-    Route::post('/get-notification','NotificationController@getNotifications');
-    Route::post('/get-notification-detail','NotificationController@getNotificationDetail');
-    Route::patch('/update-notification','NotificationController@updateNotification');
-
-    Route::post('/notification-delete','NotificationController@deleteNotification');
-    Route::post('/notification-image-delete','NotificationController@deleteNotificationImage');
-    Route::post('/comment-delete','NotificationController@deleteComment');
-    Route::post('/comment-image-delete','NotificationController@deleteCommentImage');
-    Route::post('/create-comment','NotificationController@createComment');
-
-    Route::post('/get-alarms','NotificationController@getAlarms');
-
-    ///// System Notification
-    Route::get('/sysnoti','NotificationController@indexSys');
-    Route::post('/create-sysnoti','NotificationController@createSysNotification');
+    // UserGroup
+    Route::get('/allgroups','ApiController@allGroups');
+    Route::get('/owngroups','ApiController@getOwnGroups');
+    Route::get('/usergroup','ApiController@getUserGroups');
+    Route::post('/usergroup/join','ApiController@joinGroupUser');
+    Route::post('/usergroup/active','ApiController@activeGroupUser');
+    Route::post('/usergroup/deactive','ApiController@deactiveGroupUser');
+    Route::post('/usergroup/admin','ApiController@makeGroupAdmin');
+    Route::post('/usergroup/user','ApiController@makeGroupUser');
+    Route::delete('/usergroup','ApiController@deleteGroupUser');
     
-    ///// Notification Type
-    Route::post('/noti_type','NotificationController@storeType');
-    Route::get('/noti_type','NotificationController@indexType');
-    Route::delete('/noti_type/{id}','NotificationController@destroyType');
-    Route::get('/noti_type/{id}','NotificationController@showType');
-    Route::patch('/noti_type/{id}','NotificationController@updateType');
-    Route::post('/noti_type/status','NotificationController@toggleTypeStatus');
-    Route::post('/noti_type/all','NotificationController@allType');
-    Route::post('/noti_type/commons','NotificationController@allCommonType');
+    // Notification
+    Route::post('/create-notification','ApiController@createNotification');
+    Route::post('/get-group-notification','ApiController@getGroupNotifications');
+    Route::post('/get-notification-detail','ApiController@getNotificationDetail');
+    Route::patch('/update-notification','ApiController@updateNotification');
     
-    ///// Advertisement
-    Route::get('/advertisement','AdvertisementController@index'); // Get All
-    Route::post('/advertisement','AdvertisementController@store'); // Create
-    Route::delete('/advertisement/{id}','AdvertisementController@destroy');
-    Route::get('/advertisement/{id}','AdvertisementController@show');
-    Route::patch('/advertisement/{id}','AdvertisementController@update');
-    Route::post('/advertisement/status','AdvertisementController@toggleStatus');
-    Route::post('/advertisement/all','AdvertisementController@all');
-    Route::post('/advertisement/infor','AdvertisementController@infor');
-    Route::post('/advertisement/overview','AdvertisementController@overview');
+    Route::delete('/notification','ApiController@deleteNotification');
+    Route::delete('/notification-image','ApiController@deleteNotificationImage');
 
-    // Mobile APP only (Advertisement)
-    Route::post('/advertisement/get','AdvertisementController@get');
-    Route::post('/advertisement/click','AdvertisementController@click');
+    // Comment
+    Route::post('/create-comment','ApiController@createComment');
+    Route::delete('/comment','ApiController@deleteComment');
+    Route::delete('/comment-image','ApiController@deleteCommentImage');
+
+    // Advertisement
+    Route::get('/advertisement/get','ApiController@getAdvertisement');
+    Route::post('/advertisement/click','ApiController@clickAdvertisement');
+
+    // Push Notification
+    Route::post('/push-token','ApiController@savePushToken');
+    Route::post('/push-effect','ApiController@setPushEffect');
 });

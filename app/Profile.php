@@ -7,20 +7,14 @@ class Profile extends Eloquent {
     protected $fillable = [
                             'user_id',
                             
-                            // 'group_name',
-                            // 'org_num',
-                            // 'contact_person',
                             'phone_number',
                             
                             'group_id',
                             
-                            'first_name',
-                            'family_name',
                             'full_name',
                             
                             'avatar',
                             'street_address',
-                            'street_name',
                             'postal_code',
                             'country',
                             'city',

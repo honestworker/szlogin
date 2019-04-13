@@ -46,6 +46,14 @@ There are many Laravel+Vue.js starter kit available but none of them are complet
 
 ## Change Log
 
+2.3 2019/04/12
+	- Dispath of the route as the web and api
+  - Fix some bugs
+
+2.2 2019/01/20
+	- Change the structure of the user group
+  - Add Emoticals on the website
+
 2.1.1 2019/01/20
 	- Fix Forgot Password
   
