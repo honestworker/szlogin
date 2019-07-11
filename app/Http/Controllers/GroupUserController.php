@@ -200,13 +200,13 @@ class GroupUserController extends Controller
         if (!$user->backend)
             return response()->json(['status' => 'fail', 'message' => 'You do not have the backend permission!', 'data' => null, 'error_type' => 'no_permission'], 422);
         
-        $group = \App\Group::find($usergroup_id);
-        if (!$group)
-            return response()->json(['status' => 'fail', 'message' => 'Could not find this group!', 'error_type' => 'no_group'], 422);
-        
-        $group_user = \App\GroupUser::where('group_id', $usergroup_id)->where('user_id', $user_id)->first();
+        $group_user = \App\GroupUser::find($usergroup_id);
         if (!$group_user)
             return response()->json(['status' => 'fail', 'message' => 'The user is not a group member!', 'data' => null, 'error_type' => 'no_member'], 422);
+
+        $group = \App\Group::find($group_user->group_id);
+        if (!$group)
+            return response()->json(['status' => 'fail', 'message' => 'Could not find this group!', 'error_type' => 'no_group'], 422);
         
         if ($group_user->status != 'activated') {
             $notification_names = array();
@@ -240,14 +240,14 @@ class GroupUserController extends Controller
         if (!$user->backend)
             return response()->json(['status' => 'fail', 'message' => 'You do not have the backend permission!', 'data' => null, 'error_type' => 'no_permission'], 422);
         
-        $group = \App\Group::find($usergroup_id);
-        if (!$group)
-            return response()->json(['status' => 'fail', 'message' => 'Could not find this group!', 'error_type' => 'no_group'], 422);
-            
-        $group_user = \App\GroupUser::where('group_id', $usergroup_id)->where('user_id', $user_id)->first();
+        $group_user = \App\GroupUser::find($usergroup_id);
         if (!$group_user)
             return response()->json(['status' => 'fail', 'message' => 'The user is not a group member!', 'data' => null, 'error_type' => 'no_member'], 422);
-            
+
+        $group = \App\Group::find($group_user->group_id);
+        if (!$group)
+            return response()->json(['status' => 'fail', 'message' => 'Could not find this group!', 'error_type' => 'no_group'], 422);
+
         if ($group_user->status != 'pending') {
             $notification_names = array();
             $notification_names['swedish'] = 'Din kontostatus har ändrats.';
@@ -279,14 +279,14 @@ class GroupUserController extends Controller
         if (!$user->backend)
             return response()->json(['status' => 'fail', 'message' => 'You do not have the backend permission!', 'data' => null, 'error_type' => 'no_permission'], 422);
         
-        $group = \App\Group::find($usergroup_id);
-        if (!$group)
-            return response()->json(['status' => 'fail', 'message' => 'Could not find this group!', 'error_type' => 'no_group'], 422);
-            
-        $group_user = \App\GroupUser::where('group_id', $usergroup_id)->where('user_id', $user_id)->first();
+        $group_user = \App\GroupUser::find($usergroup_id);
         if (!$group_user)
             return response()->json(['status' => 'fail', 'message' => 'The user is not a group member!', 'data' => null, 'error_type' => 'no_member'], 422);
-               
+
+        $group = \App\Group::find($group_user->group_id);
+        if (!$group)
+            return response()->json(['status' => 'fail', 'message' => 'Could not find this group!', 'error_type' => 'no_group'], 422);
+
         if ($group_user->admin != 1) {
             $notification_names = array();
             $notification_names['swedish'] = 'Din kontostatus har ändrats.';
@@ -318,14 +318,14 @@ class GroupUserController extends Controller
         if (!$user->backend)
             return response()->json(['status' => 'fail', 'message' => 'You do not have the backend permission!', 'data' => null, 'error_type' => 'no_permission'], 422);
         
-        $group = \App\Group::find($usergroup_id);
-        if (!$group)
-            return response()->json(['status' => 'fail', 'message' => 'Could not find this group!', 'error_type' => 'no_group'], 422);
-            
-        $group_user = \App\GroupUser::where('group_id', $usergroup_id)->where('user_id', $user_id)->first();
+        $group_user = \App\GroupUser::find($usergroup_id);
         if (!$group_user)
             return response()->json(['status' => 'fail', 'message' => 'The user is not a group member!', 'data' => null, 'error_type' => 'no_member'], 422);
-                 
+
+        $group = \App\Group::find($group_user->group_id);
+        if (!$group)
+            return response()->json(['status' => 'fail', 'message' => 'Could not find this group!', 'error_type' => 'no_group'], 422);
+        
         if ($group_user->admin != 0) {
             $notification_names = array();
             $notification_names['swedish'] = 'Din kontostatus har ändrats.';
@@ -357,15 +357,16 @@ class GroupUserController extends Controller
         if (!$user->backend)
             return response()->json(['status' => 'fail', 'message' => 'You do not have the backend permission!', 'data' => null, 'error_type' => 'no_permission'], 422);
         
-        $group = \App\Group::find($usergroup_id);
-        if (!$group)
-            return response()->json(['status' => 'fail', 'message' => 'Could not find this group!', 'error_type' => 'no_group'], 422);
-            
-        $group_user = \App\GroupUser::where('group_id', $usergroup_id)->where('user_id', $user_id)->first();
+        $group_user = \App\GroupUser::find($usergroup_id);
         if (!$group_user)
             return response()->json(['status' => 'fail', 'message' => 'The user is not a group member!', 'data' => null, 'error_type' => 'no_member'], 422);
           
-        $notifications = \App\Notification::where('group_id', $usergroup_id)->where('user_id', $user_id)->get();
+        $group = \App\Group::find($group_user->group_id);
+        if (!$group)
+            return response()->json(['status' => 'fail', 'message' => 'Could not find this group!', 'error_type' => 'no_group'], 422);
+        
+        $group_id = $group->id;
+        $notifications = \App\Notification::where('group_id', $group_id)->where('user_id', $user_id)->get();
         if($notifications) {
             foreach ($notifications as $notification) {
                 $notification_unreads = \App\NotificationUnread::where('notification_id', $notification->id)->get();
@@ -401,7 +402,7 @@ class GroupUserController extends Controller
                 $notification->delete();
             }
         }
-        $notifications = \App\Notification::where('group_id', $usergroup_id)->where('user_id', '!=', $user_id)->get();
+        $notifications = \App\Notification::where('group_id', $group_id)->where('user_id', '!=', $user_id)->get();
         if($notifications) {
             foreach ($notifications as $notification) {
                 $notification_unreads = \App\NotificationUnread::where('notification_id', $notification->id)->where('user_id', $user_id)->get();

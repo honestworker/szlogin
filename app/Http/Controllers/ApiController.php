@@ -811,9 +811,21 @@ class ApiController extends Controller
         // }
         //return response()->json(['status' => 'success', 'message' => 'Get Group User Data successfully!', 'users' => $result, 'end' => $page_end], 200);
         
-        $group_admins = \App\GroupUser::with('user.profile')->select('user_id', 'admin', 'status')->where('group_id', request('id'))->where('admin', 1)->where('status', 'activated')->get();
-        $group_pending_users = \App\GroupUser::with('user.profile')->select('user_id', 'admin', 'status')->where('group_id', request('id'))->where('status', 'pending')->get();
-        $group_activated_users = \App\GroupUser::with('user.profile')->select('user_id', 'admin', 'status')->where('group_id', request('id'))->where('admin', 0)->where('status', 'activated')->get();
+        $group_admins = \App\GroupUser::with('user.profile')->select('user_id', 'admin', 'status')->where('group_id', request('id'))
+            ->where('admin', 1)->where('status', 'activated')
+            ->whereHas('user',function($q) {
+                $q->whereNotNull('id')->where('id', '<>', '');
+            })->get();
+        $group_pending_users = \App\GroupUser::with('user.profile')->select('user_id', 'admin', 'status')->where('group_id', request('id'))
+            ->where('status', 'pending')
+            ->whereHas('user',function($q) {
+                $q->whereNotNull('id')->where('id', '<>', '');
+            })->get();
+        $group_activated_users = \App\GroupUser::with('user.profile')->select('user_id', 'admin', 'status')->where('group_id', request('id'))
+            ->where('admin', 0)->where('status', 'activated')
+            ->whereHas('user',function($q) {
+                $q->whereNotNull('id')->where('id', '<>', '');
+            })->get();
         $result = array(
             'admins' => $group_admins,
             'pending' => $group_pending_users,

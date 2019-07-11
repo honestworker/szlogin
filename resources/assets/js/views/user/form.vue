@@ -290,6 +290,31 @@
                 </div>
             </div>
         </div>
+
+        <!-- Delete User Modal -->
+        <div class="modal" id="modal-delete-user-group" tabindex="-1" role="dialog">
+            <div class="modal-dialog" v-if="deleteUserGroupPermission">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            Delete User
+                        </h5>
+                    </div>
+
+                    <div class="modal-body">
+                        Are you sure you want to delete this Group of this User?
+                    </div>
+
+                    <!-- Modal Actions -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">No, Go Back</button>
+                        <button type="button" class="btn btn-danger" @click.prevent="deleteUserGroup()">
+                            Yes, Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </form>
 </template>
 
@@ -330,6 +355,7 @@
                 
                 groupActivePermission : 1,
                 groupManagerPermission : 1,
+                deleteUserGroupPermission : 1,
             };
         },
         props: ['id'],
@@ -578,6 +604,33 @@
                         }
                     }
                     $('#modal-disable-group-manager').modal('hide');
+                });
+            },
+
+            modalDeleteUserGroup(user_group) {
+                this.group_id = user_group.id;
+                $('#modal-delete-user-group').modal('show');
+            },
+            deleteUserGroup() {
+                axios.delete('/admin/usergroup/' + this.id + '/' + this.group_id).then(response => {
+                    $('#modal-delete-user-group').modal('hide');
+                    toastr['success'](response.data.message);
+                    this.getUserGroups();
+                }).catch(error => {
+                    if (error.response.data.status == 'fail') {
+                        if (error.response.data.type == "token_error") {
+                            toastr['error']('The token is expired! Please refresh and try again!');
+                            this.$router.push('/login');
+                        } else {
+                            toastr['error'](error.response.data.message);
+                        }
+                    } else {
+                        if (error.message) {
+                            toastr['error']('An unexpected error occurred!');
+                            console.log(error.message);
+                        }
+                    }
+                    $('#modal-delete-user-group').modal('hide');
                 });
             },
         },
