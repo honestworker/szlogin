@@ -312,6 +312,7 @@
                 baseUrl : '',
 
                 user_id: 0,
+                usergroup_id: 0,
 
                 groupActivePermission : 1,
                 groupManagerPermission : 1,
@@ -454,10 +455,11 @@
             
             modalDeleteUser(user) {
                 this.user_id = user.id;
+                this.usergroup_id = user.group.user_group;
                 $('#modal-delete-user').modal('show');
             },
             deleteUser() {
-                axios.delete('/admin/usergroup/' + this.user_id + '/' + this.id).then(response => {
+                axios.delete('/admin/usergroup/' + this.user_id + '/' + this.usergroup_id).then(response => {
                     $('#modal-delete-user').modal('hide');
                     toastr['success'](response.data.message);
                     this.getUsers();
@@ -481,10 +483,11 @@
 
             modalActiveGroupMember(user) {
                 this.user_id = user.id;
+                this.usergroup_id = user.group.user_group;
                 $('#modal-active-group').modal('show');
             },
             activeGroupMember() {
-                axios.post('/admin/usergroup/active/' + this.user_id + '/' + this.id).then(response => {
+                axios.post('/admin/usergroup/active/' + this.user_id + '/' + this.usergroup_id).then(response => {
                     $('#modal-active-group').modal('hide');
                     toastr['success'](response.data.message);
                     this.getUsers();
@@ -508,10 +511,11 @@
             
             modalDeactiveGroupMember(user) {
                 this.user_id = user.id;
+                this.usergroup_id = user.group.user_group;
                 $('#modal-deactive-group').modal('show');
             },
             deactiveGroupMember() {
-                axios.post('/admin/usergroup/deactive/' + this.user_id + '/' + this.id).then(response => {
+                axios.post('/admin/usergroup/deactive/' + this.user_id + '/' + this.usergroup_id).then(response => {
                     $('#modal-deactive-group').modal('hide');
                     toastr['success'](response.data.message);
                     this.getUsers();
@@ -535,10 +539,11 @@
 
             modalMakeGroupManager(user) {
                 this.user_id = user.id;
+                this.usergroup_id = user.group.user_group;
                 $('#modal-make-group-manager').modal('show');
             },
             makeGroupManager() {
-                axios.post('/admin/usergroup/manager/' + this.user_id + '/' + this.id).then(response => {
+                axios.post('/admin/usergroup/manager/' + this.user_id + '/' + this.usergroup_id).then(response => {
                     $('#modal-make-group-manager').modal('hide');
                     toastr['success'](response.data.message);
                     this.getUsers();
@@ -562,10 +567,11 @@
 
             modalDisableGroupManager(user) {
                 this.user_id = user.id;
+                this.usergroup_id = user.group.user_group;
                 $('#modal-disable-group-manager').modal('show');
             },
             disableGroupManager() {
-                axios.post('/admin/usergroup/user/' + this.user_id + '/' + this.id).then(response => {
+                axios.post('/admin/usergroup/user/' + this.user_id + '/' + this.usergroup_id).then(response => {
                     $('#modal-disable-group-manager').modal('hide');
                     toastr['success'](response.data.message);
                     this.getUsers();

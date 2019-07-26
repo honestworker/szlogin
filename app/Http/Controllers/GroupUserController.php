@@ -182,7 +182,7 @@ class GroupUserController extends Controller
             if ($user_result) {
                 foreach ($user_result as $user) {
                     $group_user = \App\GroupUser::where('user_id', $user->id)->where('group_id', request('group_id'))->first();
-                    $user['group'] = array('admin'=> $group_user->admin, 'status'=> $group_user->status, 'created_at'=>  $group_user->created_at->format('Y-m-d H:i:s'));
+                    $user['group'] = array('admin'=> $group_user->admin, 'user_group'=> $group_user->id, 'status'=> $group_user->status, 'created_at'=>  $group_user->created_at->format('Y-m-d H:i:s'));
                 }
             }
         }
