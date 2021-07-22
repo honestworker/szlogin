@@ -37,6 +37,6 @@
         "vuejs-datepicker": "^0.9.11",
         "vuex": "^2.4.0",
         "vuex-persistedstate": "^2.0.0",
-        "xlsx": "^0.14.0"
+        "xlsx": "^0.17.0"
     }
 }
